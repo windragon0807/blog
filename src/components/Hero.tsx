@@ -11,7 +11,8 @@ export default function Hero() {
         alt='Picture of the author'
         width={250}
         height={250}
-        priority // 이미지 다운로드 우선순위
+        // NOTE: 이미지 다운로드 우선순위
+        priority
       />
       <h2 className='text-3xl font-bold mt-4'>{"Hi, I'm Ryong"}</h2>
       <h3 className='text-xl font-semibold mt-2'>Full-stack Engineer</h3>

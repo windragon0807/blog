@@ -6,7 +6,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      {/* NOTE_1 */}
+      {/* NOTE: Next.js <-> TypeScript 간 호환성 문제 해결을 위한 주석처리 */}
       {/* @ts-expect-error Server Component */}
       <FeaturedPosts />
       {/* @ts-expect-error Server Component */}
@@ -14,7 +14,3 @@ export default function HomePage() {
     </>
   );
 }
-
-/** [ NOTE_1 ]
- * Next.js <-> TypeScript 간 호환성 문제 해결을 위한 주석처리
- */
