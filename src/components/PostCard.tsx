@@ -7,7 +7,6 @@ export default function PostCard({
   post: { title, description, date, category, path },
 }: Props) {
   return (
-    // NOTE_1
     <Link href={`/posts/${path}`}>
       {/* NOTE: 같은 의미 단위 묶음 => <article> 사용 */}
       <article className='rounded-md overflow-hidden shadow-md hover:shadow-xl'>
