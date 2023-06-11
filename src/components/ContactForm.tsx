@@ -1,5 +1,6 @@
 'use client';
 
+import { sendContactEmail } from '@/service/contact';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import Banner, { BannerData } from './Banner';
 
@@ -9,12 +10,14 @@ type Form = {
   message: string;
 };
 
+const DEFAULT_DATA = {
+  from: '',
+  subject: '',
+  message: '',
+};
+
 export default function ContactForm() {
-  const [form, setForm] = useState<Form>({
-    from: '',
-    subject: '',
-    message: '',
-  });
+  const [form, setForm] = useState<Form>(DEFAULT_DATA);
   const [banner, setBanner] = useState<BannerData | null>(null);
 
   const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -24,11 +27,26 @@ export default function ContactForm() {
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.table(form);
-    setBanner({ message: '성공했어!!', state: 'success' });
-    setTimeout(() => {
-      setBanner(null);
-    }, 3000);
+    sendContactEmail(form)
+      .then(() => {
+        setBanner({
+          message: '메일을 성공적으로 보냈습니다.',
+          state: 'success',
+        });
+        setForm(DEFAULT_DATA);
+      })
+      .catch(() => {
+        setBanner({
+          message: '메일전송에 실패했습니다. 다시 시도해 주세요',
+          state: 'error',
+        });
+      })
+      // NOTE: success, error에 상관없는 공통적인 로직을 finally에 추가
+      .finally(() => {
+        setTimeout(() => {
+          setBanner(null);
+        }, 3000);
+      });
   };
 
   return (
@@ -49,6 +67,7 @@ export default function ContactForm() {
           autoFocus
           value={form.from}
           onChange={onChange}
+          className='text-black'
         />
         <label htmlFor='subject' className='font-semibold'>
           Subject
@@ -60,6 +79,7 @@ export default function ContactForm() {
           required
           value={form.subject}
           onChange={onChange}
+          className='text-black'
         />
         <label htmlFor='message' className='font-semibold'>
           Message
@@ -71,7 +91,7 @@ export default function ContactForm() {
           required
           value={form.message}
           onChange={onChange}
-          className='text-black resize-none'
+          className='text-black'
         />
         <button className='bg-yellow-300 text-black font-bold hover:bg-yellow-400'>
           Submit
