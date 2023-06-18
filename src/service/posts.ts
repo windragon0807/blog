@@ -1,5 +1,6 @@
 import { readFile } from 'fs/promises';
 import path from 'path';
+import { cache } from 'react';
 
 export type Post = {
   title: string;
@@ -16,14 +17,17 @@ export type PostData = Post & {
   prev: Post | null;
 };
 
-export async function getAllPosts(): Promise<Post[]> {
+// NOTE: Next.js는 fetch는 동일한 요청에 대해 자동으로 중복 제거가 되어 딱 한 번만 요청을 하지만,
+// NOTE: fetch가 아닌 DB에 접근하거나 파일을 읽는 함수는 아래와 같이 처리해줘야 한다.
+// NOTE: "한 페이지 내에서 렌더링 되는 싸이클에 한해서만" 동일한 인자를 받는다면 캐시된 값을 반환한다.
+export const getAllPosts = cache(async () => {
   const filePath = path.join(process.cwd(), 'data', 'posts.json');
   return readFile(filePath, 'utf-8')
     // NOTE: (data) => JSON.parse(data) 생략 가능
     .then<Post[]>(JSON.parse)
     // NOTE: 오름차순 정렬
     .then((posts) => posts.sort((a, b) => (a.date > b.date ? -1 : 1)));
-}
+});
 
 export async function getFeaturedPosts(): Promise<Post[]> {
   return getAllPosts()

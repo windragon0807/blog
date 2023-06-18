@@ -1,6 +1,6 @@
 import AdjacentPostCard from '@/components/AdjacentPostCard';
 import PostContent from '@/components/PostContent';
-import { getPostData } from '@/service/posts';
+import { getFeaturedPosts, getPostData } from '@/service/posts';
 import { Metadata } from 'next';
 import Image from 'next/image';
 
@@ -38,4 +38,12 @@ export default async function PostPage({ params: { slug } }: Props) {
       </section>
     </article>
   );
+}
+
+// Featured 된 Post에 한해서 페이지를 미리 만들어두기
+export async function generateStaticParams() {
+  const posts = await getFeaturedPosts();
+  return posts.map((post) => ({
+    slug: post.path,
+  }));
 }
