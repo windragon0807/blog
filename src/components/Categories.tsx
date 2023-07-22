@@ -1,7 +1,7 @@
 type Props = {
   categories: string[];
   selected: string;
-  // NOTE: useState의 set 함수 타입을 필요한 파라미터로만 표현 가능
+  // useState의 set 함수 타입을 필요한 파라미터로만 표현 가능
   onClick: (category: string) => void;
 };
 export default function Categories({ categories, selected, onClick }: Props) {
@@ -13,7 +13,7 @@ export default function Categories({ categories, selected, onClick }: Props) {
       <ul>
         {categories.map((category) => (
           <li
-            // NOTE: className `` 사용하여 동적 설정
+            // className `` 사용하여 동적 설정
             className={`cursor-pointer hover:text-sky-500 ${
               category === selected && 'text-sky-600'
             }`}

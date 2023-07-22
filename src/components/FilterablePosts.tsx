@@ -1,4 +1,5 @@
 'use client';
+
 import { Post } from '@/service/posts';
 import { useState } from 'react';
 import Categories from './Categories';

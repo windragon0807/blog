@@ -23,7 +23,7 @@ export default function AdjacentPostCard({
         width={150}
         height={100}
       />
-      {/* NOTE: hover 대상과 변환을 줄 컴포넌트 대상이 서로 다를 때, group, group-hover을 사용한다. */}
+      {/* hover 대상과 변환을 줄 컴포넌트 대상이 서로 다를 때, group, group-hover을 사용한다. */}
       <div className='group absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full flex justify-around items-center text-white px-8'>
         {type === 'prev' && <FaArrowLeft className={ICON_CLASS} />}
         <div className='w-full text-center'>

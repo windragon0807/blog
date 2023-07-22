@@ -8,7 +8,7 @@ const sans = Open_Sans({ subsets: ['latin'] });
 export const metadata = {
   title: {
     default: 'Ryong의 블로그',
-    // NOTE: 하위 페이지 title 동적 할당
+    // 하위 페이지 title 동적 할당
     template: 'Ryong의 블로그 | %s',
   },
   description: '풀스택 개발자 Ryong의 블로그',

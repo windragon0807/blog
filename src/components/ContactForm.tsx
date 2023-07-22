@@ -41,7 +41,7 @@ export default function ContactForm() {
           state: 'error',
         });
       })
-      // NOTE: success, error에 상관없는 공통적인 로직을 finally에 추가
+      // success, error에 상관없는 공통적인 로직을 finally에 추가
       .finally(() => {
         setTimeout(() => {
           setBanner(null);
