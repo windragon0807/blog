@@ -33,7 +33,9 @@ export async function getResumePdfUrl() {
 
   try {
     const metadata = await head(getResumePdfBlobPath(), getBlobCommandOptions())
-    return metadata.url
+    const versionedUrl = new URL(metadata.url)
+    versionedUrl.searchParams.set('v', metadata.uploadedAt.getTime().toString())
+    return versionedUrl.toString()
   } catch (error) {
     if (error instanceof BlobNotFoundError) {
       return null

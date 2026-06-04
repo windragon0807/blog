@@ -1,10 +1,8 @@
-import { redirect } from 'next/navigation'
-import { auth } from '@/auth'
-import { logoutAdminAction, uploadResumePdfAdminAction } from '@/app/ryong/actions'
+import { uploadResumePdfAdminAction } from '@/app/ryong/actions'
 import { ActionButton, ActionLink } from '@/components/common/ActionControl'
 import { Surface } from '@/components/common/Surface'
 import { StatusNotice } from '@/components/common/StatusNotice'
-import { Input } from '@/components/ui/input'
+import { ResumePdfFileInput } from '@/components/resume/ResumePdfFileInput'
 import { getResumePdfUrl, isResumePdfStorageConfigured } from '@/lib/resume-pdf'
 
 type AdminPageSearchParams = Promise<{
@@ -16,17 +14,6 @@ export default async function RyongAdminPage({
 }: {
   searchParams: AdminPageSearchParams
 }) {
-  const session = await auth()
-
-  if (!session) {
-    redirect('/api/auth/signin?callbackUrl=/ryong')
-  }
-
-  if (!session.user.isAdmin) {
-    redirect('/ryong/denied')
-  }
-
-  const githubLogin = session.user.githubLogin ?? 'unknown'
   const params = await searchParams
   const uploadStatus = params.upload
   const isBlobConfigured = isResumePdfStorageConfigured()
@@ -34,22 +21,6 @@ export default async function RyongAdminPage({
 
   return (
     <section className="mx-auto max-w-2xl space-y-6">
-      <header className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
-          Admin Mode
-        </p>
-        <h1 className="text-3xl font-semibold text-zinc-900 dark:text-zinc-100">
-          /ryong 관리자 진입 완료
-        </h1>
-        <p className="text-sm text-zinc-600 dark:text-zinc-300">
-          GitHub 계정 <strong>@{githubLogin}</strong> 으로 인증되었습니다.
-        </p>
-      </header>
-
-      <StatusNotice>
-        이후 관리자 기능(내부 관리 도구)을 이 공간에 확장하면 됩니다.
-      </StatusNotice>
-
       <Surface className="space-y-4 rounded-xl bg-white p-5 dark:bg-zinc-900">
         <div className="space-y-1">
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">이력서 PDF 업로드</h2>
@@ -96,13 +67,7 @@ export default async function RyongAdminPage({
         )}
 
         <form action={uploadResumePdfAdminAction} className="space-y-3">
-          <Input
-            type="file"
-            name="resumePdf"
-            accept="application/pdf,.pdf"
-            required
-            disabled={!isBlobConfigured}
-          />
+          <ResumePdfFileInput disabled={!isBlobConfigured} />
           <div className="flex flex-wrap gap-3">
             <ActionButton
               type="submit"
@@ -128,13 +93,6 @@ export default async function RyongAdminPage({
       </Surface>
 
       <div className="flex flex-wrap gap-3">
-        <form action={logoutAdminAction}>
-          <ActionButton
-            type="submit"
-          >
-            로그아웃
-          </ActionButton>
-        </form>
         <ActionLink
           href="/"
           variant="outline"
