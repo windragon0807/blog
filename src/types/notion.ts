@@ -1,4 +1,4 @@
-export type PostSource = 'blog' | 'portfolio' | 'news'
+export type PostSource = 'blog' | 'portfolio'
 
 export interface Post {
   id: string

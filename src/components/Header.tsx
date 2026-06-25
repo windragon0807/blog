@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AppLauncherMenu } from './AppLauncherMenu'
 import { BrandLogo } from './BrandLogo'
-import { SectionToggleButton } from './SectionToggleButton'
 import { useHeaderBrandScope } from './HeaderBrandScopeProvider'
 import { ICON_CONTROL_BUTTON_CLASS_NAME } from './IconControlButton'
 import { ThemeModeButton } from './ThemeModeButton'
@@ -80,7 +79,6 @@ export function Header() {
                 <HomeIcon className="relative z-10 h-[18px] w-[18px]" />
               </Link>
             )}
-            <SectionToggleButton />
             <ThemeModeButton />
             <AppLauncherMenu />
             <ThemeSettingsMenu />
