@@ -19,6 +19,7 @@ Notion Database를 CMS로 사용하는 Next.js 기반 개인 기술 블로그입
 - 본문 우측 플로팅 TOC(h1/h2/h3 추적 + 스무스 스크롤)
 - Notion `column_list`, `bookmark`, `toggle` 등 블록 렌더링 지원
 - 북마크 OG 메타데이터 수집 및 카드 UI 렌더링
+- 코드 기반 이력서(`/resume`) 렌더링 및 A4 PDF 다운로드
 - SEO 메타데이터, `robots.txt`, `sitemap.xml`, OG 이미지 API
 
 ## 기술 스택
@@ -29,6 +30,7 @@ Notion Database를 CMS로 사용하는 Next.js 기반 개인 기술 블로그입
 - Tailwind CSS v4
 - Notion API (`@notionhq/client`)
 - Shiki
+- html-to-image + pdf-lib
 - next-themes
 
 ## 프로젝트 구조
@@ -37,6 +39,7 @@ Notion Database를 CMS로 사용하는 Next.js 기반 개인 기술 블로그입
 src
 ├─ app
 │  ├─ api/og/route.tsx          # OG 이미지 생성 API
+│  ├─ resume/page.tsx           # 코드 기반 이력서
 │  ├─ posts/[slug]/page.tsx     # 포스트 상세
 │  ├─ tags/[tag]/page.tsx       # 태그별 목록
 │  ├─ layout.tsx                # 전역 레이아웃/메타/테마 부트스크립트
@@ -58,10 +61,11 @@ src
 │  ├─ bookmark.ts               # 북마크 OG 메타 수집
 │  ├─ toc.ts                    # TOC 추출/ID
 │  └─ codeLanguageIcons.ts      # 언어-아이콘 매핑
-└─ types/notion.ts
+└─ features/resume/*            # 이력서 데이터/렌더러/PDF 다운로드
 
 public
 ├─ brand/ryonglog-icon.svg
+├─ resume/*                     # 이력서 프로필/로고/프로젝트 이미지
 ├─ fonts/maplestory/*.otf
 └─ vscode-icons/*               # 코드 언어 아이콘 리소스
 ```
@@ -90,24 +94,9 @@ NOTION_API_KEY=secret_xxx
 NOTION_DATABASE_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 NOTION_WEBHOOK_VERIFICATION_TOKEN=
 NEXT_PUBLIC_SITE_URL=http://localhost:3200
-AUTH_SECRET=your-random-secret
-GITHUB_ID=your-github-oauth-app-client-id
-GITHUB_SECRET=your-github-oauth-app-client-secret
-ADMIN_GITHUB_LOGIN=your-github-login
 ```
 
 `.env.example`도 함께 참고하세요.
-
-### 2-1) `/ryong` 관리자 모드 설정
-
-- `/ryong` 경로는 GitHub OAuth 로그인 후 `ADMIN_GITHUB_LOGIN`과 일치하는 계정만 접근 가능합니다.
-- GitHub OAuth App의 callback URL은 아래로 설정하세요.
-
-```txt
-http://localhost:3200/api/auth/callback/github
-```
-
-운영 도메인을 사용할 경우 같은 경로로 도메인만 교체하면 됩니다.
 
 ### 3) 개발 서버 실행
 
@@ -187,11 +176,8 @@ npm run lint
   - `NOTION_DATABASE_ID`
   - `NOTION_WEBHOOK_VERIFICATION_TOKEN` (Webhook 연결 시)
   - `NEXT_PUBLIC_SITE_URL` (실제 도메인)
-  - `AUTH_SECRET`
-  - `GITHUB_ID`
-  - `GITHUB_SECRET`
-  - `ADMIN_GITHUB_LOGIN`
 - Notion Integration이 DB에 초대되어 있는지 확인
+- `/resume` 화면 렌더링과 PDF 다운로드 동작 확인
 
 ## 커밋 메시지 추천
 

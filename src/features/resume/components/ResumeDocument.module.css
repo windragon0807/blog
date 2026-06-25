@@ -1,0 +1,579 @@
+.document {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #ffffff;
+  color: #79819a;
+  font-family:
+    'Pretendard',
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Apple SD Gothic Neo',
+    'Segoe UI',
+    sans-serif;
+  font-size: 9.4px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0;
+  text-rendering: auto;
+  box-shadow: 0 24px 70px -44px rgba(15, 23, 42, 0.34);
+}
+
+.document * {
+  box-sizing: border-box;
+}
+
+.document strong {
+  color: inherit;
+  font-weight: 700;
+}
+
+.hero {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+  padding: 30px 27px 0;
+}
+
+.heroAura {
+  display: none;
+}
+
+.profilePhotoFrame {
+  position: absolute;
+  top: 35px;
+  left: 24px;
+  width: 144px;
+  height: 144px;
+  overflow: hidden;
+  padding: 2px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(145deg, #ded5ff 0%, #f0dff5 48%, #ffe0cf 100%);
+  box-shadow:
+    0 18px 38px -26px rgba(95, 69, 155, 0.7),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.75);
+}
+
+.profilePhoto {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+  object-position: center;
+}
+
+.identity {
+  position: absolute;
+  top: 47px;
+  left: 192px;
+}
+
+.identity h1 {
+  margin: 0;
+  color: #232738;
+  font-family:
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Apple SD Gothic Neo',
+    sans-serif;
+  font-size: 16.2px;
+  font-weight: 650;
+  line-height: 1.08;
+}
+
+.identity p {
+  display: inline-block;
+  margin: 7px 0 0;
+  padding-bottom: 2px;
+  font-family:
+    'Hancom MalangMalang',
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Apple SD Gothic Neo',
+    sans-serif;
+  background: linear-gradient(92deg, #6d69e8 0%, #b461cf 47%, #e48792 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 12.6px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.basicInfo {
+  position: absolute;
+  top: 100px;
+  left: 192px;
+  display: flex;
+  gap: 58px;
+  margin: 0;
+}
+
+.basicInfo div {
+  min-width: 70px;
+}
+
+.basicInfo dt {
+  margin: 0 0 3px;
+  color: #a4abba;
+  font-size: 8px;
+  font-weight: 560;
+  line-height: 1;
+}
+
+.basicInfo dd {
+  margin: 0;
+  color: #474f65;
+  font-size: 9.2px;
+  font-weight: 500;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.skillCloud {
+  position: absolute;
+  top: 139px;
+  left: 181px;
+  display: flex;
+  width: 390px;
+  flex-wrap: wrap;
+  gap: 4px 5px;
+}
+
+.skillPill {
+  display: inline-flex;
+  height: 15.5px;
+  align-items: center;
+  gap: 3.6px;
+  padding: 0 5.4px;
+  border: 0.55px solid rgba(214, 219, 231, 0.95);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+  color: #525b72;
+  font-size: 7.25px;
+  font-weight: 500;
+  line-height: 1;
+  box-shadow: 0 8px 18px -18px rgba(15, 23, 42, 0.35);
+  text-box: trim-both cap alphabetic;
+}
+
+.skillIcon {
+  width: 10.6px;
+  height: 10.6px;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.linkCards {
+  position: absolute;
+  bottom: 22px;
+  left: 43px;
+  display: grid;
+  width: 510px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.linkCard {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 11px;
+  border: 0.45px solid rgba(223, 227, 237, 0.62);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.86);
+  color: inherit;
+  text-decoration: none;
+  box-shadow:
+    0 15px 28px -24px rgba(36, 43, 66, 0.46),
+    inset 0 1px 0 rgba(255, 255, 255, 0.86);
+}
+
+.linkIconFrame {
+  display: inline-flex;
+  width: 27px;
+  height: 27px;
+  flex: 0 0 27px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  background: #f6f7fb;
+}
+
+.linkIcon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.linkLabel,
+.linkValue {
+  display: block;
+  min-width: 0;
+}
+
+.linkLabel {
+  color: #949bad;
+  font-size: 7.6px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.linkValue {
+  display: inline-flex;
+  max-width: 100%;
+  margin-top: 4px;
+  align-items: center;
+  gap: 4px;
+  color: #667088;
+  font-size: 8.7px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.linkValueIcon {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+  opacity: 0.72;
+  object-fit: contain;
+}
+
+.sectionStack {
+  position: relative;
+  padding: 0 16px 46px;
+}
+
+.section {
+  position: relative;
+  padding-left: 32px;
+}
+
+.section::before {
+  content: '';
+  position: absolute;
+  top: 25px;
+  bottom: -19px;
+  left: 7.5px;
+  width: 0.6px;
+  background: linear-gradient(180deg, #e5e9f3 0%, rgba(229, 233, 243, 0.55) 100%);
+}
+
+.section:last-child::before {
+  bottom: 6px;
+}
+
+.section + .section {
+  margin-top: 15px;
+}
+
+.careerSection {
+  min-height: 1030px;
+}
+
+.projectSection + .section {
+  margin-top: 65px;
+}
+
+.sectionDot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  border: 3.5px solid #f0edff;
+  border-radius: 999px;
+  background: #7b61ff;
+  box-shadow:
+    0 0 0 2px rgba(123, 97, 255, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+}
+
+.sectionHeader {
+  display: flex;
+  min-height: 18px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 9px;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  color: #2e2e48;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.sectionHeader span {
+  color: #79819a;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.1px;
+  line-height: 12px;
+}
+
+.entryList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  column-gap: 18px;
+  min-height: 34px;
+}
+
+.careerSection .entry {
+  grid-template-columns: 146px minmax(0, 1fr);
+}
+
+.entryDot {
+  position: absolute;
+  top: 1px;
+  left: -30px;
+  width: 12px;
+  height: 12px;
+  border: 3px solid #f1f3f8;
+  border-radius: 999px;
+  background: #b4bbca;
+}
+
+.careerSection .entryDot {
+  top: 6px;
+  left: 20px;
+  width: 4px;
+  height: 4px;
+  border: 0;
+  background: #ff674d;
+}
+
+.entryMeta {
+  min-width: 0;
+}
+
+.careerSection .entryMeta {
+  width: 110px;
+  margin-left: 36px;
+}
+
+.period {
+  margin: 0 0 8px;
+  color: #47516b;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.09px;
+  line-height: 12px;
+}
+
+.organization {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.organizationLogo {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  object-fit: contain;
+  box-shadow: none;
+}
+
+.organizationText {
+  min-width: 0;
+}
+
+.organizationText h3,
+.organizationText p {
+  margin: 0;
+}
+
+.organizationText h3 {
+  overflow-wrap: anywhere;
+  color: #2e2e48;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 12px;
+}
+
+.organizationText p {
+  margin-top: 3px;
+  color: #79819a;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.09px;
+  line-height: 12px;
+}
+
+.entryTechnologies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin: 0 0 12px;
+}
+
+.entryTechnology {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 6px;
+  border: 0.454px solid #e2e6ee;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #79819a;
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: 0.08px;
+  line-height: 12px;
+}
+
+.entryBody {
+  min-width: 0;
+  color: #79819a;
+  font-size: 10px;
+  letter-spacing: 0.1px;
+  line-height: 1.6;
+}
+
+.projectSection .entryBody {
+  line-height: 2.03;
+}
+
+.projectSection .entryList {
+  gap: 70px;
+}
+
+.projectSection .bulletList {
+  gap: 9px;
+}
+
+.projectSection .highlight + .highlight {
+  margin-top: 13px;
+}
+
+.bodyParagraph {
+  margin: 0 0 8px;
+}
+
+.highlight + .highlight {
+  margin-top: 10px;
+}
+
+.highlightTitleRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0 0 5px;
+}
+
+.highlightIconFrame {
+  display: inline-flex;
+  width: 12px;
+  height: 12px;
+  flex: 0 0 12px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.highlightIcon {
+  width: 12px;
+  height: 12px;
+  object-fit: contain;
+}
+
+.highlightTitle {
+  margin: 0;
+  color: #79819a;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 16px;
+}
+
+.bulletList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bodyParagraph + .bulletList,
+.screenshotStrip + .highlight,
+.highlightTitleRow + .bulletList {
+  margin-top: 5px;
+}
+
+.bulletList li {
+  position: relative;
+  padding-left: 16px;
+}
+
+.bulletList li::before {
+  content: '';
+  position: absolute;
+  top: 6.5px;
+  left: 4px;
+  width: 2.5px;
+  height: 2.5px;
+  border-radius: 999px;
+  background: #a9b0c1;
+}
+
+.bulletText {
+  margin: 0;
+}
+
+.screenshotStrip {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 3px 0 9px;
+}
+
+.projectScreenshot {
+  width: 75px;
+  height: 149px;
+  flex: 0 0 75px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  object-fit: contain;
+  object-position: top center;
+  box-shadow: none;
+}
+
+.compactEntry {
+  align-items: center;
+}
+
+.compactEntry .entryBody {
+  min-height: 1px;
+}
+
+.bottomFade {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 104px;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 82%);
+}

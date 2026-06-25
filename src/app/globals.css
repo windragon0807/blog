@@ -629,38 +629,6 @@ html.dark:not([data-code-theme]) .notion-code pre.shiki span {
   animation: hero-fade-up 440ms cubic-bezier(0.22, 1, 0.36, 1) 280ms both;
 }
 
-@keyframes resume-skeleton-shimmer {
-  0% {
-    transform: translateX(0) skewX(-18deg);
-    opacity: 0;
-  }
-  18% {
-    opacity: 0.48;
-  }
-  100% {
-    transform: translateX(340%) skewX(-18deg);
-    opacity: 0;
-  }
-}
-
-@keyframes resume-skeleton-drift {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  50% {
-    transform: translate3d(10px, -10px, 0) scale(1.03);
-  }
-}
-
-.resume-skeleton-shimmer {
-  animation: resume-skeleton-shimmer 3.2s linear infinite;
-}
-
-.resume-skeleton-drift {
-  animation: resume-skeleton-drift 6.8s ease-in-out infinite;
-}
-
 .brand-link {
   position: relative;
   align-items: center;
@@ -905,8 +873,6 @@ html[data-logo-motion='slide'] .brand-animated-char {
   .post-hero-meta,
   .post-hero-title,
   .post-hero-description,
-  .resume-skeleton-shimmer,
-  .resume-skeleton-drift,
   .settings-item {
     animation: none !important;
   }
@@ -935,7 +901,4 @@ html[data-logo-motion='slide'] .brand-animated-char {
     transition: none !important;
   }
 
-  .resume-loading-shell .animate-pulse {
-    animation: none !important;
-  }
 }

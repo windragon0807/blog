@@ -1,71 +1,14 @@
 import type { Metadata } from 'next'
-import { ActionLink } from '@/components/common/ActionControl'
-import { Surface } from '@/components/common/Surface'
-import { ResumePdfActions } from '@/components/resume/ResumePdfActions'
-import { ResumePdfViewer } from '@/components/resume/ResumePdfViewer'
-import { getResumePdfUrl, isResumePdfStorageConfigured } from '@/lib/resume-pdf'
+import { ResumeShell } from '@/features/resume/components/ResumeShell'
 
 export const metadata: Metadata = {
   title: '이력서',
-  description: '관리자 페이지에서 업로드한 최신 이력서 PDF',
+  description: '정승룡 프론트엔드 개발자 이력서',
   alternates: {
     canonical: '/resume',
   },
 }
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
-
-function ResumeNotice({ title, description }: { title: string; description: string }) {
-  return (
-    <section className="mx-auto w-full max-w-5xl px-4 py-8">
-      <Surface className="rounded-2xl bg-white p-6 dark:bg-zinc-900">
-        <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">{title}</h1>
-        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">{description}</p>
-        <div className="mt-4">
-          <ActionLink
-            href="/ryong"
-            variant="outline"
-          >
-            관리자 페이지로 이동
-          </ActionLink>
-        </div>
-      </Surface>
-    </section>
-  )
-}
-
-export default async function ResumePage() {
-  if (!isResumePdfStorageConfigured()) {
-    return (
-      <ResumeNotice
-        title="이력서 저장소가 설정되지 않았습니다"
-        description="BLOB_READ_WRITE_TOKEN 환경변수를 설정한 뒤 /ryong 관리자 페이지에서 PDF를 업로드해주세요."
-      />
-    )
-  }
-
-  const pdfUrl = await getResumePdfUrl()
-
-  if (!pdfUrl) {
-    return (
-      <ResumeNotice
-        title="업로드된 이력서 PDF가 없습니다"
-        description="관리자 페이지(/ryong)에서 이력서 PDF를 업로드하면 이 페이지에 바로 표시됩니다."
-      />
-    )
-  }
-
-  return (
-    <section className="relative left-1/2 right-1/2 w-screen -translate-x-1/2">
-      <div className="mx-auto w-full max-w-[1280px] px-3 pt-0 pb-5 sm:px-6 sm:pt-4 sm:pb-8">
-        <div className="mx-auto w-full max-w-[1120px]">
-          <ResumePdfActions pdfUrl={pdfUrl} />
-        </div>
-        <div className="mx-auto mt-4 w-full max-w-[1120px]">
-          <ResumePdfViewer pdfUrl={pdfUrl} />
-        </div>
-      </div>
-    </section>
-  )
+export default function ResumePage() {
+  return <ResumeShell />
 }
