@@ -26,8 +26,7 @@
     "lint": "eslint",
     "registry:generate": "node scripts/generate-magicui-registry.cjs",
     "test:resume": "playwright test -c playwright.config.ts",
-    "test:resume:server": "RESUME_TEST_START_SERVER=1 playwright test -c playwright.config.ts",
-    "test:resume:update": "playwright test -c playwright.config.ts --update-snapshots"
+    "test:resume:server": "RESUME_TEST_START_SERVER=1 playwright test -c playwright.config.ts"
   },
   "dependencies": {
     "@notionhq/client": "^2.3.0",

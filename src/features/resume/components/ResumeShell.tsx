@@ -1,15 +1,8 @@
 'use client'
 
-import { BookOpen, FileDown, Loader2 } from 'lucide-react'
-import Link from 'next/link'
+import { FileDown, Loader2 } from 'lucide-react'
 import { useCallback, useLayoutEffect, useRef, useState } from 'react'
-import { IconButton, iconButtonClassName } from '@/components/common/IconButton'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { IconButton } from '@/components/common/IconButton'
 import {
   RESUME_DOCUMENT_HEIGHT,
   RESUME_DOCUMENT_WIDTH,
@@ -206,21 +199,6 @@ export function ResumeShell() {
               }}
             >
               <div className="absolute right-3 top-3 z-10 flex gap-2">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Link
-                        href="/resume/readable"
-                        aria-label="읽기용 이력서 보기"
-                        className={`${iconButtonClassName} inline-grid h-9 w-9 place-items-center rounded-xl border border-zinc-200/90 bg-white/80 text-zinc-500 shadow-[0_12px_24px_-18px_rgba(15,23,42,0.55)] backdrop-blur-md hover:bg-white/95 hover:text-zinc-800 dark:border-zinc-700/80 dark:bg-zinc-900/70 dark:text-zinc-300 dark:hover:bg-zinc-800/90 dark:hover:text-zinc-100`}
-                      >
-                        <span className="sr-only">읽기용 이력서 보기</span>
-                        <BookOpen className="h-4 w-4" aria-hidden="true" />
-                      </Link>
-                    </TooltipTrigger>
-                    <TooltipContent>읽기용 이력서 보기</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
                 <IconButton
                   type="button"
                   label={isGenerating ? 'PDF 생성 중' : 'PDF 다운로드'}

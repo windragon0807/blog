@@ -226,36 +226,3 @@ test.describe('resume PDF regression', () => {
     expect(extractedText).toContain('TOPIA Live')
   })
 })
-
-test.describe('resume readable view', () => {
-  test('is discoverable from the PDF preview shell', async ({ page }) => {
-    await waitForResumeAssets(page)
-
-    await expect(
-      page.getByRole('link', { name: '읽기용 이력서 보기' })
-    ).toHaveAttribute('href', '/resume/readable')
-  })
-
-  test('renders a separated readable route without changing the PDF route', async ({
-    page,
-  }) => {
-    await page.goto('/resume/readable')
-
-    await expect(page.getByRole('heading', { name: '정승룡' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: '경력' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: '프로젝트' })).toBeVisible()
-    await expect(
-      page.getByRole('link', { name: /github\.com\/windragon0807/i })
-    ).toHaveAttribute('href', 'https://github.com/windragon0807')
-    await expect(page.getByRole('link', { name: /ryong\.blog/i })).toHaveAttribute(
-      'href',
-      'https://ryong.blog/'
-    )
-
-    const width = await page.locator('[data-resume-readable-document]').evaluate(
-      (element) => element.getBoundingClientRect().width
-    )
-
-    expect(width).toBeLessThanOrEqual(1000)
-  })
-})
