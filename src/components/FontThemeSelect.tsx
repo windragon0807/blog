@@ -43,17 +43,33 @@ export function FontThemeSelect({ className = '' }: FontThemeSelectProps) {
         onValueChange={(value) => setSelectedTheme(value as FontThemeName)}
       >
         <SelectTrigger aria-label="폰트 선택" className={cn('h-10 w-full text-sm', className)}>
-          <SelectValue placeholder="폰트를 선택하세요" />
+          <SelectValue placeholder="폰트를 선택하세요">
+            {renderFontThemeOption(selectedTheme)}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent position="popper" data-settings-menu-portal="">
           {FONT_THEME_OPTIONS.map((theme) => (
-            <SelectItem key={theme.value} value={theme.value}>
-              {theme.label}
+            <SelectItem
+              key={theme.value}
+              value={theme.value}
+              style={{ fontFamily: getFontThemeStack(theme.value) }}
+            >
+              {renderFontThemeOption(theme.value)}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
     </label>
+  )
+}
+
+function renderFontThemeOption(theme: FontThemeName) {
+  const option = FONT_THEME_OPTIONS.find((item) => item.value === theme)
+
+  return (
+    <span style={{ fontFamily: getFontThemeStack(theme) }}>
+      {option?.label ?? theme}
+    </span>
   )
 }
 
