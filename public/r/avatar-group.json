@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "avatar-group",
+  "type": "registry:ui",
+  "title": "Avatar Group",
+  "description": "A stacked avatar group with overflow count.",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "src/components/magicui/avatar-group.tsx",
+      "content": "'use client'\n\nimport { cn } from '@/lib/utils'\n\nexport interface AvatarGroupItem {\n  src?: string\n  name: string\n  fallback?: string\n}\n\ninterface AvatarGroupProps {\n  items: AvatarGroupItem[]\n  max?: number\n  className?: string\n}\n\nexport function AvatarGroup({ items, max = 5, className }: AvatarGroupProps) {\n  const visible = items.slice(0, max)\n  const extra = Math.max(items.length - visible.length, 0)\n\n  return (\n    <div className={cn('flex items-center -space-x-3', className)}>\n      {visible.map((item) => (\n        <div\n          key={item.name}\n          className=\"flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-zinc-100 text-sm font-semibold text-zinc-700 shadow-sm dark:border-zinc-950 dark:bg-zinc-800 dark:text-zinc-200\"\n          title={item.name}\n        >\n          {item.src ? (\n            // eslint-disable-next-line @next/next/no-img-element\n            <img src={item.src} alt={item.name} className=\"h-full w-full object-cover\" />\n          ) : (\n            item.fallback ?? item.name.slice(0, 2).toUpperCase()\n          )}\n        </div>\n      ))}\n      {extra > 0 && (\n        <div className=\"flex h-12 w-12 items-center justify-center rounded-full border-2 border-white bg-[var(--theme-accent-current)] text-sm font-semibold text-[var(--background)] shadow-sm dark:border-zinc-950\">\n          +{extra}\n        </div>\n      )}\n    </div>\n  )\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

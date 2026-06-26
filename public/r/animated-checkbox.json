@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "animated-checkbox",
+  "type": "registry:ui",
+  "title": "Animated Checkbox",
+  "description": "A native checkbox with animated check state.",
+  "dependencies": [
+    "motion",
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "src/components/magicui/animated-checkbox.tsx",
+      "content": "'use client'\n\nimport { useId, useState } from 'react'\nimport { motion } from 'motion/react'\nimport { Check } from 'lucide-react'\nimport { cn } from '@/lib/utils'\n\ninterface AnimatedCheckboxProps {\n  label?: string\n  defaultChecked?: boolean\n  checked?: boolean\n  onCheckedChange?: (checked: boolean) => void\n  className?: string\n}\n\nexport function AnimatedCheckbox({\n  label = 'Accept terms',\n  defaultChecked = false,\n  checked,\n  onCheckedChange,\n  className,\n}: AnimatedCheckboxProps) {\n  const id = useId()\n  const [innerChecked, setInnerChecked] = useState(defaultChecked)\n  const active = checked ?? innerChecked\n\n  const update = (next: boolean) => {\n    setInnerChecked(next)\n    onCheckedChange?.(next)\n  }\n\n  return (\n    <label\n      htmlFor={id}\n      className={cn('inline-flex cursor-pointer items-center gap-3 text-sm font-medium', className)}\n    >\n      <input\n        id={id}\n        type=\"checkbox\"\n        checked={active}\n        onChange={(event) => update(event.target.checked)}\n        className=\"sr-only\"\n      />\n      <span\n        className={cn(\n          'flex h-6 w-6 items-center justify-center rounded-md border transition-colors',\n          active\n            ? 'border-[var(--theme-accent-current)] bg-[var(--theme-accent-current)] text-[var(--background)]'\n            : 'border-zinc-300 bg-white text-transparent dark:border-zinc-700 dark:bg-zinc-950'\n        )}\n      >\n        {active && (\n          <motion.span initial={{ scale: 0, rotate: -20 }} animate={{ scale: 1, rotate: 0 }}>\n            <Check className=\"h-4 w-4\" />\n          </motion.span>\n        )}\n      </span>\n      {label}\n    </label>\n  )\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

@@ -167,6 +167,7 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
       style={{
         display: 'inline',
         fontFamily: '"Roboto Flex", sans-serif',
+        fontVariationSettings: fromFontVariationSettings,
         ...style
       }}
       className={className}
@@ -184,7 +185,9 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
                 }}
                 style={{
                   display: 'inline-block',
-                  fontVariationSettings: interpolatedSettingsRef.current[currentLetterIndex]
+                  fontVariationSettings:
+                    interpolatedSettingsRef.current[currentLetterIndex] ??
+                    fromFontVariationSettings
                 }}
                 aria-hidden="true"
               >

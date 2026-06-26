@@ -1,6 +1,6 @@
 'use client'
 
-/* eslint-disable react-hooks/set-state-in-effect, react-hooks/purity, @next/next/no-img-element */
+/* eslint-disable react-hooks/set-state-in-effect, @next/next/no-img-element */
 
 import { motion, useMotionValue, useTransform, type PanInfo } from 'motion/react';
 import { useState, useEffect } from 'react';
@@ -61,6 +61,11 @@ interface StackProps {
   pauseOnHover?: boolean;
   mobileClickOnly?: boolean;
   mobileBreakpoint?: number;
+}
+
+function getDeterministicRotation(id: number, index: number) {
+  const value = Math.sin((id + 1) * 97.13 + index * 31.79) * 10000;
+  return (value - Math.floor(value)) * 10 - 5;
 }
 
 export function Stack({
@@ -177,7 +182,7 @@ export function Stack({
       onMouseLeave={() => pauseOnHover && setIsPaused(false)}
     >
       {stack.map((card, index) => {
-        const randomRotate = randomRotation ? Math.random() * 10 - 5 : 0;
+        const randomRotate = randomRotation ? getDeterministicRotation(card.id, index) : 0;
         return (
           <CardRotate
             key={card.id}

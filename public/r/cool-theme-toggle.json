@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "cool-theme-toggle",
+  "type": "registry:ui",
+  "title": "Cool Theme Toggle",
+  "description": "A playful sun and moon toggle.",
+  "dependencies": [
+    "motion",
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "src/components/magicui/cool-theme-toggle.tsx",
+      "content": "'use client'\n\nimport { useState } from 'react'\nimport { Moon, Sun } from 'lucide-react'\nimport { motion } from 'motion/react'\nimport { cn } from '@/lib/utils'\n\ninterface CoolThemeToggleProps {\n  defaultDark?: boolean\n  onChange?: (dark: boolean) => void\n  className?: string\n}\n\nexport function CoolThemeToggle({\n  defaultDark = false,\n  onChange,\n  className,\n}: CoolThemeToggleProps) {\n  const [dark, setDark] = useState(defaultDark)\n\n  const update = () => {\n    const next = !dark\n    setDark(next)\n    onChange?.(next)\n  }\n\n  return (\n    <button\n      type=\"button\"\n      onClick={update}\n      className={cn(\n        'relative h-12 w-24 overflow-hidden rounded-full border border-zinc-200 bg-sky-100 p-1 transition-colors data-[dark=true]:bg-zinc-950 dark:border-zinc-800',\n        className\n      )}\n      data-dark={dark}\n      aria-pressed={dark}\n    >\n      <motion.span\n        className=\"absolute inset-y-1 left-1 flex h-10 w-10 items-center justify-center rounded-full bg-white text-amber-500 shadow-sm\"\n        animate={{ x: dark ? 48 : 0, rotate: dark ? 180 : 0 }}\n        transition={{ type: 'spring', stiffness: 300, damping: 24 }}\n      >\n        {dark ? <Moon className=\"h-4 w-4 text-zinc-700\" /> : <Sun className=\"h-4 w-4\" />}\n      </motion.span>\n      <span className=\"absolute left-4 top-3 h-1 w-1 rounded-full bg-white/80\" />\n      <span className=\"absolute right-5 top-5 h-1.5 w-1.5 rounded-full bg-white/70\" />\n    </button>\n  )\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

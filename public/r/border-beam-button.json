@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "border-beam-button",
+  "type": "registry:ui",
+  "title": "Border Beam Button",
+  "description": "A button with an animated conic border beam.",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "src/components/magicui/border-beam-button.tsx",
+      "content": "'use client'\n\nimport type { ButtonHTMLAttributes } from 'react'\nimport { cn } from '@/lib/utils'\n\ninterface BorderBeamButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {\n  children: React.ReactNode\n}\n\nexport function BorderBeamButton({\n  children,\n  className,\n  ...props\n}: BorderBeamButtonProps) {\n  return (\n    <button\n      type=\"button\"\n      className={cn(\n        'relative inline-flex h-11 items-center justify-center overflow-hidden rounded-xl bg-zinc-950 px-6 text-sm font-semibold text-white shadow-[0_18px_44px_-28px_rgba(24,24,27,0.75)] dark:bg-white dark:text-zinc-950',\n        className\n      )}\n      {...props}\n    >\n      <span className=\"absolute inset-0 rounded-[inherit] p-px [background:conic-gradient(from_0deg,transparent_0_55%,#60a5fa,#c084fc,#f9a8d4,transparent_82%)] motion-safe:animate-spin [animation-duration:2.8s]\" />\n      <span className=\"absolute inset-px rounded-[11px] bg-zinc-950 dark:bg-white\" />\n      <span className=\"relative\">{children}</span>\n    </button>\n  )\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

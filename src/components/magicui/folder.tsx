@@ -141,7 +141,11 @@ const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = []
                 style={{
                   ...(!open ? {} : { transform: transformStyle }),
                   backgroundColor: i === 0 ? paper1 : i === 1 ? paper2 : paper3,
-                  borderRadius: '10px'
+                  border: '1px solid rgba(148, 163, 184, 0.55)',
+                  borderRadius: '10px',
+                  boxShadow: open
+                    ? '0 14px 30px rgba(15, 23, 42, 0.16)'
+                    : '0 4px 12px rgba(15, 23, 42, 0.08)'
                 }}
               >
                 {item}

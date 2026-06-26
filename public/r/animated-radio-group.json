@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "animated-radio-group",
+  "type": "registry:ui",
+  "title": "Animated Radio Group",
+  "description": "A native radio group with animated selection dot.",
+  "dependencies": [
+    "motion"
+  ],
+  "files": [
+    {
+      "path": "src/components/magicui/animated-radio-group.tsx",
+      "content": "'use client'\n\nimport { useId, useState } from 'react'\nimport { motion } from 'motion/react'\nimport { cn } from '@/lib/utils'\n\nexport interface AnimatedRadioOption {\n  label: string\n  value: string\n}\n\ninterface AnimatedRadioGroupProps {\n  options: AnimatedRadioOption[]\n  defaultValue?: string\n  value?: string\n  onValueChange?: (value: string) => void\n  className?: string\n}\n\nexport function AnimatedRadioGroup({\n  options,\n  defaultValue,\n  value,\n  onValueChange,\n  className,\n}: AnimatedRadioGroupProps) {\n  const name = useId()\n  const [innerValue, setInnerValue] = useState(defaultValue ?? options[0]?.value)\n  const activeValue = value ?? innerValue\n\n  const update = (next: string) => {\n    setInnerValue(next)\n    onValueChange?.(next)\n  }\n\n  return (\n    <div className={cn('grid gap-2', className)} role=\"radiogroup\">\n      {options.map((option) => {\n        const active = activeValue === option.value\n\n        return (\n          <label\n            key={option.value}\n            className=\"flex cursor-pointer items-center gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm font-medium dark:border-zinc-800 dark:bg-zinc-950\"\n          >\n            <input\n              type=\"radio\"\n              name={name}\n              value={option.value}\n              checked={active}\n              onChange={() => update(option.value)}\n              className=\"sr-only\"\n            />\n            <span className=\"flex h-5 w-5 items-center justify-center rounded-full border border-zinc-300 dark:border-zinc-700\">\n              {active && (\n                <motion.span\n                  layoutId={`${name}-radio-dot`}\n                  className=\"h-2.5 w-2.5 rounded-full bg-[var(--theme-accent-current)]\"\n                />\n              )}\n            </span>\n            {option.label}\n          </label>\n        )\n      })}\n    </div>\n  )\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

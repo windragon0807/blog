@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sparkle-cursor",
+  "type": "registry:ui",
+  "title": "Sparkle Cursor",
+  "description": "A local cursor sparkle effect for a bounded surface.",
+  "dependencies": [
+    "motion"
+  ],
+  "files": [
+    {
+      "path": "src/components/magicui/sparkle-cursor.tsx",
+      "content": "'use client'\n\nimport { useState } from 'react'\nimport { motion, AnimatePresence } from 'motion/react'\nimport { cn } from '@/lib/utils'\n\ninterface Sparkle {\n  id: number\n  x: number\n  y: number\n}\n\ninterface SparkleCursorProps {\n  children?: React.ReactNode\n  color?: string\n  className?: string\n}\n\nexport function SparkleCursor({\n  children,\n  color = 'var(--theme-accent-current)',\n  className,\n}: SparkleCursorProps) {\n  const [sparkles, setSparkles] = useState<Sparkle[]>([])\n\n  const addSparkle = (event: React.PointerEvent<HTMLDivElement>) => {\n    const rect = event.currentTarget.getBoundingClientRect()\n    const id = Date.now()\n    const next = {\n      id,\n      x: event.clientX - rect.left,\n      y: event.clientY - rect.top,\n    }\n    setSparkles((current) => [...current.slice(-10), next])\n    window.setTimeout(() => {\n      setSparkles((current) => current.filter((sparkle) => sparkle.id !== id))\n    }, 700)\n  }\n\n  return (\n    <div\n      className={cn('relative h-full w-full overflow-hidden rounded-[inherit]', className)}\n      onPointerMove={addSparkle}\n    >\n      {children}\n      <AnimatePresence>\n        {sparkles.map((sparkle) => (\n          <motion.span\n            key={sparkle.id}\n            className=\"pointer-events-none absolute h-2 w-2 rounded-full\"\n            style={{ left: sparkle.x, top: sparkle.y, backgroundColor: color }}\n            initial={{ scale: 0, opacity: 1 }}\n            animate={{ scale: 1.8, opacity: 0, y: -12 }}\n            exit={{ opacity: 0 }}\n            transition={{ duration: 0.7 }}\n          />\n        ))}\n      </AnimatePresence>\n    </div>\n  )\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

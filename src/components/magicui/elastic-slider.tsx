@@ -140,6 +140,7 @@ const Slider: React.FC<SliderProps> = ({
           style={{
             x: useTransform(() => (region === 'left' ? -overflow.get() / scale.get() : 0))
           }}
+          className="text-zinc-500 dark:text-zinc-400"
         >
           {leftIcon}
         </motion.div>
@@ -176,8 +177,11 @@ const Slider: React.FC<SliderProps> = ({
             }}
             className="flex flex-grow"
           >
-            <div className="relative h-full flex-grow overflow-hidden rounded-full bg-gray-400">
-              <div className="absolute h-full bg-gray-500 rounded-full" style={{ width: `${getRangePercentage()}%` }} />
+            <div className="relative h-full flex-grow overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
+              <div
+                className="absolute h-full rounded-full bg-[var(--theme-accent-current)]"
+                style={{ width: `${getRangePercentage()}%` }}
+              />
             </div>
           </motion.div>
         </div>
@@ -190,11 +194,12 @@ const Slider: React.FC<SliderProps> = ({
           style={{
             x: useTransform(() => (region === 'right' ? overflow.get() / scale.get() : 0))
           }}
+          className="text-zinc-500 dark:text-zinc-400"
         >
           {rightIcon}
         </motion.div>
       </motion.div>
-      <p className="absolute text-gray-400 transform -translate-y-4 text-xs font-medium tracking-wide">
+      <p className="absolute -translate-y-4 transform text-xs font-medium tracking-wide text-zinc-500 dark:text-zinc-400">
         {Math.round(value)}
       </p>
     </>

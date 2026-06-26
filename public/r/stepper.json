@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "stepper",
+  "type": "registry:ui",
+  "title": "Stepper",
+  "description": "A horizontal stepper with selectable steps.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "src/components/magicui/stepper.tsx",
+      "content": "'use client'\n\nimport { useState } from 'react'\nimport { Check } from 'lucide-react'\nimport { cn } from '@/lib/utils'\n\nexport interface StepperItem {\n  title: string\n  description?: string\n}\n\ninterface StepperProps {\n  steps: StepperItem[]\n  defaultStep?: number\n  className?: string\n}\n\nexport function Stepper({ steps, defaultStep = 0, className }: StepperProps) {\n  const [active, setActive] = useState(defaultStep)\n\n  return (\n    <div className={cn('w-full max-w-xl', className)}>\n      <div className=\"flex items-start justify-between gap-3\">\n        {steps.map((step, index) => {\n          const done = index < active\n          const selected = index === active\n\n          return (\n            <button\n              key={step.title}\n              type=\"button\"\n              className=\"group flex min-w-0 flex-1 flex-col items-center gap-2 text-center\"\n              onClick={() => setActive(index)}\n            >\n              <span\n                className={cn(\n                  'flex h-10 w-10 items-center justify-center rounded-full border text-sm font-semibold transition-colors',\n                  done || selected\n                    ? 'border-[var(--theme-accent-current)] bg-[var(--theme-accent-current)] text-[var(--background)]'\n                    : 'border-zinc-200 bg-white text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950'\n                )}\n              >\n                {done ? <Check className=\"h-4 w-4\" /> : index + 1}\n              </span>\n              <span className=\"text-sm font-medium text-zinc-950 dark:text-zinc-50\">{step.title}</span>\n              {step.description && (\n                <span className=\"text-xs leading-4 text-zinc-500 dark:text-zinc-400\">\n                  {step.description}\n                </span>\n              )}\n            </button>\n          )\n        })}\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

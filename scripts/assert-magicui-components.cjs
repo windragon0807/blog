@@ -13,7 +13,6 @@ const requiredNames = [
   'pointer',
   'file-tree',
   'animated-circular-progress-bar',
-  'backlight',
   'curved-loop',
   'variable-proximity',
   'click-spark',
@@ -42,6 +41,35 @@ const requiredNames = [
   'dia-text-reveal',
   'morphing-text',
   'highlighter',
+  'background-boxes',
+  'keyboard',
+  'pixelated-canvas',
+  'wobble-card',
+  'comet-card',
+  'floating-dock',
+  'signup-form',
+  'placeholders-and-vanish-input',
+  'gooey-input',
+  'link-preview',
+  '3d-marquee',
+  'avatar-group',
+  'animated-checkbox',
+  'file-upload',
+  'animated-radio-group',
+  'playful-todolist',
+  'border-beam-button',
+  'slide-arrow-button',
+  'flower-menu',
+  'speed-dial',
+  'kinetic-center-build',
+  'text-flip',
+  'cool-theme-toggle',
+  'toggle-theme',
+  '3d-image-carousel',
+  '3d-image-slider',
+  'sparkle-cursor',
+  'stepper',
+  'data-table',
 ]
 const requiredCategories = [
   "id: 'buttons'",
@@ -52,10 +80,24 @@ const requiredCategories = [
   "name: 'Animations'",
   "id: 'backgrounds'",
   "name: 'Backgrounds'",
+  "id: 'cards'",
+  "name: 'Cards'",
+  "id: 'navigation'",
+  "name: 'Navigation'",
+  "id: 'forms'",
+  "name: 'Forms'",
   "id: 'effects'",
   "name: 'Effects'",
+  "id: 'fabs'",
+  "name: 'FABs'",
   "id: 'text'",
   "name: 'Text'",
+  "id: 'media'",
+  "name: 'Media'",
+  "id: 'controls'",
+  "name: 'Controls'",
+  "id: 'data-display'",
+  "name: 'Data Display'",
 ]
 const removedNames = [
   'action-button',
@@ -66,11 +108,11 @@ const removedNames = [
   'text-animate',
   'animated-shiny-text',
   'animated-gradient-text',
+  'backlight',
 ]
 const removedCategories = [
   'core',
   'surfaces',
-  'navigation',
   'feedback',
   'typography',
 ]
@@ -88,6 +130,24 @@ const motionNames = [
   'number-ticker',
   'dia-text-reveal',
   'highlighter',
+  'background-boxes',
+  'keyboard',
+  'wobble-card',
+  'comet-card',
+  'floating-dock',
+  'placeholders-and-vanish-input',
+  'gooey-input',
+  'link-preview',
+  '3d-marquee',
+  'animated-checkbox',
+  'animated-radio-group',
+  'playful-todolist',
+  'flower-menu',
+  'speed-dial',
+  'kinetic-center-build',
+  'text-flip',
+  'cool-theme-toggle',
+  'sparkle-cursor',
 ]
 const oglNames = ['strands', 'circular-gallery', 'aurora']
 const reactThreeNames = ['lanyard']
@@ -353,6 +413,38 @@ const meteorsSource = fs.readFileSync(
   path.join(root, 'src/components/magicui/meteors.tsx'),
   'utf8'
 )
+const carouselSource = fs.readFileSync(
+  path.join(root, 'src/components/magicui/carousel.tsx'),
+  'utf8'
+)
+const circularGallerySource = fs.readFileSync(
+  path.join(root, 'src/components/magicui/circular-gallery.tsx'),
+  'utf8'
+)
+const borderGlowSource = fs.readFileSync(
+  path.join(root, 'src/components/magicui/border-glow.tsx'),
+  'utf8'
+)
+const folderSource = fs.readFileSync(
+  path.join(root, 'src/components/magicui/folder.tsx'),
+  'utf8'
+)
+const elasticSliderSource = fs.readFileSync(
+  path.join(root, 'src/components/magicui/elastic-slider.tsx'),
+  'utf8'
+)
+const stackSource = fs.readFileSync(
+  path.join(root, 'src/components/magicui/stack.tsx'),
+  'utf8'
+)
+const glassSurfaceSource = fs.readFileSync(
+  path.join(root, 'src/components/magicui/glass-surface.tsx'),
+  'utf8'
+)
+const shinyButtonSource = fs.readFileSync(
+  path.join(root, 'src/components/magicui/shiny-button.tsx'),
+  'utf8'
+)
 const highlighterSource = fs.readFileSync(
   path.join(root, 'src/components/magicui/highlighter.tsx'),
   'utf8'
@@ -584,6 +676,91 @@ assert(
     previewsSource.includes('relative flex h-48') &&
     previewsSource.includes('<Pointer>'),
   'Pointer preview should bind each cursor to the visible bordered tile'
+)
+assert(
+  !previewsSource.includes('Backlight') &&
+    !dataSource.includes("slug: 'backlight'") &&
+    !fs.existsSync(path.join(root, 'public/r/backlight.json')),
+  'Backlight should be fully removed from previews, data, and registry output'
+)
+assert(
+  dataSource.includes('https://reactbits.dev${path}'),
+  'ReactBits references should be generated from the reactbits.dev base URL'
+)
+for (const referencePath of [
+  "'glass-surface': '/components/glass-surface'",
+  "stack: '/components/stack'",
+  "counter: '/components/counter?value=17.8'",
+  "aurora: '/backgrounds/aurora'",
+]) {
+  assert(
+    dataSource.includes(referencePath),
+    `ReactBits reference path missing or stale: ${referencePath}`
+  )
+}
+assert(
+  previewsSource.includes('cards={stackCards}') &&
+    previewsSource.includes('aria-label="Increase counter value"') &&
+    previewsSource.includes('aria-label="Decrease counter value"') &&
+    previewsSource.includes('backgroundColor="var(--background)"'),
+  'Component previews should include fixed Stack cards, Counter controls, and light BorderGlow background'
+)
+assert(
+  dataSource.includes('Decrease') &&
+    dataSource.includes('Number((current - 1).toFixed(1))') &&
+    dataSource.includes('type="button"'),
+  'Counter usage snippet should include explicit increment and decrement buttons'
+)
+assert(
+  shinyButtonSource.includes('items-center justify-center') &&
+    shinyButtonSource.includes('text-current') &&
+    !shinyButtonSource.includes('hover:shadow'),
+  'Shiny Button should keep centered readable text without hover shadow effects'
+)
+assert(
+  circularGallerySource.includes('bend = 0.25') &&
+    circularGallerySource.includes("textColor = '#71717a'") &&
+    circularGallerySource.includes('scrollSpeed = 0.75') &&
+    circularGallerySource.includes('scrollEase = 0.08'),
+  'Circular Gallery defaults should use a lighter, less wobbly configuration'
+)
+assert(
+  carouselSource.includes('border border-zinc-200 bg-white') &&
+    carouselSource.includes('text-zinc-500 dark:text-zinc-400') &&
+    !carouselSource.includes("border border-[#222]"),
+  'Carousel should use light-mode gray borders and text instead of black cards'
+)
+assert(
+  borderGlowSource.includes('border border-zinc-200 dark:border-white/15'),
+  'Border Glow should have a visible light-mode gray border'
+)
+assert(
+  borderGlowSource.includes("backgroundColor = 'var(--background)'"),
+  'Border Glow default background should follow the app background instead of a dark card'
+)
+assert(
+  carouselSource.includes('focus-visible:outline-zinc-500 dark:focus-visible:outline-white'),
+  'Carousel pagination dots should have visible focus outlines in light and dark mode'
+)
+assert(
+  folderSource.includes("border: '1px solid rgba(148, 163, 184, 0.55)'") &&
+    folderSource.includes('boxShadow: open'),
+  'Folder papers should be distinguishable when expanded'
+)
+assert(
+  elasticSliderSource.includes('bg-[var(--theme-accent-current)]') &&
+    elasticSliderSource.includes('bg-zinc-200 dark:bg-zinc-800'),
+  'Elastic Slider should use theme progress color and a light gray track'
+)
+assert(
+  !stackSource.includes('Math.random()') &&
+    stackSource.includes('getDeterministicRotation'),
+  'Stack random rotation should be deterministic to avoid hydration mismatch'
+)
+assert(
+  glassSurfaceSource.includes('const [isClient, setIsClient]') &&
+    glassSurfaceSource.includes('const backdropFilterSupported = isClient && supportsBackdropFilter()'),
+  'Glass Surface should delay browser capability checks until after mount'
 )
 assert(
   meteorsSource.includes('[animation-fill-mode:backwards]'),

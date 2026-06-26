@@ -30,31 +30,31 @@ const DEFAULT_ITEMS: CarouselItem[] = [
     title: 'Text Animations',
     description: 'Cool text animations for your projects.',
     id: 1,
-    icon: <FiFileText className="h-[16px] w-[16px] text-white" />
+    icon: <FiFileText className="h-[16px] w-[16px] text-zinc-700 dark:text-white" />
   },
   {
     title: 'Animations',
     description: 'Smooth animations for your projects.',
     id: 2,
-    icon: <FiCircle className="h-[16px] w-[16px] text-white" />
+    icon: <FiCircle className="h-[16px] w-[16px] text-zinc-700 dark:text-white" />
   },
   {
     title: 'Components',
     description: 'Reusable components for your projects.',
     id: 3,
-    icon: <FiLayers className="h-[16px] w-[16px] text-white" />
+    icon: <FiLayers className="h-[16px] w-[16px] text-zinc-700 dark:text-white" />
   },
   {
     title: 'Backgrounds',
     description: 'Beautiful backgrounds and patterns for your projects.',
     id: 4,
-    icon: <FiLayout className="h-[16px] w-[16px] text-white" />
+    icon: <FiLayout className="h-[16px] w-[16px] text-zinc-700 dark:text-white" />
   },
   {
     title: 'Common UI',
     description: 'Common UI components are coming soon!',
     id: 5,
-    icon: <FiCode className="h-[16px] w-[16px] text-white" />
+    icon: <FiCode className="h-[16px] w-[16px] text-zinc-700 dark:text-white" />
   }
 ];
 
@@ -83,8 +83,8 @@ function CarouselItem({ item, index, itemWidth, round, trackItemOffset, x, trans
       key={`${item?.id ?? index}-${index}`}
       className={`relative shrink-0 flex flex-col ${
         round
-          ? 'items-center justify-center text-center bg-[#120F17] border-0'
-          : 'items-start justify-between bg-[#222] border border-[#222] rounded-[12px]'
+          ? 'items-center justify-center border-0 bg-zinc-950 text-center text-white dark:bg-[#120F17]'
+          : 'items-start justify-between rounded-[12px] border border-zinc-200 bg-white text-zinc-950 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50'
       } overflow-hidden cursor-grab active:cursor-grabbing`}
       style={{
         width: itemWidth,
@@ -95,13 +95,27 @@ function CarouselItem({ item, index, itemWidth, round, trackItemOffset, x, trans
       transition={transition}
     >
       <div className={`${round ? 'p-0 m-0' : 'mb-4 p-5'}`}>
-        <span className="flex h-[28px] w-[28px] items-center justify-center rounded-full bg-[#120F17]">
+        <span
+          className={`flex h-[28px] w-[28px] items-center justify-center rounded-full ${
+            round
+              ? 'bg-white/10'
+              : 'bg-zinc-100 ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-zinc-800'
+          }`}
+        >
           {item.icon}
         </span>
       </div>
       <div className="p-5">
-        <div className="mb-1 font-black text-lg text-white">{item.title}</div>
-        <p className="text-sm text-white">{item.description}</p>
+        <div
+          className={`mb-1 text-lg font-semibold ${
+            round ? 'text-white' : 'text-zinc-950 dark:text-zinc-50'
+          }`}
+        >
+          {item.title}
+        </div>
+        <p className={round ? 'text-sm text-white/72' : 'text-sm text-zinc-500 dark:text-zinc-400'}>
+          {item.description}
+        </p>
       </div>
     </motion.div>
   );
@@ -243,7 +257,9 @@ export function Carousel({
     <div
       ref={containerRef}
       className={`relative overflow-hidden p-4 ${
-        round ? 'rounded-full border border-white' : 'rounded-[24px] border border-[#222]'
+        round
+          ? 'rounded-full border border-zinc-200 bg-white dark:border-white/20 dark:bg-zinc-950'
+          : 'rounded-[24px] border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-950'
       }`}
       style={{
         width: `${baseWidth}px`,
@@ -288,14 +304,14 @@ export function Carousel({
               key={index}
               aria-label={`Go to slide ${index + 1}`}
               aria-current={activeIndex === index}
-              className={`h-2 w-2 rounded-full cursor-pointer border-0 p-0 appearance-none transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+              className={`h-2 w-2 rounded-full cursor-pointer border-0 p-0 appearance-none transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-500 dark:focus-visible:outline-white ${
                 activeIndex === index
                   ? round
                     ? 'bg-white'
-                    : 'bg-[#333333]'
+                    : 'bg-[var(--theme-accent-current)]'
                   : round
                     ? 'bg-[#555]'
-                    : 'bg-[rgba(51,51,51,0.4)]'
+                    : 'bg-zinc-300 dark:bg-zinc-700'
               }`}
               animate={{
                 scale: activeIndex === index ? 1.2 : 1

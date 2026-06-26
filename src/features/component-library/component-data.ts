@@ -3,8 +3,15 @@ export type ComponentCategoryId =
   | 'components'
   | 'animations'
   | 'backgrounds'
+  | 'cards'
+  | 'navigation'
+  | 'forms'
   | 'effects'
+  | 'fabs'
   | 'text'
+  | 'media'
+  | 'controls'
+  | 'data-display'
 
 export type ComponentPreviewKind =
   | 'ripple-button'
@@ -15,7 +22,6 @@ export type ComponentPreviewKind =
   | 'pointer'
   | 'file-tree'
   | 'animated-circular-progress-bar'
-  | 'backlight'
   | 'curved-loop'
   | 'variable-proximity'
   | 'click-spark'
@@ -44,6 +50,35 @@ export type ComponentPreviewKind =
   | 'dia-text-reveal'
   | 'morphing-text'
   | 'highlighter'
+  | 'background-boxes'
+  | 'keyboard'
+  | 'pixelated-canvas'
+  | 'wobble-card'
+  | 'comet-card'
+  | 'floating-dock'
+  | 'signup-form'
+  | 'placeholders-and-vanish-input'
+  | 'gooey-input'
+  | 'link-preview'
+  | '3d-marquee'
+  | 'avatar-group'
+  | 'animated-checkbox'
+  | 'file-upload'
+  | 'animated-radio-group'
+  | 'playful-todolist'
+  | 'border-beam-button'
+  | 'slide-arrow-button'
+  | 'flower-menu'
+  | 'speed-dial'
+  | 'kinetic-center-build'
+  | 'text-flip'
+  | 'cool-theme-toggle'
+  | 'toggle-theme'
+  | '3d-image-carousel'
+  | '3d-image-slider'
+  | 'sparkle-cursor'
+  | 'stepper'
+  | 'data-table'
 
 export interface ComponentCategory {
   id: ComponentCategoryId
@@ -94,6 +129,7 @@ interface ComponentSampleInput {
   title: string
   description: string
   dependencies?: readonly string[]
+  reference?: ComponentReference
   usage: string
   props: readonly ComponentProp[]
 }
@@ -119,12 +155,45 @@ const childrenProp = prop(
   'Content rendered inside the component.'
 )
 
+const reactBitsReferencePaths: Partial<Record<ComponentPreviewKind, string>> = {
+  'curved-loop': '/text-animations/curved-loop',
+  'variable-proximity': '/text-animations/variable-proximity',
+  'click-spark': '/animations/click-spark',
+  magnet: '/animations/magnet',
+  strands: '/animations/strands',
+  'circular-gallery': '/components/circular-gallery',
+  stack: '/components/stack',
+  'glass-surface': '/components/glass-surface',
+  folder: '/components/folder',
+  lanyard: '/components/lanyard',
+  carousel: '/components/carousel',
+  'border-glow': '/components/border-glow',
+  'elastic-slider': '/components/elastic-slider',
+  counter: '/components/counter?value=17.8',
+  aurora: '/backgrounds/aurora',
+  'dot-field': '/backgrounds/dot-field',
+}
+
+function reactBitsReference(slug: ComponentPreviewKind, title: string) {
+  const path = reactBitsReferencePaths[slug]
+
+  if (!path) {
+    return undefined
+  }
+
+  return {
+    label: `ReactBits ${title}`,
+    url: `https://reactbits.dev${path}`,
+  } satisfies ComponentReference
+}
+
 function createSample({
   slug,
   categoryId,
   title,
   description,
   dependencies = [],
+  reference,
   usage,
   props,
 }: ComponentSampleInput): ComponentSample {
@@ -145,7 +214,7 @@ function createSample({
       url: `/r/${slug}.json`,
       dependencies,
     },
-    reference: {
+    reference: reference ?? reactBitsReference(slug, title) ?? {
       label: `Magic UI ${title}`,
       url: `https://magicui.design/docs/components/${slug}`,
     },
@@ -177,18 +246,682 @@ export const componentCategories: readonly ComponentCategory[] = [
     description: 'Animated background surfaces for immersive sections and demos.',
   },
   {
+    id: 'cards',
+    name: 'Cards',
+    description: 'Interactive cards and preview surfaces.',
+  },
+  {
+    id: 'navigation',
+    name: 'Navigation',
+    description: 'Navigation primitives for app shells and quick actions.',
+  },
+  {
+    id: 'forms',
+    name: 'Forms',
+    description: 'Inputs, pickers, uploads, and form composition components.',
+  },
+  {
     id: 'effects',
     name: 'Effects',
     description: 'Visual effects for cards, surfaces, canvas, and celebration UI.',
+  },
+  {
+    id: 'fabs',
+    name: 'FABs',
+    description: 'Floating action button menus for compact command surfaces.',
   },
   {
     id: 'text',
     name: 'Text',
     description: 'Animated text treatments for headings and inline emphasis.',
   },
+  {
+    id: 'media',
+    name: 'Media',
+    description: 'Image and avatar presentation components.',
+  },
+  {
+    id: 'controls',
+    name: 'Controls',
+    description: 'Toggles, steppers, cursors, and task controls.',
+  },
+  {
+    id: 'data-display',
+    name: 'Data Display',
+    description: 'Structured data presentation components.',
+  },
 ]
 
 export const componentSamples: readonly ComponentSample[] = [
+  createSample({
+    slug: 'background-boxes',
+    categoryId: 'backgrounds',
+    title: 'Background Boxes',
+    description: 'A hover-reactive grid background for hero and feature surfaces.',
+    dependencies: ['motion'],
+    reference: {
+      label: 'Aceternity Background Boxes',
+      url: 'https://ui.aceternity.com/components/background-boxes',
+    },
+    usage: `import { BackgroundBoxes } from "@/components/magicui/background-boxes"
+
+export default function Example() {
+  return (
+    <div className="relative h-96 overflow-hidden bg-slate-900">
+      <BackgroundBoxes />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,rgba(15,23,42,0.96)_78%)]" />
+    </div>
+  )
+}`,
+    props: [
+      classNameProp,
+      prop('rows', 'number', '60', 'Number of grid rows.'),
+      prop('columns', 'number', '40', 'Number of grid columns.'),
+      prop('colors', 'string[]', 'built-in palette', 'Hover color palette.'),
+      prop('boxClassName', 'string', '-', 'Classes applied to each box.'),
+    ],
+  }),
+  createSample({
+    slug: 'keyboard',
+    categoryId: 'forms',
+    title: 'Keyboard',
+    description: 'A Mac-style keyboard with clickable and physical key states.',
+    dependencies: ['motion'],
+    reference: {
+      label: 'Aceternity Keyboard',
+      url: 'https://ui.aceternity.com/components/keyboard',
+    },
+    usage: `import { Keyboard } from "@/components/magicui/keyboard"
+
+export default function Example() {
+  return <Keyboard showPreview />
+}`,
+    props: [
+      classNameProp,
+      prop('showPreview', 'boolean', 'false', 'Whether to show the last pressed key above the keyboard.'),
+      prop('enableSound', 'boolean', 'false', 'Reserved hook for adding key sounds without bundling audio assets.'),
+      prop('keys', 'string[]', '-', 'Optional shortcut mode for compact key combinations.'),
+      prop('keyClassName', 'string', '-', 'Classes applied to shortcut keys.'),
+    ],
+  }),
+  createSample({
+    slug: 'pixelated-canvas',
+    categoryId: 'backgrounds',
+    title: 'Pixelated Canvas',
+    description: 'A pixelated image canvas with interactive pointer distortion.',
+    reference: {
+      label: 'Aceternity Pixelated Canvas',
+      url: 'https://ui.aceternity.com/components/pixelated-canvas',
+    },
+    usage: `import { PixelatedCanvas } from "@/components/magicui/pixelated-canvas"
+
+export default function Example() {
+  return <PixelatedCanvas src="/image.jpg" />
+}`,
+    props: [
+      classNameProp,
+      prop('src', 'string', 'built-in image', 'Source image sampled into pixels.'),
+      prop('cellSize', 'number', '4', 'Sampling cell size.'),
+      prop('dotScale', 'number', '0.9', 'Dot size as a fraction of the cell.'),
+      prop('shape', '"circle" | "square"', '"square"', 'Rendered pixel shape.'),
+      prop('interactive', 'boolean', 'true', 'Whether pointer distortion is enabled.'),
+      prop('distortionMode', '"repel" | "attract" | "swirl"', '"swirl"', 'Pointer distortion behavior.'),
+    ],
+  }),
+  createSample({
+    slug: 'wobble-card',
+    categoryId: 'cards',
+    title: 'Wobble Card',
+    description: 'A pointer-reactive card that counter-moves its content.',
+    dependencies: ['motion'],
+    reference: {
+      label: 'Aceternity Wobble Card',
+      url: 'https://ui.aceternity.com/components/wobble-card',
+    },
+    usage: `import { WobbleCard } from "@/components/magicui/wobble-card"
+
+export default function Example() {
+  return <WobbleCard>Interactive card</WobbleCard>
+}`,
+    props: [
+      childrenProp,
+      classNameProp,
+      prop('containerClassName', 'string', '-', 'Classes applied to the moving outer container.'),
+    ],
+  }),
+  createSample({
+    slug: 'comet-card',
+    categoryId: 'cards',
+    title: 'Comet Card',
+    description: 'A card with hover tilt, depth translation, and glare.',
+    dependencies: ['motion'],
+    reference: {
+      label: 'Aceternity Comet Card',
+      url: 'https://ui.aceternity.com/components/comet-card',
+    },
+    usage: `import { CometCard } from "@/components/magicui/comet-card"
+
+export default function Example() {
+  return <CometCard>Comet surface</CometCard>
+}`,
+    props: [
+      childrenProp,
+      classNameProp,
+      prop('cardClassName', 'string', '-', 'Classes applied to the inner card surface.'),
+      prop('rotateDepth', 'number', '17.5', 'Maximum rotation depth in degrees.'),
+      prop('translateDepth', 'number', '20', 'Maximum hover translation depth.'),
+    ],
+  }),
+  createSample({
+    slug: 'floating-dock',
+    categoryId: 'navigation',
+    title: 'Floating Dock',
+    description: 'A responsive dock with icon magnification and labels.',
+    dependencies: ['motion'],
+    reference: {
+      label: 'Aceternity Floating Dock',
+      url: 'https://ui.aceternity.com/components/floating-dock',
+    },
+    usage: `import { FloatingDock } from "@/components/magicui/floating-dock"
+
+export default function Example() {
+  return <FloatingDock items={items} />
+}`,
+    props: [
+      classNameProp,
+      prop('desktopClassName', 'string', '-', 'Classes applied to the desktop dock.'),
+      prop('mobileClassName', 'string', '-', 'Classes applied to the mobile dock.'),
+      prop('items', 'FloatingDockItem[]', '-', 'Dock items with title, icon, href, and onClick.'),
+    ],
+  }),
+  createSample({
+    slug: 'signup-form',
+    categoryId: 'forms',
+    title: 'Signup Form',
+    description: 'A compact signup form surface.',
+    reference: {
+      label: 'Aceternity Signup Form',
+      url: 'https://ui.aceternity.com/components/signup-form',
+    },
+    usage: `import { SignupForm } from "@/components/magicui/signup-form"
+
+export default function Example() {
+  return <SignupForm />
+}`,
+    props: [
+      classNameProp,
+      prop('title', 'string', '"Create an account"', 'Form title.'),
+      prop('description', 'string', 'built-in copy', 'Supporting copy.'),
+      prop('submitLabel', 'string', '"Sign up"', 'Submit button label.'),
+      prop('onSubmit', '(event: FormEvent<HTMLFormElement>) => void', '-', 'Submit handler.'),
+    ],
+  }),
+  createSample({
+    slug: 'placeholders-and-vanish-input',
+    categoryId: 'forms',
+    title: 'Placeholders And Vanish Input',
+    description: 'A search input with rotating placeholders and vanish submit motion.',
+    dependencies: ['motion'],
+    reference: {
+      label: 'Aceternity Placeholders And Vanish Input',
+      url: 'https://ui.aceternity.com/components/placeholders-and-vanish-input',
+    },
+    usage: `import { PlaceholdersAndVanishInput } from "@/components/magicui/placeholders-and-vanish-input"
+
+export default function Example() {
+  return <PlaceholdersAndVanishInput placeholders={["Search docs", "Ask AI"]} />
+}`,
+    props: [
+      classNameProp,
+      prop('placeholders', 'string[]', '-', 'Placeholder values to rotate.'),
+      prop('onSubmit', '(value: string) => void', '-', 'Submit handler.'),
+    ],
+  }),
+  createSample({
+    slug: 'gooey-input',
+    categoryId: 'forms',
+    title: 'Gooey Input',
+    description: 'A collapsed search input that expands through a gooey SVG filter.',
+    dependencies: ['motion'],
+    reference: {
+      label: 'Aceternity Gooey Input',
+      url: 'https://ui.aceternity.com/components/gooey-input',
+    },
+    usage: `import { GooeyInput } from "@/components/magicui/gooey-input"
+
+export default function Example() {
+  return <GooeyInput placeholder="Search..." />
+}`,
+    props: [
+      classNameProp,
+      prop('placeholder', 'string', '"Type to search..."', 'Input placeholder.'),
+      prop('collapsedWidth', 'number', '115', 'Collapsed control width.'),
+      prop('expandedWidth', 'number', '200', 'Expanded control width.'),
+      prop('expandedOffset', 'number', '50', 'Offset used by the detached search bubble.'),
+      prop('onValueChange', '(value: string) => void', '-', 'Value change handler.'),
+    ],
+  }),
+  createSample({
+    slug: 'link-preview',
+    categoryId: 'cards',
+    title: 'Link Preview',
+    description: 'A hover card preview for inline links.',
+    dependencies: ['motion'],
+    reference: {
+      label: 'Aceternity Link Preview',
+      url: 'https://ui.aceternity.com/components/link-preview',
+    },
+    usage: `import { LinkPreview } from "@/components/magicui/link-preview"
+
+export default function Example() {
+  return <LinkPreview url="/" isStatic imageSrc="/preview.png">Hover me</LinkPreview>
+}`,
+    props: [
+      childrenProp,
+      classNameProp,
+      prop('url', 'string', '-', 'Link URL.'),
+      prop('href', 'string', '-', 'Alias for url.'),
+      prop('isStatic', 'boolean', 'false', 'Whether to use a supplied image instead of generated screenshot URL.'),
+      prop('imageSrc', 'string', '-', 'Static preview image source.'),
+      prop('width', 'number', '200', 'Preview width.'),
+      prop('height', 'number', '125', 'Preview height.'),
+    ],
+  }),
+  createSample({
+    slug: '3d-marquee',
+    categoryId: 'media',
+    title: '3D Marquee',
+    description: 'A perspective marquee grid for image or card strips.',
+    dependencies: ['motion'],
+    reference: {
+      label: 'Aceternity 3D Marquee',
+      url: 'https://ui.aceternity.com/components/3d-marquee',
+    },
+    usage: `import { ThreeDMarquee } from "@/components/magicui/3d-marquee"
+
+export default function Example() {
+  return <ThreeDMarquee images={images} />
+}`,
+    props: [
+      classNameProp,
+      prop('images', 'string[]', '-', 'Images rendered in the 3D grid.'),
+      prop('items', 'React.ReactNode[]', '-', 'Legacy custom item fallback.'),
+    ],
+  }),
+  createSample({
+    slug: 'avatar-group',
+    categoryId: 'media',
+    title: 'Avatar Group',
+    description: 'A stacked avatar group with overflow count.',
+    reference: {
+      label: 'Animate UI Avatar Group',
+      url: 'https://animate-ui.com/docs/components/animate/avatar-group',
+    },
+    usage: `import { AvatarGroup } from "@/components/magicui/avatar-group"
+
+export default function Example() {
+  return <AvatarGroup items={users} />
+}`,
+    props: [
+      classNameProp,
+      prop('items', 'AvatarGroupItem[]', '-', 'Avatar data.'),
+      prop('max', 'number', '5', 'Maximum visible avatars.'),
+    ],
+  }),
+  createSample({
+    slug: 'animated-checkbox',
+    categoryId: 'forms',
+    title: 'Animated Checkbox',
+    description: 'A native checkbox with animated check state.',
+    dependencies: ['motion', 'lucide-react'],
+    reference: {
+      label: 'Animate UI Checkbox',
+      url: 'https://animate-ui.com/docs/components/radix/checkbox',
+    },
+    usage: `import { AnimatedCheckbox } from "@/components/magicui/animated-checkbox"
+
+export default function Example() {
+  return <AnimatedCheckbox label="Send updates" />
+}`,
+    props: [
+      classNameProp,
+      prop('label', 'string', '"Accept terms"', 'Checkbox label.'),
+      prop('defaultChecked', 'boolean', 'false', 'Initial checked state.'),
+      prop('checked', 'boolean', '-', 'Controlled checked state.'),
+      prop('onCheckedChange', '(checked: boolean) => void', '-', 'Change handler.'),
+    ],
+  }),
+  createSample({
+    slug: 'file-upload',
+    categoryId: 'forms',
+    title: 'File Upload',
+    description: 'A dashed upload dropzone powered by a native file input.',
+    dependencies: ['lucide-react'],
+    reference: {
+      label: 'Animate UI Files',
+      url: 'https://animate-ui.com/docs/components/radix/files',
+    },
+    usage: `import { FileUpload } from "@/components/magicui/file-upload"
+
+export default function Example() {
+  return <FileUpload />
+}`,
+    props: [
+      classNameProp,
+      prop('label', 'string', '"Upload files"', 'Upload title.'),
+      prop('description', 'string', 'built-in copy', 'Upload helper text.'),
+    ],
+  }),
+  createSample({
+    slug: 'animated-radio-group',
+    categoryId: 'forms',
+    title: 'Animated Radio Group',
+    description: 'A native radio group with animated selection dot.',
+    dependencies: ['motion'],
+    reference: {
+      label: 'Animate UI Radio Group',
+      url: 'https://animate-ui.com/docs/components/radix/radio-group',
+    },
+    usage: `import { AnimatedRadioGroup } from "@/components/magicui/animated-radio-group"
+
+export default function Example() {
+  return <AnimatedRadioGroup options={options} />
+}`,
+    props: [
+      classNameProp,
+      prop('options', 'AnimatedRadioOption[]', '-', 'Radio options.'),
+      prop('defaultValue', 'string', '-', 'Initial selected value.'),
+      prop('value', 'string', '-', 'Controlled selected value.'),
+      prop('onValueChange', '(value: string) => void', '-', 'Change handler.'),
+    ],
+  }),
+  createSample({
+    slug: 'playful-todolist',
+    categoryId: 'controls',
+    title: 'Playful Todo List',
+    description: 'A small animated todo list interaction.',
+    dependencies: ['motion', 'lucide-react'],
+    reference: {
+      label: 'Animate UI Playful TodoList',
+      url: 'https://animate-ui.com/docs/components/community/playful-todolist',
+    },
+    usage: `import { PlayfulTodoList } from "@/components/magicui/playful-todolist"
+
+export default function Example() {
+  return <PlayfulTodoList />
+}`,
+    props: [
+      classNameProp,
+      prop('initialItems', 'string[]', '["Sketch", "Build", "Review"]', 'Initial todo labels.'),
+    ],
+  }),
+  createSample({
+    slug: 'border-beam-button',
+    categoryId: 'buttons',
+    title: 'Border Beam Button',
+    description: 'A button with an animated conic border beam.',
+    reference: {
+      label: 'Cult UI Border Beam Button',
+      url: 'https://www.cult-ui.com/docs/components/border-beam-button',
+    },
+    usage: `import { BorderBeamButton } from "@/components/magicui/border-beam-button"
+
+export default function Example() {
+  return <BorderBeamButton>Deploy</BorderBeamButton>
+}`,
+    props: [
+      childrenProp,
+      classNameProp,
+      prop('...props', 'ButtonHTMLAttributes<HTMLButtonElement>', '-', 'Native button props.'),
+    ],
+  }),
+  createSample({
+    slug: 'slide-arrow-button',
+    categoryId: 'buttons',
+    title: 'Slide Arrow Button',
+    description: 'A button with a sliding arrow hover transition.',
+    dependencies: ['lucide-react'],
+    reference: {
+      label: 'Animata Slide Arrow Button',
+      url: 'https://animata.design/docs/button/slide-arrow-button',
+    },
+    usage: `import { SlideArrowButton } from "@/components/magicui/slide-arrow-button"
+
+export default function Example() {
+  return <SlideArrowButton>Continue</SlideArrowButton>
+}`,
+    props: [
+      childrenProp,
+      classNameProp,
+      prop('text', 'string', '"Get Started"', 'Button text when children are not provided.'),
+      prop('primaryColor', 'string', '"#6f3cff"', 'Color used by the sliding background.'),
+      prop('...props', 'ButtonHTMLAttributes<HTMLButtonElement>', '-', 'Native button props.'),
+    ],
+  }),
+  createSample({
+    slug: 'flower-menu',
+    categoryId: 'fabs',
+    title: 'Flower Menu',
+    description: 'A radial floating action menu.',
+    dependencies: ['motion', 'lucide-react'],
+    reference: {
+      label: 'Animata Flower Menu',
+      url: 'https://animata.design/docs/fabs/flower-menu',
+    },
+    usage: `import { FlowerMenu } from "@/components/magicui/flower-menu"
+
+export default function Example() {
+  return <FlowerMenu items={items} />
+}`,
+    props: [
+      classNameProp,
+      prop('items', 'FlowerMenuItem[]', '-', 'Menu actions.'),
+    ],
+  }),
+  createSample({
+    slug: 'speed-dial',
+    categoryId: 'fabs',
+    title: 'Speed Dial',
+    description: 'A stacked floating action menu.',
+    dependencies: ['motion', 'lucide-react'],
+    reference: {
+      label: 'Animata Speed Dial',
+      url: 'https://animata.design/docs/fabs/speed-dial',
+    },
+    usage: `import { SpeedDial } from "@/components/magicui/speed-dial"
+
+export default function Example() {
+  return <SpeedDial items={items} />
+}`,
+    props: [
+      classNameProp,
+      prop('items', 'SpeedDialItem[]', '-', 'Dial actions.'),
+    ],
+  }),
+  createSample({
+    slug: 'kinetic-center-build',
+    categoryId: 'text',
+    title: 'Kinetic Center Build',
+    description: 'Text that builds into place from the center.',
+    dependencies: ['motion'],
+    reference: {
+      label: 'Animata Kinetic Center Build',
+      url: 'https://animata.design/docs/text/kinetic-center-build',
+    },
+    usage: `import { KineticCenterBuild } from "@/components/magicui/kinetic-center-build"
+
+export default function Example() {
+  return <KineticCenterBuild text="Kinetic" />
+}`,
+    props: [
+      classNameProp,
+      prop('text', 'string', '-', 'Text to animate.'),
+    ],
+  }),
+  createSample({
+    slug: 'text-flip',
+    categoryId: 'text',
+    title: 'Text Flip',
+    description: 'A rotating word flip animation.',
+    dependencies: ['motion'],
+    reference: {
+      label: 'Animata Text Flip',
+      url: 'https://animata.design/docs/text/text-flip',
+    },
+    usage: `import { TextFlip } from "@/components/magicui/text-flip"
+
+export default function Example() {
+  return <TextFlip words={["Design", "Build", "Ship"]} />
+}`,
+    props: [
+      classNameProp,
+      prop('words', 'string[]', '-', 'Words to rotate.'),
+      prop('interval', 'number', '1600', 'Flip interval in milliseconds.'),
+    ],
+  }),
+  createSample({
+    slug: 'cool-theme-toggle',
+    categoryId: 'controls',
+    title: 'Cool Theme Toggle',
+    description: 'A playful sun and moon toggle.',
+    dependencies: ['motion', 'lucide-react'],
+    reference: {
+      label: 'Lightswind Cool Theme Toggle',
+      url: 'https://lightswind.com/components/cool-theme-toggle',
+    },
+    usage: `import { CoolThemeToggle } from "@/components/magicui/cool-theme-toggle"
+
+export default function Example() {
+  return <CoolThemeToggle />
+}`,
+    props: [
+      classNameProp,
+      prop('defaultDark', 'boolean', 'false', 'Initial dark state.'),
+      prop('onChange', '(dark: boolean) => void', '-', 'Change handler.'),
+    ],
+  }),
+  createSample({
+    slug: 'toggle-theme',
+    categoryId: 'controls',
+    title: 'Toggle Theme',
+    description: 'A minimal switch-style theme toggle.',
+    reference: {
+      label: 'Lightswind Toggle Theme',
+      url: 'https://lightswind.com/components/toggle-theme',
+    },
+    usage: `import { ToggleTheme } from "@/components/magicui/toggle-theme"
+
+export default function Example() {
+  return <ToggleTheme />
+}`,
+    props: [
+      classNameProp,
+      prop('defaultChecked', 'boolean', 'false', 'Initial checked state.'),
+      prop('onChange', '(checked: boolean) => void', '-', 'Change handler.'),
+    ],
+  }),
+  createSample({
+    slug: '3d-image-carousel',
+    categoryId: 'media',
+    title: '3D Image Carousel',
+    description: 'A rotating perspective image carousel.',
+    reference: {
+      label: 'Lightswind 3D Image Carousel',
+      url: 'https://lightswind.com/components/3d-image-carousel',
+    },
+    usage: `import { ThreeDImageCarousel } from "@/components/magicui/3d-image-carousel"
+
+export default function Example() {
+  return <ThreeDImageCarousel items={items} />
+}`,
+    props: [
+      classNameProp,
+      prop('items', 'ThreeDImageCarouselItem[]', '-', 'Images to show.'),
+      prop('interval', 'number', '2200', 'Auto-rotation interval.'),
+    ],
+  }),
+  createSample({
+    slug: '3d-image-slider',
+    categoryId: 'media',
+    title: '3D Image Slider',
+    description: 'A perspective image slider with previous and next controls.',
+    dependencies: ['lucide-react'],
+    reference: {
+      label: 'Lightswind 3D Image Slider',
+      url: 'https://lightswind.com/components/3d-image-slider',
+    },
+    usage: `import { ThreeDImageSlider } from "@/components/magicui/3d-image-slider"
+
+export default function Example() {
+  return <ThreeDImageSlider items={items} />
+}`,
+    props: [
+      classNameProp,
+      prop('items', 'ThreeDImageSliderItem[]', '-', 'Images to show.'),
+    ],
+  }),
+  createSample({
+    slug: 'sparkle-cursor',
+    categoryId: 'effects',
+    title: 'Sparkle Cursor',
+    description: 'A local cursor sparkle effect for a bounded surface.',
+    dependencies: ['motion'],
+    reference: {
+      label: 'Lightswind Sparkle Cursor',
+      url: 'https://lightswind.com/components/sparkle-cursor',
+    },
+    usage: `import { SparkleCursor } from "@/components/magicui/sparkle-cursor"
+
+export default function Example() {
+  return <SparkleCursor>Move here</SparkleCursor>
+}`,
+    props: [
+      childrenProp,
+      classNameProp,
+      prop('color', 'string', '"var(--theme-accent-current)"', 'Sparkle color.'),
+    ],
+  }),
+  createSample({
+    slug: 'stepper',
+    categoryId: 'controls',
+    title: 'Stepper',
+    description: 'A horizontal stepper with selectable steps.',
+    dependencies: ['lucide-react'],
+    reference: {
+      label: 'Lightswind Stepper',
+      url: 'https://lightswind.com/components/stepper',
+    },
+    usage: `import { Stepper } from "@/components/magicui/stepper"
+
+export default function Example() {
+  return <Stepper steps={steps} />
+}`,
+    props: [
+      classNameProp,
+      prop('steps', 'StepperItem[]', '-', 'Steps to render.'),
+      prop('defaultStep', 'number', '0', 'Initial active step index.'),
+    ],
+  }),
+  createSample({
+    slug: 'data-table',
+    categoryId: 'data-display',
+    title: 'Table',
+    description: 'A simple typed data table inspired by HeroUI table structure.',
+    reference: {
+      label: 'HeroUI Table',
+      url: 'https://heroui.com/en/docs/react/components/table',
+    },
+    usage: `import { DataTable } from "@/components/magicui/data-table"
+
+export default function Example() {
+  return <DataTable columns={columns} rows={rows} />
+}`,
+    props: [
+      classNameProp,
+      prop('columns', 'DataTableColumn<T>[]', '-', 'Column definitions.'),
+      prop('rows', 'T[]', '-', 'Rows to render.'),
+    ],
+  }),
   createSample({
     slug: 'ripple-button',
     categoryId: 'buttons',
@@ -376,26 +1109,6 @@ export default function Example() {
     ],
   }),
   createSample({
-    slug: 'backlight',
-    categoryId: 'components',
-    title: 'Backlight',
-    description: 'An SVG filter wrapper that adds a saturated blurred glow behind its child.',
-    usage: `import { Backlight } from "@/components/magicui/backlight"
-
-export default function Example() {
-  return (
-    <Backlight>
-      <div>Backlight</div>
-    </Backlight>
-  )
-}`,
-    props: [
-      childrenProp,
-      classNameProp,
-      prop('blur', 'number', '20', 'Gaussian blur radius for the backlight filter.'),
-    ],
-  }),
-  createSample({
     slug: 'curved-loop',
     categoryId: 'text',
     title: 'Curved Loop',
@@ -536,17 +1249,17 @@ export default function Example() {
 export default function Example() {
   return (
     <div className="h-96">
-      <CircularGallery bend={3} textColor="#ffffff" />
+      <CircularGallery bend={0.25} textColor="#71717a" scrollSpeed={0.75} scrollEase={0.08} />
     </div>
   )
 }`,
     props: [
       prop('items', '{ image: string; text: string }[]', 'built-in images', 'Gallery image and title items.'),
-      prop('bend', 'number', '3', 'How strongly the gallery bends.'),
-      prop('textColor', 'string', '"#ffffff"', 'Caption color.'),
+      prop('bend', 'number', '0.25', 'How strongly the gallery bends.'),
+      prop('textColor', 'string', '"#71717a"', 'Caption color.'),
       prop('borderRadius', 'number', '0.05', 'Rounded image corner amount.'),
       prop('font', 'string', '"bold 30px Figtree"', 'Caption canvas font.'),
-      prop('scrollSpeed', 'number', '2', 'Drag and wheel scroll speed.'),
+      prop('scrollSpeed', 'number', '0.75', 'Drag and wheel scroll speed.'),
     ],
   }),
   createSample({
@@ -558,14 +1271,18 @@ export default function Example() {
     usage: `import { Stack } from "@/components/magicui/stack"
 
 export default function Example() {
-  return <Stack randomRotation />
+  return (
+    <div className="h-64 w-64">
+      <Stack randomRotation />
+    </div>
+  )
 }`,
     props: [
       prop('randomRotation', 'boolean', 'false', 'Whether to rotate cards randomly.'),
       prop('sensitivity', 'number', '200', 'Drag distance required to send card back.'),
       prop('sendToBackOnClick', 'boolean', 'false', 'Whether clicking moves a card back.'),
-      prop('cardDimensions', '{ width: number; height: number }', '{ width: 208, height: 208 }', 'Card size.'),
-      prop('cardsData', '{ id: number; img: string }[]', 'built-in cards', 'Card image data.'),
+      prop('cards', 'React.ReactNode[]', 'built-in cards', 'Custom card nodes.'),
+      prop('autoplay', 'boolean', 'false', 'Whether the stack cycles automatically.'),
     ],
   }),
   createSample({
@@ -577,9 +1294,12 @@ export default function Example() {
 
 export default function Example() {
   return (
-    <GlassSurface width={300} height={120}>
-      Glass Surface
-    </GlassSurface>
+    <div className="relative flex h-64 items-center justify-center overflow-hidden rounded-xl">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,#8b5cf6,transparent_34%),radial-gradient(circle_at_80%_70%,#06b6d4,transparent_36%)]" />
+      <GlassSurface width={300} height={120}>
+        Glass Surface
+      </GlassSurface>
+    </div>
   )
 }`,
     props: [
@@ -705,10 +1425,29 @@ export default function Example() {
     title: 'Counter',
     description: 'An animated rolling number counter with decimal place support.',
     dependencies: ['motion'],
-    usage: `import { Counter } from "@/components/magicui/counter"
+    usage: `import { useState } from "react"
+import { Counter } from "@/components/magicui/counter"
 
 export default function Example() {
-  return <Counter value={17.8} />
+  const [value, setValue] = useState(17.8)
+
+  return (
+    <div>
+      <Counter value={value} />
+      <button
+        type="button"
+        onClick={() => setValue((current) => Number((current - 1).toFixed(1)))}
+      >
+        Decrease
+      </button>
+      <button
+        type="button"
+        onClick={() => setValue((current) => Number((current + 1).toFixed(1)))}
+      >
+        Increase
+      </button>
+    </div>
+  )
 }`,
     props: [
       prop('value', 'number', '-', 'Target number.'),

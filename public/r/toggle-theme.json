@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "toggle-theme",
+  "type": "registry:ui",
+  "title": "Toggle Theme",
+  "description": "A minimal switch-style theme toggle.",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "src/components/magicui/toggle-theme.tsx",
+      "content": "'use client'\n\nimport { useState } from 'react'\nimport { cn } from '@/lib/utils'\n\ninterface ToggleThemeProps {\n  defaultChecked?: boolean\n  onChange?: (checked: boolean) => void\n  className?: string\n}\n\nexport function ToggleTheme({\n  defaultChecked = false,\n  onChange,\n  className,\n}: ToggleThemeProps) {\n  const [checked, setChecked] = useState(defaultChecked)\n\n  const update = () => {\n    const next = !checked\n    setChecked(next)\n    onChange?.(next)\n  }\n\n  return (\n    <button\n      type=\"button\"\n      role=\"switch\"\n      aria-checked={checked}\n      onClick={update}\n      className={cn(\n        'relative h-9 w-16 rounded-full border border-zinc-200 bg-zinc-100 p-1 transition-colors aria-checked:bg-[var(--theme-accent-current)] dark:border-zinc-800 dark:bg-zinc-900',\n        className\n      )}\n    >\n      <span\n        className={cn(\n          'block h-7 w-7 rounded-full bg-white shadow-sm transition-transform',\n          checked && 'translate-x-7'\n        )}\n      />\n    </button>\n  )\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

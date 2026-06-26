@@ -788,13 +788,13 @@ interface CircularGalleryProps {
 
 export function CircularGallery({
   items,
-  bend = 3,
-  textColor = '#ffffff',
+  bend = 0.25,
+  textColor = '#71717a',
   borderRadius = 0.05,
   font = 'bold 30px Figtree',
   fontUrl,
-  scrollSpeed = 2,
-  scrollEase = 0.05
+  scrollSpeed = 0.75,
+  scrollEase = 0.08
 }: CircularGalleryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {

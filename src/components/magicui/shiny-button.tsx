@@ -5,8 +5,8 @@ import { motion, type MotionProps } from 'motion/react'
 import { cn } from '@/lib/utils'
 
 const animationProps: MotionProps = {
-  initial: { '--x': '100%', scale: 0.8 },
-  animate: { '--x': '-100%', scale: 1 },
+  initial: { '--x': '100%' },
+  animate: { '--x': '-100%' },
   whileTap: { scale: 0.95 },
   transition: {
     repeat: Infinity,
@@ -16,12 +16,6 @@ const animationProps: MotionProps = {
     stiffness: 20,
     damping: 15,
     mass: 2,
-    scale: {
-      type: 'spring',
-      stiffness: 200,
-      damping: 5,
-      mass: 0.5,
-    },
   },
 }
 
@@ -40,14 +34,14 @@ export const ShinyButton = React.forwardRef<
     <motion.button
       ref={ref}
       className={cn(
-        'relative cursor-pointer rounded-lg border px-6 py-2 font-medium backdrop-blur-xl transition-shadow duration-300 ease-in-out hover:shadow dark:bg-[radial-gradient(circle_at_50%_0%,var(--primary)/10%_0%,transparent_60%)] dark:hover:shadow-[0_0_20px_var(--primary)/10%]',
+        'relative inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-lg border px-6 py-2 text-center font-medium backdrop-blur-xl dark:bg-[radial-gradient(circle_at_50%_0%,var(--primary)/10%_0%,transparent_60%)]',
         className
       )}
       {...animationProps}
       {...props}
     >
       <span
-        className="relative block size-full text-sm tracking-wide text-[rgb(0,0,0,65%)] uppercase dark:font-light dark:text-[rgb(255,255,255,90%)]"
+        className="relative z-20 inline-flex size-full items-center justify-center text-center text-sm tracking-wide text-current uppercase dark:font-light"
         style={{
           maskImage:
             'linear-gradient(-75deg,var(--primary) calc(var(--x) + 20%),transparent calc(var(--x) + 30%),var(--primary) calc(var(--x) + 100%))',
