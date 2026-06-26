@@ -168,6 +168,7 @@ export function FloatingToc({ headings }: Props) {
     <aside className="fixed top-24 right-[max(1rem,calc((100vw-48rem)/2-17rem))] z-40 hidden w-60 xl:block">
       <nav
         ref={navRef}
+        aria-label="문서 목차"
         className="max-h-[calc(100vh-8rem)] overflow-y-auto border-l border-zinc-200 pl-4 dark:border-zinc-700"
       >
         <div ref={trackRef} className="floating-toc-track relative">

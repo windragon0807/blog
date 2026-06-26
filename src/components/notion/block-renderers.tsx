@@ -186,13 +186,13 @@ const knownBlockRenderers = {
     if (columns.length === 0) return null
 
     return (
-      <section className="my-6 flex flex-col gap-4 md:flex-row md:items-start md:gap-6">
+      <div className="my-6 flex flex-col gap-4 md:flex-row md:items-start md:gap-6">
         {columns.map((column) => (
           <div key={column.id} className="min-w-0 flex-1">
             {context.renderBlocks(column.children ?? [])}
           </div>
         ))}
-      </section>
+      </div>
     )
   },
 

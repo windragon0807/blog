@@ -14,7 +14,10 @@ export function PostExplorer({
   emptyMessage = '조건에 맞는 글이 없습니다.',
 }: Props) {
   return (
-    <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+    <section
+      aria-label="게시글 목록"
+      className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
+    >
       {posts.length === 0 ? (
         <EmptyStatePanel
           className="col-span-full py-14"

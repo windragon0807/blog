@@ -11,6 +11,7 @@ export function SettingsSection({
 }) {
   return (
     <section
+      aria-label={label}
       className="settings-item rounded-xl border border-zinc-200/80 bg-zinc-50/85 p-3 dark:border-zinc-700/70 dark:bg-zinc-800/70"
       style={{ '--settings-item-delay': `${delayMs}ms` } as CSSProperties}
     >

@@ -30,11 +30,11 @@ export default function HomeLoading() {
       aria-label="콘텐츠를 불러오는 중"
       className="relative left-1/2 w-[min(1200px,calc(100vw-2rem))] -translate-x-1/2 pt-5 md:pt-6"
     >
-      <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {Array.from({ length: 6 }).map((_, idx) => (
           <PostCardSkeleton key={idx} />
         ))}
-      </section>
+      </div>
     </div>
   )
 }

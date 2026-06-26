@@ -41,9 +41,9 @@ export default async function TagPage({ params }: PageProps) {
         </p>
       </section>
 
-      <section className="mb-6">
+      <div className="mb-6">
         <TagFilter tags={allTags} activeTag={decodedTag} />
-      </section>
+      </div>
 
       <PostExplorer
         posts={posts}

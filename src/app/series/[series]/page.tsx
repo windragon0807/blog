@@ -43,9 +43,9 @@ export default async function SeriesPage({ params }: PageProps) {
         <p className="text-zinc-500 dark:text-zinc-300">{posts.length}개의 시리즈 글</p>
       </section>
 
-      <section className="mb-6">
+      <div className="mb-6">
         <SeriesFilter seriesList={seriesList} activeSeries={decodedSeries} />
-      </section>
+      </div>
 
       <SeriesTimeline seriesName={decodedSeries} posts={posts} />
 
