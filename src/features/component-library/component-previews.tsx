@@ -2,10 +2,26 @@
 
 import type { ReactNode } from 'react'
 import { motion } from 'motion/react'
+import { AnimatedGradientText } from '@/components/magicui/animated-gradient-text'
+import { AnimatedShinyText } from '@/components/magicui/animated-shiny-text'
+import { AuroraText } from '@/components/magicui/aurora-text'
+import { BorderBeam } from '@/components/magicui/border-beam'
+import { ConfettiButton } from '@/components/magicui/confetti'
+import { DiaTextReveal } from '@/components/magicui/dia-text-reveal'
+import { Highlighter } from '@/components/magicui/highlighter'
 import { IconCloud } from '@/components/magicui/icon-cloud'
 import { Lens } from '@/components/magicui/lens'
+import { MagicCard } from '@/components/magicui/magic-card'
 import { Marquee } from '@/components/magicui/marquee'
+import { Meteors } from '@/components/magicui/meteors'
+import { MorphingText } from '@/components/magicui/morphing-text'
+import { NumberTicker } from '@/components/magicui/number-ticker'
+import { Particles } from '@/components/magicui/particles'
 import { Pointer } from '@/components/magicui/pointer'
+import { ShineBorder } from '@/components/magicui/shine-border'
+import { TextAnimate } from '@/components/magicui/text-animate'
+import { TypingAnimation } from '@/components/magicui/typing-animation'
+import { VideoText } from '@/components/magicui/video-text'
 import type { ComponentSample } from './component-data'
 
 type PreviewMode = 'interactive' | 'thumbnail'
@@ -89,9 +105,7 @@ function ReviewCard({
   body: string
 }) {
   return (
-    <figure
-      className="relative h-full w-64 cursor-pointer overflow-hidden rounded-xl border border-gray-950/[.1] bg-gray-950/[.01] p-4 hover:bg-gray-950/[.05] dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]"
-    >
+    <figure className="relative h-full w-64 cursor-pointer overflow-hidden rounded-xl border border-gray-950/[.1] bg-gray-950/[.01] p-4 hover:bg-gray-950/[.05] dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]">
       <div className="flex flex-row items-center gap-2">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className="rounded-full" width="32" height="32" alt="" src={img} />
@@ -104,6 +118,22 @@ function ReviewCard({
       </div>
       <blockquote className="mt-2 text-sm">{body}</blockquote>
     </figure>
+  )
+}
+
+function PreviewSurface({
+  children,
+  className = '',
+}: {
+  children: ReactNode
+  className?: string
+}) {
+  return (
+    <div
+      className={`relative flex min-h-52 w-full max-w-xl items-center justify-center overflow-hidden rounded-xl border border-zinc-200 bg-white p-8 text-center dark:border-zinc-800 dark:bg-zinc-950 ${className}`}
+    >
+      {children}
+    </div>
   )
 }
 
@@ -154,23 +184,8 @@ function LensPreview() {
           Your next camp
         </h3>
         <p className="text-sm leading-6 text-zinc-500 dark:text-zinc-400">
-          See our latest and best camp destinations all across the five
-          continents of the globe.
+          See our latest and best camp destinations across the globe.
         </p>
-        <div className="flex gap-3 pt-2">
-          <button
-            type="button"
-            className="rounded-md bg-zinc-950 px-3 py-2 text-sm font-medium text-white dark:bg-zinc-50 dark:text-zinc-950"
-          >
-            Let&apos;s go
-          </button>
-          <button
-            type="button"
-            className="rounded-md bg-zinc-100 px-3 py-2 text-sm font-medium text-zinc-950 dark:bg-zinc-800 dark:text-zinc-50"
-          >
-            Another time
-          </button>
-        </div>
       </div>
     </div>
   )
@@ -244,13 +259,10 @@ function PointerPreview() {
           <HeartPointer />
         </Pointer>
       </PointerTile>
-      <PointerTile
-        title="Colored Pointer"
-        description="A custom pointer with different color"
-      >
+      <PointerTile title="Colored Pointer" description="Custom color">
         <Pointer className="fill-blue-500" />
       </PointerTile>
-      <PointerTile title="Custom Shape" description="A pointer with a custom SVG shape">
+      <PointerTile title="Custom Shape" description="Custom SVG shape">
         <Pointer>
           <svg
             width="24"
@@ -264,17 +276,201 @@ function PointerPreview() {
           </svg>
         </Pointer>
       </PointerTile>
-      <PointerTile title="Emoji Pointer" description="Using an emoji as a custom pointer">
+      <PointerTile title="Text Pointer" description="Custom text">
         <Pointer>
-          <div className="text-2xl">Up</div>
+          <div className="text-lg font-semibold text-rose-500">Click</div>
         </Pointer>
       </PointerTile>
     </div>
   )
 }
 
+function BorderBeamPreview() {
+  return (
+    <PreviewSurface className="bg-zinc-950 text-white dark:bg-zinc-950">
+      <BorderBeam size={90} duration={8} />
+      <div>
+        <p className="text-2xl font-semibold">Border Beam</p>
+        <p className="mt-2 text-sm text-zinc-400">Light travels the edge.</p>
+      </div>
+    </PreviewSurface>
+  )
+}
+
+function ShineBorderPreview() {
+  return (
+    <PreviewSurface>
+      <ShineBorder
+        borderWidth={2}
+        shineColor={['#A07CFE', '#FE8FB5', '#FFBE7B']}
+      />
+      <div>
+        <p className="text-2xl font-semibold text-zinc-950 dark:text-zinc-50">
+          Shine Border
+        </p>
+        <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+          A soft animated border.
+        </p>
+      </div>
+    </PreviewSurface>
+  )
+}
+
+function MagicCardPreview() {
+  return (
+    <MagicCard className="w-full max-w-md rounded-xl p-8 shadow-sm">
+      <div className="relative">
+        <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+          Hover surface
+        </p>
+        <p className="mt-2 text-3xl font-semibold text-zinc-950 dark:text-zinc-50">
+          Magic Card
+        </p>
+      </div>
+    </MagicCard>
+  )
+}
+
+function MeteorsPreview({ mode }: { mode: PreviewMode }) {
+  return (
+    <PreviewSurface className="bg-zinc-950 text-white dark:bg-zinc-950">
+      <Meteors number={mode === 'thumbnail' ? 8 : 22} />
+      <div>
+        <p className="text-2xl font-semibold">Meteors</p>
+        <p className="mt-2 text-sm text-zinc-400">A shower across the card.</p>
+      </div>
+    </PreviewSurface>
+  )
+}
+
+function ConfettiPreview() {
+  return (
+    <PreviewSurface>
+      <ConfettiButton type="button" className="rounded-lg">
+        Celebrate
+      </ConfettiButton>
+    </PreviewSurface>
+  )
+}
+
+function ParticlesPreview({ mode }: { mode: PreviewMode }) {
+  return (
+    <PreviewSurface className="bg-zinc-950 text-white dark:bg-zinc-950">
+      <Particles
+        className="absolute inset-0"
+        quantity={mode === 'thumbnail' ? 40 : 90}
+        color="#38bdf8"
+        ease={80}
+      />
+      <div className="relative">
+        <p className="text-2xl font-semibold">Particles</p>
+        <p className="mt-2 text-sm text-zinc-400">Canvas depth and motion.</p>
+      </div>
+    </PreviewSurface>
+  )
+}
+
+function TextAnimatePreview() {
+  return (
+    <TextAnimate
+      by="word"
+      animation="blurInUp"
+      className="text-center text-4xl font-semibold text-zinc-950 dark:text-zinc-50"
+    >
+      Text Animate
+    </TextAnimate>
+  )
+}
+
+function TypingAnimationPreview() {
+  return (
+    <TypingAnimation
+      words={['Typing Animation', 'Typed Motion', 'Text Loop']}
+      loop
+      className="text-4xl font-semibold text-zinc-950 dark:text-zinc-50"
+    />
+  )
+}
+
+function AuroraTextPreview() {
+  return (
+    <p className="text-center text-5xl font-semibold tracking-normal">
+      <AuroraText>Aurora Text</AuroraText>
+    </p>
+  )
+}
+
+function VideoTextPreview() {
+  return (
+    <div className="h-48 w-full max-w-xl overflow-hidden rounded-xl bg-zinc-950">
+      <VideoText
+        src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+        fontSize={18}
+      >
+        VIDEO
+      </VideoText>
+    </div>
+  )
+}
+
+function NumberTickerPreview() {
+  return (
+    <p className="text-6xl font-semibold tabular-nums text-zinc-950 dark:text-zinc-50">
+      <NumberTicker value={12840} />
+    </p>
+  )
+}
+
+function AnimatedShinyTextPreview() {
+  return (
+    <AnimatedShinyText className="text-4xl font-semibold">
+      Animated Shiny Text
+    </AnimatedShinyText>
+  )
+}
+
+function AnimatedGradientTextPreview() {
+  return (
+    <AnimatedGradientText className="text-4xl font-semibold">
+      Animated Gradient Text
+    </AnimatedGradientText>
+  )
+}
+
+function DiaTextRevealPreview() {
+  return (
+    <DiaTextReveal
+      text={['Dia Text Reveal', 'Color Sweep', 'Magic UI']}
+      repeat
+      className="text-center text-4xl font-semibold"
+    />
+  )
+}
+
+function MorphingTextPreview() {
+  return (
+    <MorphingText
+      texts={['Design', 'Build', 'Ship']}
+      className="h-20 text-[42px] md:h-24"
+    />
+  )
+}
+
+function HighlighterPreview() {
+  return (
+    <p className="max-w-md text-center text-3xl font-semibold leading-tight text-zinc-950 dark:text-zinc-50">
+      Build with{' '}
+      <Highlighter color="#fde68a" strokeWidth={2}>
+        highlighted
+      </Highlighter>{' '}
+      details.
+    </p>
+  )
+}
+
 function BasePreviewContent({
   sample,
+  mode,
 }: {
   sample: ComponentSample
   mode: PreviewMode
@@ -288,6 +484,38 @@ function BasePreviewContent({
       return <LensPreview />
     case 'pointer':
       return <PointerPreview />
+    case 'border-beam':
+      return <BorderBeamPreview />
+    case 'shine-border':
+      return <ShineBorderPreview />
+    case 'magic-card':
+      return <MagicCardPreview />
+    case 'meteors':
+      return <MeteorsPreview mode={mode} />
+    case 'confetti':
+      return <ConfettiPreview />
+    case 'particles':
+      return <ParticlesPreview mode={mode} />
+    case 'text-animate':
+      return <TextAnimatePreview />
+    case 'typing-animation':
+      return <TypingAnimationPreview />
+    case 'aurora-text':
+      return <AuroraTextPreview />
+    case 'video-text':
+      return <VideoTextPreview />
+    case 'number-ticker':
+      return <NumberTickerPreview />
+    case 'animated-shiny-text':
+      return <AnimatedShinyTextPreview />
+    case 'animated-gradient-text':
+      return <AnimatedGradientTextPreview />
+    case 'dia-text-reveal':
+      return <DiaTextRevealPreview />
+    case 'morphing-text':
+      return <MorphingTextPreview />
+    case 'highlighter':
+      return <HighlighterPreview />
   }
 }
 

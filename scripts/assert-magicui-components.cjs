@@ -4,14 +4,42 @@ const fs = require('node:fs')
 const path = require('node:path')
 
 const root = process.cwd()
-const requiredNames = ['marquee', 'icon-cloud', 'lens', 'pointer']
+const requiredNames = [
+  'marquee',
+  'icon-cloud',
+  'lens',
+  'pointer',
+  'border-beam',
+  'shine-border',
+  'magic-card',
+  'meteors',
+  'confetti',
+  'particles',
+  'text-animate',
+  'typing-animation',
+  'aurora-text',
+  'video-text',
+  'number-ticker',
+  'animated-shiny-text',
+  'animated-gradient-text',
+  'dia-text-reveal',
+  'morphing-text',
+  'highlighter',
+]
+const requiredCategories = [
+  "id: 'components'",
+  "name: 'Components'",
+  "id: 'effects'",
+  "name: 'Effects'",
+  "id: 'text'",
+  "name: 'Text'",
+]
 const removedNames = [
   'action-button',
   'glass-surface',
   'component-nav',
   'status-notice',
   'gradient-heading',
-  'border-beam',
 ]
 const removedCategories = [
   'core',
@@ -19,7 +47,26 @@ const removedCategories = [
   'navigation',
   'feedback',
   'typography',
-  'effects',
+]
+const motionNames = [
+  'lens',
+  'pointer',
+  'border-beam',
+  'magic-card',
+  'text-animate',
+  'typing-animation',
+  'number-ticker',
+  'dia-text-reveal',
+  'highlighter',
+]
+const cssRegistryNames = [
+  'marquee',
+  'shine-border',
+  'meteors',
+  'typing-animation',
+  'aurora-text',
+  'animated-shiny-text',
+  'animated-gradient-text',
 ]
 const dataPath = path.join(
   root,
@@ -31,6 +78,7 @@ const docsPath = path.join(
 )
 const componentsPagePath = path.join(root, 'src/app/components/page.tsx')
 const layoutPath = path.join(root, 'src/app/components/layout.tsx')
+const globalsPath = path.join(root, 'src/app/globals.css')
 const sidebarPath = path.join(
   root,
   'src/features/component-library/component-sidebar.tsx'
@@ -52,6 +100,7 @@ const dataSource = fs.readFileSync(dataPath, 'utf8')
 const docsSource = fs.readFileSync(docsPath, 'utf8')
 const componentsPageSource = fs.readFileSync(componentsPagePath, 'utf8')
 const layoutSource = fs.readFileSync(layoutPath, 'utf8')
+const globalsSource = fs.readFileSync(globalsPath, 'utf8')
 
 function assert(condition, message) {
   if (!condition) {
@@ -59,11 +108,12 @@ function assert(condition, message) {
   }
 }
 
-assert(
-  dataSource.includes("id: 'components'") &&
-    dataSource.includes("name: 'Components'"),
-  'Missing Components category in component-data.ts'
-)
+for (const category of requiredCategories) {
+  assert(
+    dataSource.includes(category),
+    `Missing required category marker in component-data.ts: ${category}`
+  )
+}
 
 for (const category of removedCategories) {
   assert(
@@ -108,12 +158,12 @@ for (const name of requiredNames) {
   )
   assert(
     typeof registry.files[0].content === 'string' &&
-      registry.files[0].content.includes(`export function`),
+      /export (function|const) /.test(registry.files[0].content),
     `${name} registry item should include component source`
   )
 }
 
-for (const name of ['lens', 'pointer']) {
+for (const name of motionNames) {
   const registry = JSON.parse(
     fs.readFileSync(path.join(root, `public/r/${name}.json`), 'utf8')
   )
@@ -121,6 +171,34 @@ for (const name of ['lens', 'pointer']) {
     Array.isArray(registry.dependencies) &&
       registry.dependencies.includes('motion'),
     `${name} registry item should include motion dependency`
+  )
+}
+
+{
+  const registry = JSON.parse(
+    fs.readFileSync(path.join(root, 'public/r/confetti.json'), 'utf8')
+  )
+  assert(
+    Array.isArray(registry.dependencies) &&
+      registry.dependencies.includes('canvas-confetti') &&
+      registry.dependencies.includes('@types/canvas-confetti'),
+    'confetti registry item should include canvas-confetti dependencies'
+  )
+  assert(
+    Array.isArray(registry.registryDependencies) &&
+      registry.registryDependencies.includes('button'),
+    'confetti registry item should include button registry dependency'
+  )
+}
+
+{
+  const registry = JSON.parse(
+    fs.readFileSync(path.join(root, 'public/r/highlighter.json'), 'utf8')
+  )
+  assert(
+    Array.isArray(registry.dependencies) &&
+      registry.dependencies.includes('rough-notation'),
+    'highlighter registry item should include rough-notation dependency'
   )
 }
 
@@ -132,6 +210,16 @@ assert(
     marquee.css?.['@keyframes marquee-vertical'],
   'marquee registry item should include marquee keyframes'
 )
+
+for (const name of cssRegistryNames) {
+  const registry = JSON.parse(
+    fs.readFileSync(path.join(root, `public/r/${name}.json`), 'utf8')
+  )
+  assert(
+    registry.css || registry.cssVars,
+    `${name} registry item should include Magic UI CSS metadata`
+  )
+}
 
 assert(
   fs.existsSync(exampleTabsPath),
@@ -268,11 +356,36 @@ assert(
   'Component sidebar should mark the current page with pathname-based active state'
 )
 assert(
-  sidebarSource.includes('space-y-7 px-1 py-1') &&
+  sidebarSource.includes('space-y-7 px-1 pb-24 pt-1') &&
     sidebarSource.includes('border border-transparent') &&
     sidebarSource.includes('border-zinc-200') &&
     !sidebarSource.includes('ring-1'),
   'Component sidebar active state should have padded, non-clipped inner borders'
+)
+assert(
+  sidebarSource.includes('lg:h-full') &&
+    sidebarSource.includes('lg:overflow-y-auto') &&
+    sidebarSource.includes('lg:overscroll-contain') &&
+    sidebarSource.includes('lg:scroll-pb-24') &&
+    sidebarSource.includes('data-lenis-prevent-wheel'),
+  'Component sidebar should be an independent desktop scroll container that bypasses Lenis wheel smoothing'
+)
+assert(
+  layoutSource.includes('lg:fixed') &&
+    layoutSource.includes('lg:top-[6.25rem]') &&
+    layoutSource.includes('lg:bottom-0') &&
+    layoutSource.includes('lg:h-full') &&
+    layoutSource.includes('components-scroll-shell') &&
+    layoutSource.includes('lg:overflow-hidden') &&
+    layoutSource.includes('lg:overflow-y-auto') &&
+    layoutSource.includes('lg:overscroll-contain') &&
+    layoutSource.includes('data-lenis-prevent-wheel'),
+  'Components layout should use a fixed desktop app shell with independent scroll containers and no page-level wheel capture'
+)
+assert(
+  globalsSource.includes('html:has(.components-scroll-shell)') &&
+    globalsSource.includes('overflow-y: hidden'),
+  'Components desktop app shell should disable page-level html scrolling'
 )
 assert(
   !sidebarSource.includes('Getting Started') &&

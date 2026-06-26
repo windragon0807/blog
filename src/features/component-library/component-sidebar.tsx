@@ -21,9 +21,10 @@ export function ComponentSidebar() {
   return (
     <aside
       aria-label="컴포넌트 문서 탐색"
-      className="lg:sticky lg:top-20 lg:h-[calc(100dvh-6rem)] lg:overflow-y-auto lg:pr-4"
+      className="lg:h-full lg:scroll-pb-24 lg:overflow-y-auto lg:overscroll-contain lg:pr-4"
+      data-lenis-prevent-wheel
     >
-      <nav aria-label="Component categories" className="space-y-7 px-1 py-1">
+      <nav aria-label="Component categories" className="space-y-7 px-1 pb-24 pt-1">
         {componentCategories.map((category) => {
           const samples = componentSamples.filter(
             (sample) => sample.categoryId === category.id

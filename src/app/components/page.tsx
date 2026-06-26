@@ -67,7 +67,7 @@ export default function ComponentsPage() {
               Components
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-              Components 카테고리에는 Magic UI 기준 컴포넌트를 먼저 배치했습니다. 상세 문서는 개별 페이지에서 다룹니다.
+              Components, Effects, Text 카테고리에 Magic UI 기준 컴포넌트를 배치했습니다. 상세 문서는 개별 페이지에서 다룹니다.
             </p>
           </div>
           <p className="text-sm text-zinc-500">{componentSamples.length} samples</p>
