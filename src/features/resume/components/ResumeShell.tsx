@@ -11,8 +11,8 @@ import {
 import { buildResumePdfFromElement } from '../lib/build-resume-pdf'
 import { ResumeDocument } from './ResumeDocument'
 
-const RESUME_PREVIEW_MAX_SCALE = 2.675
-const RESUME_PREVIEW_MAX_WIDTH = '70vw'
+const RESUME_PREVIEW_MAX_WIDTH = 1000
+const RESUME_PREVIEW_MAX_SCALE = RESUME_PREVIEW_MAX_WIDTH / RESUME_DOCUMENT_WIDTH
 
 function downloadBytes(bytes: Uint8Array, fileName: string) {
   const buffer = new Uint8Array(bytes.byteLength)
@@ -28,6 +28,14 @@ function downloadBytes(bytes: Uint8Array, fileName: string) {
   link.click()
   link.remove()
   window.setTimeout(() => URL.revokeObjectURL(url), 0)
+}
+
+function waitForNextPaint() {
+  return new Promise<void>((resolve) => {
+    window.requestAnimationFrame(() => {
+      window.setTimeout(resolve, 0)
+    })
+  })
 }
 
 export function ResumeShell() {
@@ -147,6 +155,7 @@ export function ResumeShell() {
     setErrorMessage(null)
 
     try {
+      await waitForNextPaint()
       const pdfBytes = await buildResumePdfFromElement(target)
       downloadBytes(pdfBytes, RESUME_PDF_FILE_NAME)
     } catch (error) {
@@ -159,7 +168,7 @@ export function ResumeShell() {
 
   return (
     <>
-      <div className="relative left-1/2 right-1/2 w-screen -translate-x-1/2 bg-white px-3 pt-3 pb-3 dark:bg-[#11141b] sm:px-6 sm:pt-8">
+      <div className="relative left-1/2 right-1/2 w-screen -translate-x-1/2 bg-white px-0 py-0 dark:bg-[#11141b] sm:px-5 sm:py-5 lg:py-8">
         <div
           ref={viewportRef}
           className="relative mx-auto w-full overflow-visible"
@@ -172,7 +181,7 @@ export function ResumeShell() {
           )}
           {scale === null ? (
             <div
-              className="mx-auto box-content overflow-hidden rounded-3xl border border-zinc-200 bg-zinc-100 shadow-[0_24px_70px_-46px_rgba(15,23,42,0.32)]"
+              className="mx-auto box-content overflow-hidden bg-zinc-100 shadow-none sm:rounded-3xl sm:border sm:border-zinc-200 sm:shadow-[0_24px_70px_-46px_rgba(15,23,42,0.32)]"
               data-resume-skeleton
               style={{
                 aspectRatio: `${RESUME_DOCUMENT_WIDTH} / ${RESUME_DOCUMENT_HEIGHT}`,
@@ -183,7 +192,7 @@ export function ResumeShell() {
             </div>
           ) : (
             <div
-              className="relative mx-auto box-content overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-[0_24px_70px_-46px_rgba(15,23,42,0.52)]"
+              className="relative mx-auto box-content overflow-hidden bg-white shadow-none sm:rounded-3xl sm:border sm:border-zinc-200 sm:shadow-[0_24px_70px_-46px_rgba(15,23,42,0.52)]"
               style={{
                 width: RESUME_DOCUMENT_WIDTH * scale,
                 height: documentHeight * scale,

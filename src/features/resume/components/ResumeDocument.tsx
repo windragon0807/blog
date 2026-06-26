@@ -107,12 +107,13 @@ function ResumeValueLinkIcon() {
           <stop offset="100%" stopColor="#e48792" />
         </linearGradient>
       </defs>
-      <g className={styles.linkValueIconBase} stroke="currentColor">
+      <g className={styles.linkValueIconBase} data-resume-link-icon-base stroke="currentColor">
         <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
         <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
       </g>
       <g
         className={styles.linkValueIconGradient}
+        data-resume-link-icon-gradient
         stroke={`url(#${gradientId})`}
       >
         <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
@@ -346,6 +347,7 @@ const ResumeDocument = forwardRef<HTMLDivElement>(function ResumeDocument(_, ref
               key={link.label}
               href={link.href}
               className={styles.linkCard}
+              data-resume-pdf-link={link.href}
               target="_blank"
               rel="noreferrer"
             >
