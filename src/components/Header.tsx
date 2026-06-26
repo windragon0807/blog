@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { Component as ComponentIcon } from 'lucide-react'
 import { AppLauncherMenu } from './AppLauncherMenu'
 import { BrandLogo } from './BrandLogo'
 import { useHeaderBrandScope } from './HeaderBrandScopeProvider'
@@ -42,14 +43,23 @@ export function Header() {
   const pathname = usePathname()
   const { scope } = useHeaderBrandScope()
   const shouldShowHomeButton =
-    pathname === '/resume' || pathname === '/portfolio'
+    pathname === '/resume' ||
+    pathname === '/portfolio' ||
+    pathname.startsWith('/components')
   const brandLabel =
     scope === 'resume'
       ? 'ryong.resume'
       : scope === 'portfolio'
         ? 'ryong.portfolio'
+        : scope === 'components'
+          ? 'ryong.components'
         : 'ryong.log'
-  const brandHref = scope === 'portfolio' ? '/portfolio' : '/'
+  const brandHref =
+    scope === 'portfolio'
+      ? '/portfolio'
+      : scope === 'components'
+        ? '/components'
+        : '/'
 
   return (
     <header className="glass-surface header-sticky top-0 z-50 w-full">
@@ -79,6 +89,14 @@ export function Header() {
                 <HomeIcon className="relative z-10 h-[18px] w-[18px]" />
               </Link>
             )}
+            <Link
+              href="/components"
+              aria-label="컴포넌트 라이브러리로 이동"
+              className={ICON_CONTROL_BUTTON_CLASS_NAME}
+            >
+              <span className="sr-only">컴포넌트 라이브러리로 이동</span>
+              <ComponentIcon className="h-[18px] w-[18px]" aria-hidden="true" />
+            </Link>
             <ThemeModeButton />
             <AppLauncherMenu />
             <ThemeSettingsMenu />

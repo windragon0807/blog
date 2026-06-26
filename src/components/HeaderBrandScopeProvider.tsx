@@ -9,7 +9,7 @@ import {
 } from 'react'
 import { usePathname } from 'next/navigation'
 
-export type HeaderBrandScope = 'log' | 'portfolio' | 'resume'
+export type HeaderBrandScope = 'log' | 'portfolio' | 'resume' | 'components'
 
 interface HeaderBrandScopeContextValue {
   scope: HeaderBrandScope
@@ -21,6 +21,7 @@ const HeaderBrandScopeContext = createContext<HeaderBrandScopeContextValue | nul
 function getScopeFromPathname(pathname: string): HeaderBrandScope {
   if (pathname === '/resume') return 'resume'
   if (pathname === '/portfolio') return 'portfolio'
+  if (pathname.startsWith('/components')) return 'components'
   return 'log'
 }
 
