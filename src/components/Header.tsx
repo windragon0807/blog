@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { HouseIcon, PuzzleIcon } from '@/components/icons'
+import { usePostsPrefetch } from '@/hooks/usePostsPrefetch'
 import { AppLauncherMenu } from './AppLauncherMenu'
 import { BrandLogo } from './BrandLogo'
 import { useHeaderBrandScope } from './HeaderBrandScopeProvider'
@@ -12,6 +13,7 @@ import { ThemeSettingsMenu } from './ThemeSettingsMenu'
 
 export function Header() {
   const pathname = usePathname()
+  const prefetchPosts = usePostsPrefetch()
   const { scope } = useHeaderBrandScope()
   const shouldShowHomeButton =
     pathname === '/resume' ||
@@ -40,6 +42,9 @@ export function Header() {
             <Link
               href={brandHref}
               className="brand-link relative inline-grid max-w-full truncate font-bold text-lg text-zinc-900 dark:text-zinc-100"
+              onFocus={brandHref === '/' ? prefetchPosts : undefined}
+              onMouseEnter={brandHref === '/' ? prefetchPosts : undefined}
+              onTouchStart={brandHref === '/' ? prefetchPosts : undefined}
             >
               <BrandLogo label={brandLabel} />
             </Link>
@@ -51,6 +56,9 @@ export function Header() {
                 href="/"
                 aria-label="홈으로 이동"
                 className={ICON_CONTROL_BUTTON_CLASS_NAME}
+                onFocus={prefetchPosts}
+                onMouseEnter={prefetchPosts}
+                onTouchStart={prefetchPosts}
               >
                 <span className="sr-only">홈으로 이동</span>
                 <HouseIcon className="h-[18px] w-[18px]" />

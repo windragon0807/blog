@@ -319,43 +319,9 @@ export const getPostBySlug = cache(async (slug: string): Promise<Post | null> =>
   return null
 })
 
-/** 특정 태그의 포스트 목록 */
-async function getPostsByTagImpl(tag: string): Promise<Post[]> {
-  const schema = await getDatabaseSchema(BLOG_DATABASE_ID)
-  if (!schema.tags) return []
-
-  const filter: QueryDatabaseParameters['filter'] = schema.published
-    ? {
-        and: [
-          { property: schema.tags, multi_select: { contains: tag } },
-          { property: schema.published, checkbox: { equals: true } },
-        ],
-      }
-    : { property: schema.tags, multi_select: { contains: tag } }
-
-  const sorts = schema.date
-    ? [{ property: schema.date, direction: 'descending' as const }]
-    : [{ timestamp: 'created_time' as const, direction: 'descending' as const }]
-
-  const pages = await queryAllPages(BLOG_DATABASE_ID, {
-    filter,
-    sorts,
-  })
-
-  return pages.map((page) => pageToPost(page, schema, 'blog'))
-}
-
-const getPostsByTagCached = unstable_cache(
-  getPostsByTagImpl,
-  [`notion-posts-by-tag:${BLOG_DATABASE_ID}`],
-  {
-    revalidate: CACHE_TTL_SECONDS,
-    tags: [NOTION_CACHE_TAGS.posts],
-  }
-)
-
 export const getPostsByTag = cache(async (tag: string): Promise<Post[]> => {
-  return getPostsByTagCached(tag)
+  const posts = await getPosts()
+  return posts.filter((post) => post.tags.includes(tag))
 })
 
 /** 전체 태그 목록 집계 */

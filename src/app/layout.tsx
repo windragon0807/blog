@@ -6,6 +6,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import { ThemeProvider } from 'next-themes'
 import { Header } from '@/components/Header'
 import { HeaderBrandScopeProvider } from '@/components/HeaderBrandScopeProvider'
+import { QueryProvider } from '@/components/providers/QueryProvider'
 import { SmoothScrollProvider } from '@/components/SmoothScrollProvider'
 import { ScrollToTopButton } from '@/components/ScrollToTopButton'
 import {
@@ -182,12 +183,14 @@ export default function RootLayout({
           {logoMotionBootScript}
         </Script>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <HeaderBrandScopeProvider>
-            <SmoothScrollProvider />
-            <Header />
-            <main className="max-w-3xl mx-auto px-4 pt-8 pb-16">{children}</main>
-            <ScrollToTopButton />
-          </HeaderBrandScopeProvider>
+          <QueryProvider>
+            <HeaderBrandScopeProvider>
+              <SmoothScrollProvider />
+              <Header />
+              <main className="max-w-3xl mx-auto px-4 pt-8 pb-16">{children}</main>
+              <ScrollToTopButton />
+            </HeaderBrandScopeProvider>
+          </QueryProvider>
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />
