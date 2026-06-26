@@ -138,6 +138,17 @@ export function ComponentSection({ sample }: { sample: ComponentSample }) {
           <p className="mt-4 max-w-2xl text-base leading-7 text-zinc-600 dark:text-zinc-400">
             {sample.description}
           </p>
+          <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400">
+            Reference:{' '}
+            <a
+              href={sample.reference.url}
+              target="_blank"
+              rel="noreferrer"
+              className="font-medium text-[var(--theme-accent-current)] underline underline-offset-4 transition-opacity hover:opacity-75"
+            >
+              {sample.reference.label}
+            </a>
+          </p>
         </div>
       </div>
 

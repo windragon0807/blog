@@ -8,10 +8,17 @@ export function ComponentExampleTabs({
 }) {
   const flushPreview =
     sample.preview.kind === 'border-beam' ||
+    sample.preview.kind === 'shine-border' ||
     sample.preview.kind === 'meteors' ||
     sample.preview.kind === 'confetti' ||
     sample.preview.kind === 'particles' ||
-    sample.preview.kind === 'video-text'
+    sample.preview.kind === 'video-text' ||
+    sample.preview.kind === 'strands' ||
+    sample.preview.kind === 'circular-gallery' ||
+    sample.preview.kind === 'glass-surface' ||
+    sample.preview.kind === 'lanyard' ||
+    sample.preview.kind === 'aurora' ||
+    sample.preview.kind === 'dot-field'
 
   return (
     <section

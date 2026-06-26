@@ -49,9 +49,11 @@ export function InstallCommandTabs({
 
   const activePanel = panels.find((panel) => panel.manager === activeManager)
 
-  const activateManager = (manager: PackageManager) => {
+  const activateManager = (manager: PackageManager, shouldFocus = true) => {
     setActiveManager(manager)
-    requestAnimationFrame(() => tabRefs.current[manager]?.focus())
+    if (shouldFocus) {
+      requestAnimationFrame(() => tabRefs.current[manager]?.focus())
+    }
   }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
@@ -82,8 +84,20 @@ export function InstallCommandTabs({
 
   return (
     <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-      <div className="relative flex items-center gap-6 border-b border-zinc-200 px-4 pt-3 dark:border-zinc-800">
-        <div role="tablist" aria-label="Install command package manager" className="flex gap-6">
+      <div className="border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
+        <div
+          role="tablist"
+          aria-label="Install command package manager"
+          className="relative inline-flex gap-1 rounded-xl bg-zinc-100 p-1 dark:bg-zinc-900"
+        >
+          <span
+            aria-hidden="true"
+            className="absolute inset-y-1 rounded-lg bg-white shadow-sm transition-[left,width] duration-200 ease-out dark:bg-zinc-800"
+            style={{
+              left: indicatorStyle.left,
+              width: indicatorStyle.width,
+            }}
+          />
           {panels.map((panel) => {
             const isSelected = activeManager === panel.manager
 
@@ -99,9 +113,9 @@ export function InstallCommandTabs({
                 aria-selected={isSelected}
                 aria-controls={`${generatedId}-${panel.manager}-panel`}
                 tabIndex={isSelected ? 0 : -1}
-                onClick={() => setActiveManager(panel.manager)}
+                onClick={() => activateManager(panel.manager, false)}
                 onKeyDown={handleKeyDown}
-                className={`pb-3 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-950 dark:focus-visible:outline-zinc-50 ${
+                className={`relative z-10 rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-950 dark:focus-visible:outline-zinc-50 ${
                   isSelected
                     ? 'text-zinc-950 dark:text-zinc-50'
                     : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100'
@@ -112,14 +126,6 @@ export function InstallCommandTabs({
             )
           })}
         </div>
-        <span
-          aria-hidden="true"
-          className="absolute bottom-0 h-0.5 rounded-full bg-zinc-950 transition-[left,width] duration-200 ease-out dark:bg-zinc-50"
-          style={{
-            left: indicatorStyle.left,
-            width: indicatorStyle.width,
-          }}
-        />
       </div>
 
       {panels.map((panel) => (

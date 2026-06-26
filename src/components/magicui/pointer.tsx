@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import {
   AnimatePresence,
   motion,
@@ -24,8 +25,8 @@ export function Pointer({
   children,
   ...props
 }: HTMLMotionProps<'div'>): ReactNode {
-  const x = useMotionValue(0)
-  const y = useMotionValue(0)
+  const pointerX = useMotionValue(0)
+  const pointerY = useMotionValue(0)
   const [isActive, setIsActive] = useState<boolean>(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -36,14 +37,14 @@ export function Pointer({
         : null
 
     const handleMouseMove = (e: MouseEvent) => {
-      x.set(e.clientX)
-      y.set(e.clientY)
+      pointerX.set(e.clientX)
+      pointerY.set(e.clientY)
       setIsActive(true)
     }
 
     const handleMouseEnter = (e: MouseEvent) => {
-      x.set(e.clientX)
-      y.set(e.clientY)
+      pointerX.set(e.clientX)
+      pointerY.set(e.clientY)
       setIsActive(true)
     }
 
@@ -66,32 +67,35 @@ export function Pointer({
         parentElement.removeEventListener('mouseleave', handleMouseLeave)
       }
     }
-  }, [x, y])
+  }, [pointerX, pointerY])
 
-  return (
-    <>
-      <div ref={containerRef} />
-      <AnimatePresence>
-        {isActive && (
+  const cursorLayer = (
+    <AnimatePresence>
+      {isActive && (
+        <motion.div
+          className="pointer-events-none fixed z-50"
+          style={{
+            top: pointerY,
+            left: pointerX,
+            ...style,
+          }}
+          initial={{
+            opacity: 0,
+          }}
+          animate={{
+            opacity: 1,
+          }}
+          exit={{
+            opacity: 0,
+          }}
+          transition={{ duration: 0.12, ease: 'easeOut' }}
+        >
           <motion.div
-            className="pointer-events-none fixed z-50 transform-[translate(-50%,-50%)]"
-            style={{
-              top: y,
-              left: x,
-              ...style,
-            }}
-            initial={{
-              scale: 0,
-              opacity: 0,
-            }}
-            animate={{
-              scale: 1,
-              opacity: 1,
-            }}
-            exit={{
-              scale: 0,
-              opacity: 0,
-            }}
+            className="-translate-x-1/2 -translate-y-1/2"
+            initial={{ scale: 0.92 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0.92 }}
+            transition={{ duration: 0.12, ease: 'easeOut' }}
             {...props}
           >
             {children || (
@@ -104,7 +108,7 @@ export function Pointer({
                 width="24"
                 xmlns="http://www.w3.org/2000/svg"
                 className={cn(
-                  'rotate-[-70deg] stroke-white text-black',
+                  'rotate-[-70deg] stroke-white text-[var(--theme-accent-current)]',
                   className
                 )}
               >
@@ -112,8 +116,17 @@ export function Pointer({
               </svg>
             )}
           </motion.div>
-        )}
-      </AnimatePresence>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+
+  return (
+    <>
+      <div ref={containerRef} />
+      {typeof document === 'undefined'
+        ? cursorLayer
+        : createPortal(cursorLayer, document.body)}
     </>
   )
 }

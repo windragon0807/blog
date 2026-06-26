@@ -5,29 +5,53 @@ const path = require('node:path')
 
 const root = process.cwd()
 const requiredNames = [
+  'ripple-button',
+  'shiny-button',
   'marquee',
   'icon-cloud',
   'lens',
   'pointer',
+  'file-tree',
+  'animated-circular-progress-bar',
+  'backlight',
+  'curved-loop',
+  'variable-proximity',
+  'click-spark',
+  'magnet',
+  'strands',
+  'circular-gallery',
+  'stack',
+  'glass-surface',
+  'folder',
+  'lanyard',
+  'carousel',
+  'border-glow',
+  'elastic-slider',
+  'counter',
+  'aurora',
+  'dot-field',
   'border-beam',
   'shine-border',
   'meteors',
   'confetti',
   'particles',
-  'text-animate',
   'typing-animation',
   'aurora-text',
   'video-text',
   'number-ticker',
-  'animated-shiny-text',
-  'animated-gradient-text',
   'dia-text-reveal',
   'morphing-text',
   'highlighter',
 ]
 const requiredCategories = [
+  "id: 'buttons'",
+  "name: 'Buttons'",
   "id: 'components'",
   "name: 'Components'",
+  "id: 'animations'",
+  "name: 'Animations'",
+  "id: 'backgrounds'",
+  "name: 'Backgrounds'",
   "id: 'effects'",
   "name: 'Effects'",
   "id: 'text'",
@@ -35,11 +59,13 @@ const requiredCategories = [
 ]
 const removedNames = [
   'action-button',
-  'glass-surface',
   'component-nav',
   'status-notice',
   'gradient-heading',
   'magic-card',
+  'text-animate',
+  'animated-shiny-text',
+  'animated-gradient-text',
 ]
 const removedCategories = [
   'core',
@@ -49,23 +75,30 @@ const removedCategories = [
   'typography',
 ]
 const motionNames = [
+  'shiny-button',
   'lens',
   'pointer',
+  'variable-proximity',
+  'stack',
+  'carousel',
+  'elastic-slider',
+  'counter',
   'border-beam',
-  'text-animate',
   'typing-animation',
   'number-ticker',
   'dia-text-reveal',
   'highlighter',
 ]
+const oglNames = ['strands', 'circular-gallery', 'aurora']
+const reactThreeNames = ['lanyard']
+const reactIconsNames = ['carousel']
 const cssRegistryNames = [
+  'ripple-button',
   'marquee',
   'shine-border',
   'meteors',
   'typing-animation',
   'aurora-text',
-  'animated-shiny-text',
-  'animated-gradient-text',
 ]
 const dataPath = path.join(
   root,
@@ -170,7 +203,8 @@ for (const name of requiredNames) {
   )
   assert(
     typeof registry.files[0].content === 'string' &&
-      /export (function|const) /.test(registry.files[0].content),
+      (/export (function|const) /.test(registry.files[0].content) ||
+        registry.files[0].content.includes('export {')),
     `${name} registry item should include component source`
   )
 }
@@ -183,6 +217,66 @@ for (const name of motionNames) {
     Array.isArray(registry.dependencies) &&
       registry.dependencies.includes('motion'),
     `${name} registry item should include motion dependency`
+  )
+}
+
+for (const name of oglNames) {
+  const registry = JSON.parse(
+    fs.readFileSync(path.join(root, `public/r/${name}.json`), 'utf8')
+  )
+  assert(
+    Array.isArray(registry.dependencies) &&
+      registry.dependencies.includes('ogl'),
+    `${name} registry item should include ogl dependency`
+  )
+}
+
+for (const name of reactThreeNames) {
+  const registry = JSON.parse(
+    fs.readFileSync(path.join(root, `public/r/${name}.json`), 'utf8')
+  )
+  for (const dependency of [
+    '@react-three/fiber',
+    '@react-three/drei',
+    '@react-three/rapier',
+    'meshline',
+    'three',
+  ]) {
+    assert(
+      Array.isArray(registry.dependencies) &&
+        registry.dependencies.includes(dependency),
+      `${name} registry item should include ${dependency} dependency`
+    )
+  }
+}
+
+for (const name of reactIconsNames) {
+  const registry = JSON.parse(
+    fs.readFileSync(path.join(root, `public/r/${name}.json`), 'utf8')
+  )
+  assert(
+    Array.isArray(registry.dependencies) &&
+      registry.dependencies.includes('react-icons'),
+    `${name} registry item should include react-icons dependency`
+  )
+}
+
+{
+  const registry = JSON.parse(
+    fs.readFileSync(path.join(root, 'public/r/file-tree.json'), 'utf8')
+  )
+  assert(
+    Array.isArray(registry.dependencies) &&
+      registry.dependencies.includes('@radix-ui/react-accordion') &&
+      registry.dependencies.includes('@radix-ui/react-scroll-area') &&
+      registry.dependencies.includes('lucide-react'),
+    'file-tree registry item should include tree dependencies'
+  )
+  assert(
+    Array.isArray(registry.registryDependencies) &&
+      registry.registryDependencies.includes('button') &&
+      registry.registryDependencies.includes('scroll-area'),
+    'file-tree registry item should include button and scroll-area registry dependencies'
   )
 }
 
@@ -255,6 +349,14 @@ assert(
 const highlightedCodeBlockSource = fs.readFileSync(highlightedCodeBlockPath, 'utf8')
 const notionCodeBlockSource = fs.readFileSync(notionCodeBlockPath, 'utf8')
 const installTabsSource = fs.readFileSync(installTabsPath, 'utf8')
+const meteorsSource = fs.readFileSync(
+  path.join(root, 'src/components/magicui/meteors.tsx'),
+  'utf8'
+)
+const highlighterSource = fs.readFileSync(
+  path.join(root, 'src/components/magicui/highlighter.tsx'),
+  'utf8'
+)
 assert(
   !exampleTabsSource.includes('>Example<') &&
     !exampleTabsSource.includes('id="example-heading"'),
@@ -285,7 +387,8 @@ assert(
   'Preview heading should match the Installation and Code section title style'
 )
 assert(
-  exampleTabsSource.includes('flushPreview') &&
+    exampleTabsSource.includes('flushPreview') &&
+    exampleTabsSource.includes("sample.preview.kind === 'shine-border'") &&
     exampleTabsSource.includes("sample.preview.kind === 'meteors'") &&
     exampleTabsSource.includes("sample.preview.kind === 'particles'") &&
     exampleTabsSource.includes("sample.preview.kind === 'video-text'"),
@@ -358,9 +461,10 @@ assert(
   'Component pages should not render Ready status badges'
 )
 assert(
-  !docsSource.includes('sample.registry.url') &&
+  docsSource.includes('sample.reference.url') &&
+    docsSource.includes('sample.reference.label') &&
     !docsSource.includes('sample.registry.dependencies'),
-  'Component detail page should not render registry URL or dependency chips'
+  'Component detail page should render reference links without dependency chips'
 )
 assert(
   fs.existsSync(sidebarPath),
@@ -418,8 +522,14 @@ assert(
 assert(
   !previewsSource.includes('MagicCard') &&
     !previewsSource.includes('MagicCardPreview') &&
-    !previewsSource.includes("case 'magic-card'"),
-  'Component previews should not include Magic Card'
+    !previewsSource.includes("case 'magic-card'") &&
+    !previewsSource.includes('TextAnimate') &&
+    !previewsSource.includes('AnimatedShinyText') &&
+    !previewsSource.includes('AnimatedGradientText') &&
+    !previewsSource.includes("case 'text-animate'") &&
+    !previewsSource.includes("case 'animated-shiny-text'") &&
+    !previewsSource.includes("case 'animated-gradient-text'"),
+  'Component previews should not include removed Magic UI components'
 )
 for (const requiredPreviewPart of [
   'OuterEffectSurface',
@@ -429,8 +539,9 @@ for (const requiredPreviewPart of [
   'ParticlesPreview',
   'VideoTextPreview',
   'HighlighterPreview',
-  'bg-white',
-  'dark:bg-white',
+  'TextPreviewFont',
+  'bg-background',
+  'theme-accent-current',
 ]) {
   assert(
     previewsSource.includes(requiredPreviewPart),
@@ -445,10 +556,45 @@ assert(
 )
 assert(
   !sidebarSource.includes('Getting Started') &&
-    !sidebarSource.includes('Introduction') &&
-    !sidebarSource.includes('isIntroActive') &&
-    !sidebarSource.includes('href="/components"'),
-  'Component sidebar should not render the Introduction section'
+    sidebarSource.includes('Introduction') &&
+    sidebarSource.includes('isIntroActive') &&
+    sidebarSource.includes('href="/components"'),
+  'Component sidebar should render Introduction as the first navigation item'
+)
+assert(
+  installTabsSource.includes('rounded-xl bg-zinc-100 p-1') &&
+    installTabsSource.includes('rounded-lg bg-white shadow-sm') &&
+    !installTabsSource.includes('bottom-0 h-0.5'),
+  'Install tabs should use a moving rounded background indicator instead of an underline'
+)
+assert(
+  previewsSource.includes('Hancom MalangMalang') &&
+    previewsSource.includes('TextPreviewFont') &&
+    previewsSource.includes('fontFamily="Hancom MalangMalang"'),
+  'Text previews should use Hancom MalangMalang, including VideoText mask font'
+)
+assert(
+  previewsSource.includes('themeGradientColors') &&
+    previewsSource.includes('useThemeColor') &&
+    previewsSource.includes('var(--theme-accent-current)'),
+  'Component previews should use the selected blog theme colors'
+)
+assert(
+  previewsSource.includes('pointer-events-none flex flex-col') &&
+    previewsSource.includes('relative flex h-48') &&
+    previewsSource.includes('<Pointer>'),
+  'Pointer preview should bind each cursor to the visible bordered tile'
+)
+assert(
+  meteorsSource.includes('[animation-fill-mode:backwards]'),
+  'Meteors should preserve the initial rotated keyframe during animation delay'
+)
+assert(
+  highlighterSource.includes('getScrollTargets') &&
+    highlighterSource.includes('addEventListener("scroll"') &&
+    highlighterSource.includes('removeEventListener') &&
+    highlighterSource.includes('"scroll"'),
+  'Highlighter should refresh rough-notation positions inside scroll containers'
 )
 assert(
   layoutSource.includes('@/features/component-library/component-sidebar'),

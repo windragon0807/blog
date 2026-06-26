@@ -206,7 +206,7 @@ export function ResumeShell() {
                   onClick={handleDownload}
                   disabled={scale === null || isGenerating}
                   aria-busy={isGenerating}
-                  className="h-9 w-9 rounded-xl bg-white/80 text-zinc-500 shadow-[0_12px_24px_-18px_rgba(15,23,42,0.55)] backdrop-blur-md hover:bg-white/95 hover:text-zinc-800 disabled:text-zinc-400 dark:bg-zinc-900/70 dark:text-zinc-300 dark:hover:bg-zinc-800/90 dark:hover:text-zinc-100 dark:disabled:text-zinc-500"
+                  className="h-9 w-9 rounded-xl border-transparent bg-transparent bg-none text-zinc-500 shadow-none backdrop-blur-none [background-image:none] [backdrop-filter:none] [-webkit-backdrop-filter:none] hover:translate-y-0 hover:border-transparent hover:bg-zinc-200/90 hover:bg-none hover:text-zinc-800 hover:shadow-none dark:border-transparent dark:bg-transparent dark:text-zinc-300 dark:hover:border-transparent dark:hover:bg-zinc-700/85 dark:hover:text-zinc-100 disabled:text-zinc-400 dark:disabled:text-zinc-500"
                 >
                   {isGenerating ? (
                     <Loader2

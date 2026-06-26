@@ -116,7 +116,7 @@ export const resumeSections: readonly ResumeSection[] = [
         id: 'topia',
         period: '2024.01 ~ 재직 중',
         name: '토피아에드테크',
-        role: 'Frontend',
+        role: 'Full Stack',
         logo: '/resume/logos/topia.png',
         logoAlt: 'TOPIA EdTech',
         technologies: [

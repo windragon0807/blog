@@ -17,6 +17,7 @@ function getLinkClass(isActive: boolean) {
 
 export function ComponentSidebar() {
   const pathname = usePathname()
+  const isIntroActive = pathname === '/components'
 
   return (
     <aside
@@ -25,6 +26,15 @@ export function ComponentSidebar() {
       data-lenis-prevent-wheel
     >
       <nav aria-label="Component categories" className="space-y-7 px-1 pb-24 pt-1">
+        <div>
+          <Link
+            href="/components"
+            aria-current={isIntroActive ? 'page' : undefined}
+            className={getLinkClass(isIntroActive)}
+          >
+            Introduction
+          </Link>
+        </div>
         {componentCategories.map((category) => {
           const samples = componentSamples.filter(
             (sample) => sample.categoryId === category.id
