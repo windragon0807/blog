@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { ComponentSidebar } from '@/features/component-library/component-docs'
+import { ComponentSidebar } from '@/features/component-library/component-sidebar'
 
 export default function ComponentsLayout({ children }: { children: ReactNode }) {
   return (

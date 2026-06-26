@@ -53,10 +53,10 @@ export default function ComponentsPage() {
           Installation
         </h2>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-          실제 registry JSON 연결 전까지는 화면 구조와 명령어 노출만 먼저 맞춥니다.
+          배포된 registry item JSON을 shadcn CLI로 직접 가져오는 구조입니다.
         </p>
         <div className="mt-5">
-          <InstallCommand command="pnpm dlx shadcn@latest registry add @ryong=https://ryong.dev/r/{name}.json" />
+          <InstallCommand command="pnpm dlx shadcn@latest add https://ryong.dev/r/marquee.json" />
         </div>
       </section>
 
@@ -67,7 +67,7 @@ export default function ComponentsPage() {
               Components
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-              각 카테고리마다 샘플 하나씩 먼저 배치했습니다. 상세 문서는 개별 페이지에서 다룹니다.
+              Components 카테고리에는 Magic UI 기준 컴포넌트를 먼저 배치했습니다. 상세 문서는 개별 페이지에서 다룹니다.
             </p>
           </div>
           <p className="text-sm text-zinc-500">{componentSamples.length} samples</p>
@@ -81,24 +81,19 @@ export default function ComponentsPage() {
               className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-[0_18px_32px_-24px_rgba(15,23,42,0.45)] dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-700"
             >
               <div className="p-3">
-                <PreviewFrame sample={sample} />
+                <PreviewFrame sample={sample} mode="thumbnail" />
               </div>
               <div className="border-t border-zinc-200 p-4 dark:border-zinc-800">
                 <p className="text-xs font-medium uppercase tracking-[0.16em] text-zinc-400">
                   {getCategoryName(sample.categoryId)}
                 </p>
-                <div className="mt-2 flex items-start justify-between gap-4">
-                  <div>
-                    <h3 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
-                      {sample.title}
-                    </h3>
-                    <p className="mt-1 line-clamp-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-                      {sample.description}
-                    </p>
-                  </div>
-                  <span className="shrink-0 rounded-full border border-zinc-200 bg-zinc-50 px-2 py-1 text-[11px] font-medium text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400">
-                    {sample.status}
-                  </span>
+                <div className="mt-2">
+                  <h3 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
+                    {sample.title}
+                  </h3>
+                  <p className="mt-1 line-clamp-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                    {sample.description}
+                  </p>
                 </div>
               </div>
             </Link>

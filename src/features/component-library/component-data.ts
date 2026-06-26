@@ -1,10 +1,4 @@
-export type ComponentCategoryId =
-  | 'core'
-  | 'surfaces'
-  | 'navigation'
-  | 'feedback'
-  | 'typography'
-  | 'effects'
+export type ComponentCategoryId = 'components'
 
 export interface ComponentCategory {
   id: ComponentCategoryId
@@ -19,6 +13,12 @@ export interface ComponentProp {
   description: string
 }
 
+export interface ComponentRegistry {
+  name: string
+  url: string
+  dependencies: readonly string[]
+}
+
 export interface ComponentSample {
   slug: string
   categoryId: ComponentCategoryId
@@ -28,15 +28,10 @@ export interface ComponentSample {
   installCommand: string
   filePath: string
   preview: {
-    kind:
-      | 'button'
-      | 'surface'
-      | 'navigation'
-      | 'feedback'
-      | 'typography'
-      | 'effect'
+    kind: 'marquee' | 'icon-cloud' | 'lens' | 'pointer'
     label: string
   }
+  registry?: ComponentRegistry
   code: string
   usage: string
   props: readonly ComponentProp[]
@@ -44,261 +39,293 @@ export interface ComponentSample {
 
 export const componentCategories: readonly ComponentCategory[] = [
   {
-    id: 'core',
-    name: 'Core',
-    description: 'Reusable primitives for direct user actions.',
-  },
-  {
-    id: 'surfaces',
-    name: 'Surfaces',
-    description: 'Containers for cards, panels, and document blocks.',
-  },
-  {
-    id: 'navigation',
-    name: 'Navigation',
-    description: 'Controls that move between pages or sections.',
-  },
-  {
-    id: 'feedback',
-    name: 'Feedback',
-    description: 'Status, empty, and progress communication.',
-  },
-  {
-    id: 'typography',
-    name: 'Typography',
-    description: 'Text treatments used for hierarchy and emphasis.',
-  },
-  {
-    id: 'effects',
-    name: 'Effects',
-    description: 'Small visual effects that can be copied into products.',
+    id: 'components',
+    name: 'Components',
+    description: 'Magic UI style components ready for registry installs.',
   },
 ]
 
 export const componentSamples: readonly ComponentSample[] = [
   {
-    slug: 'action-button',
-    categoryId: 'core',
-    title: 'Action Button',
-    description: 'A compact command button for primary actions in blog tools.',
+    slug: 'marquee',
+    categoryId: 'components',
+    title: 'Marquee',
+    description:
+      'An infinite scrolling component that can display text, images, or videos.',
     status: 'Ready',
-    installCommand: 'pnpm dlx shadcn@latest add @ryong/action-button',
-    filePath: 'components/ryong/action-button.tsx',
+    installCommand: 'pnpm dlx shadcn@latest add https://ryong.dev/r/marquee.json',
+    filePath: 'components/magicui/marquee.tsx',
     preview: {
-      kind: 'button',
-      label: 'Publish note',
+      kind: 'marquee',
+      label: 'Marquee',
     },
-    code: `import { Button } from "@/components/ui/button"
+    registry: {
+      name: 'marquee',
+      url: '/r/marquee.json',
+      dependencies: [],
+    },
+    code: `import { Marquee } from "@/components/magicui/marquee"
 
-export function ActionButton() {
+export function MarqueeDemo() {
   return (
-    <Button className="rounded-lg px-4">
-      Publish note
-    </Button>
+    <Marquee pauseOnHover className="[--duration:20s]">
+      <span>Next.js</span>
+      <span>React</span>
+      <span>TypeScript</span>
+      <span>Tailwind CSS</span>
+    </Marquee>
   )
 }`,
-    usage: `import { ActionButton } from "@/components/ryong/action-button"
+    usage: `import { Marquee } from "@/components/magicui/marquee"
 
 export default function Example() {
-  return <ActionButton />
-}`,
-    props: [
-      {
-        name: 'children',
-        type: 'React.ReactNode',
-        defaultValue: '-',
-        description: 'Button label or composed content.',
-      },
-      {
-        name: 'variant',
-        type: '"default" | "subtle" | "glass"',
-        defaultValue: '"default"',
-        description: 'Visual emphasis for the action.',
-      },
-    ],
-  },
-  {
-    slug: 'glass-surface',
-    categoryId: 'surfaces',
-    title: 'Glass Surface',
-    description: 'A restrained translucent panel for dense blog UI sections.',
-    status: 'Ready',
-    installCommand: 'pnpm dlx shadcn@latest add @ryong/glass-surface',
-    filePath: 'components/ryong/glass-surface.tsx',
-    preview: {
-      kind: 'surface',
-      label: 'Reading queue',
-    },
-    code: `import { cn } from "@/lib/utils"
-
-export function GlassSurface({ className, ...props }) {
   return (
-    <div
-      className={cn(
-        "rounded-xl border border-zinc-200/85 bg-white/80 shadow-sm backdrop-blur-md",
-        "dark:border-zinc-700/70 dark:bg-zinc-900/70",
-        className
-      )}
-      {...props}
-    />
+    <Marquee>
+      <span>Next.js</span>
+      <span>React</span>
+      <span>TypeScript</span>
+      <span>Tailwind CSS</span>
+    </Marquee>
   )
 }`,
-    usage: `<GlassSurface className="p-4">
-  <p>Reading queue</p>
-</GlassSurface>`,
     props: [
       {
         name: 'className',
         type: 'string',
         defaultValue: '-',
-        description: 'Additional classes merged onto the surface.',
+        description: 'The class name to apply to the component.',
       },
       {
-        name: 'interactive',
+        name: 'reverse',
         type: 'boolean',
         defaultValue: 'false',
-        description: 'Adds hover treatment for clickable surfaces.',
+        description: 'Whether to reverse the direction of the marquee.',
       },
-    ],
-  },
-  {
-    slug: 'component-nav',
-    categoryId: 'navigation',
-    title: 'Component Nav',
-    description: 'A compact sidebar list for component documentation pages.',
-    status: 'Draft',
-    installCommand: 'pnpm dlx shadcn@latest add @ryong/component-nav',
-    filePath: 'components/ryong/component-nav.tsx',
-    preview: {
-      kind: 'navigation',
-      label: 'Components',
-    },
-    code: `const items = ["Action Button", "Glass Surface", "Status Notice"]
-
-export function ComponentNav() {
-  return (
-    <nav aria-label="Components">
-      {items.map((item) => (
-        <a key={item} href="#" className="block rounded-md px-3 py-2 text-sm">
-          {item}
-        </a>
-      ))}
-    </nav>
-  )
-}`,
-    usage: `<ComponentNav />`,
-    props: [
       {
-        name: 'items',
-        type: 'ComponentNavItem[]',
-        defaultValue: '[]',
-        description: 'Sidebar entries grouped by category.',
+        name: 'pauseOnHover',
+        type: 'boolean',
+        defaultValue: 'false',
+        description: 'Whether to pause the marquee on hover.',
+      },
+      {
+        name: 'vertical',
+        type: 'boolean',
+        defaultValue: 'false',
+        description: 'Whether to animate vertically.',
+      },
+      {
+        name: 'children',
+        type: 'React.ReactNode',
+        defaultValue: '-',
+        description: 'The content to display in the marquee.',
+      },
+      {
+        name: 'repeat',
+        type: 'number',
+        defaultValue: '4',
+        description: 'The number of times to repeat the content.',
       },
     ],
   },
   {
-    slug: 'status-notice',
-    categoryId: 'feedback',
-    title: 'Status Notice',
-    description: 'A small notice block for save, sync, and generation states.',
+    slug: 'icon-cloud',
+    categoryId: 'components',
+    title: 'Icon Cloud',
+    description: 'An interactive 3D tag cloud component.',
     status: 'Ready',
-    installCommand: 'pnpm dlx shadcn@latest add @ryong/status-notice',
-    filePath: 'components/ryong/status-notice.tsx',
+    installCommand:
+      'pnpm dlx shadcn@latest add https://ryong.dev/r/icon-cloud.json',
+    filePath: 'components/magicui/icon-cloud.tsx',
     preview: {
-      kind: 'feedback',
-      label: 'Registry ready',
+      kind: 'icon-cloud',
+      label: 'Icon Cloud',
     },
-    code: `export function StatusNotice() {
-  return (
-    <p className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
-      Registry ready
-    </p>
-  )
+    registry: {
+      name: 'icon-cloud',
+      url: '/r/icon-cloud.json',
+      dependencies: [],
+    },
+    code: `import { IconCloud } from "@/components/magicui/icon-cloud"
+
+const images = ["typescript", "react", "nextdotjs"].map(
+  (slug) => \`https://cdn.simpleicons.org/\${slug}/\${slug}\`
+)
+
+export function IconCloudDemo() {
+  return <IconCloud images={images} />
 }`,
-    usage: `<StatusNotice />`,
-    props: [
-      {
-        name: 'tone',
-        type: '"info" | "success" | "warning"',
-        defaultValue: '"info"',
-        description: 'Color system for the notice.',
-      },
-      {
-        name: 'children',
-        type: 'React.ReactNode',
-        defaultValue: '-',
-        description: 'Notice message.',
-      },
-    ],
-  },
-  {
-    slug: 'gradient-heading',
-    categoryId: 'typography',
-    title: 'Gradient Heading',
-    description: 'A display heading treatment for named product surfaces.',
-    status: 'Draft',
-    installCommand: 'pnpm dlx shadcn@latest add @ryong/gradient-heading',
-    filePath: 'components/ryong/gradient-heading.tsx',
-    preview: {
-      kind: 'typography',
-      label: 'ryong.ui',
-    },
-    code: `export function GradientHeading() {
+    usage: `import { IconCloud } from "@/components/magicui/icon-cloud"
+
+export default function Example() {
   return (
-    <h2 className="bg-gradient-to-r from-zinc-950 via-indigo-600 to-rose-500 bg-clip-text text-4xl font-semibold text-transparent">
-      ryong.ui
-    </h2>
-  )
-}`,
-    usage: `<GradientHeading />`,
-    props: [
-      {
-        name: 'as',
-        type: '"h1" | "h2" | "h3"',
-        defaultValue: '"h2"',
-        description: 'Semantic heading element.',
-      },
-      {
-        name: 'children',
-        type: 'React.ReactNode',
-        defaultValue: '-',
-        description: 'Heading content.',
-      },
-    ],
-  },
-  {
-    slug: 'border-beam',
-    categoryId: 'effects',
-    title: 'Border Beam',
-    description: 'A quiet moving border accent for featured cards.',
-    status: 'Draft',
-    installCommand: 'pnpm dlx shadcn@latest add @ryong/border-beam',
-    filePath: 'components/ryong/border-beam.tsx',
-    preview: {
-      kind: 'effect',
-      label: 'Preview',
-    },
-    code: `export function BorderBeamCard() {
-  return (
-    <div className="relative overflow-hidden rounded-xl border p-5">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-400 to-transparent" />
-      <p>Preview</p>
+    <div className="relative overflow-hidden">
+      <IconCloud images={images} />
     </div>
   )
 }`,
-    usage: `<BorderBeamCard />`,
     props: [
       {
-        name: 'active',
+        name: 'icons',
+        type: 'React.ReactNode[]',
+        defaultValue: '[]',
+        description: 'Array of icons to render in the cloud.',
+      },
+      {
+        name: 'images',
+        type: 'string[]',
+        defaultValue: '[]',
+        description: 'Array of image URLs to render in the cloud.',
+      },
+    ],
+  },
+  {
+    slug: 'lens',
+    categoryId: 'components',
+    title: 'Lens',
+    description:
+      'An interactive component that enables zooming into images, videos, and other elements.',
+    status: 'Ready',
+    installCommand: 'pnpm dlx shadcn@latest add https://ryong.dev/r/lens.json',
+    filePath: 'components/magicui/lens.tsx',
+    preview: {
+      kind: 'lens',
+      label: 'Lens',
+    },
+    registry: {
+      name: 'lens',
+      url: '/r/lens.json',
+      dependencies: ['motion'],
+    },
+    code: `import { Lens } from "@/components/magicui/lens"
+
+export function LensDemo() {
+  return (
+    <Lens zoomFactor={2} lensSize={150}>
+      <img src="/images/lens-demo.jpg" alt="Lens demo" />
+    </Lens>
+  )
+}`,
+    usage: `import { Lens } from "@/components/magicui/lens"
+
+export default function Example() {
+  return (
+    <Lens>
+      <img src="/images/lens-demo.jpg" alt="Lens demo" />
+    </Lens>
+  )
+}`,
+    props: [
+      {
+        name: 'children',
+        type: 'React.ReactNode',
+        defaultValue: '-',
+        description: 'The content that will be magnified by the lens.',
+      },
+      {
+        name: 'zoomFactor',
+        type: 'number',
+        defaultValue: '1.3',
+        description: 'The magnification factor of the lens.',
+      },
+      {
+        name: 'lensSize',
+        type: 'number',
+        defaultValue: '170',
+        description: 'The size of the lens in pixels.',
+      },
+      {
+        name: 'position',
+        type: '{ x: number; y: number }',
+        defaultValue: '-',
+        description: 'The current position of the lens.',
+      },
+      {
+        name: 'defaultPosition',
+        type: '{ x: number; y: number }',
+        defaultValue: '-',
+        description: 'The initial position of the lens.',
+      },
+      {
+        name: 'isStatic',
         type: 'boolean',
-        defaultValue: 'true',
-        description: 'Controls whether the accent is visible.',
+        defaultValue: 'false',
+        description: 'Whether the lens should remain fixed.',
       },
       {
         name: 'duration',
         type: 'number',
-        defaultValue: '6',
+        defaultValue: '0.1',
         description: 'Animation duration in seconds.',
+      },
+      {
+        name: 'lensColor',
+        type: 'string',
+        defaultValue: '"black"',
+        description: 'The color used by the mask.',
+      },
+      {
+        name: 'ariaLabel',
+        type: 'string',
+        defaultValue: '"Zoom Area"',
+        description: 'Accessible label for the lens region.',
+      },
+    ],
+  },
+  {
+    slug: 'pointer',
+    categoryId: 'components',
+    title: 'Pointer',
+    description: 'A component that displays a pointer when hovering over an element.',
+    status: 'Ready',
+    installCommand:
+      'pnpm dlx shadcn@latest add https://ryong.dev/r/pointer.json',
+    filePath: 'components/magicui/pointer.tsx',
+    preview: {
+      kind: 'pointer',
+      label: 'Pointer',
+    },
+    registry: {
+      name: 'pointer',
+      url: '/r/pointer.json',
+      dependencies: ['motion'],
+    },
+    code: `import { Pointer } from "@/components/magicui/pointer"
+
+export function PointerDemo() {
+  return (
+    <div className="relative">
+      <p>Hover this area</p>
+      <Pointer />
+    </div>
+  )
+}`,
+    usage: `import { Pointer } from "@/components/magicui/pointer"
+
+export default function Example() {
+  return (
+    <div className="relative">
+      <Pointer />
+    </div>
+  )
+}`,
+    props: [
+      {
+        name: 'className',
+        type: 'string',
+        defaultValue: '-',
+        description: 'Class name applied to the default pointer SVG.',
+      },
+      {
+        name: 'children',
+        type: 'React.ReactNode',
+        defaultValue: '-',
+        description: 'Custom pointer content.',
+      },
+      {
+        name: '...props',
+        type: 'HTMLMotionProps<"div">',
+        defaultValue: '-',
+        description: 'Additional props passed to the animated pointer wrapper.',
       },
     ],
   },
