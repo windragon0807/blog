@@ -407,8 +407,13 @@
 }
 
 .sectionStack {
+  --resume-section-gap: 38px;
+  --resume-section-line-tail: -46px;
+  --resume-entry-gap: 28px;
+  --resume-highlight-gap: 10px;
+  --resume-bullet-gap: 6px;
   position: relative;
-  padding: 0 24px 46px 16px;
+  padding: 0 24px 72px 16px;
 }
 
 .section {
@@ -419,8 +424,8 @@
 .section::before {
   content: '';
   position: absolute;
-  top: 25px;
-  bottom: -19px;
+  top: 8px;
+  bottom: var(--resume-section-line-tail);
   left: 7.5px;
   width: 0.6px;
   background: linear-gradient(180deg, #e5e9f3 0%, rgba(229, 233, 243, 0.55) 100%);
@@ -431,15 +436,7 @@
 }
 
 .section + .section {
-  margin-top: 15px;
-}
-
-.careerSection {
-  min-height: 1030px;
-}
-
-.projectSection + .section {
-  margin-top: 65px;
+  margin-top: var(--resume-section-gap);
 }
 
 .sectionDot {
@@ -530,10 +527,14 @@
   line-height: 12px;
 }
 
+.careerSection .sectionHeader span {
+  font-weight: 450;
+}
+
 .entryList {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--resume-entry-gap);
 }
 
 .entry {
@@ -542,10 +543,6 @@
   grid-template-columns: 110px minmax(0, 1fr);
   column-gap: 18px;
   min-height: 34px;
-}
-
-.careerSection .entry {
-  grid-template-columns: 124px minmax(0, 1fr);
 }
 
 .entryDot {
@@ -559,22 +556,8 @@
   background: #b4bbca;
 }
 
-.careerSection .entryDot {
-  top: 6px;
-  left: 6px;
-  width: 4px;
-  height: 4px;
-  border: 0;
-  background: #ff674d;
-}
-
 .entryMeta {
   min-width: 0;
-}
-
-.careerSection .entryMeta {
-  width: 110px;
-  margin-left: 24px;
 }
 
 .period {
@@ -601,6 +584,10 @@
   background: transparent;
   object-fit: contain;
   box-shadow: none;
+}
+
+.topiaOrganizationLogo {
+  border-radius: 5px;
 }
 
 .organizationText {
@@ -662,24 +649,12 @@
   line-height: 2.03;
 }
 
-.projectSection .entryList {
-  gap: 70px;
-}
-
-.projectSection .bulletList {
-  gap: 9px;
-}
-
-.projectSection .highlight + .highlight {
-  margin-top: 13px;
-}
-
 .bodyParagraph {
   margin: 0 0 8px;
 }
 
 .highlight + .highlight {
-  margin-top: 10px;
+  margin-top: var(--resume-highlight-gap);
 }
 
 .highlightTitleRow {
@@ -719,7 +694,7 @@
 .bulletList {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--resume-bullet-gap);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -739,7 +714,8 @@
 .bulletList li::before {
   content: '';
   position: absolute;
-  top: 6.5px;
+  top: 7px;
+  top: calc(0.5lh - 1.25px);
   left: 4px;
   width: 2.5px;
   height: 2.5px;
@@ -783,7 +759,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  height: 104px;
+  height: 64px;
   pointer-events: none;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 82%);
 }

@@ -1,8 +1,8 @@
 'use client'
 
-import { Download, Loader2 } from 'lucide-react'
+import { FileDown, Loader2 } from 'lucide-react'
 import { useCallback, useLayoutEffect, useRef, useState } from 'react'
-import { ActionButton } from '@/components/common/ActionControl'
+import { IconButton } from '@/components/common/IconButton'
 import {
   RESUME_DOCUMENT_HEIGHT,
   RESUME_DOCUMENT_WIDTH,
@@ -79,16 +79,63 @@ export function ResumeShell() {
 
     if (!target) return
 
+    let frameId: number | null = null
+    let isDisposed = false
+
     const updateHeight = () => {
-      setDocumentHeight(Math.max(RESUME_DOCUMENT_HEIGHT, target.scrollHeight))
+      frameId = null
+
+      if (isDisposed) return
+
+      setDocumentHeight((currentHeight) => {
+        const nextHeight = Math.ceil(
+          Math.max(
+            RESUME_DOCUMENT_HEIGHT,
+            target.scrollHeight,
+            target.offsetHeight
+          )
+        )
+
+        return currentHeight === nextHeight ? currentHeight : nextHeight
+      })
     }
 
-    updateHeight()
+    const scheduleHeightUpdate = () => {
+      if (isDisposed) return
 
-    const resizeObserver = new ResizeObserver(updateHeight)
-    resizeObserver.observe(target)
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId)
+      }
 
-    return () => resizeObserver.disconnect()
+      frameId = window.requestAnimationFrame(updateHeight)
+    }
+
+    scheduleHeightUpdate()
+
+    document.fonts?.ready.then(scheduleHeightUpdate).catch(() => undefined)
+
+    const resizeObserver = new ResizeObserver(scheduleHeightUpdate)
+    const measuredElements = [
+      target,
+      ...Array.from(
+        target.querySelectorAll<HTMLElement>(
+          '[data-resume-section-stack], section, article'
+        )
+      ),
+    ]
+
+    measuredElements.forEach((element) => resizeObserver.observe(element))
+    window.addEventListener('load', scheduleHeightUpdate)
+
+    return () => {
+      isDisposed = true
+      resizeObserver.disconnect()
+      window.removeEventListener('load', scheduleHeightUpdate)
+
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId)
+      }
+    }
   }, [scale])
 
   const handleDownload = useCallback(async () => {
@@ -112,33 +159,17 @@ export function ResumeShell() {
 
   return (
     <>
-      <div className="fixed right-4 top-[72px] z-40 flex max-w-[calc(100vw-32px)] flex-col items-end gap-2 md:right-[60px]">
-        {errorMessage && (
-          <p className="max-w-80 rounded-lg border border-rose-200 bg-white/95 px-3 py-2 text-right text-xs font-medium text-rose-600 shadow-sm backdrop-blur dark:border-rose-900/70 dark:bg-[#11141b]/95 dark:text-rose-300">
-            {errorMessage}
-          </p>
-        )}
-        <ActionButton
-          type="button"
-          onClick={handleDownload}
-          disabled={scale === null || isGenerating}
-          className="h-9 shrink-0 rounded-lg px-3 text-xs"
-        >
-          {isGenerating ? (
-            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-          ) : (
-            <Download className="h-4 w-4" aria-hidden="true" />
-          )}
-          PDF 다운로드
-        </ActionButton>
-      </div>
-
-      <section className="relative left-1/2 right-1/2 w-screen -translate-x-1/2 bg-white px-3 pt-5 pb-3 dark:bg-[#11141b] sm:px-6 sm:pt-[61px]">
+      <div className="relative left-1/2 right-1/2 w-screen -translate-x-1/2 bg-white px-3 pt-3 pb-3 dark:bg-[#11141b] sm:px-6 sm:pt-8">
         <div
           ref={viewportRef}
-          className="mx-auto w-full overflow-visible"
+          className="relative mx-auto w-full overflow-visible"
           style={{ maxWidth: RESUME_PREVIEW_MAX_WIDTH }}
         >
+          {errorMessage && (
+            <p className="absolute right-0 top-0 z-20 max-w-80 -translate-y-[calc(100%+8px)] rounded-lg border border-rose-200 bg-white/95 px-3 py-2 text-right text-xs font-medium text-rose-600 shadow-sm backdrop-blur dark:border-rose-900/70 dark:bg-[#11141b]/95 dark:text-rose-300">
+              {errorMessage}
+            </p>
+          )}
           {scale === null ? (
             <div
               className="mx-auto box-content overflow-hidden rounded-3xl border border-zinc-200 bg-zinc-100 shadow-[0_24px_70px_-46px_rgba(15,23,42,0.32)]"
@@ -152,12 +183,32 @@ export function ResumeShell() {
             </div>
           ) : (
             <div
-              className="mx-auto box-content overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-[0_24px_70px_-46px_rgba(15,23,42,0.52)]"
+              className="relative mx-auto box-content overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-[0_24px_70px_-46px_rgba(15,23,42,0.52)]"
               style={{
                 width: RESUME_DOCUMENT_WIDTH * scale,
                 height: documentHeight * scale,
               }}
             >
+              <div className="absolute right-3 top-3 z-10">
+                <IconButton
+                  type="button"
+                  label={isGenerating ? 'PDF 생성 중' : 'PDF 다운로드'}
+                  tooltip={isGenerating ? 'PDF 생성 중' : 'PDF 다운로드'}
+                  onClick={handleDownload}
+                  disabled={scale === null || isGenerating}
+                  aria-busy={isGenerating}
+                  className="h-9 w-9 rounded-xl bg-white/80 text-zinc-500 shadow-[0_12px_24px_-18px_rgba(15,23,42,0.55)] backdrop-blur-md hover:bg-white/95 hover:text-zinc-800 disabled:text-zinc-400 dark:bg-zinc-900/70 dark:text-zinc-300 dark:hover:bg-zinc-800/90 dark:hover:text-zinc-100 dark:disabled:text-zinc-500"
+                >
+                  {isGenerating ? (
+                    <Loader2
+                      className="h-4 w-4 animate-spin text-zinc-400 dark:text-zinc-500"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    <FileDown className="h-4 w-4" aria-hidden="true" />
+                  )}
+                </IconButton>
+              </div>
               <div
                 style={{
                   transform: `scale(${scale})`,
@@ -170,7 +221,7 @@ export function ResumeShell() {
             </div>
           )}
         </div>
-      </section>
+      </div>
     </>
   )
 }

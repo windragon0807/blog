@@ -2,6 +2,7 @@
 
 import { forwardRef, useId } from 'react'
 import {
+  resumeBirthDate,
   resumeLinks,
   resumeProfile,
   resumeSections,
@@ -130,6 +131,38 @@ function getKoreaYearMonth() {
   }
 }
 
+function getKoreaDate() {
+  const koreaNow = new Date(Date.now() + 9 * 60 * 60 * 1000)
+
+  return {
+    year: koreaNow.getUTCFullYear(),
+    month: koreaNow.getUTCMonth() + 1,
+    day: koreaNow.getUTCDate(),
+  }
+}
+
+function formatKoreanAge(birthDate: {
+  year: number
+  month: number
+  day: number
+}) {
+  const today = getKoreaDate()
+  const birthdayPassed =
+    today.month > birthDate.month ||
+    (today.month === birthDate.month && today.day >= birthDate.day)
+  const age = today.year - birthDate.year - (birthdayPassed ? 0 : 1)
+
+  return Math.max(0, age)
+}
+
+function getProfileBasicValue(item: (typeof resumeProfile.basics)[number]) {
+  if (item.label !== '나이') {
+    return item.value
+  }
+
+  return `${resumeBirthDate.year}년 (만 ${formatKoreanAge(resumeBirthDate)}세)`
+}
+
 function formatDurationFrom(start: { year: number; month: number }) {
   const now = getKoreaYearMonth()
   const totalMonths = Math.max(
@@ -215,21 +248,25 @@ function ScreenshotStrip({ screenshots, name }: { screenshots: readonly string[]
 }
 
 function ResumeEntryBlock({ entry }: { entry: ResumeEntry }) {
+  const logoClassName = `${styles.organizationLogo} ${
+    entry.id === 'topia' ? styles.topiaOrganizationLogo : ''
+  }`.trim()
+
   return (
     <article
       className={`${styles.entry} ${entry.compact ? styles.compactEntry : ''}`.trim()}
     >
       <span className={styles.entryDot} aria-hidden="true" />
-      <aside className={styles.entryMeta}>
+      <div className={styles.entryMeta}>
         <p className={styles.period}>{entry.period}</p>
         <div className={styles.organization}>
-          <img src={entry.logo} alt={entry.logoAlt} className={styles.organizationLogo} />
+          <img src={entry.logo} alt={entry.logoAlt} className={logoClassName} />
           <div className={styles.organizationText}>
             <h3>{entry.name}</h3>
             {entry.role && <p>{entry.role}</p>}
           </div>
         </div>
-      </aside>
+      </div>
       <div className={styles.entryBody}>
         {entry.technologies && (
           <div className={styles.entryTechnologies}>
@@ -284,7 +321,7 @@ const ResumeDocument = forwardRef<HTMLDivElement>(function ResumeDocument(_, ref
           {resumeProfile.basics.map((item) => (
             <div key={item.label}>
               <dt>{item.label}</dt>
-              <dd>{item.value}</dd>
+              <dd>{getProfileBasicValue(item)}</dd>
             </div>
           ))}
         </dl>
@@ -327,7 +364,7 @@ const ResumeDocument = forwardRef<HTMLDivElement>(function ResumeDocument(_, ref
         </div>
       </header>
 
-      <main className={styles.sectionStack}>
+      <div className={styles.sectionStack} data-resume-section-stack>
         {resumeSections.map((section) => {
           const sectionSummary = getSectionSummary(section)
 
@@ -353,7 +390,7 @@ const ResumeDocument = forwardRef<HTMLDivElement>(function ResumeDocument(_, ref
             </section>
           )
         })}
-      </main>
+      </div>
       <div className={styles.bottomFade} aria-hidden="true" />
     </div>
   )

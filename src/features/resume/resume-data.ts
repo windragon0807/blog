@@ -58,10 +58,16 @@ export const resumeProfile = {
   role: 'Product Engineer',
   photo: '/resume/profile/avatar-square.jpg',
   basics: [
-    { label: '나이', value: '1995년 (만 30세)' },
+    { label: '나이', value: '1995년' },
     { label: '주소', value: '서울시 서대문구' },
     { label: '이메일', value: 'tmdfyd95@naver.com' },
   ],
+} as const
+
+export const resumeBirthDate = {
+  year: 1995,
+  month: 2,
+  day: 2,
 } as const
 
 export const resumeTechnologies: readonly ResumeTechnology[] = [
@@ -353,7 +359,7 @@ export const resumeSections: readonly ResumeSection[] = [
       {
         id: 'korea-university',
         period: '2016.03 ~ 2022.02 (4년)',
-        name: '고려대학교 세종캠퍼스',
+        name: '고려대학교 (세종)',
         role: '컴퓨터 정보학과 (4.0/4.5)',
         logo: '/resume/logos/korea-university.png',
         logoAlt: 'Korea University Sejong Campus',
