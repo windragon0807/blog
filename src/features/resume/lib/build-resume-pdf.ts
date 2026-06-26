@@ -12,6 +12,11 @@ import {
   addLinkAnnotationsToPage,
   type ResumePdfLinkAnnotation,
 } from './resume-pdf-annotations'
+import {
+  addSearchableTextLayerToResumePdf,
+  collectResumeTextRuns,
+  fetchResumePdfFontBytes,
+} from './resume-pdf-text-layer'
 
 type SchedulerWindow = Window & {
   scheduler?: {
@@ -157,10 +162,12 @@ async function buildPdfInWorker({
   imageBlob,
   linkAnnotations,
   sourcePageHeight,
+  textRuns,
 }: {
   imageBlob: Blob
   linkAnnotations: ResumePdfLinkAnnotation[]
   sourcePageHeight: number
+  textRuns: ReturnType<typeof collectResumeTextRuns>
 }) {
   const worker = new Worker(new URL('./resume-pdf.worker.ts', import.meta.url), {
     type: 'module',
@@ -168,6 +175,8 @@ async function buildPdfInWorker({
 
   try {
     const imageBytes = await imageBlob.arrayBuffer()
+    const fontBytes =
+      textRuns.length > 0 ? await fetchResumePdfFontBytes() : undefined
 
     return await new Promise<Uint8Array>((resolve, reject) => {
       worker.onmessage = (event: MessageEvent<ResumePdfWorkerResponse>) => {
@@ -187,12 +196,14 @@ async function buildPdfInWorker({
 
       worker.postMessage(
         {
+          fontBytes,
           imageBytes,
           imageType: imageBlob.type,
           linkAnnotations,
           sourcePageHeight,
+          textRuns,
         },
-        [imageBytes]
+        fontBytes ? [imageBytes, fontBytes] : [imageBytes]
       )
     })
   } finally {
@@ -295,6 +306,7 @@ export async function buildResumePdfFromElement(element: HTMLElement) {
 
   let imageBlob: Blob | null
   const linkAnnotations = collectResumeLinkAnnotations(element)
+  const textRuns = collectResumeTextRuns(element)
 
   try {
     imageBlob = await toBlob(element, {
@@ -323,22 +335,42 @@ export async function buildResumePdfFromElement(element: HTMLElement) {
 
   await yieldToMain()
 
+  let pdfBytes: Uint8Array
+
   if (supportsResumePdfWorker()) {
     try {
-      return await buildPdfInWorker({
+      pdfBytes = await buildPdfInWorker({
+        imageBlob,
+        linkAnnotations,
+        sourcePageHeight,
+        textRuns,
+      })
+      return pdfBytes
+    } catch (error) {
+      console.warn('PDF worker 처리 실패. 메인 스레드 fallback으로 전환합니다.', error)
+      await yieldToMain()
+      pdfBytes = await buildPdfOnMainThread({
         imageBlob,
         linkAnnotations,
         sourcePageHeight,
       })
-    } catch (error) {
-      console.warn('PDF worker 처리 실패. 메인 스레드 fallback으로 전환합니다.', error)
-      await yieldToMain()
     }
+  } else {
+    pdfBytes = await buildPdfOnMainThread({
+      imageBlob,
+      linkAnnotations,
+      sourcePageHeight,
+    })
   }
 
-  return buildPdfOnMainThread({
-    imageBlob,
-    linkAnnotations,
-    sourcePageHeight,
-  })
+  try {
+    return await addSearchableTextLayerToResumePdf({
+      pdfBytes,
+      sourcePageHeight,
+      textRuns,
+    })
+  } catch (error) {
+    console.warn('PDF 텍스트 레이어 추가 실패. 이미지 PDF로 다운로드합니다.', error)
+    return pdfBytes
+  }
 }

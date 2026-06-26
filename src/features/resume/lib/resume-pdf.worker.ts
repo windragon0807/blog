@@ -8,12 +8,18 @@ import {
   addLinkAnnotationsToPage,
   type ResumePdfLinkAnnotation,
 } from './resume-pdf-annotations'
+import {
+  addSearchableTextRunsToPdfDocument,
+  type ResumePdfTextRun,
+} from './resume-pdf-text-layer'
 
 type ResumePdfWorkerRequest = {
+  fontBytes?: ArrayBuffer
   imageBytes: ArrayBuffer
   imageType: string
   linkAnnotations: ResumePdfLinkAnnotation[]
   sourcePageHeight: number
+  textRuns?: ResumePdfTextRun[]
 }
 
 type ResumePdfWorkerResponse =
@@ -41,10 +47,12 @@ function toTransferableArrayBuffer(bytes: Uint8Array) {
 }
 
 async function buildPdfInWorker({
+  fontBytes,
   imageBytes,
   imageType,
   linkAnnotations,
   sourcePageHeight,
+  textRuns = [],
 }: ResumePdfWorkerRequest) {
   const imageBlob = new Blob([imageBytes], { type: imageType || 'image/png' })
   const sourceImage = await createImageBitmap(imageBlob)
@@ -98,6 +106,15 @@ async function buildPdfInWorker({
         pageIndex,
         pdf,
         sourcePageHeight,
+      })
+    }
+
+    if (fontBytes && textRuns.length > 0) {
+      await addSearchableTextRunsToPdfDocument({
+        fontBytes,
+        pdf,
+        sourcePageHeight,
+        textRuns,
       })
     }
   } finally {
