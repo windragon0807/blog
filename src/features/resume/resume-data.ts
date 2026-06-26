@@ -65,21 +65,21 @@ export const resumeProfile = {
 } as const
 
 export const resumeTechnologies: readonly ResumeTechnology[] = [
-  { label: 'Next.js', icon: '/resume/skills/nextjs.png' },
-  { label: 'React', icon: '/resume/skills/react.png' },
-  { label: 'TypeScript', icon: '/resume/skills/typescript.png' },
-  { label: 'React Query', icon: '/resume/skills/react-query.png' },
-  { label: 'Zustand', icon: '/resume/skills/zustand.png' },
-  { label: 'Redux', icon: '/resume/skills/redux.png' },
-  { label: 'Tailwind', icon: '/resume/skills/tailwind.png' },
-  { label: 'Emotion', icon: '/resume/skills/emotion.png' },
-  { label: 'Playwright', icon: '/resume/skills/playwright.png' },
-  { label: 'Storybook', icon: '/resume/skills/storybook.png' },
-  { label: 'Sentry', icon: '/resume/skills/sentry.png' },
-  { label: 'Google Analytics', icon: '/resume/skills/google-analytics.png' },
-  { label: 'React Native (Expo)', icon: '/resume/skills/react.png' },
-  { label: 'Express', icon: '/resume/skills/express.png' },
-  { label: 'MySQL', icon: '/resume/skills/mysql.png' },
+  { label: 'Next.js', icon: '/resume/skills/nextjs.svg' },
+  { label: 'React', icon: '/resume/skills/react.svg' },
+  { label: 'TypeScript', icon: '/resume/skills/typescript.svg' },
+  { label: 'React Query', icon: '/resume/skills/react-query.svg' },
+  { label: 'Zustand', icon: '/resume/skills/zustand.svg' },
+  { label: 'Redux', icon: '/resume/skills/redux.svg' },
+  { label: 'Tailwind', icon: '/resume/skills/tailwind.svg' },
+  { label: 'Emotion', icon: '/resume/skills/emotion.svg' },
+  { label: 'Playwright', icon: '/resume/skills/playwright.svg' },
+  { label: 'Storybook', icon: '/resume/skills/storybook.svg' },
+  { label: 'Sentry', icon: '/resume/skills/sentry.svg' },
+  { label: 'Google Analytics', icon: '/resume/skills/google-analytics.svg' },
+  { label: 'React Native (Expo)', icon: '/resume/skills/react.svg' },
+  { label: 'Express', icon: '/resume/skills/express.svg' },
+  { label: 'MySQL', icon: '/resume/skills/mysql.svg' },
 ]
 
 export const resumeLinks: readonly ResumeLink[] = [
