@@ -55,7 +55,7 @@ const t = (text: string, emphasis?: readonly string[]): ResumeText => ({
 
 export const resumeProfile = {
   name: '정승룡',
-  role: 'Frontend Developer',
+  role: 'Product Engineer',
   photo: '/resume/profile/avatar-square.jpg',
   basics: [
     { label: '나이', value: '1995년 (만 30세)' },
