@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { SlidersHorizontal } from 'lucide-react'
 import { SettingsSection } from '@/components/common/SettingsSection'
+import { SettingsIcon } from '@/components/icons'
 import {
   Popover,
   PopoverContent,
@@ -14,6 +14,19 @@ import { FontThemeSelect } from './FontThemeSelect'
 import { IconControlButton } from './IconControlButton'
 import { LogoMotionSelect } from './LogoMotionSelect'
 
+const SETTINGS_MENU_PORTAL_SELECTOR = '[data-settings-menu-portal]'
+
+function handleSettingsMenuInteractOutside(event: Event) {
+  const target = event.target
+
+  if (
+    target instanceof Element &&
+    target.closest(SETTINGS_MENU_PORTAL_SELECTOR)
+  ) {
+    event.preventDefault()
+  }
+}
+
 export function ThemeSettingsMenu() {
   const [open, setOpen] = useState(false)
 
@@ -21,7 +34,7 @@ export function ThemeSettingsMenu() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <IconControlButton srLabel="환경설정 열기">
-          <SlidersHorizontal aria-hidden="true" className="block h-[18px] w-[18px]" />
+          <SettingsIcon className="block h-[18px] w-[18px]" />
         </IconControlButton>
       </PopoverTrigger>
       <PopoverContent
@@ -29,6 +42,7 @@ export function ThemeSettingsMenu() {
         sideOffset={9}
         aria-label="환경설정 패널"
         data-settings-menu-portal=""
+        onInteractOutside={handleSettingsMenuInteractOutside}
         className="settings-popover w-[min(92vw,22rem)] rounded-2xl border-zinc-200/90 bg-white/95 p-3 shadow-[0_24px_60px_-30px_rgba(20,20,30,0.55)] backdrop-blur-xl dark:border-zinc-700/80 dark:bg-zinc-900/95"
       >
         <p className="px-1 text-[11px] font-semibold tracking-[0.1em] text-zinc-500 dark:text-zinc-400">

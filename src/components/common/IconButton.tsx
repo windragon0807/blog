@@ -18,7 +18,7 @@ interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const iconButtonClassName =
-  'relative overflow-hidden [&_svg]:z-10'
+  'relative translate-y-0 overflow-hidden transition-[background-color,border-color,color,box-shadow,translate,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[translate] [&_svg]:z-10'
 
 export function IconButton({
   label,

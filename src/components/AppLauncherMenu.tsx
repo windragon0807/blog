@@ -4,6 +4,7 @@ import type { CSSProperties } from 'react'
 import Image from 'next/image'
 import { useState } from 'react'
 import { ExternalLink } from 'lucide-react'
+import { LayoutGridIcon } from '@/components/icons'
 import {
   Popover,
   PopoverContent,
@@ -29,24 +30,6 @@ const APP_LINKS: AppLink[] = [
   },
 ]
 
-function AppLauncherIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      className={className}
-    >
-      <rect x="4" y="4" width="6" height="6" rx="1.2" />
-      <rect x="14" y="4" width="6" height="6" rx="1.2" />
-      <rect x="4" y="14" width="6" height="6" rx="1.2" />
-      <rect x="14" y="14" width="6" height="6" rx="1.2" />
-    </svg>
-  )
-}
-
 export function AppLauncherMenu() {
   const [open, setOpen] = useState(false)
 
@@ -54,7 +37,7 @@ export function AppLauncherMenu() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <IconControlButton srLabel="애플리케이션 메뉴 열기">
-          <AppLauncherIcon className="block h-[18px] w-[18px]" />
+          <LayoutGridIcon className="block h-[18px] w-[18px]" />
         </IconControlButton>
       </PopoverTrigger>
       <PopoverContent

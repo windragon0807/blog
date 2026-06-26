@@ -2,42 +2,8 @@
 
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
+import { MoonIcon, SunIcon } from '@/components/icons'
 import { IconControlButton } from './IconControlButton'
-
-function SunIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      className={className}
-    >
-      <circle cx="12" cy="12" r="4.2" />
-      <path d="M12 2.75v2.1M12 19.15v2.1M21.25 12h-2.1M4.85 12h-2.1M18.54 5.46l-1.48 1.48M6.94 17.06l-1.48 1.48M18.54 18.54l-1.48-1.48M6.94 6.94 5.46 5.46" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function MoonIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      className={className}
-    >
-      <path
-        d="M19 14.6A7.6 7.6 0 1 1 9.4 5a6.5 6.5 0 0 0 9.6 9.6Z"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
 
 export function ThemeModeButton() {
   const { resolvedTheme, setTheme } = useTheme()
