@@ -11,7 +11,6 @@ import { DiaTextReveal } from '@/components/magicui/dia-text-reveal'
 import { Highlighter } from '@/components/magicui/highlighter'
 import { IconCloud } from '@/components/magicui/icon-cloud'
 import { Lens } from '@/components/magicui/lens'
-import { MagicCard } from '@/components/magicui/magic-card'
 import { Marquee } from '@/components/magicui/marquee'
 import { Meteors } from '@/components/magicui/meteors'
 import { MorphingText } from '@/components/magicui/morphing-text'
@@ -131,6 +130,22 @@ function PreviewSurface({
   return (
     <div
       className={`relative flex min-h-52 w-full max-w-xl items-center justify-center overflow-hidden rounded-xl border border-zinc-200 bg-white p-8 text-center dark:border-zinc-800 dark:bg-zinc-950 ${className}`}
+    >
+      {children}
+    </div>
+  )
+}
+
+function OuterEffectSurface({
+  children,
+  className = '',
+}: {
+  children: ReactNode
+  className?: string
+}) {
+  return (
+    <div
+      className={`relative flex min-h-60 w-full items-center justify-center overflow-hidden rounded-[inherit] bg-white p-8 text-center text-zinc-950 dark:bg-white dark:text-zinc-950 ${className}`}
     >
       {children}
     </div>
@@ -287,13 +302,19 @@ function PointerPreview() {
 
 function BorderBeamPreview() {
   return (
-    <PreviewSurface className="bg-zinc-950 text-white dark:bg-zinc-950">
-      <BorderBeam size={90} duration={8} />
+    <OuterEffectSurface>
+      <BorderBeam
+        size={110}
+        duration={7}
+        borderWidth={2}
+        colorFrom="#2563eb"
+        colorTo="#ec4899"
+      />
       <div>
         <p className="text-2xl font-semibold">Border Beam</p>
-        <p className="mt-2 text-sm text-zinc-400">Light travels the edge.</p>
+        <p className="mt-2 text-sm text-zinc-500">Light travels the edge.</p>
       </div>
-    </PreviewSurface>
+    </OuterEffectSurface>
   )
 }
 
@@ -316,57 +337,45 @@ function ShineBorderPreview() {
   )
 }
 
-function MagicCardPreview() {
-  return (
-    <MagicCard className="w-full max-w-md rounded-xl p-8 shadow-sm">
-      <div className="relative">
-        <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-          Hover surface
-        </p>
-        <p className="mt-2 text-3xl font-semibold text-zinc-950 dark:text-zinc-50">
-          Magic Card
-        </p>
-      </div>
-    </MagicCard>
-  )
-}
-
 function MeteorsPreview({ mode }: { mode: PreviewMode }) {
   return (
-    <PreviewSurface className="bg-zinc-950 text-white dark:bg-zinc-950">
-      <Meteors number={mode === 'thumbnail' ? 8 : 22} />
-      <div>
+    <OuterEffectSurface>
+      <Meteors
+        number={mode === 'thumbnail' ? 8 : 22}
+        className="bg-sky-500 shadow-[0_0_0_1px_rgba(14,165,233,0.2)]"
+      />
+      <div className="relative">
         <p className="text-2xl font-semibold">Meteors</p>
-        <p className="mt-2 text-sm text-zinc-400">A shower across the card.</p>
+        <p className="mt-2 text-sm text-zinc-500">A shower across the card.</p>
       </div>
-    </PreviewSurface>
+    </OuterEffectSurface>
   )
 }
 
 function ConfettiPreview() {
   return (
-    <PreviewSurface>
-      <ConfettiButton type="button" className="rounded-lg">
+    <OuterEffectSurface>
+      <ConfettiButton type="button" className="relative rounded-lg">
         Celebrate
       </ConfettiButton>
-    </PreviewSurface>
+    </OuterEffectSurface>
   )
 }
 
 function ParticlesPreview({ mode }: { mode: PreviewMode }) {
   return (
-    <PreviewSurface className="bg-zinc-950 text-white dark:bg-zinc-950">
+    <OuterEffectSurface>
       <Particles
         className="absolute inset-0"
         quantity={mode === 'thumbnail' ? 40 : 90}
-        color="#38bdf8"
+        color="#0ea5e9"
         ease={80}
       />
       <div className="relative">
         <p className="text-2xl font-semibold">Particles</p>
-        <p className="mt-2 text-sm text-zinc-400">Canvas depth and motion.</p>
+        <p className="mt-2 text-sm text-zinc-500">Canvas depth and motion.</p>
       </div>
-    </PreviewSurface>
+    </OuterEffectSurface>
   )
 }
 
@@ -402,14 +411,15 @@ function AuroraTextPreview() {
 
 function VideoTextPreview() {
   return (
-    <div className="h-48 w-full max-w-xl overflow-hidden rounded-xl bg-zinc-950">
+    <OuterEffectSurface className="min-h-60 p-0">
       <VideoText
         src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
         fontSize={18}
+        className="h-48 w-full"
       >
         VIDEO
       </VideoText>
-    </div>
+    </OuterEffectSurface>
   )
 }
 
@@ -458,12 +468,27 @@ function MorphingTextPreview() {
 
 function HighlighterPreview() {
   return (
-    <p className="max-w-md text-center text-3xl font-semibold leading-tight text-zinc-950 dark:text-zinc-50">
+    <p className="max-w-2xl text-center text-4xl font-semibold leading-tight text-zinc-950 dark:text-zinc-50">
       Build with{' '}
-      <Highlighter color="#fde68a" strokeWidth={2}>
-        highlighted
+      <Highlighter
+        color="#fde68a"
+        strokeWidth={2.5}
+        padding={6}
+        animationDuration={900}
+      >
+        hand drawn
       </Highlighter>{' '}
-      details.
+      marks and{' '}
+      <Highlighter
+        action="underline"
+        color="#38bdf8"
+        strokeWidth={2}
+        padding={6}
+        animationDuration={900}
+      >
+        underlines
+      </Highlighter>
+      .
     </p>
   )
 }
@@ -488,8 +513,6 @@ function BasePreviewContent({
       return <BorderBeamPreview />
     case 'shine-border':
       return <ShineBorderPreview />
-    case 'magic-card':
-      return <MagicCardPreview />
     case 'meteors':
       return <MeteorsPreview mode={mode} />
     case 'confetti':

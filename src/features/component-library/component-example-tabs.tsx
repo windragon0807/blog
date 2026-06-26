@@ -6,6 +6,13 @@ export function ComponentExampleTabs({
 }: {
   sample: ComponentSample
 }) {
+  const flushPreview =
+    sample.preview.kind === 'border-beam' ||
+    sample.preview.kind === 'meteors' ||
+    sample.preview.kind === 'confetti' ||
+    sample.preview.kind === 'particles' ||
+    sample.preview.kind === 'video-text'
+
   return (
     <section
       id="preview"
@@ -20,8 +27,12 @@ export function ComponentExampleTabs({
       </h2>
 
       <div className="mt-4 overflow-hidden rounded-2xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-        <div className="min-h-60 p-6">
-          <div className="flex min-h-60 items-center justify-center overflow-hidden">
+        <div className={flushPreview ? 'min-h-60 rounded-[inherit]' : 'min-h-60 p-6'}>
+          <div
+            className={`flex min-h-60 items-center justify-center overflow-hidden ${
+              flushPreview ? 'rounded-[inherit]' : ''
+            }`}
+          >
             <ComponentPreviewContent sample={sample} mode="interactive" />
           </div>
         </div>

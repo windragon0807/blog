@@ -84,13 +84,6 @@ const items = [
     },
   },
   {
-    name: 'magic-card',
-    title: 'Magic Card',
-    description:
-      'A spotlight effect that follows your mouse cursor and highlights borders on hover.',
-    dependencies: ['motion', 'next-themes'],
-  },
-  {
     name: 'meteors',
     title: 'Meteors',
     description: 'A meteor shower effect.',

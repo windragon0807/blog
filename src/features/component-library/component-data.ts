@@ -7,7 +7,6 @@ export type ComponentPreviewKind =
   | 'pointer'
   | 'border-beam'
   | 'shine-border'
-  | 'magic-card'
   | 'meteors'
   | 'confetti'
   | 'particles'
@@ -284,31 +283,6 @@ export default function Example() {
     ],
   }),
   createSample({
-    slug: 'magic-card',
-    categoryId: 'effects',
-    title: 'Magic Card',
-    description:
-      'A spotlight effect that follows your mouse cursor and highlights borders on hover.',
-    dependencies: ['motion', 'next-themes'],
-    usage: `import { MagicCard } from "@/components/magicui/magic-card"
-
-export default function Example() {
-  return (
-    <MagicCard className="rounded-xl p-6">
-      Magic Card
-    </MagicCard>
-  )
-}`,
-    props: [
-      childrenProp,
-      classNameProp,
-      prop('mode', '"gradient" | "orb"', '"gradient"', 'Hover effect mode.'),
-      prop('gradientSize', 'number', '200', 'Spotlight size.'),
-      prop('gradientColor', 'string', '"#262626"', 'Inner gradient color.'),
-      prop('gradientOpacity', 'number', '0.8', 'Inner gradient opacity.'),
-    ],
-  }),
-  createSample({
     slug: 'meteors',
     categoryId: 'effects',
     title: 'Meteors',
@@ -552,7 +526,11 @@ export default function Example() {
     usage: `import { Highlighter } from "@/components/magicui/highlighter"
 
 export default function Example() {
-  return <Highlighter>Highlighter</Highlighter>
+  return (
+    <Highlighter color="#fde68a" padding={6}>
+      Highlighter
+    </Highlighter>
+  )
 }`,
     props: [
       childrenProp,
@@ -560,6 +538,9 @@ export default function Example() {
       prop('color', 'string', '"#ffd1dc"', 'Annotation color.'),
       prop('strokeWidth', 'number', '1.5', 'Stroke width.'),
       prop('animationDuration', 'number', '600', 'Draw animation duration.'),
+      prop('iterations', 'number', '2', 'Number of rough-notation strokes.'),
+      prop('padding', 'number', '2', 'Annotation padding around the text.'),
+      prop('multiline', 'boolean', 'true', 'Whether to annotate wrapped lines.'),
       prop('isView', 'boolean', 'false', 'Whether to start when in view.'),
     ],
   }),

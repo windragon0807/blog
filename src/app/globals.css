@@ -303,6 +303,30 @@ html {
   html:has(.components-scroll-shell) {
     overflow-y: hidden;
   }
+
+  .components-shell-grid {
+    display: grid;
+    grid-template-columns:
+      max(2.5rem, calc((100vw - 1380px) / 2 + 2.5rem))
+      17rem
+      2rem
+      minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .components-sidebar-slot {
+    grid-column: 2;
+    min-height: 0;
+  }
+
+  .components-content-scroll {
+    grid-column: 4;
+    min-height: 0;
+  }
+
+  .components-content-inner {
+    max-width: calc(1380px - 5rem - 17rem - 2rem);
+  }
 }
 
 body {

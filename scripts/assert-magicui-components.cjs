@@ -11,7 +11,6 @@ const requiredNames = [
   'pointer',
   'border-beam',
   'shine-border',
-  'magic-card',
   'meteors',
   'confetti',
   'particles',
@@ -40,6 +39,7 @@ const removedNames = [
   'component-nav',
   'status-notice',
   'gradient-heading',
+  'magic-card',
 ]
 const removedCategories = [
   'core',
@@ -52,7 +52,6 @@ const motionNames = [
   'lens',
   'pointer',
   'border-beam',
-  'magic-card',
   'text-animate',
   'typing-animation',
   'number-ticker',
@@ -83,6 +82,10 @@ const sidebarPath = path.join(
   root,
   'src/features/component-library/component-sidebar.tsx'
 )
+const previewsPath = path.join(
+  root,
+  'src/features/component-library/component-previews.tsx'
+)
 const exampleTabsPath = path.join(
   root,
   'src/features/component-library/component-example-tabs.tsx'
@@ -101,6 +104,7 @@ const docsSource = fs.readFileSync(docsPath, 'utf8')
 const componentsPageSource = fs.readFileSync(componentsPagePath, 'utf8')
 const layoutSource = fs.readFileSync(layoutPath, 'utf8')
 const globalsSource = fs.readFileSync(globalsPath, 'utf8')
+const previewsSource = fs.readFileSync(previewsPath, 'utf8')
 
 function assert(condition, message) {
   if (!condition) {
@@ -126,6 +130,14 @@ for (const name of removedNames) {
   assert(
     !dataSource.includes(`slug: '${name}'`),
     `Removed sample still exists: ${name}`
+  )
+  assert(
+    !fs.existsSync(path.join(root, `src/components/magicui/${name}.tsx`)),
+    `Removed source file still exists: ${name}`
+  )
+  assert(
+    !fs.existsSync(path.join(root, `public/r/${name}.json`)),
+    `Removed registry file still exists: ${name}`
   )
 }
 
@@ -273,6 +285,13 @@ assert(
   'Preview heading should match the Installation and Code section title style'
 )
 assert(
+  exampleTabsSource.includes('flushPreview') &&
+    exampleTabsSource.includes("sample.preview.kind === 'meteors'") &&
+    exampleTabsSource.includes("sample.preview.kind === 'particles'") &&
+    exampleTabsSource.includes("sample.preview.kind === 'video-text'"),
+  'Effect previews should render flush against the outer preview border'
+)
+assert(
   !exampleTabsSource.includes('codePanel') &&
     !exampleTabsSource.includes('ReactNode') &&
     !exampleTabsSource.includes('import { CodeBlock }'),
@@ -376,6 +395,8 @@ assert(
     layoutSource.includes('lg:bottom-0') &&
     layoutSource.includes('lg:h-full') &&
     layoutSource.includes('components-scroll-shell') &&
+    layoutSource.includes('components-shell-grid') &&
+    layoutSource.includes('components-content-scroll') &&
     layoutSource.includes('lg:overflow-hidden') &&
     layoutSource.includes('lg:overflow-y-auto') &&
     layoutSource.includes('lg:overscroll-contain') &&
@@ -383,9 +404,44 @@ assert(
   'Components layout should use a fixed desktop app shell with independent scroll containers and no page-level wheel capture'
 )
 assert(
+  globalsSource.includes('.components-shell-grid') &&
+    globalsSource.includes('.components-content-scroll') &&
+    globalsSource.includes('minmax(0, 1fr)') &&
+    globalsSource.includes('grid-column: 4'),
+  'Components desktop content scroller should extend to the viewport right edge'
+)
+assert(
   globalsSource.includes('html:has(.components-scroll-shell)') &&
     globalsSource.includes('overflow-y: hidden'),
   'Components desktop app shell should disable page-level html scrolling'
+)
+assert(
+  !previewsSource.includes('MagicCard') &&
+    !previewsSource.includes('MagicCardPreview') &&
+    !previewsSource.includes("case 'magic-card'"),
+  'Component previews should not include Magic Card'
+)
+for (const requiredPreviewPart of [
+  'OuterEffectSurface',
+  'BorderBeamPreview',
+  'MeteorsPreview',
+  'ConfettiPreview',
+  'ParticlesPreview',
+  'VideoTextPreview',
+  'HighlighterPreview',
+  'bg-white',
+  'dark:bg-white',
+]) {
+  assert(
+    previewsSource.includes(requiredPreviewPart),
+    `Component previews missing light outer surface part: ${requiredPreviewPart}`
+  )
+}
+assert(
+  previewsSource.includes('action="underline"') &&
+    previewsSource.includes('padding={6}') &&
+    previewsSource.includes('animationDuration={900}'),
+  'Highlighter preview should exercise Magic UI highlighter props without a shrunken look'
 )
 assert(
   !sidebarSource.includes('Getting Started') &&
