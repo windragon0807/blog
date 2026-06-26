@@ -2,10 +2,24 @@
   "name": "blog-temp",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@11.9.0",
   "engines": {
-    "node": "24.x"
+    "node": "26.x"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "26.4.0",
+      "onFail": "download"
+    },
+    "packageManager": {
+      "name": "pnpm",
+      "version": "11.9.0",
+      "onFail": "download"
+    }
   },
   "scripts": {
+    "preinstall": "node scripts/ensure-pnpm.cjs",
     "dev": "next dev -p 3200",
     "build": "next build",
     "start": "next start -p 3200",

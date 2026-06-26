@@ -98,8 +98,8 @@
 
 배포 전:
 
-1. `npm run lint`
-2. `npm run build`
+1. `pnpm lint`
+2. `pnpm build`
 3. 홈/태그/시리즈/상세 렌더 확인
 4. 헤더 검색 오버레이 동작 확인
 5. `/resume` 화면 렌더링과 PDF 다운로드 확인

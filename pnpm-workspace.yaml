@@ -1,0 +1,4 @@
+allowBuilds:
+  "node@runtime:26.4.0": true
+  sharp: true
+  unrs-resolver: true

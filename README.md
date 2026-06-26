@@ -74,15 +74,17 @@ public
 
 ### 0) Node 버전 맞추기
 
-이 프로젝트는 `Node 24.x` 기준으로 동작합니다.
+이 프로젝트는 `Node 26.4.0` 기준으로 동작합니다.
 
-- `nvm`/`fnm`/`asdf`/`mise` 같은 버전 매니저를 쓴다면 프로젝트 루트에서 `24` 버전을 사용하세요.
+- `nvm`/`fnm`/`asdf`/`mise` 같은 버전 매니저를 쓴다면 프로젝트 루트에서 `26.4.0` 버전을 사용하세요.
 - `.nvmrc`, `.node-version` 파일이 포함되어 있어서 지원하는 도구는 자동으로 인식할 수 있습니다.
+- 패키지 매니저는 `pnpm@11.9.0` 기준입니다. `npm install`, `yarn install`은 프로젝트 가드에서 차단됩니다.
+- `pnpm` 스크립트는 `package.json`의 `devEngines.runtime` 기준으로 Node 26.4.0 런타임을 사용합니다.
 
 ### 1) 설치
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### 2) 환경변수 설정
@@ -101,7 +103,7 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3200
 ### 3) 개발 서버 실행
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 기본 포트는 `3200`입니다.  
@@ -110,7 +112,7 @@ npm run dev
 예시:
 
 ```bash
-npx next dev -p 3001
+pnpm exec next dev -p 3001
 ```
 
 ## Notion DB 설정 가이드
@@ -163,10 +165,10 @@ https://www.notion.so/workspace/8a85c5a7a1d94db4b7b367168fca1e2d?v=...
 ## 스크립트
 
 ```bash
-npm run dev
-npm run build
-npm run start
-npm run lint
+pnpm dev
+pnpm build
+pnpm start
+pnpm lint
 ```
 
 ## 배포 체크리스트
