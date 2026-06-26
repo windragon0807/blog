@@ -63,7 +63,7 @@ export function Header() {
 
   return (
     <header className="glass-surface header-sticky top-0 z-50 w-full">
-      <div className="w-full px-4 md:px-[60px]">
+      <div className="w-full px-5 md:px-6">
         <div className="flex min-h-14 items-center justify-between gap-3 py-2 sm:gap-4 sm:py-0">
           <div className="min-w-0">
             <Link

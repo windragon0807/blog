@@ -22,7 +22,7 @@ interface AppLink {
 const APP_LINKS: AppLink[] = [
   {
     id: 'openrun',
-    name: 'Openrun',
+    name: '오픈런- OpenRun',
     description: '커뮤니티 기반 러닝 M2E',
     href: 'https://open-run.vercel.app/',
     iconSrc: '/apps/openrun-icon.png',

@@ -242,12 +242,16 @@ html body[data-scroll-locked][data-scroll-locked] {
 
 .glass-surface.header-sticky {
   position: sticky;
+  top: 0.75rem;
   isolation: isolate;
+  inline-size: min(960px, calc(100% - 1rem));
+  margin-block-start: 0.75rem;
+  margin-inline: auto;
   border-style: solid;
-  border-width: 0 1px 1px;
+  border-width: 1px;
   border-color: rgba(228, 228, 231, 0.78);
   border-bottom-color: rgba(228, 228, 231, 0.36);
-  border-radius: 0 0 26px 26px;
+  border-radius: 999px;
   box-shadow:
     0 22px 44px -36px rgba(15, 23, 42, 0.34),
     inset 0 1px 0 rgba(255, 255, 255, 0.68);
@@ -331,7 +335,7 @@ html body[data-scroll-locked][data-scroll-locked] {
 
 @media (min-width: 640px) {
   .glass-surface.header-sticky {
-    border-radius: 0 0 30px 30px;
+    inline-size: min(960px, calc(100% - 2rem));
   }
 }
 

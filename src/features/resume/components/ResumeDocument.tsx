@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 
-import { forwardRef } from 'react'
+import { forwardRef, useId } from 'react'
 import {
   resumeLinks,
   resumeProfile,
@@ -74,6 +74,51 @@ function ResumeTextBlock({
 
 function TechnologyTag({ label }: { label: string }) {
   return <span className={styles.entryTechnology}>{label}</span>
+}
+
+function ResumeValueLinkIcon() {
+  const gradientId = `resume-link-value-gradient-${useId().replaceAll(':', '')}`
+
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={styles.linkValueIcon}
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient
+          id={gradientId}
+          x1="3"
+          x2="21"
+          y1="3"
+          y2="21"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop offset="0%" stopColor="#6d69e8" />
+          <stop offset="47%" stopColor="#b461cf" />
+          <stop offset="100%" stopColor="#e48792" />
+        </linearGradient>
+      </defs>
+      <g className={styles.linkValueIconBase} stroke="currentColor">
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+      </g>
+      <g
+        className={styles.linkValueIconGradient}
+        stroke={`url(#${gradientId})`}
+      >
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+      </g>
+    </svg>
+  )
 }
 
 function getKoreaYearMonth() {
@@ -274,12 +319,7 @@ const ResumeDocument = forwardRef<HTMLDivElement>(function ResumeDocument(_, ref
                 <span className={styles.linkLabel}>{link.label}</span>
                 <span className={styles.linkValue}>
                   {link.value}
-                  <img
-                    src="/resume/logos/external-link.png"
-                    alt=""
-                    className={styles.linkValueIcon}
-                    aria-hidden="true"
-                  />
+                  <ResumeValueLinkIcon />
                 </span>
               </span>
             </a>
