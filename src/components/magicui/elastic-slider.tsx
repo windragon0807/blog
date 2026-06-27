@@ -29,7 +29,7 @@ const ElasticSlider: React.FC<ElasticSliderProps> = ({
   rightIcon = <>+</>
 }) => {
   return (
-    <div className={`flex flex-col items-center justify-center gap-4 w-48 ${className}`}>
+    <div className={`flex w-72 flex-col items-center justify-center gap-5 ${className}`}>
       <Slider
         defaultValue={defaultValue}
         startingValue={startingValue}
@@ -140,7 +140,7 @@ const Slider: React.FC<SliderProps> = ({
           style={{
             x: useTransform(() => (region === 'left' ? -overflow.get() / scale.get() : 0))
           }}
-          className="text-zinc-500 dark:text-zinc-400"
+          className="text-lg text-zinc-500 dark:text-zinc-400"
         >
           {leftIcon}
         </motion.div>
@@ -194,12 +194,12 @@ const Slider: React.FC<SliderProps> = ({
           style={{
             x: useTransform(() => (region === 'right' ? overflow.get() / scale.get() : 0))
           }}
-          className="text-zinc-500 dark:text-zinc-400"
+          className="text-lg text-zinc-500 dark:text-zinc-400"
         >
           {rightIcon}
         </motion.div>
       </motion.div>
-      <p className="absolute -translate-y-4 transform text-xs font-medium tracking-wide text-zinc-500 dark:text-zinc-400">
+      <p className="absolute -translate-y-5 transform text-sm font-medium tracking-wide text-zinc-500 dark:text-zinc-400">
         {Math.round(value)}
       </p>
     </>

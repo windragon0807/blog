@@ -42,17 +42,14 @@ export type ComponentPreviewKind =
   | 'highlighter'
   | 'background-boxes'
   | 'keyboard'
-  | 'comet-card'
   | 'placeholders-and-vanish-input'
   | 'gooey-input'
   | '3d-marquee'
   | 'avatar-group'
   | 'playful-todolist'
-  | 'border-beam-button'
   | 'slide-arrow-button'
   | 'flower-menu'
   | 'text-flip'
-  | 'cool-theme-toggle'
   | 'toggle-theme'
   | '3d-image-carousel'
   | 'sparkle-cursor'
@@ -310,29 +307,6 @@ export default function Example() {
     ],
   }),
   createSample({
-    slug: 'comet-card',
-    categoryId: 'cards',
-    title: 'Comet Card',
-    description: 'A card with hover tilt, depth translation, and glare.',
-    dependencies: ['motion'],
-    reference: {
-      label: 'Aceternity Comet Card',
-      url: 'https://ui.aceternity.com/components/comet-card',
-    },
-    usage: `import { CometCard } from "@/components/magicui/comet-card"
-
-export default function Example() {
-  return <CometCard>Comet surface</CometCard>
-}`,
-    props: [
-      childrenProp,
-      classNameProp,
-      prop('cardClassName', 'string', '-', 'Classes applied to the inner card surface.'),
-      prop('rotateDepth', 'number', '17.5', 'Maximum rotation depth in degrees.'),
-      prop('translateDepth', 'number', '20', 'Maximum hover translation depth.'),
-    ],
-  }),
-  createSample({
     slug: 'placeholders-and-vanish-input',
     categoryId: 'forms',
     title: 'Placeholders And Vanish Input',
@@ -417,7 +391,11 @@ export default function Example() {
     props: [
       classNameProp,
       prop('items', 'AvatarGroupItem[]', '-', 'Avatar data.'),
-      prop('max', 'number', '5', 'Maximum visible avatars.'),
+      prop('max', 'number', '6', 'Maximum visible avatars.'),
+      prop('invertOverlap', 'boolean', 'true', 'Whether the earlier avatars should visually sit above later avatars.'),
+      prop('translate', 'string | number', '"-30%"', 'Hover translation applied to the active avatar.'),
+      prop('transition', 'Transition', 'spring 300/17', 'Avatar hover transition.'),
+      prop('tooltipTransition', 'Transition', 'spring 300/35', 'Tooltip enter and exit transition.'),
     ],
   }),
 
@@ -438,27 +416,7 @@ export default function Example() {
 }`,
     props: [
       classNameProp,
-      prop('initialItems', 'string[]', '["Sketch", "Build", "Review"]', 'Initial todo labels.'),
-    ],
-  }),
-  createSample({
-    slug: 'border-beam-button',
-    categoryId: 'buttons',
-    title: 'Border Beam Button',
-    description: 'A button with an animated conic border beam.',
-    reference: {
-      label: 'Cult UI Border Beam Button',
-      url: 'https://www.cult-ui.com/docs/components/border-beam-button',
-    },
-    usage: `import { BorderBeamButton } from "@/components/magicui/border-beam-button"
-
-export default function Example() {
-  return <BorderBeamButton>Deploy</BorderBeamButton>
-}`,
-    props: [
-      childrenProp,
-      classNameProp,
-      prop('...props', 'ButtonHTMLAttributes<HTMLButtonElement>', '-', 'Native button props.'),
+      prop('items', 'TodoItem[]', 'built-in list', 'Todo labels and initial checked states.'),
     ],
   }),
   createSample({
@@ -528,32 +486,11 @@ export default function Example() {
     ],
   }),
   createSample({
-    slug: 'cool-theme-toggle',
-    categoryId: 'controls',
-    title: 'Cool Theme Toggle',
-    description: 'A playful sun and moon toggle.',
-    dependencies: ['motion', 'lucide-react'],
-    reference: {
-      label: 'Lightswind Cool Theme Toggle',
-      url: 'https://lightswind.com/components/cool-theme-toggle',
-    },
-    usage: `import { CoolThemeToggle } from "@/components/magicui/cool-theme-toggle"
-
-export default function Example() {
-  return <CoolThemeToggle />
-}`,
-    props: [
-      classNameProp,
-      prop('defaultDark', 'boolean', 'false', 'Initial dark state.'),
-      prop('onChange', '(dark: boolean) => void', '-', 'Change handler.'),
-    ],
-  }),
-  createSample({
     slug: 'toggle-theme',
     categoryId: 'controls',
     title: 'Toggle Theme',
     description: 'A minimal switch-style theme toggle.',
-    dependencies: ['lucide-react'],
+    dependencies: ['lucide-react', 'next-themes'],
     reference: {
       label: 'Lightswind Toggle Theme',
       url: 'https://lightswind.com/components/toggle-theme',
@@ -1244,6 +1181,8 @@ export default function Example() {
       prop('padding', 'number', '2', 'Annotation padding around the text.'),
       prop('multiline', 'boolean', 'true', 'Whether to annotate wrapped lines.'),
       prop('isView', 'boolean', 'false', 'Whether to start when in view.'),
+      prop('repeat', 'boolean', 'false', 'Whether to replay the draw animation.'),
+      prop('repeatDelay', 'number', '1800', 'Delay between repeated draw animations.'),
     ],
   }),
 ]

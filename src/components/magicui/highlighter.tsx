@@ -25,6 +25,8 @@ interface HighlighterProps {
   padding?: number
   multiline?: boolean
   isView?: boolean
+  repeat?: boolean
+  repeatDelay?: number
 }
 
 type ScrollTarget = Element | Window
@@ -57,6 +59,8 @@ export function Highlighter({
   padding = 2,
   multiline = true,
   isView = false,
+  repeat = false,
+  repeatDelay = 1800,
 }: HighlighterProps) {
   const elementRef = useRef<HTMLSpanElement>(null)
 
@@ -73,6 +77,7 @@ export function Highlighter({
     let annotation: RoughAnnotation | null = null
     let resizeObserver: ResizeObserver | null = null
     let animationFrame: number | null = null
+    let repeatTimer: number | null = null
     let scrollTargets: ScrollTarget[] = []
     let refreshAnnotation: (() => void) | null = null
 
@@ -90,6 +95,18 @@ export function Highlighter({
       const currentAnnotation = annotate(element, annotationConfig)
       annotation = currentAnnotation
       currentAnnotation.show()
+
+      if (repeat) {
+        const intervalDelay = Math.max(
+          repeatDelay,
+          animationDuration + 240
+        )
+
+        repeatTimer = window.setInterval(() => {
+          currentAnnotation.hide()
+          window.requestAnimationFrame(() => currentAnnotation.show())
+        }, intervalDelay)
+      }
 
       refreshAnnotation = () => {
         if (animationFrame !== null) return
@@ -128,6 +145,9 @@ export function Highlighter({
       if (animationFrame !== null) {
         window.cancelAnimationFrame(animationFrame)
       }
+      if (repeatTimer !== null) {
+        window.clearInterval(repeatTimer)
+      }
       if (resizeObserver) {
         resizeObserver.disconnect()
       }
@@ -141,6 +161,8 @@ export function Highlighter({
     iterations,
     padding,
     multiline,
+    repeat,
+    repeatDelay,
   ])
 
   return (

@@ -1,13 +1,18 @@
 'use client'
 
 import { useState, type ReactNode } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
+import {
+  AnimatePresence,
+  motion,
+  type Transition,
+} from 'motion/react'
 import { cn } from '@/lib/utils'
 
 export interface AvatarGroupItem {
   src?: string
   name: string
   fallback?: string
+  tooltip?: string
 }
 
 interface AvatarGroupProps {
@@ -15,63 +20,120 @@ interface AvatarGroupProps {
   max?: number
   className?: string
   children?: ReactNode
+  invertOverlap?: boolean
+  translate?: string | number
+  transition?: Transition
+  tooltipTransition?: Transition
 }
 
-const defaultItems: AvatarGroupItem[] = ['Mina', 'Joon', 'Ari', 'Theo', 'Lia', 'Noah'].map(
-  (name) => ({
-    name,
-    src: `https://avatar.vercel.sh/${name}`,
-  })
-)
+const defaultItems: AvatarGroupItem[] = [
+  {
+    src: 'https://pbs.twimg.com/profile_images/1948770261848756224/oPwqXMD6_400x400.jpg',
+    name: 'Skyleen',
+    fallback: 'SK',
+  },
+  {
+    src: 'https://pbs.twimg.com/profile_images/1593304942210478080/TUYae5z7_400x400.jpg',
+    name: 'Shadcn',
+    fallback: 'CN',
+  },
+  {
+    src: 'https://pbs.twimg.com/profile_images/1677042510839857154/Kq4tpySA_400x400.jpg',
+    name: 'Adam Wathan',
+    fallback: 'AW',
+  },
+  {
+    src: 'https://pbs.twimg.com/profile_images/1783856060249595904/8TfcCN0r_400x400.jpg',
+    name: 'Guillermo Rauch',
+    fallback: 'GR',
+  },
+  {
+    src: 'https://pbs.twimg.com/profile_images/1534700564810018816/anAuSfkp_400x400.jpg',
+    name: 'Jhey',
+    fallback: 'JH',
+  },
+  {
+    src: 'https://pbs.twimg.com/profile_images/1927474594102784000/Al0g-I6o_400x400.jpg',
+    name: 'David Haz',
+    fallback: 'DH',
+  },
+]
+
+const defaultTransition: Transition = {
+  type: 'spring',
+  stiffness: 300,
+  damping: 17,
+}
+
+const defaultTooltipTransition: Transition = {
+  type: 'spring',
+  stiffness: 300,
+  damping: 35,
+}
 
 export function AvatarGroup({
   items = defaultItems,
-  max = 5,
+  max = 6,
   className,
   children,
+  invertOverlap = true,
+  translate = '-30%',
+  transition = defaultTransition,
+  tooltipTransition = defaultTooltipTransition,
 }: AvatarGroupProps) {
   const [hovered, setHovered] = useState<string | null>(null)
   const visible = items.slice(0, max)
   const extra = Math.max(items.length - visible.length, 0)
 
   if (children) {
-    return <div className={cn('flex items-center -space-x-3', className)}>{children}</div>
+    return <div className={cn('flex h-12 items-center -space-x-3', className)}>{children}</div>
   }
 
   return (
-    <div className={cn('flex items-center -space-x-3', className)}>
+    <div className={cn('flex h-12 items-center -space-x-3', className)}>
       {visible.map((item, index) => (
         <motion.div
           key={item.name}
           className="relative"
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: index * 0.04, type: 'spring', stiffness: 280, damping: 24 }}
+          initial="initial"
+          whileHover="hover"
+          whileTap="hover"
+          style={{
+            zIndex: invertOverlap ? visible.length - index : index,
+          }}
           onHoverStart={() => setHovered(item.name)}
           onHoverEnd={() => setHovered(null)}
-          whileHover={{ y: -10, scale: 1.06, zIndex: 40 }}
-          whileTap={{ scale: 0.96 }}
         >
-          <div
-            className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-zinc-100 text-sm font-semibold text-zinc-700 shadow-[0_10px_24px_-16px_rgba(24,24,27,0.65)] dark:border-zinc-950 dark:bg-zinc-800 dark:text-zinc-200"
-            title={item.name}
+          <motion.div
+            variants={{
+              initial: { y: 0 },
+              hover: { y: translate },
+            }}
+            transition={transition}
+            className="relative flex size-12 items-center justify-center overflow-hidden rounded-full border-[3px] border-background bg-zinc-100 text-sm font-semibold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
           >
             {item.src ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={item.src} alt={item.name} className="h-full w-full object-cover" />
+              <img
+                src={item.src}
+                alt={item.name}
+                className="h-full w-full object-cover"
+              />
             ) : (
               item.fallback ?? item.name.slice(0, 2).toUpperCase()
             )}
-          </div>
+          </motion.div>
           <AnimatePresence>
             {hovered === item.name ? (
               <motion.span
                 initial={{ opacity: 0, y: 6, scale: 0.96 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 6, scale: 0.96 }}
-                className="pointer-events-none absolute -top-9 left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-full bg-zinc-950 px-3 py-1 text-xs font-medium text-white shadow-sm"
+                transition={tooltipTransition}
+                className="pointer-events-none absolute bottom-[calc(100%+25px)] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground shadow-sm"
               >
-                {item.name}
+                {item.tooltip ?? item.name}
+                <span className="absolute left-1/2 top-full size-3 -translate-x-1/2 -translate-y-px rotate-45 rounded-[2px] bg-primary" />
               </motion.span>
             ) : null}
           </AnimatePresence>
@@ -79,9 +141,15 @@ export function AvatarGroup({
       ))}
       {extra > 0 && (
         <motion.div
-          className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-white bg-[var(--theme-accent-current)] text-sm font-semibold text-[var(--background)] shadow-sm dark:border-zinc-950"
-          whileHover={{ y: -10, scale: 1.06 }}
-          whileTap={{ scale: 0.96 }}
+          initial="initial"
+          whileHover="hover"
+          whileTap="hover"
+          variants={{
+            initial: { y: 0 },
+            hover: { y: translate },
+          }}
+          transition={transition}
+          className="flex size-12 items-center justify-center rounded-full border-[3px] border-background bg-primary text-sm font-semibold text-primary-foreground"
         >
           +{extra}
         </motion.div>

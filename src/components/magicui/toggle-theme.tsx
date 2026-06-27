@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useSyncExternalStore } from 'react'
+import { useState, useSyncExternalStore, type MouseEvent } from 'react'
 import { Check, Moon, Sparkles, Sun } from 'lucide-react'
+import { useTheme } from 'next-themes'
 import { cn } from '@/lib/utils'
 
 type ToggleThemeAnimation = 'circle' | 'wipe' | 'blur' | 'fade'
@@ -16,12 +17,15 @@ interface ToggleThemeProps {
 }
 
 type ViewTransitionDocument = Document & {
-  startViewTransition?: (callback: () => void) => void
+  startViewTransition?: (callback: () => void) => {
+    finished: Promise<void>
+  }
 }
 
-function applyTheme(next: boolean) {
+function applyTheme(next: boolean, setTheme: (theme: string) => void) {
   document.documentElement.classList.toggle('dark', next)
   window.localStorage.setItem('theme', next ? 'dark' : 'light')
+  setTheme(next ? 'dark' : 'light')
 }
 
 function subscribeToThemeChanges(callback: () => void) {
@@ -50,31 +54,50 @@ export function ToggleTheme({
   label,
   className,
 }: ToggleThemeProps) {
+  const { resolvedTheme, setTheme } = useTheme()
   const documentChecked = useDocumentDarkTheme(defaultChecked ?? false)
   const [innerChecked, setInnerChecked] = useState(defaultChecked ?? false)
-  const active = checked ?? (defaultChecked === undefined ? documentChecked : innerChecked)
+  const providerChecked =
+    resolvedTheme === 'dark'
+      ? true
+      : resolvedTheme === 'light'
+        ? false
+        : documentChecked
+  const active = checked ?? (defaultChecked === undefined ? providerChecked : innerChecked)
 
-  const update = () => {
+  const update = (event: MouseEvent<HTMLButtonElement>) => {
     const next = !active
     const root = document.documentElement
+    const rect = event.currentTarget.getBoundingClientRect()
     root.dataset.themeTransition = animationType
+    root.style.setProperty(
+      '--theme-transition-x',
+      `${rect.left + rect.width / 2}px`
+    )
+    root.style.setProperty(
+      '--theme-transition-y',
+      `${rect.top + rect.height / 2}px`
+    )
 
-    const run = () => applyTheme(next)
+    const run = () => applyTheme(next, setTheme)
     const startViewTransition = (document as ViewTransitionDocument)
       .startViewTransition?.bind(document)
+    const clearTransition = () => {
+      delete root.dataset.themeTransition
+      root.style.removeProperty('--theme-transition-x')
+      root.style.removeProperty('--theme-transition-y')
+    }
 
     if (checked === undefined) setInnerChecked(next)
     onChange?.(next)
 
     if (startViewTransition) {
-      startViewTransition(run)
+      const transition = startViewTransition(run)
+      void transition.finished.finally(clearTransition)
     } else {
       run()
+      window.setTimeout(clearTransition, 720)
     }
-
-    window.setTimeout(() => {
-      delete root.dataset.themeTransition
-    }, 720)
   }
 
   return (

@@ -63,10 +63,9 @@ function GooeyFilter({ filterId, blur }: { filterId: string; blur: number }) {
   )
 }
 
-function SearchIcon({ layoutId }: { layoutId: string }) {
+function SearchIcon() {
   return (
     <motion.svg
-      layoutId={layoutId}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -100,8 +99,6 @@ export function GooeyInput({
   const reactId = useId()
   const safeId = reactId.replace(/:/g, '')
   const filterId = `gooey-filter-${safeId}`
-  const iconLayoutId = `gooey-input-icon-${safeId}`
-  const inputLayoutId = `gooey-input-field-${safeId}`
   const inputRef = useRef<HTMLInputElement>(null)
   const previousExpandedRef = useRef(false)
   const [expanded, setExpanded] = useState(false)
@@ -172,10 +169,9 @@ export function GooeyInput({
               classNames?.trigger
             )}
           >
-            {!expanded ? <SearchIcon layoutId={iconLayoutId} /> : null}
+            {!expanded ? <SearchIcon /> : null}
             {expanded ? (
               <motion.input
-                layoutId={inputLayoutId}
                 ref={inputRef}
                 type="search"
                 enterKeyHint="search"
@@ -187,6 +183,9 @@ export function GooeyInput({
                 }}
                 disabled={disabled}
                 placeholder={placeholder}
+                initial={false}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
                 className={cn(
                   'h-full min-w-0 flex-1 bg-transparent text-sm text-background outline-none placeholder:text-background/50',
                   classNames?.input
@@ -194,7 +193,9 @@ export function GooeyInput({
               />
             ) : (
               <motion.span
-                layoutId={inputLayoutId}
+                initial={false}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
                 className={cn(
                   'min-w-0 truncate text-sm text-background/85',
                   classNames?.input
@@ -224,7 +225,7 @@ export function GooeyInput({
               classNames?.bubbleSurface
             )}
           >
-            <SearchIcon layoutId={iconLayoutId} />
+            <SearchIcon />
           </div>
         </motion.div>
       </div>

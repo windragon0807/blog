@@ -302,12 +302,6 @@ const items = [
     dependencies: ['motion'],
   },
   {
-    name: 'comet-card',
-    title: 'Comet Card',
-    description: 'A card with hover tilt, depth translation, and glare.',
-    dependencies: ['motion'],
-  },
-  {
     name: 'placeholders-and-vanish-input',
     title: 'Placeholders And Vanish Input',
     description: 'A search input with rotating placeholders and vanish submit motion.',
@@ -340,12 +334,6 @@ const items = [
     dependencies: ['motion'],
   },
   {
-    name: 'border-beam-button',
-    title: 'Border Beam Button',
-    description: 'A button with an animated conic border beam.',
-    dependencies: [],
-  },
-  {
     name: 'slide-arrow-button',
     title: 'Slide Arrow Button',
     description: 'A button with a sliding arrow hover transition.',
@@ -365,16 +353,87 @@ const items = [
     dependencies: ['motion'],
   },
   {
-    name: 'cool-theme-toggle',
-    title: 'Cool Theme Toggle',
-    description: 'A playful sun and moon toggle.',
-    dependencies: ['motion', 'lucide-react'],
-  },
-  {
     name: 'toggle-theme',
     title: 'Toggle Theme',
     description: 'A minimal switch-style theme toggle.',
-    dependencies: ['lucide-react'],
+    dependencies: ['lucide-react', 'next-themes'],
+    css: {
+      '::view-transition-old(root), ::view-transition-new(root)': {
+        'animation-duration': '520ms',
+        'animation-timing-function': 'cubic-bezier(0.22, 1, 0.36, 1)',
+        'mix-blend-mode': 'normal',
+      },
+      "html[data-theme-transition='circle']::view-transition-old(root)": {
+        animation: 'none',
+      },
+      "html[data-theme-transition='circle']::view-transition-new(root)": {
+        'animation-name': 'theme-circle-reveal',
+      },
+      "html[data-theme-transition='wipe']::view-transition-old(root)": {
+        'animation-name': 'theme-fade-out',
+      },
+      "html[data-theme-transition='wipe']::view-transition-new(root)": {
+        'animation-name': 'theme-wipe-reveal',
+      },
+      "html[data-theme-transition='blur']::view-transition-old(root)": {
+        'animation-name': 'theme-blur-out',
+      },
+      "html[data-theme-transition='blur']::view-transition-new(root)": {
+        'animation-name': 'theme-blur-in',
+      },
+      "html[data-theme-transition='fade']::view-transition-old(root)": {
+        'animation-name': 'theme-fade-out',
+      },
+      "html[data-theme-transition='fade']::view-transition-new(root)": {
+        'animation-name': 'theme-fade-in',
+      },
+      '@keyframes theme-circle-reveal': {
+        from: {
+          'clip-path':
+            'circle(0 at var(--theme-transition-x, 50%) var(--theme-transition-y, 50%))',
+        },
+        to: {
+          'clip-path':
+            'circle(150vmax at var(--theme-transition-x, 50%) var(--theme-transition-y, 50%))',
+        },
+      },
+      '@keyframes theme-wipe-reveal': {
+        from: { 'clip-path': 'inset(0 100% 0 0)' },
+        to: { 'clip-path': 'inset(0 0 0 0)' },
+      },
+      '@keyframes theme-blur-out': {
+        from: {
+          filter: 'blur(0)',
+          opacity: '1',
+          transform: 'scale(1)',
+        },
+        to: {
+          filter: 'blur(16px)',
+          opacity: '0',
+          transform: 'scale(0.985)',
+        },
+      },
+      '@keyframes theme-blur-in': {
+        from: {
+          filter: 'blur(16px)',
+          opacity: '0',
+          transform: 'scale(1.015)',
+        },
+        to: {
+          filter: 'blur(0)',
+          opacity: '1',
+          transform: 'scale(1)',
+        },
+      },
+      '@keyframes theme-fade-out': {
+        from: { opacity: '1' },
+        to: { opacity: '0' },
+      },
+      '@keyframes theme-fade-in': {
+        from: { opacity: '0' },
+        to: { opacity: '1' },
+      },
+    },
   },
   {
     name: '3d-image-carousel',

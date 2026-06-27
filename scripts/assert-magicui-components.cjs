@@ -34,17 +34,14 @@ const requiredNames = [
   'highlighter',
   'background-boxes',
   'keyboard',
-  'comet-card',
   'placeholders-and-vanish-input',
   'gooey-input',
   '3d-marquee',
   'avatar-group',
   'playful-todolist',
-  'border-beam-button',
   'slide-arrow-button',
   'flower-menu',
   'text-flip',
-  'cool-theme-toggle',
   'toggle-theme',
   '3d-image-carousel',
   'sparkle-cursor',
@@ -107,6 +104,9 @@ const removedNames = [
   'link-preview',
   'animated-checkbox',
   'kinetic-center-build',
+  'border-beam-button',
+  'comet-card',
+  'cool-theme-toggle',
 ]
 const removedCategories = [
   'core',
@@ -128,14 +128,12 @@ const motionNames = [
   'highlighter',
   'background-boxes',
   'keyboard',
-  'comet-card',
   'placeholders-and-vanish-input',
   'gooey-input',
   '3d-marquee',
   'avatar-group',
   'playful-todolist',
   'text-flip',
-  'cool-theme-toggle',
 ]
 const oglNames = []
 const reactThreeNames = []
@@ -364,6 +362,18 @@ for (const name of reactIconsNames) {
     Array.isArray(registry.dependencies) &&
       registry.dependencies.includes('gsap'),
     'sparkle-cursor registry item should include gsap dependency'
+  )
+}
+
+{
+  const registry = JSON.parse(
+    fs.readFileSync(path.join(root, 'public/r/toggle-theme.json'), 'utf8')
+  )
+  assert(
+    Array.isArray(registry.dependencies) &&
+      registry.dependencies.includes('lucide-react') &&
+      registry.dependencies.includes('next-themes'),
+    'toggle-theme registry item should include lucide-react and next-themes dependencies'
   )
 }
 

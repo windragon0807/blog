@@ -241,13 +241,11 @@ export function FlowerMenu({
           const openDelay = 10 + index * 20
           const closeDelay = (itemCount - 1 - index) * 14
           const buttonClassName = cn(
-            'flower-petal-control flex size-full touch-manipulation items-center justify-center rounded-full transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 active:scale-95',
+            'flower-petal-control flex size-full touch-manipulation items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-sm transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 active:scale-95',
             isOpen ? 'opacity-100' : 'opacity-0',
             'hover:scale-110 focus-visible:scale-110'
           )
           const buttonStyle = {
-            backgroundColor,
-            color: iconColor,
             transform: `rotate(-${angle}deg)`,
           }
           const content = (

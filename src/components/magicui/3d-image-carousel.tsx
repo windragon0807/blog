@@ -45,6 +45,26 @@ function wrapIndex(value: number, length: number) {
   return ((value % length) + length) % length
 }
 
+function getDirectionalOffset(
+  index: number,
+  active: number,
+  length: number,
+  direction: number
+) {
+  const forwardOffset = wrapIndex(index - active, length)
+  const backwardOffset = forwardOffset - length
+
+  if (forwardOffset === 0) return 0
+
+  if (Math.abs(forwardOffset) === Math.abs(backwardOffset)) {
+    return direction > 0 ? backwardOffset : forwardOffset
+  }
+
+  return Math.abs(forwardOffset) < Math.abs(backwardOffset)
+    ? forwardOffset
+    : backwardOffset
+}
+
 export function ThreeDImageCarousel({
   items,
   slides,
@@ -54,11 +74,13 @@ export function ThreeDImageCarousel({
 }: ThreeDImageCarouselProps) {
   const carouselItems = slides ?? items ?? defaultItems
   const [active, setActive] = useState(0)
+  const [direction, setDirection] = useState(1)
 
   useEffect(() => {
     if (!autoplay || carouselItems.length <= 1) return
 
     const id = window.setInterval(() => {
+      setDirection(1)
       setActive((current) => wrapIndex(current + 1, carouselItems.length))
     }, interval)
 
@@ -70,7 +92,15 @@ export function ThreeDImageCarousel({
   }
 
   const go = (direction: number) => {
+    setDirection(direction)
     setActive((current) => wrapIndex(current + direction, carouselItems.length))
+  }
+
+  const selectIndex = (index: number) => {
+    const forwardOffset = wrapIndex(index - active, carouselItems.length)
+    const backwardOffset = forwardOffset - carouselItems.length
+    setDirection(Math.abs(forwardOffset) <= Math.abs(backwardOffset) ? 1 : -1)
+    setActive(index)
   }
 
   return (
@@ -81,11 +111,12 @@ export function ThreeDImageCarousel({
       )}
     >
       {carouselItems.map((item, index) => {
-        const rawOffset = index - active
-        const offset =
-          Math.abs(rawOffset) > carouselItems.length / 2
-            ? rawOffset - Math.sign(rawOffset) * carouselItems.length
-            : rawOffset
+        const offset = getDirectionalOffset(
+          index,
+          active,
+          carouselItems.length,
+          direction
+        )
         const distance = Math.abs(offset)
         const visible = distance <= 2
 
@@ -104,7 +135,7 @@ export function ThreeDImageCarousel({
               zIndex: 20 - distance,
               opacity: visible ? (distance === 0 ? 1 : 0.55) : 0,
             }}
-            onClick={() => setActive(index)}
+            onClick={() => selectIndex(index)}
             aria-label={`Show ${item.alt}`}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}

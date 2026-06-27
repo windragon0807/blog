@@ -24,12 +24,9 @@ import { AnimatedCircularProgressBar } from '@/components/magicui/animated-circu
 import { AuroraText } from '@/components/magicui/aurora-text'
 import { AvatarGroup } from '@/components/magicui/avatar-group'
 import { BackgroundBoxes } from '@/components/magicui/background-boxes'
-import { BorderBeamButton } from '@/components/magicui/border-beam-button'
 import { Carousel } from '@/components/magicui/carousel'
 import { ClickSpark } from '@/components/magicui/click-spark'
-import { CometCard } from '@/components/magicui/comet-card'
 import { ConfettiButton } from '@/components/magicui/confetti'
-import { CoolThemeToggle } from '@/components/magicui/cool-theme-toggle'
 import { Counter } from '@/components/magicui/counter'
 import { CurvedLoop } from '@/components/magicui/curved-loop'
 import { DataTable } from '@/components/magicui/data-table'
@@ -231,10 +228,38 @@ const previewImages = [
     alt: 'Desk',
   },
 ]
-const avatarItems = ['Mina', 'Joon', 'Ari', 'Theo', 'Lia', 'Noah'].map((name) => ({
-  name,
-  src: `https://avatar.vercel.sh/${name}`,
-}))
+const avatarItems = [
+  {
+    src: 'https://pbs.twimg.com/profile_images/1948770261848756224/oPwqXMD6_400x400.jpg',
+    name: 'Skyleen',
+    fallback: 'SK',
+  },
+  {
+    src: 'https://pbs.twimg.com/profile_images/1593304942210478080/TUYae5z7_400x400.jpg',
+    name: 'Shadcn',
+    fallback: 'CN',
+  },
+  {
+    src: 'https://pbs.twimg.com/profile_images/1677042510839857154/Kq4tpySA_400x400.jpg',
+    name: 'Adam Wathan',
+    fallback: 'AW',
+  },
+  {
+    src: 'https://pbs.twimg.com/profile_images/1783856060249595904/8TfcCN0r_400x400.jpg',
+    name: 'Guillermo Rauch',
+    fallback: 'GR',
+  },
+  {
+    src: 'https://pbs.twimg.com/profile_images/1534700564810018816/anAuSfkp_400x400.jpg',
+    name: 'Jhey',
+    fallback: 'JH',
+  },
+  {
+    src: 'https://pbs.twimg.com/profile_images/1927474594102784000/Al0g-I6o_400x400.jpg',
+    name: 'David Haz',
+    fallback: 'DH',
+  },
+]
 const actionItems = [
   { label: 'Edit', icon: <PenLine className="h-4 w-4" /> },
   { label: 'Copy', icon: <Copy className="h-4 w-4" /> },
@@ -372,19 +397,6 @@ function KeyboardPreview() {
   )
 }
 
-function CometCardPreview() {
-  return (
-    <OuterEffectSurface className="min-h-[26rem]">
-      <CometCard className="w-full max-w-2xl" cardClassName="min-h-56 text-left">
-        <p className="text-2xl font-semibold">Comet Card</p>
-        <p className="mt-2 text-sm text-zinc-500">
-          Tilt and glare follow the pointer.
-        </p>
-      </CometCard>
-    </OuterEffectSurface>
-  )
-}
-
 function PlaceholdersAndVanishInputPreview() {
   return (
     <OuterEffectSurface>
@@ -432,7 +444,7 @@ function ThreeDMarqueePreview() {
 function AvatarGroupPreview() {
   return (
     <OuterEffectSurface>
-      <AvatarGroup items={avatarItems} max={5} />
+      <AvatarGroup items={avatarItems} />
     </OuterEffectSurface>
   )
 }
@@ -441,14 +453,6 @@ function PlayfulTodoListPreview() {
   return (
     <OuterEffectSurface>
       <PlayfulTodoList />
-    </OuterEffectSurface>
-  )
-}
-
-function BorderBeamButtonPreview() {
-  return (
-    <OuterEffectSurface>
-      <BorderBeamButton>Border Beam</BorderBeamButton>
     </OuterEffectSurface>
   )
 }
@@ -480,14 +484,6 @@ function TextFlipPreview() {
   )
 }
 
-function CoolThemeTogglePreview() {
-  return (
-    <OuterEffectSurface>
-      <CoolThemeToggle />
-    </OuterEffectSurface>
-  )
-}
-
 function ToggleThemePreview() {
   return (
     <OuterEffectSurface className="min-h-72">
@@ -515,7 +511,7 @@ function ThreeDImageCarouselPreview() {
 function SparkleCursorPreview() {
   return (
     <OuterEffectSurface className="p-0">
-      <SparkleCursor className="flex min-h-[28rem] items-center justify-center bg-black text-white">
+      <SparkleCursor className="flex min-h-[28rem] items-center justify-center bg-[#0d0b12] text-white">
         <div className="rounded-2xl border border-white/15 bg-white/5 px-8 py-6 text-center shadow-sm backdrop-blur">
           <Sparkles className="mx-auto mb-3 h-6 w-6 text-yellow-300" />
           <p className="text-xl font-semibold">Move the cursor</p>
@@ -669,7 +665,7 @@ function MagnetPreview() {
 
 function StackPreview() {
   return (
-    <div className="relative flex min-h-[30rem] w-full items-center justify-center overflow-hidden rounded-[inherit] bg-[#0d0a14] p-8">
+    <div className="relative flex min-h-[30rem] w-full items-center justify-center overflow-hidden rounded-[inherit] bg-white p-8">
       <div className="relative h-64 w-64">
         <Stack
           cards={stackCards}
@@ -1006,26 +1002,30 @@ function MorphingTextPreview() {
 
 function HighlighterPreview() {
   return (
-    <p className="max-w-2xl text-center text-4xl font-semibold leading-tight text-foreground">
-      Build with{' '}
+    <p className="max-w-full whitespace-nowrap text-center text-xl leading-relaxed text-foreground md:text-2xl">
+      The{' '}
       <Highlighter
         action="underline"
         color="#FF9800"
         strokeWidth={2}
         animationDuration={900}
+        repeat
+        repeatDelay={1400}
       >
-        hand drawn
+        Magic UI Highlighter
       </Highlighter>{' '}
-      marks and{' '}
+      makes important{' '}
       <Highlighter
         action="highlight"
         color="#87CEFA"
         strokeWidth={2}
         animationDuration={900}
+        repeat
+        repeatDelay={1400}
       >
-        underlines
+        text stand out
       </Highlighter>
-      .
+      {' '}effortlessly.
     </p>
   )
 }
@@ -1097,8 +1097,6 @@ function BasePreviewContent({
       return <BackgroundBoxesPreview />
     case 'keyboard':
       return <KeyboardPreview />
-    case 'comet-card':
-      return <CometCardPreview />
     case 'placeholders-and-vanish-input':
       return <PlaceholdersAndVanishInputPreview />
     case 'gooey-input':
@@ -1109,16 +1107,12 @@ function BasePreviewContent({
       return <AvatarGroupPreview />
     case 'playful-todolist':
       return <PlayfulTodoListPreview />
-    case 'border-beam-button':
-      return <BorderBeamButtonPreview />
     case 'slide-arrow-button':
       return <SlideArrowButtonPreview />
     case 'flower-menu':
       return <FlowerMenuPreview />
     case 'text-flip':
       return <TextFlipPreview />
-    case 'cool-theme-toggle':
-      return <CoolThemeTogglePreview />
     case 'toggle-theme':
       return <ToggleThemePreview />
     case '3d-image-carousel':

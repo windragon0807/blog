@@ -16,7 +16,6 @@ export function ComponentExampleTabs({
     sample.preview.kind === 'background-boxes' ||
     sample.preview.kind === 'click-spark' ||
     sample.preview.kind === 'keyboard' ||
-    sample.preview.kind === 'comet-card' ||
     sample.preview.kind === '3d-marquee' ||
     sample.preview.kind === 'sparkle-cursor' ||
     sample.preview.kind === '3d-image-carousel' ||

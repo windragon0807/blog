@@ -40,6 +40,8 @@ export function ComponentSidebar() {
             (sample) => sample.categoryId === category.id
           )
 
+          if (samples.length === 0) return null
+
           return (
             <div key={category.id}>
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-400">
