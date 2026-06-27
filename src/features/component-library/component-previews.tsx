@@ -2,38 +2,30 @@
 
 import {
   useEffect,
-  useRef,
   useState,
   type CSSProperties,
   type ReactNode,
 } from 'react'
 import {
-  Home,
+  Copy,
+  Download,
+  Heart,
   PenLine,
-  Search,
   Settings,
   Share2,
   Sparkles,
   Trash2,
   Upload,
-  User,
 } from 'lucide-react'
 import { motion } from 'motion/react'
 import { ThreeDImageCarousel } from '@/components/magicui/3d-image-carousel'
-import { ThreeDImageSlider } from '@/components/magicui/3d-image-slider'
 import { ThreeDMarquee } from '@/components/magicui/3d-marquee'
 import { AnimatedCircularProgressBar } from '@/components/magicui/animated-circular-progress-bar'
-import { AnimatedCheckbox } from '@/components/magicui/animated-checkbox'
-import { AnimatedRadioGroup } from '@/components/magicui/animated-radio-group'
-import { Aurora } from '@/components/magicui/aurora'
 import { AuroraText } from '@/components/magicui/aurora-text'
 import { AvatarGroup } from '@/components/magicui/avatar-group'
 import { BackgroundBoxes } from '@/components/magicui/background-boxes'
 import { BorderBeamButton } from '@/components/magicui/border-beam-button'
-import { BorderBeam } from '@/components/magicui/border-beam'
-import { BorderGlow } from '@/components/magicui/border-glow'
 import { Carousel } from '@/components/magicui/carousel'
-import { CircularGallery } from '@/components/magicui/circular-gallery'
 import { ClickSpark } from '@/components/magicui/click-spark'
 import { CometCard } from '@/components/magicui/comet-card'
 import { ConfettiButton } from '@/components/magicui/confetti'
@@ -42,48 +34,34 @@ import { Counter } from '@/components/magicui/counter'
 import { CurvedLoop } from '@/components/magicui/curved-loop'
 import { DataTable } from '@/components/magicui/data-table'
 import { DiaTextReveal } from '@/components/magicui/dia-text-reveal'
-import { DotField } from '@/components/magicui/dot-field'
 import { ElasticSlider } from '@/components/magicui/elastic-slider'
 import { Tree, type TreeViewElement } from '@/components/magicui/file-tree'
-import { FileUpload } from '@/components/magicui/file-upload'
-import { FloatingDock } from '@/components/magicui/floating-dock'
 import { FlowerMenu } from '@/components/magicui/flower-menu'
 import { Folder } from '@/components/magicui/folder'
-import { GlassSurface } from '@/components/magicui/glass-surface'
 import { GooeyInput } from '@/components/magicui/gooey-input'
 import { Highlighter } from '@/components/magicui/highlighter'
 import { IconCloud } from '@/components/magicui/icon-cloud'
 import { Keyboard } from '@/components/magicui/keyboard'
-import { KineticCenterBuild } from '@/components/magicui/kinetic-center-build'
-import { Lanyard } from '@/components/magicui/lanyard'
 import { Lens } from '@/components/magicui/lens'
-import { LinkPreview } from '@/components/magicui/link-preview'
 import { Magnet } from '@/components/magicui/magnet'
 import { Marquee } from '@/components/magicui/marquee'
 import { Meteors } from '@/components/magicui/meteors'
 import { MorphingText } from '@/components/magicui/morphing-text'
 import { NumberTicker } from '@/components/magicui/number-ticker'
 import { Particles } from '@/components/magicui/particles'
-import { PixelatedCanvas } from '@/components/magicui/pixelated-canvas'
 import { PlaceholdersAndVanishInput } from '@/components/magicui/placeholders-and-vanish-input'
 import { PlayfulTodoList } from '@/components/magicui/playful-todolist'
 import { Pointer } from '@/components/magicui/pointer'
 import { RippleButton } from '@/components/magicui/ripple-button'
 import { ShineBorder } from '@/components/magicui/shine-border'
 import { ShinyButton } from '@/components/magicui/shiny-button'
-import { SignupForm } from '@/components/magicui/signup-form'
 import { SlideArrowButton } from '@/components/magicui/slide-arrow-button'
 import { SparkleCursor } from '@/components/magicui/sparkle-cursor'
-import { SpeedDial } from '@/components/magicui/speed-dial'
 import { Stack } from '@/components/magicui/stack'
-import { Stepper } from '@/components/magicui/stepper'
-import { Strands } from '@/components/magicui/strands'
 import { TextFlip } from '@/components/magicui/text-flip'
 import { ToggleTheme } from '@/components/magicui/toggle-theme'
 import { TypingAnimation } from '@/components/magicui/typing-animation'
-import { VariableProximity } from '@/components/magicui/variable-proximity'
 import { VideoText } from '@/components/magicui/video-text'
-import { WobbleCard } from '@/components/magicui/wobble-card'
 import type { ComponentSample } from './component-data'
 
 type PreviewMode = 'interactive' | 'thumbnail'
@@ -204,54 +182,37 @@ const themeGradientColors = [
   'var(--theme-progress-mid)',
   'var(--theme-progress-end)',
 ] as const
-const stackCards = [
+const stackCardImages = [
+  {
+    src: 'https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?q=80&w=500&auto=format',
+    title: 'house',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=500&auto=format',
+    title: 'beach',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1452626212852-811d58933cae?q=80&w=500&auto=format',
+    title: 'mountain',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1572120360610-d971b9d7767c?q=80&w=500&auto=format',
+    title: 'home',
+  },
+]
+const stackCards = stackCardImages.map((image) => (
   <div
-    key="stack-one"
-    className="flex h-full w-full flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-5 text-left shadow-sm dark:border-zinc-800 dark:bg-zinc-950"
+    key={image.title}
+    className="h-full w-full overflow-hidden rounded-2xl bg-zinc-100"
   >
-    <div className="h-9 w-9 rounded-xl bg-[var(--theme-accent-current)]/12 ring-1 ring-[var(--theme-accent-current)]/20" />
-    <div>
-      <p className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">
-        Design
-      </p>
-      <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-        Motion-ready card
-      </p>
-    </div>
-  </div>,
-  <div
-    key="stack-two"
-    className="flex h-full w-full flex-col justify-between rounded-2xl border border-violet-200 bg-violet-50 p-5 text-left shadow-sm dark:border-violet-400/20 dark:bg-violet-500/10"
-  >
-    <div className="h-9 w-16 rounded-full bg-violet-500/20" />
-    <div>
-      <p className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">
-        Build
-      </p>
-      <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-        Drag or click
-      </p>
-    </div>
-  </div>,
-  <div
-    key="stack-three"
-    className="flex h-full w-full flex-col justify-between rounded-2xl border border-cyan-200 bg-cyan-50 p-5 text-left shadow-sm dark:border-cyan-400/20 dark:bg-cyan-500/10"
-  >
-    <div className="grid grid-cols-3 gap-1.5">
-      <span className="h-3 rounded-full bg-cyan-500/35" />
-      <span className="h-3 rounded-full bg-cyan-500/20" />
-      <span className="h-3 rounded-full bg-cyan-500/45" />
-    </div>
-    <div>
-      <p className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">
-        Ship
-      </p>
-      <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-        Layered preview
-      </p>
-    </div>
-  </div>,
-] satisfies ReactNode[]
+    {/* eslint-disable-next-line @next/next/no-img-element */}
+    <img
+      src={image.src}
+      alt={image.title}
+      className="pointer-events-none h-full w-full object-cover"
+    />
+  </div>
+)) satisfies ReactNode[]
 const previewImages = [
   {
     src: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=600&q=80',
@@ -274,29 +235,28 @@ const avatarItems = ['Mina', 'Joon', 'Ari', 'Theo', 'Lia', 'Noah'].map((name) =>
   name,
   src: `https://avatar.vercel.sh/${name}`,
 }))
-const dockItems = [
-  { title: 'Home', icon: <Home className="h-5 w-5" />, href: '#' },
-  { title: 'Search', icon: <Search className="h-5 w-5" />, href: '#' },
-  { title: 'Profile', icon: <User className="h-5 w-5" />, href: '#' },
-  { title: 'Settings', icon: <Settings className="h-5 w-5" />, href: '#' },
-]
 const actionItems = [
   { label: 'Edit', icon: <PenLine className="h-4 w-4" /> },
+  { label: 'Copy', icon: <Copy className="h-4 w-4" /> },
   { label: 'Share', icon: <Share2 className="h-4 w-4" /> },
+  { label: 'Save', icon: <Heart className="h-4 w-4" /> },
   { label: 'Upload', icon: <Upload className="h-4 w-4" /> },
+  { label: 'Download', icon: <Download className="h-4 w-4" /> },
+  { label: 'Settings', icon: <Settings className="h-4 w-4" /> },
   { label: 'Delete', icon: <Trash2 className="h-4 w-4" /> },
 ]
 const tableColumns = [
-  { key: 'component', header: 'Component' },
-  { key: 'category', header: 'Category' },
+  { key: 'name', header: 'Name' },
+  { key: 'role', header: 'Role' },
   { key: 'status', header: 'Status' },
+  { key: 'email', header: 'Email' },
 ] as const
 const tableRows = [
-  { component: 'Wobble Card', category: 'Cards', status: 'Ready' },
-  { component: 'Gooey Input', category: 'Forms', status: 'Ready' },
-  { component: 'Stepper', category: 'Controls', status: 'Ready' },
+  { name: 'Kate Moore', role: 'CEO', status: 'Active', email: 'kate@acme.com' },
+  { name: 'John Smith', role: 'CTO', status: 'Active', email: 'john@acme.com' },
+  { name: 'Sara Johnson', role: 'CMO', status: 'On Leave', email: 'sara@acme.com' },
+  { name: 'Michael Brown', role: 'CFO', status: 'Active', email: 'michael@acme.com' },
 ]
-
 function readThemeColor(variableName: string, fallback: string) {
   if (typeof window === 'undefined') return fallback
 
@@ -392,8 +352,8 @@ function TextPreviewFont({ children }: { children: ReactNode }) {
 
 function BackgroundBoxesPreview() {
   return (
-    <div className="relative h-72 w-full overflow-hidden rounded-[inherit] bg-slate-900">
-      <BackgroundBoxes rows={46} columns={32} />
+    <div className="relative h-[420px] w-full overflow-hidden rounded-[inherit] bg-slate-900">
+      <BackgroundBoxes />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,rgba(15,23,42,0.96)_78%)]" />
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <p className="text-4xl font-semibold text-white">
@@ -406,46 +366,16 @@ function BackgroundBoxesPreview() {
 
 function KeyboardPreview() {
   return (
-    <OuterEffectSurface className="min-h-72 overflow-hidden">
-      <Keyboard showPreview className="scale-[1.08]" />
-    </OuterEffectSurface>
-  )
-}
-
-function PixelatedCanvasPreview() {
-  return (
-    <div className="flex h-72 w-full items-center justify-center overflow-hidden rounded-[inherit] bg-black">
-      <PixelatedCanvas
-        responsive
-        cellSize={5}
-        dotScale={0.82}
-        shape="circle"
-        backgroundColor="#050505"
-        tintColor="#ffffff"
-        tintStrength={0.08}
-        className="h-full w-full"
-      />
-    </div>
-  )
-}
-
-function WobbleCardPreview() {
-  return (
-    <OuterEffectSurface>
-      <WobbleCard containerClassName="min-h-44 w-full max-w-md text-left">
-        <p className="text-2xl font-semibold text-white">Wobble Card</p>
-        <p className="mt-2 text-sm text-white/70">
-          Move the pointer over this card.
-        </p>
-      </WobbleCard>
+    <OuterEffectSurface className="min-h-[34rem] overflow-visible p-8">
+      <Keyboard showPreview className="scale-[1.75]" />
     </OuterEffectSurface>
   )
 }
 
 function CometCardPreview() {
   return (
-    <OuterEffectSurface>
-      <CometCard className="w-full max-w-md" cardClassName="min-h-44 text-left">
+    <OuterEffectSurface className="min-h-[26rem]">
+      <CometCard className="w-full max-w-2xl" cardClassName="min-h-56 text-left">
         <p className="text-2xl font-semibold">Comet Card</p>
         <p className="mt-2 text-sm text-zinc-500">
           Tilt and glare follow the pointer.
@@ -455,26 +385,11 @@ function CometCardPreview() {
   )
 }
 
-function FloatingDockPreview() {
-  return (
-    <OuterEffectSurface>
-      <FloatingDock items={dockItems} />
-    </OuterEffectSurface>
-  )
-}
-
-function SignupFormPreview() {
-  return (
-    <OuterEffectSurface>
-      <SignupForm />
-    </OuterEffectSurface>
-  )
-}
-
 function PlaceholdersAndVanishInputPreview() {
   return (
     <OuterEffectSurface>
       <PlaceholdersAndVanishInput
+        className="max-w-md"
         placeholders={['Search components', 'Ask about registry', 'Find animations']}
       />
     </OuterEffectSurface>
@@ -484,25 +399,17 @@ function PlaceholdersAndVanishInputPreview() {
 function GooeyInputPreview() {
   return (
     <OuterEffectSurface>
-      <GooeyInput />
-    </OuterEffectSurface>
-  )
-}
-
-function LinkPreviewPreview() {
-  return (
-    <OuterEffectSurface>
-      <p className="text-2xl font-semibold">
-        Hover the{' '}
-        <LinkPreview
-          url="https://ryong.dev"
-          isStatic
-          imageSrc={previewImages[0].src}
-          className="underline decoration-zinc-300 underline-offset-4"
-        >
-          component link
-        </LinkPreview>
-      </p>
+      <GooeyInput
+        placeholder="search"
+        classNames={{
+          trigger:
+            'bg-[var(--theme-accent-current)] text-[var(--background)]',
+          input:
+            'text-[var(--background)] placeholder:text-[var(--background)]/70',
+          bubbleSurface:
+            'bg-[var(--theme-accent-current)] text-[var(--background)]',
+        }}
+      />
     </OuterEffectSurface>
   )
 }
@@ -526,38 +433,6 @@ function AvatarGroupPreview() {
   return (
     <OuterEffectSurface>
       <AvatarGroup items={avatarItems} max={5} />
-    </OuterEffectSurface>
-  )
-}
-
-function AnimatedCheckboxPreview() {
-  return (
-    <OuterEffectSurface>
-      <AnimatedCheckbox label="Send weekly updates" defaultChecked />
-    </OuterEffectSurface>
-  )
-}
-
-function FileUploadPreview() {
-  return (
-    <OuterEffectSurface>
-      <FileUpload />
-    </OuterEffectSurface>
-  )
-}
-
-function AnimatedRadioGroupPreview() {
-  return (
-    <OuterEffectSurface>
-      <AnimatedRadioGroup
-        defaultValue="preview"
-        options={[
-          { label: 'Preview', value: 'preview' },
-          { label: 'Code', value: 'code' },
-          { label: 'Install', value: 'install' },
-        ]}
-        className="w-full max-w-sm"
-      />
     </OuterEffectSurface>
   )
 }
@@ -594,20 +469,15 @@ function FlowerMenuPreview() {
   )
 }
 
-function SpeedDialPreview() {
-  return (
-    <OuterEffectSurface>
-      <SpeedDial items={actionItems} />
-    </OuterEffectSurface>
-  )
-}
-
-function KineticCenterBuildPreview() {
-  return <KineticCenterBuild text="Kinetic Build" className="text-[var(--theme-accent-current)]" />
-}
-
 function TextFlipPreview() {
-  return <TextFlip words={['Design', 'Build', 'Ship']} className="text-[var(--theme-accent-current)]" />
+  return (
+    <TextFlip
+      prefix="Coding is"
+      words={['fantastic', 'love', 'fire', 'awesome']}
+      className="text-foreground"
+      wordClassName="w-[10ch]"
+    />
+  )
 }
 
 function CoolThemeTogglePreview() {
@@ -620,24 +490,24 @@ function CoolThemeTogglePreview() {
 
 function ToggleThemePreview() {
   return (
-    <OuterEffectSurface>
-      <ToggleTheme />
+    <OuterEffectSurface className="min-h-72">
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        {(['circle', 'wipe', 'blur', 'fade'] as const).map((animationType) => (
+          <ToggleTheme
+            key={animationType}
+            animationType={animationType}
+            label={animationType}
+          />
+        ))}
+      </div>
     </OuterEffectSurface>
   )
 }
 
 function ThreeDImageCarouselPreview() {
   return (
-    <OuterEffectSurface className="p-0">
-      <ThreeDImageCarousel items={previewImages} />
-    </OuterEffectSurface>
-  )
-}
-
-function ThreeDImageSliderPreview() {
-  return (
-    <OuterEffectSurface>
-      <ThreeDImageSlider items={previewImages} />
+    <OuterEffectSurface className="min-h-[30rem] p-0">
+      <ThreeDImageCarousel items={previewImages} className="max-w-6xl" />
     </OuterEffectSurface>
   )
 }
@@ -645,34 +515,19 @@ function ThreeDImageSliderPreview() {
 function SparkleCursorPreview() {
   return (
     <OuterEffectSurface className="p-0">
-      <SparkleCursor className="flex min-h-60 items-center justify-center">
-        <div className="rounded-2xl border border-zinc-200 bg-white px-8 py-6 text-center shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-          <Sparkles className="mx-auto mb-3 h-6 w-6 text-[var(--theme-accent-current)]" />
-          <p className="text-xl font-semibold">Move here</p>
+      <SparkleCursor className="flex min-h-[28rem] items-center justify-center bg-black text-white">
+        <div className="rounded-2xl border border-white/15 bg-white/5 px-8 py-6 text-center shadow-sm backdrop-blur">
+          <Sparkles className="mx-auto mb-3 h-6 w-6 text-yellow-300" />
+          <p className="text-xl font-semibold">Move the cursor</p>
         </div>
       </SparkleCursor>
     </OuterEffectSurface>
   )
 }
 
-function StepperPreview() {
-  return (
-    <OuterEffectSurface>
-      <Stepper
-        defaultStep={1}
-        steps={[
-          { title: 'Design', description: 'Shape' },
-          { title: 'Build', description: 'Code' },
-          { title: 'Ship', description: 'Review' },
-        ]}
-      />
-    </OuterEffectSurface>
-  )
-}
-
 function DataTablePreview() {
   return (
-    <OuterEffectSurface>
+    <OuterEffectSurface className="min-h-[26rem] p-4">
       <DataTable columns={tableColumns} rows={tableRows} />
     </OuterEffectSurface>
   )
@@ -771,39 +626,19 @@ function CurvedLoopPreview() {
   )
 }
 
-function VariableProximityPreview() {
-  const containerRef = useRef<HTMLDivElement>(null)
-
-  return (
-    <div
-      ref={containerRef}
-      className="flex min-h-64 w-full items-center justify-center px-6 text-center"
-    >
-      <VariableProximity
-        label="Variable Proximity"
-        containerRef={containerRef}
-        fromFontVariationSettings="'wght' 420"
-        toFontVariationSettings="'wght' 900"
-        radius={150}
-        className="text-5xl leading-tight text-foreground"
-        style={textPreviewFontStyle}
-      />
-    </div>
-  )
-}
-
 function ClickSparkPreview() {
   const themeAccentColor = useThemeColor('--theme-accent-current', '#171717')
 
   return (
-    <OuterEffectSurface className="p-0">
+    <OuterEffectSurface className="min-h-[30rem] p-0">
       <ClickSpark
         sparkColor={themeAccentColor}
         sparkRadius={38}
         sparkSize={14}
         sparkCount={10}
+        className="min-h-[30rem]"
       >
-        <div className="flex min-h-60 w-full cursor-crosshair items-center justify-center p-8">
+        <div className="flex min-h-[30rem] w-full cursor-crosshair items-center justify-center p-8">
           <button
             type="button"
             className="rounded-xl px-6 py-3 text-sm font-medium text-white shadow-[0_18px_40px_-24px_var(--theme-accent-current)]"
@@ -832,80 +667,15 @@ function MagnetPreview() {
   )
 }
 
-function StrandsPreview({ mode }: { mode: PreviewMode }) {
-  return (
-    <div className="relative h-72 w-full overflow-hidden rounded-[inherit] bg-white">
-      <Strands
-        colors={['#2563eb', '#8b5cf6', '#ec4899', '#14b8a6']}
-        count={mode === 'thumbnail' ? 2 : 4}
-        speed={0.45}
-        amplitude={1}
-        glow={1.8}
-        opacity={0.9}
-        saturation={1.2}
-      />
-    </div>
-  )
-}
-
-function CircularGalleryPreview() {
-  return (
-    <div className="h-80 w-full overflow-hidden rounded-[inherit] bg-white dark:bg-zinc-950">
-      <CircularGallery
-        bend={0.25}
-        borderRadius={0.08}
-        scrollSpeed={0.75}
-        scrollEase={0.08}
-        textColor="#71717a"
-      />
-    </div>
-  )
-}
-
 function StackPreview() {
   return (
-    <OuterEffectSurface>
+    <div className="relative flex min-h-[30rem] w-full items-center justify-center overflow-hidden rounded-[inherit] bg-[#0d0a14] p-8">
       <div className="relative h-64 w-64">
         <Stack
           cards={stackCards}
-          randomRotation
           sendToBackOnClick
-          autoplay
-          pauseOnHover
         />
       </div>
-    </OuterEffectSurface>
-  )
-}
-
-function GlassSurfacePreview() {
-  return (
-    <div className="relative flex h-72 w-full items-center justify-center overflow-hidden rounded-[inherit] bg-white dark:bg-zinc-950">
-      <div className="absolute left-10 top-8 h-28 w-48 rounded-2xl border border-zinc-200 bg-zinc-50 p-4 text-left shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="mb-4 h-3 w-20 rounded-full bg-zinc-300 dark:bg-zinc-700" />
-        <div className="space-y-2">
-          <div className="h-2 rounded-full bg-zinc-200 dark:bg-zinc-800" />
-          <div className="h-2 w-2/3 rounded-full bg-zinc-200 dark:bg-zinc-800" />
-        </div>
-      </div>
-      <div className="absolute right-12 bottom-8 grid h-24 w-40 grid-cols-3 gap-2 rounded-2xl border border-zinc-200 bg-zinc-50 p-3 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <span className="rounded-lg bg-[var(--theme-progress-start)]/30" />
-        <span className="rounded-lg bg-[var(--theme-progress-mid)]/30" />
-        <span className="rounded-lg bg-[var(--theme-progress-end)]/30" />
-      </div>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,var(--theme-progress-start),transparent_30%),radial-gradient(circle_at_70%_70%,var(--theme-progress-mid),transparent_34%)] opacity-35" />
-      <GlassSurface
-        width={320}
-        height={118}
-        borderRadius={24}
-        backgroundOpacity={0.2}
-        displace={12}
-        saturation={1.45}
-      >
-        <span className="text-lg font-semibold text-zinc-950 dark:text-white">
-          Glass Surface
-        </span>
-      </GlassSurface>
     </div>
   )
 }
@@ -914,7 +684,7 @@ function FolderPreview() {
   const themeAccentColor = useThemeColor('--theme-accent-current', '#171717')
 
   return (
-    <OuterEffectSurface>
+    <OuterEffectSurface className="min-h-[320px] pt-24">
       <Folder
         color={themeAccentColor}
         size={1.2}
@@ -928,40 +698,10 @@ function FolderPreview() {
   )
 }
 
-function LanyardPreview({ mode }: { mode: PreviewMode }) {
-  return (
-    <div className="relative h-[360px] w-full overflow-hidden rounded-[inherit] border border-zinc-200 bg-[linear-gradient(180deg,#ffffff,#f8fafc)] dark:border-zinc-800 dark:bg-zinc-950">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,var(--theme-progress-start),transparent_28%),radial-gradient(circle_at_62%_68%,var(--theme-progress-mid),transparent_34%)] opacity-20 dark:opacity-30" />
-      <Lanyard position={[0, 0, 24]} fov={mode === 'thumbnail' ? 24 : 22} />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_22%,transparent,rgba(255,255,255,0.34))] dark:bg-[radial-gradient(circle_at_50%_22%,transparent,rgba(0,0,0,0.38))]" />
-    </div>
-  )
-}
-
 function CarouselPreview() {
   return (
     <OuterEffectSurface>
       <Carousel autoplay loop pauseOnHover />
-    </OuterEffectSurface>
-  )
-}
-
-function BorderGlowReactBitsPreview() {
-  return (
-    <OuterEffectSurface>
-      <BorderGlow
-        className="w-full max-w-md"
-        backgroundColor="var(--background)"
-        colors={['hsl(260 100% 72%)', 'hsl(322 92% 72%)', 'hsl(190 95% 68%)']}
-        fillOpacity={0.28}
-        glowRadius={18}
-        glowIntensity={0.7}
-      >
-        <div className="space-y-2 p-8 text-left">
-          <p className="text-2xl font-semibold">Border Glow</p>
-          <p className="text-sm text-muted-foreground">Move near the edge.</p>
-        </div>
-      </BorderGlow>
     </OuterEffectSurface>
   )
 }
@@ -1005,35 +745,6 @@ function CounterPreview() {
           +
         </button>
       </div>
-    </div>
-  )
-}
-
-function AuroraPreview() {
-  return (
-    <div className="h-72 w-full overflow-hidden rounded-[inherit] bg-white">
-      <Aurora
-        colorStops={['#93c5fd', '#c4b5fd', '#f9a8d4']}
-        amplitude={1.1}
-        blend={0.68}
-      />
-    </div>
-  )
-}
-
-function DotFieldPreview() {
-  return (
-    <div className="h-72 w-full overflow-hidden rounded-[inherit] bg-white">
-      <DotField
-        dotRadius={3}
-        dotSpacing={12}
-        cursorRadius={420}
-        gradientFrom="rgba(24, 24, 27, 0.78)"
-        gradientTo="rgba(37, 99, 235, 0.72)"
-        glowColor="rgba(37, 99, 235, 0.22)"
-        sparkle
-        waveAmplitude={0.15}
-      />
     </div>
   )
 }
@@ -1164,24 +875,6 @@ function PointerPreview() {
         </Pointer>
       </PointerTile>
     </div>
-  )
-}
-
-function BorderBeamPreview() {
-  return (
-    <OuterEffectSurface>
-      <BorderBeam
-        size={110}
-        duration={7}
-        borderWidth={2}
-        colorFrom="var(--theme-progress-start)"
-        colorTo="var(--theme-progress-end)"
-      />
-      <div>
-        <p className="text-2xl font-semibold">Border Beam</p>
-        <p className="mt-2 text-sm text-zinc-500">Light travels the edge.</p>
-      </div>
-    </OuterEffectSurface>
   )
 }
 
@@ -1316,19 +1009,18 @@ function HighlighterPreview() {
     <p className="max-w-2xl text-center text-4xl font-semibold leading-tight text-foreground">
       Build with{' '}
       <Highlighter
-        color="#fde68a"
-        strokeWidth={2.5}
-        padding={6}
+        action="underline"
+        color="#FF9800"
+        strokeWidth={2}
         animationDuration={900}
       >
         hand drawn
       </Highlighter>{' '}
       marks and{' '}
       <Highlighter
-        action="underline"
-        color="#38bdf8"
+        action="highlight"
+        color="#87CEFA"
         strokeWidth={2}
-        padding={6}
         animationDuration={900}
       >
         underlines
@@ -1365,38 +1057,20 @@ function BasePreviewContent({
       return <AnimatedCircularProgressBarPreview />
     case 'curved-loop':
       return <CurvedLoopPreview />
-    case 'variable-proximity':
-      return <VariableProximityPreview />
     case 'click-spark':
       return <ClickSparkPreview />
     case 'magnet':
       return <MagnetPreview />
-    case 'strands':
-      return <StrandsPreview mode={mode} />
-    case 'circular-gallery':
-      return <CircularGalleryPreview />
     case 'stack':
       return <StackPreview />
-    case 'glass-surface':
-      return <GlassSurfacePreview />
     case 'folder':
       return <FolderPreview />
-    case 'lanyard':
-      return <LanyardPreview mode={mode} />
     case 'carousel':
       return <CarouselPreview />
-    case 'border-glow':
-      return <BorderGlowReactBitsPreview />
     case 'elastic-slider':
       return <ElasticSliderPreview />
     case 'counter':
       return <CounterPreview />
-    case 'aurora':
-      return <AuroraPreview />
-    case 'dot-field':
-      return <DotFieldPreview />
-    case 'border-beam':
-      return <BorderBeamPreview />
     case 'shine-border':
       return <ShineBorderPreview />
     case 'meteors':
@@ -1423,32 +1097,16 @@ function BasePreviewContent({
       return <BackgroundBoxesPreview />
     case 'keyboard':
       return <KeyboardPreview />
-    case 'pixelated-canvas':
-      return <PixelatedCanvasPreview />
-    case 'wobble-card':
-      return <WobbleCardPreview />
     case 'comet-card':
       return <CometCardPreview />
-    case 'floating-dock':
-      return <FloatingDockPreview />
-    case 'signup-form':
-      return <SignupFormPreview />
     case 'placeholders-and-vanish-input':
       return <PlaceholdersAndVanishInputPreview />
     case 'gooey-input':
       return <GooeyInputPreview />
-    case 'link-preview':
-      return <LinkPreviewPreview />
     case '3d-marquee':
       return <ThreeDMarqueePreview />
     case 'avatar-group':
       return <AvatarGroupPreview />
-    case 'animated-checkbox':
-      return <AnimatedCheckboxPreview />
-    case 'file-upload':
-      return <FileUploadPreview />
-    case 'animated-radio-group':
-      return <AnimatedRadioGroupPreview />
     case 'playful-todolist':
       return <PlayfulTodoListPreview />
     case 'border-beam-button':
@@ -1457,10 +1115,6 @@ function BasePreviewContent({
       return <SlideArrowButtonPreview />
     case 'flower-menu':
       return <FlowerMenuPreview />
-    case 'speed-dial':
-      return <SpeedDialPreview />
-    case 'kinetic-center-build':
-      return <KineticCenterBuildPreview />
     case 'text-flip':
       return <TextFlipPreview />
     case 'cool-theme-toggle':
@@ -1469,12 +1123,8 @@ function BasePreviewContent({
       return <ToggleThemePreview />
     case '3d-image-carousel':
       return <ThreeDImageCarouselPreview />
-    case '3d-image-slider':
-      return <ThreeDImageSliderPreview />
     case 'sparkle-cursor':
       return <SparkleCursorPreview />
-    case 'stepper':
-      return <StepperPreview />
     case 'data-table':
       return <DataTablePreview />
     }

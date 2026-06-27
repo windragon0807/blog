@@ -24,8 +24,8 @@ const defaultColors = [
 ]
 
 function BackgroundBoxesCore({
-  rows = 60,
-  columns = 40,
+  rows = 150,
+  columns = 100,
   colors = defaultColors,
   className,
   boxClassName,
@@ -47,7 +47,7 @@ function BackgroundBoxesCore({
       {rowItems.map((_, rowIndex) => (
         <motion.div
           key={`row-${rowIndex}`}
-          className="relative h-8 w-16 border-l border-slate-700/80"
+          className="relative h-8 w-16 border-l border-slate-700"
         >
           {columnItems.map((__, columnIndex) => (
             <motion.div
@@ -60,7 +60,7 @@ function BackgroundBoxesCore({
               }}
               animate={{ transition: { duration: 2 } }}
               className={cn(
-                'relative h-8 w-16 border-r border-t border-slate-700/80',
+                'relative h-8 w-16 border-r border-t border-slate-700',
                 boxClassName
               )}
             >
@@ -71,7 +71,7 @@ function BackgroundBoxesCore({
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.5"
-                  className="pointer-events-none absolute -left-[22px] -top-[14px] h-6 w-10 stroke-[1px] text-slate-700/90"
+                  className="pointer-events-none absolute -left-[22px] -top-[14px] h-6 w-10 stroke-[1px] text-slate-700"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
                 </svg>

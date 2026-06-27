@@ -32,7 +32,7 @@ export function ThreeDMarquee({ images, items, className }: ThreeDMarqueeProps) 
       <div className="flex size-full items-center justify-center">
         <div className="size-[1720px] shrink-0 scale-50 sm:scale-75 lg:scale-100">
           <div
-            className="relative left-[8%] top-96 grid size-full origin-top-left grid-cols-4 gap-8 [transform-style:preserve-3d]"
+            className="relative right-[50%] top-96 grid size-full origin-top-left grid-cols-4 gap-8 [transform-style:preserve-3d]"
             style={{ transform: 'rotateX(55deg) rotateY(0deg) rotateZ(-45deg)' }}
           >
             {imageChunks.map((chunk, columnIndex) => (

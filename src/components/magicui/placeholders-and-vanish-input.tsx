@@ -97,10 +97,6 @@ export function PlaceholdersAndVanishInput({
     particlesRef.current = particles
   }, [value])
 
-  useEffect(() => {
-    drawTextToParticles()
-  }, [drawTextToParticles])
-
   const animate = (start: number) => {
     const frame = (position = start) => {
       requestAnimationFrame(() => {
@@ -180,7 +176,7 @@ export function PlaceholdersAndVanishInput({
       <canvas
         ref={canvasRef}
         className={cn(
-          'pointer-events-none absolute left-2 top-[20%] origin-top-left scale-50 pr-20 text-base invert filter sm:left-8 dark:invert-0',
+          'pointer-events-none absolute left-2 top-[20%] origin-top-left scale-50 pr-20 text-base invert filter sm:left-4 dark:invert-0',
           animating ? 'opacity-100' : 'opacity-0'
         )}
       />
@@ -194,7 +190,7 @@ export function PlaceholdersAndVanishInput({
           onChange?.(event)
         }}
         className={cn(
-          'relative z-50 h-full w-full rounded-full border-none bg-transparent pl-4 pr-20 text-sm text-black outline-none focus:outline-none focus:ring-0 sm:pl-10 sm:text-base dark:text-white',
+          'relative z-50 h-full w-full rounded-full border-none bg-transparent pl-4 pr-20 text-sm text-black outline-none focus:outline-none focus:ring-0 sm:pl-6 sm:text-base dark:text-white',
           animating && 'text-transparent dark:text-transparent'
         )}
       />
@@ -233,7 +229,7 @@ export function PlaceholdersAndVanishInput({
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -15, opacity: 0 }}
               transition={{ duration: 0.3, ease: 'linear' }}
-              className="w-[calc(100%-2rem)] truncate pl-4 text-left text-sm font-normal text-neutral-500 sm:pl-12 sm:text-base dark:text-zinc-500"
+              className="w-[calc(100%-2rem)] truncate pl-4 text-left text-sm font-normal text-neutral-500 sm:pl-6 sm:text-base dark:text-zinc-500"
             >
               {placeholders[currentPlaceholder]}
             </motion.p>

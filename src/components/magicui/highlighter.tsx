@@ -101,7 +101,8 @@ export function Highlighter({
       }
 
       resizeObserver = new ResizeObserver(() => {
-        refreshAnnotation?.()
+        currentAnnotation.hide()
+        currentAnnotation.show()
       })
 
       resizeObserver.observe(element)

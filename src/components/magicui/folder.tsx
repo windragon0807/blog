@@ -86,7 +86,7 @@ const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = []
   const getOpenTransform = (index: number) => {
     if (index === 0) return 'translate(-120%, -70%) rotate(-15deg)';
     if (index === 1) return 'translate(10%, -70%) rotate(15deg)';
-    if (index === 2) return 'translate(-50%, -100%) rotate(5deg)';
+    if (index === 2) return 'translate(-50%, -88%) rotate(5deg)';
     return '';
   };
 

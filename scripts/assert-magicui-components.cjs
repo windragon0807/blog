@@ -14,22 +14,13 @@ const requiredNames = [
   'file-tree',
   'animated-circular-progress-bar',
   'curved-loop',
-  'variable-proximity',
   'click-spark',
   'magnet',
-  'strands',
-  'circular-gallery',
   'stack',
-  'glass-surface',
   'folder',
-  'lanyard',
   'carousel',
-  'border-glow',
   'elastic-slider',
   'counter',
-  'aurora',
-  'dot-field',
-  'border-beam',
   'shine-border',
   'meteors',
   'confetti',
@@ -43,32 +34,20 @@ const requiredNames = [
   'highlighter',
   'background-boxes',
   'keyboard',
-  'pixelated-canvas',
-  'wobble-card',
   'comet-card',
-  'floating-dock',
-  'signup-form',
   'placeholders-and-vanish-input',
   'gooey-input',
-  'link-preview',
   '3d-marquee',
   'avatar-group',
-  'animated-checkbox',
-  'file-upload',
-  'animated-radio-group',
   'playful-todolist',
   'border-beam-button',
   'slide-arrow-button',
   'flower-menu',
-  'speed-dial',
-  'kinetic-center-build',
   'text-flip',
   'cool-theme-toggle',
   'toggle-theme',
   '3d-image-carousel',
-  '3d-image-slider',
   'sparkle-cursor',
-  'stepper',
   'data-table',
 ]
 const requiredCategories = [
@@ -82,8 +61,6 @@ const requiredCategories = [
   "name: 'Backgrounds'",
   "id: 'cards'",
   "name: 'Cards'",
-  "id: 'navigation'",
-  "name: 'Navigation'",
   "id: 'forms'",
   "name: 'Forms'",
   "id: 'effects'",
@@ -109,6 +86,27 @@ const removedNames = [
   'animated-shiny-text',
   'animated-gradient-text',
   'backlight',
+  'aurora',
+  'circular-gallery',
+  'dot-field',
+  'file-upload',
+  'floating-dock',
+  'glass-surface',
+  'pixelated-canvas',
+  'signup-form',
+  'speed-dial',
+  'stepper',
+  'strands',
+  'variable-proximity',
+  'wobble-card',
+  'animated-radio-group',
+  '3d-image-slider',
+  'border-beam',
+  'lanyard',
+  'border-glow',
+  'link-preview',
+  'animated-checkbox',
+  'kinetic-center-build',
 ]
 const removedCategories = [
   'core',
@@ -120,37 +118,27 @@ const motionNames = [
   'shiny-button',
   'lens',
   'pointer',
-  'variable-proximity',
   'stack',
   'carousel',
   'elastic-slider',
   'counter',
-  'border-beam',
   'typing-animation',
   'number-ticker',
   'dia-text-reveal',
   'highlighter',
   'background-boxes',
   'keyboard',
-  'wobble-card',
   'comet-card',
-  'floating-dock',
   'placeholders-and-vanish-input',
   'gooey-input',
-  'link-preview',
   '3d-marquee',
-  'animated-checkbox',
-  'animated-radio-group',
+  'avatar-group',
   'playful-todolist',
-  'flower-menu',
-  'speed-dial',
-  'kinetic-center-build',
   'text-flip',
   'cool-theme-toggle',
-  'sparkle-cursor',
 ]
-const oglNames = ['strands', 'circular-gallery', 'aurora']
-const reactThreeNames = ['lanyard']
+const oglNames = []
+const reactThreeNames = []
 const reactIconsNames = ['carousel']
 const cssRegistryNames = [
   'ripple-button',
@@ -368,6 +356,17 @@ for (const name of reactIconsNames) {
   )
 }
 
+{
+  const registry = JSON.parse(
+    fs.readFileSync(path.join(root, 'public/r/sparkle-cursor.json'), 'utf8')
+  )
+  assert(
+    Array.isArray(registry.dependencies) &&
+      registry.dependencies.includes('gsap'),
+    'sparkle-cursor registry item should include gsap dependency'
+  )
+}
+
 const marquee = JSON.parse(
   fs.readFileSync(path.join(root, 'public/r/marquee.json'), 'utf8')
 )
@@ -417,14 +416,6 @@ const carouselSource = fs.readFileSync(
   path.join(root, 'src/components/magicui/carousel.tsx'),
   'utf8'
 )
-const circularGallerySource = fs.readFileSync(
-  path.join(root, 'src/components/magicui/circular-gallery.tsx'),
-  'utf8'
-)
-const borderGlowSource = fs.readFileSync(
-  path.join(root, 'src/components/magicui/border-glow.tsx'),
-  'utf8'
-)
 const folderSource = fs.readFileSync(
   path.join(root, 'src/components/magicui/folder.tsx'),
   'utf8'
@@ -435,10 +426,6 @@ const elasticSliderSource = fs.readFileSync(
 )
 const stackSource = fs.readFileSync(
   path.join(root, 'src/components/magicui/stack.tsx'),
-  'utf8'
-)
-const glassSurfaceSource = fs.readFileSync(
-  path.join(root, 'src/components/magicui/glass-surface.tsx'),
   'utf8'
 )
 const shinyButtonSource = fs.readFileSync(
@@ -625,7 +612,6 @@ assert(
 )
 for (const requiredPreviewPart of [
   'OuterEffectSurface',
-  'BorderBeamPreview',
   'MeteorsPreview',
   'ConfettiPreview',
   'ParticlesPreview',
@@ -642,9 +628,10 @@ for (const requiredPreviewPart of [
 }
 assert(
   previewsSource.includes('action="underline"') &&
-    previewsSource.includes('padding={6}') &&
+    previewsSource.includes('action="highlight"') &&
+    previewsSource.includes('color="#87CEFA"') &&
     previewsSource.includes('animationDuration={900}'),
-  'Highlighter preview should exercise Magic UI highlighter props without a shrunken look'
+  'Highlighter preview should exercise Magic UI highlighter props with visible animation colors'
 )
 assert(
   !sidebarSource.includes('Getting Started') &&
@@ -688,10 +675,8 @@ assert(
   'ReactBits references should be generated from the reactbits.dev base URL'
 )
 for (const referencePath of [
-  "'glass-surface': '/components/glass-surface'",
   "stack: '/components/stack'",
   "counter: '/components/counter?value=17.8'",
-  "aurora: '/backgrounds/aurora'",
 ]) {
   assert(
     dataSource.includes(referencePath),
@@ -701,9 +686,8 @@ for (const referencePath of [
 assert(
   previewsSource.includes('cards={stackCards}') &&
     previewsSource.includes('aria-label="Increase counter value"') &&
-    previewsSource.includes('aria-label="Decrease counter value"') &&
-    previewsSource.includes('backgroundColor="var(--background)"'),
-  'Component previews should include fixed Stack cards, Counter controls, and light BorderGlow background'
+    previewsSource.includes('aria-label="Decrease counter value"'),
+  'Component previews should include fixed Stack cards and Counter controls'
 )
 assert(
   dataSource.includes('Decrease') &&
@@ -718,25 +702,10 @@ assert(
   'Shiny Button should keep centered readable text without hover shadow effects'
 )
 assert(
-  circularGallerySource.includes('bend = 0.25') &&
-    circularGallerySource.includes("textColor = '#71717a'") &&
-    circularGallerySource.includes('scrollSpeed = 0.75') &&
-    circularGallerySource.includes('scrollEase = 0.08'),
-  'Circular Gallery defaults should use a lighter, less wobbly configuration'
-)
-assert(
   carouselSource.includes('border border-zinc-200 bg-white') &&
     carouselSource.includes('text-zinc-500 dark:text-zinc-400') &&
     !carouselSource.includes("border border-[#222]"),
   'Carousel should use light-mode gray borders and text instead of black cards'
-)
-assert(
-  borderGlowSource.includes('border border-zinc-200 dark:border-white/15'),
-  'Border Glow should have a visible light-mode gray border'
-)
-assert(
-  borderGlowSource.includes("backgroundColor = 'var(--background)'"),
-  'Border Glow default background should follow the app background instead of a dark card'
 )
 assert(
   carouselSource.includes('focus-visible:outline-zinc-500 dark:focus-visible:outline-white'),
@@ -756,11 +725,6 @@ assert(
   !stackSource.includes('Math.random()') &&
     stackSource.includes('getDeterministicRotation'),
   'Stack random rotation should be deterministic to avoid hydration mismatch'
-)
-assert(
-  glassSurfaceSource.includes('const [isClient, setIsClient]') &&
-    glassSurfaceSource.includes('const backdropFilterSupported = isClient && supportsBackdropFilter()'),
-  'Glass Surface should delay browser capability checks until after mount'
 )
 assert(
   meteorsSource.includes('[animation-fill-mode:backwards]'),

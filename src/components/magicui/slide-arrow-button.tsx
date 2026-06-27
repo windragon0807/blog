@@ -12,7 +12,7 @@ interface SlideArrowButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> 
 
 export function SlideArrowButton({
   text,
-  primaryColor = '#6f3cff',
+  primaryColor = 'var(--theme-accent-current)',
   children,
   className,
   ...props
@@ -21,7 +21,7 @@ export function SlideArrowButton({
     <button
       type="button"
       className={cn(
-        'group/slide relative rounded-full border border-white bg-white p-2 text-xl font-semibold shadow-sm',
+        'group/slide relative rounded-full border border-white bg-white p-2 font-[inherit] text-xl font-semibold shadow-sm',
         className
       )}
       {...props}
@@ -34,7 +34,7 @@ export function SlideArrowButton({
           <ArrowRight size={20} />
         </span>
       </div>
-      <span className="relative left-4 z-10 whitespace-nowrap px-8 font-semibold text-black transition-all duration-200 ease-in-out group-hover/slide:-left-3 group-hover/slide:text-white">
+      <span className="relative left-4 z-10 whitespace-nowrap px-8 font-[inherit] font-semibold text-black transition-all duration-200 ease-in-out group-hover/slide:-left-3 group-hover/slide:text-white">
         {children ?? text ?? 'Get Started'}
       </span>
     </button>

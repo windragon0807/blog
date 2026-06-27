@@ -75,7 +75,7 @@ export function CometCard({
         initial={{ scale: 1, z: 0 }}
         whileHover={{ scale: 1.05, z: 50, transition: { duration: 0.2 } }}
         className={cn(
-          'relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-6 shadow-[0_26px_90px_-46px_rgba(24,24,27,0.8)] dark:border-zinc-800 dark:bg-zinc-950',
+          'relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-6 shadow-[0_24px_70px_-44px_rgba(24,24,27,0.55)] dark:border-zinc-800 dark:bg-zinc-950',
           cardClassName
         )}
         style={{
@@ -84,7 +84,7 @@ export function CometCard({
           translateX,
           translateY,
           boxShadow:
-            'rgba(0,0,0,0.01) 0px 520px 146px 0px, rgba(0,0,0,0.04) 0px 333px 133px 0px, rgba(0,0,0,0.24) 0px 83px 83px 0px, rgba(0,0,0,0.26) 0px 21px 46px 0px',
+            'rgba(0,0,0,0.08) 0px 36px 70px -42px, rgba(0,0,0,0.18) 0px 18px 38px -30px',
         }}
       >
         {children}

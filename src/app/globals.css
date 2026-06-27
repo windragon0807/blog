@@ -995,6 +995,68 @@ html[data-logo-motion='slide'] .brand-animated-char {
   transform: translateY(4px);
 }
 
+html[data-theme-transition='fade']::view-transition-old(root),
+html[data-theme-transition='fade']::view-transition-new(root) {
+  animation-duration: 520ms;
+  animation-timing-function: ease;
+}
+
+html[data-theme-transition='circle']::view-transition-new(root) {
+  animation: theme-circle-reveal 640ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html[data-theme-transition='wipe']::view-transition-new(root) {
+  animation: theme-wipe-reveal 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html[data-theme-transition='blur']::view-transition-old(root) {
+  animation: theme-blur-out 520ms ease both;
+}
+
+html[data-theme-transition='blur']::view-transition-new(root) {
+  animation: theme-blur-in 520ms ease both;
+}
+
+@keyframes theme-circle-reveal {
+  from {
+    clip-path: circle(0% at 50% 50%);
+  }
+  to {
+    clip-path: circle(140% at 50% 50%);
+  }
+}
+
+@keyframes theme-wipe-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes theme-blur-out {
+  from {
+    opacity: 1;
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    filter: blur(14px);
+  }
+}
+
+@keyframes theme-blur-in {
+  from {
+    opacity: 0;
+    filter: blur(14px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .post-card-motion,
   .post-hero-cover,

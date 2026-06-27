@@ -7,18 +7,20 @@ export function ComponentExampleTabs({
   sample: ComponentSample
 }) {
   const flushPreview =
-    sample.preview.kind === 'border-beam' ||
     sample.preview.kind === 'shine-border' ||
     sample.preview.kind === 'meteors' ||
     sample.preview.kind === 'confetti' ||
     sample.preview.kind === 'particles' ||
     sample.preview.kind === 'video-text' ||
-    sample.preview.kind === 'strands' ||
-    sample.preview.kind === 'circular-gallery' ||
-    sample.preview.kind === 'glass-surface' ||
-    sample.preview.kind === 'lanyard' ||
-    sample.preview.kind === 'aurora' ||
-    sample.preview.kind === 'dot-field'
+    sample.preview.kind === 'stack' ||
+    sample.preview.kind === 'background-boxes' ||
+    sample.preview.kind === 'click-spark' ||
+    sample.preview.kind === 'keyboard' ||
+    sample.preview.kind === 'comet-card' ||
+    sample.preview.kind === '3d-marquee' ||
+    sample.preview.kind === 'sparkle-cursor' ||
+    sample.preview.kind === '3d-image-carousel' ||
+    sample.preview.kind === 'data-table'
 
   return (
     <section

@@ -5,7 +5,9 @@ import { AnimatePresence, motion } from 'motion/react'
 import { cn } from '@/lib/utils'
 
 type KeyDefinition = {
+  kind?: 'key' | 'arrow-stack'
   code?: string
+  codes?: ['ArrowUp', 'ArrowDown']
   label?: ReactNode
   top?: ReactNode
   bottom?: ReactNode
@@ -97,8 +99,7 @@ const keyRows: KeyDefinition[][] = [
     { code: 'MetaRight', top: '⌘', bottom: 'command', className: 'w-8' },
     { code: 'AltRight', top: '⌥', bottom: 'option' },
     { code: 'ArrowLeft', label: '◀', className: 'h-6 w-6' },
-    { code: 'ArrowUp', label: '▲', className: 'h-3 w-6' },
-    { code: 'ArrowDown', label: '▼', className: 'h-3 w-6' },
+    { kind: 'arrow-stack', codes: ['ArrowUp', 'ArrowDown'] },
     { code: 'ArrowRight', label: '▶', className: 'h-6 w-6 rounded-br-lg' },
   ],
 ]
@@ -184,26 +185,51 @@ export function Keyboard({
       <div className="h-full w-fit rounded-xl bg-zinc-200 p-1 shadow-sm ring-1 shadow-black/5 ring-black/5">
         {keyRows.map((row, rowIndex) => (
           <KeyboardRow key={rowIndex}>
-            {row.map((key, keyIndex) => (
-              <KeyButton
-                key={`${key.code ?? keyIndex}-${rowIndex}`}
-                definition={key}
-                pressed={key.code ? pressedKeys.has(key.code) : false}
-                onPress={() => {
-                  if (!key.code) return
-                  setPressedKeys((current) => new Set(current).add(key.code as string))
-                  setLastPressedKey(key.code)
-                }}
-                onRelease={() => {
-                  if (!key.code) return
-                  setPressedKeys((current) => {
-                    const next = new Set(current)
-                    next.delete(key.code as string)
-                    return next
-                  })
-                }}
-              />
-            ))}
+            {row.map((key, keyIndex) => {
+              if (key.kind === 'arrow-stack' && key.codes) {
+                const [upCode, downCode] = key.codes
+
+                return (
+                  <ArrowStackKey
+                    key={`arrow-stack-${rowIndex}-${keyIndex}`}
+                    pressedUp={pressedKeys.has(upCode)}
+                    pressedDown={pressedKeys.has(downCode)}
+                    onPress={(code) => {
+                      setPressedKeys((current) => new Set(current).add(code))
+                      setLastPressedKey(code)
+                    }}
+                    onRelease={(code) => {
+                      setPressedKeys((current) => {
+                        const next = new Set(current)
+                        next.delete(code)
+                        return next
+                      })
+                    }}
+                  />
+                )
+              }
+
+              return (
+                <KeyButton
+                  key={`${key.code ?? keyIndex}-${rowIndex}`}
+                  definition={key}
+                  pressed={key.code ? pressedKeys.has(key.code) : false}
+                  onPress={() => {
+                    if (!key.code) return
+                    setPressedKeys((current) => new Set(current).add(key.code as string))
+                    setLastPressedKey(key.code)
+                  }}
+                  onRelease={() => {
+                    if (!key.code) return
+                    setPressedKeys((current) => {
+                      const next = new Set(current)
+                      next.delete(key.code as string)
+                      return next
+                    })
+                  }}
+                />
+              )
+            })}
           </KeyboardRow>
         ))}
       </div>
@@ -286,6 +312,44 @@ function KeyButton({
           )}
         </div>
       </button>
+    </div>
+  )
+}
+
+function ArrowStackKey({
+  pressedUp,
+  pressedDown,
+  onPress,
+  onRelease,
+}: {
+  pressedUp: boolean
+  pressedDown: boolean
+  onPress: (code: 'ArrowUp' | 'ArrowDown') => void
+  onRelease: (code: 'ArrowUp' | 'ArrowDown') => void
+}) {
+  return (
+    <div className="flex h-6 w-6 flex-col gap-[2px] rounded-[4px] p-[0.5px]">
+      {([
+        ['ArrowUp', '▲', pressedUp],
+        ['ArrowDown', '▼', pressedDown],
+      ] satisfies Array<['ArrowUp' | 'ArrowDown', string, boolean]>).map(([code, label, pressed]) => (
+        <button
+          key={code}
+          type="button"
+          onMouseDown={() => onPress(code)}
+          onMouseUp={() => onRelease(code)}
+          onMouseLeave={() => {
+            if (pressed) onRelease(code)
+          }}
+          className={cn(
+            'flex h-[11px] w-full cursor-pointer items-center justify-center rounded-[3.5px] bg-zinc-100 text-[5px] text-zinc-700 shadow-[0px_0px_1px_0px_rgba(0,0,0,0.5),0px_1px_1px_0px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(255,255,255,1)_inset] transition-transform duration-75 active:scale-[0.98]',
+            pressed &&
+              'scale-[0.98] bg-zinc-100/80 shadow-[0px_0px_1px_0px_rgba(0,0,0,0.5),0px_1px_1px_0px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(255,255,255,0.5)]'
+          )}
+        >
+          {label}
+        </button>
+      ))}
     </div>
   )
 }

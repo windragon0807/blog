@@ -24,6 +24,7 @@ export interface GooeyInputClassNames {
 
 interface GooeyInputProps {
   placeholder?: string
+  collapsedLabel?: string
   className?: string
   classNames?: GooeyInputClassNames
   collapsedWidth?: number
@@ -82,7 +83,8 @@ function SearchIcon({ layoutId }: { layoutId: string }) {
 }
 
 export function GooeyInput({
-  placeholder = 'Type to search...',
+  placeholder = 'search',
+  collapsedLabel,
   className,
   classNames,
   collapsedWidth = 115,
@@ -171,27 +173,36 @@ export function GooeyInput({
             )}
           >
             {!expanded ? <SearchIcon layoutId={iconLayoutId} /> : null}
-            <motion.input
-              layoutId={inputLayoutId}
-              ref={inputRef}
-              type="search"
-              enterKeyHint="search"
-              autoComplete="off"
-              value={searchText}
-              onChange={handleChange}
-              onBlur={() => {
-                if (!searchText) setOpen(false)
-              }}
-              disabled={disabled || !expanded}
-              placeholder={placeholder}
-              className={cn(
-                'h-full min-w-0 flex-1 bg-transparent text-sm text-background outline-none',
-                expanded
-                  ? 'placeholder:text-background/50'
-                  : 'pointer-events-none placeholder:text-background/80',
-                classNames?.input
-              )}
-            />
+            {expanded ? (
+              <motion.input
+                layoutId={inputLayoutId}
+                ref={inputRef}
+                type="search"
+                enterKeyHint="search"
+                autoComplete="off"
+                value={searchText}
+                onChange={handleChange}
+                onBlur={() => {
+                  if (!searchText) setOpen(false)
+                }}
+                disabled={disabled}
+                placeholder={placeholder}
+                className={cn(
+                  'h-full min-w-0 flex-1 bg-transparent text-sm text-background outline-none placeholder:text-background/50',
+                  classNames?.input
+                )}
+              />
+            ) : (
+              <motion.span
+                layoutId={inputLayoutId}
+                className={cn(
+                  'min-w-0 truncate text-sm text-background/85',
+                  classNames?.input
+                )}
+              >
+                {collapsedLabel ?? placeholder}
+              </motion.span>
+            )}
           </button>
         </motion.div>
         <motion.div

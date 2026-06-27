@@ -104,12 +104,6 @@ const items = [
     dependencies: [],
   },
   {
-    name: 'variable-proximity',
-    title: 'Variable Proximity',
-    description: 'Variable font settings interpolate as the pointer nears each character.',
-    dependencies: ['motion'],
-  },
-  {
     name: 'click-spark',
     title: 'Click Spark',
     description: 'A canvas overlay that emits radial sparks from every click.',
@@ -122,28 +116,10 @@ const items = [
     dependencies: [],
   },
   {
-    name: 'strands',
-    title: 'Strands',
-    description: 'A WebGL shader that renders flowing luminous strands.',
-    dependencies: ['ogl'],
-  },
-  {
-    name: 'circular-gallery',
-    title: 'Circular Gallery',
-    description: 'A draggable WebGL image gallery with a bent carousel plane.',
-    dependencies: ['ogl'],
-  },
-  {
     name: 'stack',
     title: 'Stack',
     description: 'A draggable card stack that sends swiped cards to the back.',
     dependencies: ['motion'],
-  },
-  {
-    name: 'glass-surface',
-    title: 'Glass Surface',
-    description: 'A responsive liquid-glass container with SVG displacement fallback.',
-    dependencies: [],
   },
   {
     name: 'folder',
@@ -151,24 +127,14 @@ const items = [
     description: 'A clickable folder illustration that opens layered paper cards.',
     dependencies: [],
   },
-  {
-    name: 'lanyard',
-    title: 'Lanyard',
-    description: 'A physics-driven 3D lanyard and badge rendered with React Three Fiber.',
-    dependencies: ['@react-three/fiber', '@react-three/drei', '@react-three/rapier', 'meshline', 'three'],
-  },
+
   {
     name: 'carousel',
     title: 'Carousel',
     description: 'A draggable, optionally autoplaying 3D card carousel.',
     dependencies: ['motion', 'react-icons'],
   },
-  {
-    name: 'border-glow',
-    title: 'Border Glow',
-    description: 'A pointer-aware gradient glow that travels around the border.',
-    dependencies: [],
-  },
+
   {
     name: 'elastic-slider',
     title: 'Elastic Slider',
@@ -181,25 +147,7 @@ const items = [
     description: 'An animated rolling number counter with decimal place support.',
     dependencies: ['motion'],
   },
-  {
-    name: 'aurora',
-    title: 'Aurora',
-    description: 'A WebGL aurora shader background with configurable color stops.',
-    dependencies: ['ogl'],
-  },
-  {
-    name: 'dot-field',
-    title: 'Dot Field',
-    description: 'An interactive canvas field of dots that reacts to pointer movement.',
-    dependencies: [],
-  },
-  {
-    name: 'border-beam',
-    title: 'Border Beam',
-    description:
-      'An animated beam of light which travels along the border of its container.',
-    dependencies: ['motion'],
-  },
+
   {
     name: 'shine-border',
     title: 'Shine Border',
@@ -354,34 +302,10 @@ const items = [
     dependencies: ['motion'],
   },
   {
-    name: 'pixelated-canvas',
-    title: 'Pixelated Canvas',
-    description: 'A pixelated image canvas with interactive pointer distortion.',
-    dependencies: [],
-  },
-  {
-    name: 'wobble-card',
-    title: 'Wobble Card',
-    description: 'A pointer-reactive card that counter-moves its content.',
-    dependencies: ['motion'],
-  },
-  {
     name: 'comet-card',
     title: 'Comet Card',
     description: 'A card with hover tilt, depth translation, and glare.',
     dependencies: ['motion'],
-  },
-  {
-    name: 'floating-dock',
-    title: 'Floating Dock',
-    description: 'A responsive dock with icon magnification and labels.',
-    dependencies: ['motion'],
-  },
-  {
-    name: 'signup-form',
-    title: 'Signup Form',
-    description: 'A compact signup form surface.',
-    dependencies: [],
   },
   {
     name: 'placeholders-and-vanish-input',
@@ -395,12 +319,7 @@ const items = [
     description: 'A collapsed search input that expands through a gooey SVG filter.',
     dependencies: ['motion'],
   },
-  {
-    name: 'link-preview',
-    title: 'Link Preview',
-    description: 'A hover card preview for inline links.',
-    dependencies: ['motion'],
-  },
+
   {
     name: '3d-marquee',
     title: '3D Marquee',
@@ -411,31 +330,14 @@ const items = [
     name: 'avatar-group',
     title: 'Avatar Group',
     description: 'A stacked avatar group with overflow count.',
-    dependencies: [],
-  },
-  {
-    name: 'animated-checkbox',
-    title: 'Animated Checkbox',
-    description: 'A native checkbox with animated check state.',
-    dependencies: ['motion', 'lucide-react'],
-  },
-  {
-    name: 'file-upload',
-    title: 'File Upload',
-    description: 'A dashed upload dropzone powered by a native file input.',
-    dependencies: ['lucide-react'],
-  },
-  {
-    name: 'animated-radio-group',
-    title: 'Animated Radio Group',
-    description: 'A native radio group with animated selection dot.',
     dependencies: ['motion'],
   },
+
   {
     name: 'playful-todolist',
     title: 'Playful Todo List',
     description: 'A small animated todo list interaction.',
-    dependencies: ['motion', 'lucide-react'],
+    dependencies: ['motion'],
   },
   {
     name: 'border-beam-button',
@@ -453,20 +355,9 @@ const items = [
     name: 'flower-menu',
     title: 'Flower Menu',
     description: 'A radial floating action menu.',
-    dependencies: ['motion', 'lucide-react'],
+    dependencies: [],
   },
-  {
-    name: 'speed-dial',
-    title: 'Speed Dial',
-    description: 'A stacked floating action menu.',
-    dependencies: ['motion', 'lucide-react'],
-  },
-  {
-    name: 'kinetic-center-build',
-    title: 'Kinetic Center Build',
-    description: 'Text that builds into place from the center.',
-    dependencies: ['motion'],
-  },
+
   {
     name: 'text-flip',
     title: 'Text Flip',
@@ -483,31 +374,19 @@ const items = [
     name: 'toggle-theme',
     title: 'Toggle Theme',
     description: 'A minimal switch-style theme toggle.',
-    dependencies: [],
+    dependencies: ['lucide-react'],
   },
   {
     name: '3d-image-carousel',
     title: '3D Image Carousel',
     description: 'A rotating perspective image carousel.',
-    dependencies: [],
-  },
-  {
-    name: '3d-image-slider',
-    title: '3D Image Slider',
-    description: 'A perspective image slider with previous and next controls.',
     dependencies: ['lucide-react'],
   },
   {
     name: 'sparkle-cursor',
     title: 'Sparkle Cursor',
     description: 'A local cursor sparkle effect for a bounded surface.',
-    dependencies: ['motion'],
-  },
-  {
-    name: 'stepper',
-    title: 'Stepper',
-    description: 'A horizontal stepper with selectable steps.',
-    dependencies: ['lucide-react'],
+    dependencies: ['gsap'],
   },
   {
     name: 'data-table',
@@ -518,6 +397,12 @@ const items = [
 ]
 
 fs.mkdirSync(outDir, { recursive: true })
+
+for (const file of fs.readdirSync(outDir)) {
+  if (file.endsWith('.json')) {
+    fs.rmSync(path.join(outDir, file))
+  }
+}
 
 for (const item of items) {
   const sourcePath = path.join(root, `src/components/magicui/${item.name}.tsx`)
