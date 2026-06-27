@@ -364,7 +364,7 @@ function OuterEffectSurface({
 }) {
   return (
     <div
-      className={`relative flex min-h-60 w-full items-center justify-center overflow-hidden rounded-[inherit] bg-background p-8 text-center text-foreground ${className}`}
+      className={`relative flex min-h-60 w-full items-center justify-center overflow-hidden rounded-[inherit] bg-background text-center text-foreground ${className}`}
     >
       {children}
     </div>

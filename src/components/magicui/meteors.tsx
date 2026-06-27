@@ -19,6 +19,10 @@ function seededRandom(seed: number) {
   return value - Math.floor(value)
 }
 
+function formatSeconds(value: number) {
+  return `${value.toFixed(3)}s`
+}
+
 export const Meteors = ({
   number = 20,
   minDelay = 0.2,
@@ -29,24 +33,24 @@ export const Meteors = ({
   className,
 }: MeteorsProps) => {
   const meteorStyles = useMemo<Array<React.CSSProperties>>(() => {
-    const viewportWidth =
-      typeof window === "undefined" ? 1200 : window.innerWidth
+    return [...new Array(number)].map((_, index) => {
+      const leftPercent = Math.floor(seededRandom(index * 3 + 1) * 100)
 
-    return [...new Array(number)].map((_, index) => ({
-      "--angle": -angle + "deg",
-      top: "-5%",
-      left: `calc(0% + ${Math.floor(
-        seededRandom(index * 3 + 1) * viewportWidth
-      )}px)`,
-      animationDelay:
-        seededRandom(index * 3 + 2) * (maxDelay - minDelay) + minDelay + "s",
-      animationDuration:
-        Math.floor(
-          seededRandom(index * 3 + 3) * (maxDuration - minDuration) +
-            minDuration
-        ) +
-        "s",
-    }))
+      return {
+        "--angle": -angle + "deg",
+        top: "-5%",
+        left: `${leftPercent}%`,
+        animationDelay: formatSeconds(
+          seededRandom(index * 3 + 2) * (maxDelay - minDelay) + minDelay
+        ),
+        animationDuration:
+          Math.floor(
+            seededRandom(index * 3 + 3) * (maxDuration - minDuration) +
+              minDuration
+          ) +
+          "s",
+      }
+    })
   }, [number, minDelay, maxDelay, minDuration, maxDuration, angle])
 
   return (

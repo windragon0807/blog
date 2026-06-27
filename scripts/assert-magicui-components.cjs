@@ -549,12 +549,48 @@ assert(
   'Preview heading should match the Installation and Code section title style'
 )
 assert(
-    exampleTabsSource.includes('flushPreview') &&
-    exampleTabsSource.includes("sample.preview.kind === 'shine-border'") &&
-    exampleTabsSource.includes("sample.preview.kind === 'meteors'") &&
-    exampleTabsSource.includes("sample.preview.kind === 'particles'") &&
-    exampleTabsSource.includes("sample.preview.kind === 'video-text'"),
-  'Effect previews should render flush against the outer preview border'
+  exampleTabsSource.includes('fullBleedPreviewKinds.includes(sample.preview.kind)') &&
+    exampleTabsSource.includes("isFullBleedPreview ? 'min-h-60 rounded-[inherit]' : 'min-h-60 p-6'") &&
+    exampleTabsSource.includes("isFullBleedPreview ? 'rounded-[inherit]' : ''") &&
+    !exampleTabsSource.includes("'data-table'"),
+  'Requested surface-heavy previews should render flush against the outer preview border'
+)
+for (const requiredFullBleedPreviewKind of [
+  'shine-border',
+  'meteors',
+  'particles',
+  'background-boxes',
+  'keyboard',
+  'placeholders-and-vanish-input',
+  'gooey-input',
+  '3d-marquee',
+  'avatar-group',
+  'playful-todolist',
+  'slide-arrow-button',
+  'flower-menu',
+  'text-flip',
+  'toggle-theme',
+  '3d-image-carousel',
+  'sparkle-cursor',
+  'mouse-invert-cursor',
+  'mouse-trail-cursor',
+  'mouse-ripple-cursor',
+  'mouse-custom-cursor',
+  'fairy-dust-cursor',
+  'bubble-cursor',
+  'character-cursor',
+  'canvas-cursor',
+  'fluid-cursor',
+]) {
+  assert(
+    exampleTabsSource.includes(`'${requiredFullBleedPreviewKind}'`),
+    `Missing full-bleed preview kind: ${requiredFullBleedPreviewKind}`
+  )
+}
+assert(
+  !previewsSource.includes('bg-background p-8') &&
+    previewsSource.includes('bg-background text-center'),
+  'Outer effect preview surfaces should not add 32px inner padding'
 )
 assert(
   !exampleTabsSource.includes('codePanel') &&
@@ -894,6 +930,15 @@ assert(
 assert(
   meteorsSource.includes('[animation-fill-mode:backwards]'),
   'Meteors should preserve the initial rotated keyframe during animation delay'
+)
+assert(
+  !meteorsSource.includes('window.innerWidth') &&
+    !meteorsSource.includes('typeof window') &&
+    meteorsSource.includes('left: `${leftPercent}%`') &&
+    meteorsSource.includes('function formatSeconds') &&
+    meteorsSource.includes('value.toFixed(3)') &&
+    meteorsSource.includes('animationDelay: formatSeconds('),
+  'Meteors should use deterministic percentage positions and rounded delays to avoid SSR/client hydration mismatches'
 )
 assert(
   highlighterSource.includes('getScrollTargets') &&
