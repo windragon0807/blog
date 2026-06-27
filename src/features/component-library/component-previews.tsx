@@ -535,7 +535,7 @@ function ToggleThemePreview() {
 function ThreeDImageCarouselPreview() {
   return (
     <OuterEffectSurface className="min-h-[30rem] p-0">
-      <ThreeDImageCarousel items={previewImages} className="max-w-6xl" />
+      <ThreeDImageCarousel items={previewImages} itemCount={3} />
     </OuterEffectSurface>
   )
 }

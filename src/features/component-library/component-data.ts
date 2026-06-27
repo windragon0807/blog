@@ -513,8 +513,11 @@ export default function Example() {
       classNameProp,
       prop('items', 'ThreeDImageCarouselItem[]', '-', 'Images to show.'),
       prop('slides', 'ThreeDImageCarouselItem[]', '-', 'Alias for images to show.'),
-      prop('interval', 'number', '2200', 'Auto-rotation interval.'),
+      prop('itemCount', '3 | 5', '5', 'Number of visible cascade positions.'),
+      prop('interval', 'number', '-', 'Auto-rotation interval alias in milliseconds.'),
+      prop('delay', 'number', '3', 'Auto-rotation delay in seconds, matching the source component API.'),
       prop('autoplay', 'boolean', 'false', 'Whether to rotate automatically.'),
+      prop('pauseOnHover', 'boolean', 'true', 'Whether autoplay pauses while hovering.'),
     ],
   }),
   createSample({
