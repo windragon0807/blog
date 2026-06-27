@@ -43,6 +43,7 @@ interface ParticlesProps extends ComponentPropsWithoutRef<"div"> {
   size?: number
   refresh?: boolean
   color?: string
+  colors?: readonly string[]
   vx?: number
   vy?: number
 }
@@ -75,6 +76,7 @@ type Circle = {
   dx: number
   dy: number
   magnetism: number
+  color: number[]
 }
 
 export const Particles: React.FC<ParticlesProps> = ({
@@ -85,6 +87,7 @@ export const Particles: React.FC<ParticlesProps> = ({
   size = 0.4,
   refresh = false,
   color = "#ffffff",
+  colors,
   vx = 0,
   vy = 0,
   ...props
@@ -102,6 +105,7 @@ export const Particles: React.FC<ParticlesProps> = ({
   const initCanvasRef = useRef<() => void>(() => {})
   const onMouseMoveRef = useRef<() => void>(() => {})
   const animateRef = useRef<() => void>(() => {})
+  const colorPalette = (colors && colors.length > 0 ? colors : [color]).map(hexToRgb)
 
   const initCanvas = () => {
     resizeCanvas()
@@ -153,6 +157,7 @@ export const Particles: React.FC<ParticlesProps> = ({
     const dx = (Math.random() - 0.5) * 0.1
     const dy = (Math.random() - 0.5) * 0.1
     const magnetism = 0.1 + Math.random() * 4
+    const particleColor = colorPalette[Math.floor(Math.random() * colorPalette.length)]
     return {
       x,
       y,
@@ -164,10 +169,9 @@ export const Particles: React.FC<ParticlesProps> = ({
       dx,
       dy,
       magnetism,
+      color: particleColor,
     }
   }
-
-  const rgb = hexToRgb(color)
 
   const drawCircle = (circle: Circle, update = false) => {
     if (context.current) {
@@ -175,7 +179,7 @@ export const Particles: React.FC<ParticlesProps> = ({
       context.current.translate(translateX, translateY)
       context.current.beginPath()
       context.current.arc(x, y, size, 0, 2 * Math.PI)
-      context.current.fillStyle = `rgba(${rgb.join(", ")}, ${alpha})`
+      context.current.fillStyle = `rgba(${circle.color.join(", ")}, ${alpha})`
       context.current.fill()
       context.current.setTransform(dpr, 0, 0, dpr, 0, 0)
 
@@ -300,7 +304,7 @@ export const Particles: React.FC<ParticlesProps> = ({
       }
       window.removeEventListener("resize", handleResize)
     }
-  }, [color])
+  }, [color, colors])
 
   useEffect(() => {
     onMouseMoveRef.current()

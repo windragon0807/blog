@@ -61,7 +61,7 @@ export const Meteors = ({
           key={idx}
           style={{ ...style }}
           className={cn(
-            "animate-meteor pointer-events-none absolute size-0.5 rotate-(--angle) rounded-full bg-current text-[var(--theme-accent-current)] shadow-[0_0_0_1px_#ffffff10] [animation-fill-mode:backwards] will-change-transform",
+            "animate-meteor pointer-events-none absolute size-0.5 rotate-(--angle) rounded-full bg-current text-sky-300 shadow-[0_0_0_1px_#ffffff10] [animation-fill-mode:backwards] will-change-transform",
             className
           )}
         >

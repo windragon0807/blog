@@ -8,7 +8,7 @@ import {
   type ComponentPropsWithoutRef,
 } from 'react'
 import { flushSync } from 'react-dom'
-import { Check, Moon, Sparkles, Sun } from 'lucide-react'
+import { Moon, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { cn } from '@/lib/utils'
 
@@ -41,6 +41,7 @@ interface ToggleThemeProps
   duration?: number
   animationType?: ToggleThemeAnimation
   label?: string
+  variant?: 'default' | 'glass'
 }
 
 type ViewTransition = {
@@ -155,6 +156,7 @@ export function ToggleTheme({
   duration = 400,
   animationType = 'circle-spread',
   label,
+  variant = 'default',
   className,
   disabled,
   ...props
@@ -443,6 +445,7 @@ export function ToggleTheme({
   ])
 
   const hasLabel = label !== undefined
+  const isGlass = variant === 'glass'
 
   return (
     <button
@@ -455,8 +458,13 @@ export function ToggleTheme({
       onClick={update}
       className={cn(
         hasLabel
-          ? 'group inline-flex h-11 items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 text-sm font-semibold text-zinc-800 shadow-sm transition-colors duration-300 hover:text-[var(--theme-accent-current)] dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100'
-          : 'rounded-full p-2 transition-colors duration-300 hover:text-[var(--theme-accent-current)]',
+          ? cn(
+              'group inline-flex h-11 items-center gap-2 rounded-full px-3.5 text-sm font-semibold transition-colors duration-300',
+              isGlass
+                ? 'border border-white/10 bg-white/[0.08] text-white/82 shadow-[0_18px_58px_-38px_rgba(255,255,255,0.32)] backdrop-blur-md hover:bg-white/[0.13] hover:text-white'
+                : 'border border-zinc-200 bg-white text-zinc-800 shadow-sm hover:text-blue-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100'
+            )
+          : 'rounded-full p-2 transition-colors duration-300 hover:text-blue-600',
         className
       )}
       {...props}
@@ -465,14 +473,15 @@ export function ToggleTheme({
         <>
           <span
             className={cn(
-              'relative flex h-7 w-12 items-center rounded-full bg-zinc-100 p-1 transition-colors duration-300 dark:bg-zinc-800',
-              active &&
-                'bg-[var(--theme-accent-current)]/20 dark:bg-[var(--theme-accent-current)]/30'
+              'relative flex h-7 w-12 items-center rounded-full p-1 transition-colors duration-300',
+              isGlass ? 'bg-white/[0.08] ring-1 ring-white/10' : 'bg-zinc-100 dark:bg-zinc-800',
+              active && (isGlass ? 'bg-sky-400/18' : 'bg-blue-500/20 dark:bg-blue-400/30')
             )}
           >
             <span
               className={cn(
-                'flex h-5 w-5 items-center justify-center rounded-full bg-white text-zinc-700 shadow-sm transition-transform duration-300 dark:bg-zinc-100',
+                'flex h-5 w-5 items-center justify-center rounded-full shadow-sm transition-transform duration-300',
+                isGlass ? 'bg-white/88 text-zinc-800' : 'bg-white text-zinc-700 dark:bg-zinc-100',
                 active && 'translate-x-5'
               )}
             >
@@ -484,11 +493,6 @@ export function ToggleTheme({
             </span>
           </span>
           <span>{label}</span>
-          {active ? (
-            <Check className="h-3.5 w-3.5 text-[var(--theme-accent-current)]" />
-          ) : (
-            <Sparkles className="h-3.5 w-3.5 text-zinc-400" />
-          )}
         </>
       ) : active ? (
         <Sun className="h-6 w-6" />

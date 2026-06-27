@@ -13,7 +13,7 @@ export default function ComponentsLayout({ children }: { children: ReactNode }) 
           <ComponentSidebar />
         </div>
         <ScrollArea
-          className="components-content-scroll min-w-0 lg:h-full lg:overscroll-contain"
+          className="components-content-scroll min-w-0 lg:h-full lg:overflow-y-auto lg:overscroll-contain"
           data-lenis-prevent-wheel
           orientation="vertical"
         >

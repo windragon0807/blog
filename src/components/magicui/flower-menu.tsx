@@ -25,6 +25,7 @@ interface FlowerMenuProps extends React.HTMLAttributes<HTMLElement> {
   menuItems?: FlowerMenuItem[]
   iconColor?: string
   backgroundColor?: string
+  variant?: 'default' | 'glass'
   animationDuration?: number
   togglerSize?: number
   petalGap?: number
@@ -46,6 +47,7 @@ function MenuToggler({
   onToggle,
   backgroundColor,
   iconColor,
+  variant,
   animationDuration,
   togglerSize,
   iconSize,
@@ -57,6 +59,7 @@ function MenuToggler({
   onToggle: () => void
   backgroundColor: string
   iconColor: string
+  variant: 'default' | 'glass'
   animationDuration: number
   togglerSize: number
   iconSize: number
@@ -72,9 +75,13 @@ function MenuToggler({
     <button
       ref={buttonRef}
       type="button"
-      className="absolute inset-0 z-20 m-auto flex touch-manipulation cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2"
+      className={cn(
+        'absolute inset-0 z-20 m-auto flex touch-manipulation cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2',
+        variant === 'glass' &&
+          'border border-white/10 bg-white/[0.08] shadow-[0_24px_90px_-52px_rgba(255,255,255,0.34)] backdrop-blur-md hover:bg-white/[0.14]'
+      )}
       style={{
-        backgroundColor,
+        backgroundColor: variant === 'glass' ? undefined : backgroundColor,
         color: iconColor,
         width: togglerSize,
         height: togglerSize,
@@ -121,6 +128,7 @@ export function FlowerMenu({
   menuItems,
   iconColor = 'white',
   backgroundColor = 'var(--theme-accent-current)',
+  variant = 'default',
   animationDuration = 220,
   togglerSize = 44,
   petalGap = 28,
@@ -220,6 +228,7 @@ export function FlowerMenu({
         onToggle={toggle}
         backgroundColor={backgroundColor}
         iconColor={iconColor}
+        variant={variant}
         animationDuration={animationDuration}
         togglerSize={safeTogglerSize}
         iconSize={iconSize}
@@ -241,7 +250,10 @@ export function FlowerMenu({
           const openDelay = 10 + index * 20
           const closeDelay = (itemCount - 1 - index) * 14
           const buttonClassName = cn(
-            'flower-petal-control flex size-full touch-manipulation items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-sm transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 active:scale-95',
+            'flower-petal-control flex size-full touch-manipulation items-center justify-center rounded-full transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 active:scale-95',
+            variant === 'glass'
+              ? 'border border-white/10 bg-white/[0.07] text-white/82 shadow-[0_18px_58px_-38px_rgba(255,255,255,0.32)] backdrop-blur-md'
+              : 'border border-zinc-200 bg-white text-zinc-600 shadow-sm',
             isOpen ? 'opacity-100' : 'opacity-0',
             'hover:scale-110 focus-visible:scale-110'
           )

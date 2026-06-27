@@ -148,6 +148,7 @@ export function GooeyInput({
     <div className={cn('relative flex items-center justify-center', className, classNames?.root)}>
       <GooeyFilter filterId={filterId} blur={gooeyBlur} />
       <div
+        data-gooey-filter-wrap
         className={cn('relative flex h-10 items-center justify-center', classNames?.filterWrap)}
         style={{ filter: `url(#${filterId})` }}
       >
@@ -159,6 +160,7 @@ export function GooeyInput({
           transition={transition}
         >
           <button
+            data-gooey-trigger
             type="button"
             disabled={disabled}
             onClick={() => {
@@ -207,6 +209,7 @@ export function GooeyInput({
           </button>
         </motion.div>
         <motion.div
+          data-gooey-bubble
           className={cn(
             'absolute left-0 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center',
             classNames?.bubble

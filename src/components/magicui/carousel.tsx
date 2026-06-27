@@ -23,6 +23,7 @@ export interface CarouselProps {
   pauseOnHover?: boolean;
   loop?: boolean;
   round?: boolean;
+  variant?: 'light' | 'dark';
 }
 
 const DEFAULT_ITEMS: CarouselItem[] = [
@@ -30,31 +31,31 @@ const DEFAULT_ITEMS: CarouselItem[] = [
     title: 'Text Animations',
     description: 'Cool text animations for your projects.',
     id: 1,
-    icon: <FiFileText className="h-[16px] w-[16px] text-zinc-700 dark:text-white" />
+    icon: <FiFileText className="h-[16px] w-[16px] text-current" />
   },
   {
     title: 'Animations',
     description: 'Smooth animations for your projects.',
     id: 2,
-    icon: <FiCircle className="h-[16px] w-[16px] text-zinc-700 dark:text-white" />
+    icon: <FiCircle className="h-[16px] w-[16px] text-current" />
   },
   {
     title: 'Components',
     description: 'Reusable components for your projects.',
     id: 3,
-    icon: <FiLayers className="h-[16px] w-[16px] text-zinc-700 dark:text-white" />
+    icon: <FiLayers className="h-[16px] w-[16px] text-current" />
   },
   {
     title: 'Backgrounds',
     description: 'Beautiful backgrounds and patterns for your projects.',
     id: 4,
-    icon: <FiLayout className="h-[16px] w-[16px] text-zinc-700 dark:text-white" />
+    icon: <FiLayout className="h-[16px] w-[16px] text-current" />
   },
   {
     title: 'Common UI',
     description: 'Common UI components are coming soon!',
     id: 5,
-    icon: <FiCode className="h-[16px] w-[16px] text-zinc-700 dark:text-white" />
+    icon: <FiCode className="h-[16px] w-[16px] text-current" />
   }
 ];
 
@@ -68,15 +69,17 @@ interface CarouselItemProps {
   index: number;
   itemWidth: number;
   round: boolean;
+  variant: 'light' | 'dark';
   trackItemOffset: number;
   x: any;
   transition: any;
 }
 
-function CarouselItem({ item, index, itemWidth, round, trackItemOffset, x, transition }: CarouselItemProps) {
+function CarouselItem({ item, index, itemWidth, round, variant, trackItemOffset, x, transition }: CarouselItemProps) {
   const range = [-(index + 1) * trackItemOffset, -index * trackItemOffset, -(index - 1) * trackItemOffset];
   const outputRange = [90, 0, -90];
   const rotateY = useTransform(x, range, outputRange, { clamp: false });
+  const isDark = variant === 'dark';
 
   return (
     <motion.div
@@ -84,7 +87,9 @@ function CarouselItem({ item, index, itemWidth, round, trackItemOffset, x, trans
       className={`relative shrink-0 flex flex-col ${
         round
           ? 'items-center justify-center border-0 bg-zinc-950 text-center text-white dark:bg-[#120F17]'
-          : 'items-start justify-between rounded-[12px] border border-zinc-200 bg-white text-zinc-950 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50'
+          : isDark
+            ? 'items-start justify-between rounded-[12px] border border-white/10 bg-white/[0.07] text-white shadow-[0_18px_58px_-38px_rgba(255,255,255,0.32)]'
+            : 'items-start justify-between rounded-[12px] border border-zinc-200 bg-white text-zinc-950 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50'
       } overflow-hidden cursor-grab active:cursor-grabbing`}
       style={{
         width: itemWidth,
@@ -99,7 +104,9 @@ function CarouselItem({ item, index, itemWidth, round, trackItemOffset, x, trans
           className={`flex h-[28px] w-[28px] items-center justify-center rounded-full ${
             round
               ? 'bg-white/10'
-              : 'bg-zinc-100 ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-zinc-800'
+              : isDark
+                ? 'bg-white/10 text-white/80 ring-1 ring-white/10'
+                : 'bg-zinc-100 ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-zinc-800'
           }`}
         >
           {item.icon}
@@ -108,12 +115,12 @@ function CarouselItem({ item, index, itemWidth, round, trackItemOffset, x, trans
       <div className="p-5">
         <div
           className={`mb-1 text-lg font-semibold ${
-            round ? 'text-white' : 'text-zinc-950 dark:text-zinc-50'
+            round || isDark ? 'text-white' : 'text-zinc-950 dark:text-zinc-50'
           }`}
         >
           {item.title}
         </div>
-        <p className={round ? 'text-sm text-white/72' : 'text-sm text-zinc-500 dark:text-zinc-400'}>
+        <p className={round || isDark ? 'text-sm text-white/[0.58]' : 'text-sm text-zinc-500 dark:text-zinc-400'}>
           {item.description}
         </p>
       </div>
@@ -128,7 +135,8 @@ export function Carousel({
   autoplayDelay = 3000,
   pauseOnHover = false,
   loop = false,
-  round = false
+  round = false,
+  variant = 'light'
 }: CarouselProps): JSX.Element {
   const containerPadding = 16;
   const itemWidth = baseWidth - containerPadding * 2;
@@ -256,10 +264,13 @@ export function Carousel({
   return (
     <div
       ref={containerRef}
+      data-carousel-variant={variant}
       className={`relative overflow-hidden p-4 ${
         round
           ? 'rounded-full border border-zinc-200 bg-white dark:border-white/20 dark:bg-zinc-950'
-          : 'rounded-[24px] border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-950'
+          : variant === 'dark'
+            ? 'rounded-[28px] border border-white/10 bg-white/[0.06] shadow-[0_24px_90px_-52px_rgba(255,255,255,0.32)] backdrop-blur'
+            : 'rounded-[24px] border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-950'
       }`}
       style={{
         width: `${baseWidth}px`,
@@ -290,6 +301,7 @@ export function Carousel({
             index={index}
             itemWidth={itemWidth}
             round={round}
+            variant={variant}
             trackItemOffset={trackItemOffset}
             x={x}
             transition={effectiveTransition}
@@ -308,10 +320,14 @@ export function Carousel({
                 activeIndex === index
                   ? round
                     ? 'bg-white'
-                    : 'bg-[var(--theme-accent-current)]'
+                    : variant === 'dark'
+                      ? 'bg-sky-400'
+                      : 'bg-blue-600'
                   : round
                     ? 'bg-[#555]'
-                    : 'bg-zinc-300 dark:bg-zinc-700'
+                    : variant === 'dark'
+                      ? 'bg-white/[0.18]'
+                      : 'bg-zinc-300 dark:bg-zinc-700'
               }`}
               animate={{
                 scale: activeIndex === index ? 1.2 : 1

@@ -324,7 +324,7 @@ export function ThreeDImageCarousel({
   return (
     <div
       data-3d-image-carousel=""
-      className="relative flex h-[30rem] min-h-[30rem] w-full items-center justify-center overflow-hidden rounded-[inherit] bg-white dark:bg-zinc-950"
+      className="relative flex h-[30rem] min-h-[30rem] w-full items-center justify-center overflow-hidden rounded-[inherit] bg-transparent"
     >
       <style dangerouslySetInnerHTML={{ __html: embeddedCss }} />
 
@@ -381,8 +381,10 @@ export function ThreeDImageCarousel({
 
         {total > 1 && (
           <>
-            <span
-              className="cascade-slider_arrow cascade-slider_arrow-left rounded-full bg-black/30 p-2 text-white transition-colors duration-300 hover:bg-black/60"
+            <button
+              type="button"
+              aria-label="Previous image"
+              className="cascade-slider_arrow cascade-slider_arrow-left rounded-full border border-white/10 bg-white/[0.08] p-2 text-white/80 shadow-[0_16px_48px_-30px_rgba(255,255,255,0.52)] backdrop-blur-md transition-colors duration-300 hover:bg-white/[0.14] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
               onClick={(event) => {
                 event.stopPropagation()
                 navigate('prev')
@@ -390,9 +392,11 @@ export function ThreeDImageCarousel({
               data-action="prev"
             >
               <ArrowLeftCircle size={30} />
-            </span>
-            <span
-              className="cascade-slider_arrow cascade-slider_arrow-right rounded-full bg-black/30 p-2 text-white transition-colors duration-300 hover:bg-black/60"
+            </button>
+            <button
+              type="button"
+              aria-label="Next image"
+              className="cascade-slider_arrow cascade-slider_arrow-right rounded-full border border-white/10 bg-white/[0.08] p-2 text-white/80 shadow-[0_16px_48px_-30px_rgba(255,255,255,0.52)] backdrop-blur-md transition-colors duration-300 hover:bg-white/[0.14] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
               onClick={(event) => {
                 event.stopPropagation()
                 navigate('next')
@@ -400,7 +404,7 @@ export function ThreeDImageCarousel({
               data-action="next"
             >
               <ArrowRightCircle size={30} />
-            </span>
+            </button>
           </>
         )}
       </div>

@@ -29,7 +29,7 @@ const ElasticSlider: React.FC<ElasticSliderProps> = ({
   rightIcon = <>+</>
 }) => {
   return (
-    <div className={`flex w-72 flex-col items-center justify-center gap-5 ${className}`}>
+    <div className={`flex w-72 flex-col items-center justify-center gap-7 ${className}`}>
       <Slider
         defaultValue={defaultValue}
         startingValue={startingValue}
@@ -140,7 +140,7 @@ const Slider: React.FC<SliderProps> = ({
           style={{
             x: useTransform(() => (region === 'left' ? -overflow.get() / scale.get() : 0))
           }}
-          className="text-lg text-zinc-500 dark:text-zinc-400"
+          className="text-2xl text-white/58"
         >
           {leftIcon}
         </motion.div>
@@ -177,9 +177,9 @@ const Slider: React.FC<SliderProps> = ({
             }}
             className="flex flex-grow"
           >
-            <div className="relative h-full flex-grow overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
+            <div className="relative h-full flex-grow overflow-hidden rounded-full border border-white/10 bg-white/[0.12] shadow-[0_16px_48px_-34px_rgba(255,255,255,0.5)] backdrop-blur-md">
               <div
-                className="absolute h-full rounded-full bg-[var(--theme-accent-current)]"
+                className="absolute h-full rounded-full bg-sky-400 shadow-[0_0_20px_rgba(56,189,248,0.45)]"
                 style={{ width: `${getRangePercentage()}%` }}
               />
             </div>
@@ -194,12 +194,12 @@ const Slider: React.FC<SliderProps> = ({
           style={{
             x: useTransform(() => (region === 'right' ? overflow.get() / scale.get() : 0))
           }}
-          className="text-lg text-zinc-500 dark:text-zinc-400"
+          className="text-2xl text-white/58"
         >
           {rightIcon}
         </motion.div>
       </motion.div>
-      <p className="absolute -translate-y-5 transform text-sm font-medium tracking-wide text-zinc-500 dark:text-zinc-400">
+      <p className="absolute -translate-y-8 transform text-xl font-semibold tracking-wide text-white/70">
         {Math.round(value)}
       </p>
     </>

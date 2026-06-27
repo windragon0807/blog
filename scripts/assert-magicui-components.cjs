@@ -201,6 +201,15 @@ const diaTextRevealPath = path.join(
   root,
   'src/components/magicui/dia-text-reveal.tsx'
 )
+const toggleThemePath = path.join(root, 'src/components/magicui/toggle-theme.tsx')
+const playfulTodoListPath = path.join(
+  root,
+  'src/components/magicui/playful-todolist.tsx'
+)
+const avatarGroupPath = path.join(root, 'src/components/magicui/avatar-group.tsx')
+const dataTablePath = path.join(root, 'src/components/magicui/data-table.tsx')
+const fileTreePath = path.join(root, 'src/components/magicui/file-tree.tsx')
+const textFlipPath = path.join(root, 'src/components/magicui/text-flip.tsx')
 const cursorEffectRuntimePath = path.join(
   root,
   'src/components/magicui/cursor-effect-runtime.tsx'
@@ -215,6 +224,12 @@ const brandLogoSource = fs.readFileSync(brandLogoPath, 'utf8')
 const logoMotionsSource = fs.readFileSync(logoMotionsPath, 'utf8')
 const videoTextSource = fs.readFileSync(videoTextPath, 'utf8')
 const diaTextRevealSource = fs.readFileSync(diaTextRevealPath, 'utf8')
+const toggleThemeSource = fs.readFileSync(toggleThemePath, 'utf8')
+const playfulTodoListSource = fs.readFileSync(playfulTodoListPath, 'utf8')
+const avatarGroupSource = fs.readFileSync(avatarGroupPath, 'utf8')
+const dataTableSource = fs.readFileSync(dataTablePath, 'utf8')
+const fileTreeSource = fs.readFileSync(fileTreePath, 'utf8')
+const textFlipSource = fs.readFileSync(textFlipPath, 'utf8')
 const cursorEffectRuntimeSource = fs.existsSync(cursorEffectRuntimePath)
   ? fs.readFileSync(cursorEffectRuntimePath, 'utf8')
   : ''
@@ -513,6 +528,38 @@ const shinyButtonSource = fs.readFileSync(
   path.join(root, 'src/components/magicui/shiny-button.tsx'),
   'utf8'
 )
+const flowerMenuSource = fs.readFileSync(
+  path.join(root, 'src/components/magicui/flower-menu.tsx'),
+  'utf8'
+)
+const gooeyInputSource = fs.readFileSync(
+  path.join(root, 'src/components/magicui/gooey-input.tsx'),
+  'utf8'
+)
+const auroraTextSource = fs.readFileSync(
+  path.join(root, 'src/components/magicui/aurora-text.tsx'),
+  'utf8'
+)
+const curvedLoopSource = fs.readFileSync(
+  path.join(root, 'src/components/magicui/curved-loop.tsx'),
+  'utf8'
+)
+const clickSparkSource = fs.readFileSync(
+  path.join(root, 'src/components/magicui/click-spark.tsx'),
+  'utf8'
+)
+const particlesSource = fs.readFileSync(
+  path.join(root, 'src/components/magicui/particles.tsx'),
+  'utf8'
+)
+const placeholdersAndVanishInputSource = fs.readFileSync(
+  path.join(root, 'src/components/magicui/placeholders-and-vanish-input.tsx'),
+  'utf8'
+)
+const threeDImageCarouselSource = fs.readFileSync(
+  path.join(root, 'src/components/magicui/3d-image-carousel.tsx'),
+  'utf8'
+)
 const highlighterSource = fs.readFileSync(
   path.join(root, 'src/components/magicui/highlighter.tsx'),
   'utf8'
@@ -668,6 +715,13 @@ assert(
     previewsSource.includes('className="min-h-[44rem]"'),
   'Keyboard preview should use a taller surface than the 448px minimum'
 )
+assert(
+  previewSurfaceSource.includes('py-16') &&
+    previewSurfaceSource.includes('md:py-20') &&
+    previewSurfaceSource.includes('contentGapClassName') &&
+    previewSurfaceSource.includes('children ? ('),
+  'Preview demo surface should keep a 448px minimum while giving taller content generous vertical padding'
+)
 for (const requiredDemoSurfacePreview of [
   'BackgroundBoxesPreview',
   'KeyboardPreview',
@@ -778,9 +832,9 @@ const previewFunctionSource = (functionName) => {
 }
 const threeDImageCarouselPreviewSource = previewFunctionSource('ThreeDImageCarouselPreview')
 assert(
-  threeDImageCarouselPreviewSource.includes('!bg-transparent') &&
+  !threeDImageCarouselPreviewSource.includes('!bg-transparent') &&
     threeDImageCarouselPreviewSource.includes('!overflow-visible'),
-  '3D Image Carousel preview should blend into the shared dark surface without clipping'
+  '3D Image Carousel preview should let the component own the transparent stage without clipping'
 )
 assert(
   previewFunctionSource('FolderPreview').includes('mt-16'),
@@ -791,9 +845,13 @@ assert(
   'Counter preview should hide the white gradient bands'
 )
 assert(
-  previewFunctionSource('TextFlipPreview').includes('[&>span:first-child]:!text-white') &&
-    !previewFunctionSource('TextFlipPreview').includes('[&_span]:!text-white'),
-  'Text Flip preview should keep the rotating word themed while forcing only the prefix to white'
+  previewFunctionSource('TextFlipPreview').includes('wordColors={textFlipColors}') &&
+    previewFunctionSource('TextFlipPreview').includes('gap-2') &&
+    previewFunctionSource('TextFlipPreview').includes('wordClassName="w-[9ch] justify-items-start text-left"') &&
+    textFlipSource.includes('wordColors?: readonly string[]') &&
+    textFlipSource.includes('style={{ color: wordColors?.[index % wordColors.length] }}') &&
+    !textFlipSource.includes('text-[var(--theme-accent-current)]'),
+  'Text Flip preview should keep the changing word adjacent while centering the full longest phrase'
 )
 const curvedLoopPreviewSource = previewFunctionSource('CurvedLoopPreview')
 assert(
@@ -801,8 +859,12 @@ assert(
     curvedLoopPreviewSource.includes('<CurvedLoop') &&
     curvedLoopPreviewSource.includes('contentClassName="w-full max-w-none"') &&
     curvedLoopPreviewSource.includes('w-[calc(100%+4rem)]') &&
-    curvedLoopPreviewSource.includes('text-[76px]'),
-  'Curved Loop preview should render a larger full-width loop below the subtitle'
+    curvedLoopPreviewSource.includes('curveAmount={150}') &&
+    curvedLoopPreviewSource.includes('colors={auroraSparkColors}') &&
+    curvedLoopSource.includes('colors?: readonly string[]') &&
+    curvedLoopSource.includes('<linearGradient') &&
+    curvedLoopSource.includes('fill={gradientColors ?'),
+  'Curved Loop preview should render a steeper full-width loop with SVG Aurora gradient text'
 )
 const videoTextPreviewSource = previewFunctionSource('VideoTextPreview')
 assert(
@@ -812,10 +874,80 @@ assert(
     videoTextPreviewSource.includes('contentClassName="w-full max-w-4xl"'),
   'Video Text preview should render the masked text at roughly half of the parent width'
 )
+const keyboardPreviewSource = previewFunctionSource('KeyboardPreview')
+assert(
+  keyboardPreviewSource.includes('headingClassName="-translate-y-10 md:-translate-y-12"') &&
+    keyboardPreviewSource.includes('contentGapClassName="mt-3"'),
+  'Keyboard preview heading should sit higher without leaving excessive space above the keystroke preview'
+)
+assert(
+  previewFunctionSource('AvatarGroupPreview').includes('contentGapClassName="mt-16"') &&
+    avatarGroupSource.includes('bottom-[calc(100%+26px)]') &&
+    avatarGroupSource.includes('bg-[#3c3540]/95') &&
+    avatarGroupSource.includes('top-[calc(100%-1px)]') &&
+    avatarGroupSource.includes('backdrop-blur-md') &&
+    avatarGroupSource.includes('text-white'),
+  'Avatar Group preview should sit lower and use a raised seamless tooltip on the dark surface'
+)
+assert(
+  playfulTodoListSource.includes('space-y-4') &&
+    playfulTodoListSource.includes('p-5') &&
+    playfulTodoListSource.includes('bg-white/[0.07]') &&
+    playfulTodoListSource.includes('text-white/42') &&
+    playfulTodoListSource.includes('stroke-white/38') &&
+    playfulTodoListSource.includes('checked[index]'),
+  'Playful Todo List checked text should dim on a glass panel and item spacing should be tighter'
+)
+assert(
+  !toggleThemeSource.includes('<Check className=') &&
+    !toggleThemeSource.includes('<Sparkles className=') &&
+    toggleThemeSource.includes('<span>{label}</span>'),
+  'Toggle Theme labeled buttons should not render trailing state icons'
+)
+assert(
+  previewFunctionSource('AnimatedCircularProgressBarPreview').includes('onClick={() => setValue') &&
+    previewFunctionSource('AnimatedCircularProgressBarPreview').includes('aria-label="Decrease progress value"') &&
+    previewFunctionSource('AnimatedCircularProgressBarPreview').includes('aria-label="Increase progress value"') &&
+    !previewFunctionSource('AnimatedCircularProgressBarPreview').includes('setInterval'),
+  'Circular Progress preview should use manual controls instead of automatic value cycling'
+)
+assert(
+  !previewFunctionSource('DataTablePreview').includes('dark-preview-panel') &&
+    dataTableSource.includes('gridTemplateColumns') &&
+    dataTableSource.includes('rounded-[34px] border border-white/10 bg-white/[0.085] p-2 pt-0') &&
+    dataTableSource.includes('className="grid px-1 text-white/58"') &&
+    dataTableSource.includes('rounded-[28px] border border-white/10 bg-white/[0.055]') &&
+    dataTableSource.includes('className="grid border-t border-white/10') &&
+    !dataTableSource.includes('border-separate') &&
+    dataTableSource.includes('bg-white/[0.025]') &&
+    dataTableSource.includes('hover:bg-white/[0.075]'),
+  'Table preview should use a glass outer header shell that wraps the inset body rows'
+)
+assert(
+  previewFunctionSource('FileTreePreview').includes('w-[min(34rem,90vw)]') &&
+    previewFunctionSource('FileTreePreview').includes('h-[28rem]') &&
+    previewFunctionSource('FileTreePreview').includes('text-base') &&
+    fileTreeSource.includes('w-full items-center') &&
+    fileTreeSource.includes('min-w-0 flex-1 truncate'),
+  'File Tree preview should use a stable taller dark panel with larger text and no width shift on collapse'
+)
+assert(
+  previewFunctionSource('CarouselPreview').includes('variant="dark"') &&
+    carouselSource.includes("variant?: 'light' | 'dark'") &&
+    carouselSource.includes('data-carousel-variant={variant}'),
+  'Carousel preview should use a dark variant that matches the shared preview surface'
+)
 assert(
   previewFunctionSource('DiaTextRevealPreview').includes('textColor="#ffffff"') &&
     previewFunctionSource('DiaTextRevealPreview').includes('finalTextColor="#ffffff"'),
   'Dia Text Reveal preview should leave white text after the color sweep'
+)
+assert(
+  !previewFunctionSource('AuroraTextPreview').includes('bg-white') &&
+    previewFunctionSource('AuroraTextPreview').includes('auroraOriginalColors') &&
+    !previewFunctionSource('AuroraTextPreview').includes('themeGradientColors') &&
+    !auroraTextSource.includes('absolute inset-0'),
+  'Aurora Text preview should keep the original dark-stage text treatment and only swap the gradient palette'
 )
 assert(
   previewFunctionSource('MorphingTextPreview').includes('contentClassName="w-full max-w-4xl"') &&
@@ -834,15 +966,171 @@ assert(
   'Pointer preview tiles should be shorter rectangles with white text'
 )
 assert(
-  previewFunctionSource('ClickSparkPreview').includes('sparkColor="#facc15"') &&
-    previewFunctionSource('ClickSparkPreview').includes('[&>canvas]:z-20'),
-  'Click Spark preview should draw visible sparks above the surface'
+  previewFunctionSource('ClickSparkPreview').includes('sparkColors={auroraSparkColors}') &&
+    previewFunctionSource('ClickSparkPreview').includes('[&>canvas]:z-20') &&
+    previewFunctionSource('ClickSparkPreview').includes('cursor-crosshair') &&
+    !previewFunctionSource('ClickSparkPreview').includes('<button') &&
+    clickSparkSource.includes('sparkColors?: readonly string[]') &&
+    clickSparkSource.includes('color: string') &&
+    clickSparkSource.includes('ctx.strokeStyle = spark.color'),
+  'Click Spark preview should spark from the full surface with stable per-spark Aurora colors'
+)
+assert(
+  previewFunctionSource('GooeyInputPreview').includes('placeholder="Search Something"') &&
+    previewFunctionSource('GooeyInputPreview').includes('collapsedLabel="Search Something"') &&
+    previewFunctionSource('GooeyInputPreview').includes('collapsedWidth={420}') &&
+    previewFunctionSource('GooeyInputPreview').includes('expandedWidth={388}') &&
+    previewFunctionSource('GooeyInputPreview').includes('expandedOffset={56}') &&
+    previewFunctionSource('GooeyInputPreview').includes('gooeyBlur={5}') &&
+    previewFunctionSource('GooeyInputPreview').includes('className="w-full max-w-md"') &&
+    previewFunctionSource('GooeyInputPreview').includes('filterWrap:') &&
+    previewFunctionSource('GooeyInputPreview').includes('h-12') &&
+    gooeyInputSource.includes('data-gooey-filter-wrap') &&
+    gooeyInputSource.includes('data-gooey-trigger') &&
+    gooeyInputSource.includes('data-gooey-bubble') &&
+    !gooeyInputSource.includes('data-gooey-filter-layer') &&
+    !previewFunctionSource('GooeyInputPreview').includes('gooLayer:') &&
+    previewFunctionSource('GooeyInputPreview').includes('bg-[#25282d]') &&
+    previewFunctionSource('GooeyInputPreview').includes('text-white/75') &&
+    previewFunctionSource('GooeyInputPreview').includes('shadow-[0_24px_90px_-52px_rgba(255,255,255,0.34)]') &&
+    previewFunctionSource('GooeyInputPreview').includes('placeholder:text-white/45'),
+  'Gooey Input preview should keep the original gooey animation structure while using a taller Vanish Input-like outer shell'
+)
+assert(
+  previewFunctionSource('FlowerMenuPreview').includes('variant="glass"') &&
+    flowerMenuSource.includes("variant?: 'default' | 'glass'") &&
+    flowerMenuSource.includes("variant === 'glass'"),
+  'Flower Menu preview should render trigger and petals with the glass variant'
+)
+assert(
+  previewFunctionSource('RippleButtonPreview').includes('rippleColor="rgba(56,189,248,0.36)"') &&
+    previewFunctionSource('RippleButtonPreview').includes('glassButtonClassName') &&
+    previewFunctionSource('RippleButtonPreview').includes('Click me'),
+  'Ripple Button preview should use a glass button with a sky-tinted ripple'
+)
+assert(
+  !previewFunctionSource('ShinyButtonPreview').includes('style={themeAccentButtonStyle}') &&
+    previewFunctionSource('ShinyButtonPreview').includes('shineColor="rgba(56,189,248,0.68)"') &&
+    previewFunctionSource('ShinyButtonPreview').includes('glassStaticButtonClassName') &&
+    !previewFunctionSource('ShinyButtonPreview').includes('glassButtonClassName') &&
+    shinyButtonSource.includes('shineColor?: string'),
+  'Shiny Button preview should use a static glass button with white text and sky shine'
+)
+assert(
+  elasticSliderSource.includes('text-2xl') &&
+    elasticSliderSource.includes('-translate-y-8') &&
+    elasticSliderSource.includes('text-xl') &&
+    elasticSliderSource.includes('bg-white/[0.12]') &&
+    elasticSliderSource.includes('bg-sky-400') &&
+    elasticSliderSource.includes('text-white/58'),
+  'Elastic Slider should use glass rail styling with larger progress and control icons'
+)
+assert(
+  previewFunctionSource('CounterPreview').includes('textColor="#ffffff"') &&
+    previewFunctionSource('CounterPreview').includes('glassIconButtonClassName'),
+  'Counter preview should render the animated number and controls in glass styling'
+)
+assert(
+  previewFunctionSource('PlaceholdersAndVanishInputPreview').includes('variant="glass"') &&
+    placeholdersAndVanishInputSource.includes("variant?: 'light' | 'glass'") &&
+    placeholdersAndVanishInputSource.includes("isGlass ? 'text-white/45'") &&
+    placeholdersAndVanishInputSource.includes('backdrop-blur-md'),
+  'Placeholders And Vanish Input preview should use the glass variant'
+)
+assert(
+  previewFunctionSource('ToggleThemePreview').includes('variant="glass"') &&
+    toggleThemeSource.includes("variant?: 'default' | 'glass'") &&
+    toggleThemeSource.includes('bg-white/[0.08]') &&
+    toggleThemeSource.includes('backdrop-blur-md'),
+  'Toggle Theme preview should use glass root, track, and thumb styling'
+)
+assert(
+  !threeDImageCarouselPreviewSource.includes('!bg-transparent') &&
+    threeDImageCarouselSource.includes('bg-transparent') &&
+    threeDImageCarouselSource.includes('aria-label="Previous image"') &&
+    threeDImageCarouselSource.includes('aria-label="Next image"') &&
+    threeDImageCarouselSource.includes('bg-white/[0.08]') &&
+    threeDImageCarouselSource.includes('backdrop-blur-md'),
+  '3D Image Carousel should own transparent stage and glass arrow buttons'
+)
+assert(
+  previewFunctionSource('LensPreview').includes('bg-white/[0.07]') &&
+    previewFunctionSource('LensPreview').includes('backdrop-blur-md') &&
+    previewFunctionSource('LensPreview').includes('text-white/58'),
+  'Lens preview card should use the same glass card treatment'
+)
+assert(
+  previewFunctionSource('ConfettiPreview').includes('glassButtonClassName') &&
+    !previewFunctionSource('ConfettiPreview').includes('style={originalAccentButtonStyle}'),
+  'Confetti preview should use a glass button instead of the old accent button'
+)
+assert(
+  previewFunctionSource('ParticlesPreview').includes('colors={cosmicParticleColors}') &&
+    particlesSource.includes('colors?: readonly string[]') &&
+    particlesSource.includes('color: number[]') &&
+    particlesSource.includes('colorPalette'),
+  'Particles preview should render with a varied cosmic color palette'
+)
+assert(
+  previewFunctionSource('MagnetPreview').includes('bg-white/[0.08]') &&
+    !previewFunctionSource('MagnetPreview').includes('style={originalAccentButtonStyle}'),
+  'Magnet preview should use a glassy dark-surface chip instead of the amber accent button'
 )
 assert(
   fs.existsSync(sidebarPath),
   `Missing active sidebar file: ${sidebarPath}`
 )
 const sidebarSource = fs.readFileSync(sidebarPath, 'utf8')
+assert(
+  sidebarSource.includes('useState') &&
+    sidebarSource.includes('componentSearchQuery') &&
+    sidebarSource.includes('filteredSamples') &&
+    sidebarSource.includes('aria-label="컴포넌트 메뉴 검색"') &&
+    sidebarSource.includes('placeholder="컴포넌트 검색"'),
+  'Component sidebar should render a search input above Introduction and filter menu samples'
+)
+assert(
+  sidebarSource.includes('AnimatePresence') &&
+    sidebarSource.includes('layoutId="component-sidebar-active-indicator"') &&
+    sidebarSource.includes('layoutDependency={pathname}') &&
+    sidebarSource.includes('transform-gpu') &&
+    sidebarSource.includes('backdrop-blur') &&
+    sidebarSource.includes('willChange:') &&
+    sidebarSource.includes('contain:') &&
+    sidebarSource.includes('translateZ(0)'),
+  'Component sidebar should keep the search input visually stable and animate the active menu box with a shared layout indicator'
+)
+const sampleDescriptionMatches = [
+  ...dataSource.matchAll(
+    /createSample\(\{[\s\S]*?slug: '([^']+)'[\s\S]*?description:\s*'([^']+)'/g
+  ),
+]
+assert(
+  sampleDescriptionMatches.length === requiredNames.length,
+  'Every component sample should expose one detail-page description'
+)
+for (const [, sampleSlug, sampleDescription] of sampleDescriptionMatches) {
+  assert(
+    /[가-힣]/.test(sampleDescription) &&
+      !/^(A|An|The)\s/.test(sampleDescription),
+    `Component sample description should be Korean: ${sampleSlug} - ${sampleDescription}`
+  )
+}
+const referenceSectionIndex = docsSource.indexOf('id="reference"')
+const propsSectionIndex = docsSource.indexOf('id="props"')
+const headerBeforePreviewSource = docsSource.slice(
+  0,
+  docsSource.indexOf('<ComponentExampleTabs sample={sample} />')
+)
+assert(
+  referenceSectionIndex > propsSectionIndex &&
+    !headerBeforePreviewSource.includes('Reference:'),
+  'Component Reference link should move from the header to the bottom of the page'
+)
+assert(
+  !previewsSource.includes('subtitle="//'),
+  'Component preview subtitles should not render code-comment slashes'
+)
 assert(
   sidebarSource.includes("'use client'") &&
     sidebarSource.includes('usePathname') &&
@@ -911,7 +1199,7 @@ for (const requiredPreviewPart of [
   'VideoTextPreview',
   'HighlighterPreview',
   'bg-background',
-  'theme-accent-current',
+  'glassButtonClassName',
 ]) {
   assert(
     previewsSource.includes(requiredPreviewPart),
@@ -1020,14 +1308,17 @@ assert(
   'Dia Text Reveal should support a scoped trail size without changing the default'
 )
 assert(
-  previewsSource.includes('themeGradientColors') &&
-    previewsSource.includes('useThemeColor') &&
-    previewsSource.includes('var(--theme-accent-current)'),
-  'Component previews should use the selected blog theme colors'
+  !previewFunctionSource('FolderPreview').includes('useThemeColor') &&
+    !previewFunctionSource('CounterPreview').includes('useThemeColor') &&
+    !previewFunctionSource('ParticlesPreview').includes('useThemeColor') &&
+    !previewFunctionSource('AuroraTextPreview').includes('themeGradientColors') &&
+    !previewFunctionSource('CurvedLoopPreview').includes('theme-accent-current') &&
+    !previewsSource.includes('const originalAccentButtonStyle'),
+  'Component previews should avoid applying the blog theme color to previewed components'
 )
 assert(
   previewsSource.includes('pointer-events-none flex flex-col') &&
-    previewsSource.includes('relative flex h-48') &&
+    previewsSource.includes('relative flex h-36') &&
     previewsSource.includes('<Pointer>'),
   'Pointer preview should bind each cursor to the visible bordered tile'
 )
@@ -1069,24 +1360,32 @@ assert(
   'Shiny Button should keep centered readable text without hover shadow effects'
 )
 assert(
-  carouselSource.includes('border border-zinc-200 bg-white') &&
-    carouselSource.includes('text-zinc-500 dark:text-zinc-400') &&
-    !carouselSource.includes("border border-[#222]"),
-  'Carousel should use light-mode gray borders and text instead of black cards'
+  carouselSource.includes("variant = 'light'") &&
+    carouselSource.includes("variant === 'dark'") &&
+    carouselSource.includes('bg-white/[0.06]') &&
+    carouselSource.includes('border-white/10'),
+  'Carousel should expose a dark variant for preview surfaces while keeping the default light variant'
 )
 assert(
   carouselSource.includes('focus-visible:outline-zinc-500 dark:focus-visible:outline-white'),
   'Carousel pagination dots should have visible focus outlines in light and dark mode'
 )
 assert(
-  folderSource.includes("border: '1px solid rgba(148, 163, 184, 0.55)'") &&
-    folderSource.includes('boxShadow: open'),
-  'Folder papers should be distinguishable when expanded'
+  folderSource.includes("paperVariant?: 'paper' | 'glass'") &&
+    folderSource.includes('color-mix(in srgb, ${hex}') &&
+    folderSource.includes("return 'translate(-50%, -100%) rotate(5deg)'") &&
+    folderSource.includes("background: isGlassPaper") &&
+    folderSource.includes("backdropFilter: isGlassPaper ? 'blur(12px)'") &&
+    previewsSource.includes('const folderPreviewColor') &&
+    previewsSource.includes('color-mix(in srgb, var(--theme-accent-current) 64%, #f8fafc)') &&
+    previewFunctionSource('FolderPreview').includes('color={folderPreviewColor}') &&
+    previewFunctionSource('FolderPreview').includes('paperVariant="glass"'),
+  'Folder preview should use a visible current-theme folder color with glass document cards'
 )
 assert(
-  elasticSliderSource.includes('bg-[var(--theme-accent-current)]') &&
-    elasticSliderSource.includes('bg-zinc-200 dark:bg-zinc-800'),
-  'Elastic Slider should use theme progress color and a light gray track'
+  elasticSliderSource.includes('bg-sky-400') &&
+    elasticSliderSource.includes('bg-white/[0.12]'),
+  'Elastic Slider should use a fixed sky progress color and glass track'
 )
 assert(
   !stackSource.includes('Math.random()') &&

@@ -24,12 +24,13 @@ interface ShinyButtonProps
     MotionProps {
   children: React.ReactNode
   className?: string
+  shineColor?: string
 }
 
 export const ShinyButton = React.forwardRef<
   HTMLButtonElement,
   ShinyButtonProps
->(({ children, className, ...props }, ref) => {
+>(({ children, className, shineColor = 'currentColor', style, ...props }, ref) => {
   return (
     <motion.button
       ref={ref}
@@ -37,6 +38,7 @@ export const ShinyButton = React.forwardRef<
         'relative inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-lg border px-6 py-2 text-center font-medium backdrop-blur-xl dark:bg-[radial-gradient(circle_at_50%_0%,var(--primary)/10%_0%,transparent_60%)]',
         className
       )}
+      style={style}
       {...animationProps}
       {...props}
     >
@@ -44,7 +46,7 @@ export const ShinyButton = React.forwardRef<
         className="relative z-20 inline-flex size-full items-center justify-center text-center text-sm tracking-wide text-current uppercase dark:font-light"
         style={{
           maskImage:
-            'linear-gradient(-75deg,var(--primary) calc(var(--x) + 20%),transparent calc(var(--x) + 30%),var(--primary) calc(var(--x) + 100%))',
+            'linear-gradient(-75deg,#000 calc(var(--x) + 20%),transparent calc(var(--x) + 30%),#000 calc(var(--x) + 100%))',
         }}
       >
         {children}
@@ -55,7 +57,8 @@ export const ShinyButton = React.forwardRef<
           WebkitMask:
             'linear-gradient(rgb(0,0,0), rgb(0,0,0)) content-box exclude,linear-gradient(rgb(0,0,0), rgb(0,0,0))',
           backgroundImage:
-            'linear-gradient(-75deg,var(--primary)/10% calc(var(--x)+20%),var(--primary)/50% calc(var(--x)+25%),var(--primary)/10% calc(var(--x)+100%))',
+            `linear-gradient(-75deg,transparent calc(var(--x)+20%),${shineColor} calc(var(--x)+25%),transparent calc(var(--x)+100%))`,
+          opacity: 0.68,
         }}
         className="absolute inset-0 z-10 block rounded-[inherit] p-px"
       />

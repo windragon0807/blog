@@ -142,17 +142,6 @@ export function ComponentSection({ sample }: { sample: ComponentSample }) {
           <p className="mt-4 max-w-2xl text-base leading-7 text-zinc-600 dark:text-zinc-400">
             {sample.description}
           </p>
-          <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400">
-            Reference:{' '}
-            <a
-              href={sample.reference.url}
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium text-[var(--theme-accent-current)] underline underline-offset-4 transition-opacity hover:opacity-75"
-            >
-              {sample.reference.label}
-            </a>
-          </p>
         </div>
       </div>
 
@@ -196,6 +185,27 @@ export function ComponentSection({ sample }: { sample: ComponentSample }) {
         <div className="mt-4">
           <PropsTable sample={sample} />
         </div>
+      </section>
+
+      <section id="reference" aria-labelledby="reference-heading" className="mt-8">
+        <h2
+          id="reference-heading"
+          className="text-xl font-semibold text-zinc-950 dark:text-zinc-50"
+        >
+          Reference
+        </h2>
+        <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+          원본 구현과 인터랙션 흐름은{' '}
+          <a
+            href={sample.reference.url}
+            target="_blank"
+            rel="noreferrer"
+            className="font-medium text-[var(--theme-accent-current)] underline underline-offset-4 transition-opacity hover:opacity-75"
+          >
+            {sample.reference.label}
+          </a>
+          를 기준으로 확인할 수 있습니다.
+        </p>
       </section>
     </article>
   )

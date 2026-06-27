@@ -247,7 +247,7 @@ function KeystrokePreview({
   const label = lastPressedKey ? getDisplayLabel(lastPressedKey) : null
 
   return (
-    <div className="relative flex h-12 w-full items-center justify-center">
+    <div className="relative flex h-10 w-full items-center justify-center">
       <AnimatePresence mode="popLayout">
         {label ? (
           <motion.div
@@ -257,7 +257,7 @@ function KeystrokePreview({
             animate={{ opacity: 1, scale: pressed ? 0.95 : 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: -5 }}
             transition={{ type: 'spring', stiffness: 500, damping: 30, mass: 0.5 }}
-            className="absolute flex items-center justify-center rounded-lg px-4 py-2 font-mono text-2xl font-black text-zinc-700"
+            className="absolute flex items-center justify-center rounded-lg px-4 py-1.5 font-mono text-xl font-semibold tracking-normal text-white/30"
           >
             {label}
           </motion.div>

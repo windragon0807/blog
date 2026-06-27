@@ -58,12 +58,12 @@ export function PlayfulTodoList({
   return (
     <div
       className={cn(
-        'w-full max-w-lg space-y-6 rounded-2xl bg-neutral-100 p-6 text-left dark:bg-neutral-900',
+        'w-full max-w-lg space-y-4 rounded-2xl border border-white/10 bg-white/[0.07] p-5 text-left text-white shadow-[0_24px_90px_-52px_rgba(255,255,255,0.34)] backdrop-blur-md',
         className
       )}
     >
       {items.map((item, index) => (
-        <div key={item.id} className="space-y-6">
+        <div key={item.id} className="space-y-4">
           <div className="flex items-center space-x-2">
             <button
               type="button"
@@ -77,9 +77,9 @@ export function PlayfulTodoList({
                 })
               }}
               className={cn(
-                'flex size-5 shrink-0 items-center justify-center rounded-md border border-neutral-300 bg-white text-neutral-950 shadow-sm transition-colors dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-50',
+                'flex size-5 shrink-0 items-center justify-center rounded-md border border-white/18 bg-white/[0.08] text-sky-300 shadow-[0_12px_28px_-22px_rgba(255,255,255,0.5)] transition-colors',
                 checked[index] &&
-                  'border-[var(--theme-accent-current)] bg-[var(--theme-accent-current)] text-[var(--background)]'
+                  'border-sky-300/35 bg-sky-300/15 text-sky-200'
               )}
             >
               <motion.svg
@@ -104,7 +104,10 @@ export function PlayfulTodoList({
             <div className="relative inline-block">
               <label
                 htmlFor={`checkbox-${item.id}`}
-                className="cursor-pointer text-base font-medium text-neutral-900 dark:text-neutral-100"
+                className={cn(
+                  'cursor-pointer text-base font-medium text-white transition-colors',
+                  checked[index] && 'text-white/42'
+                )}
               >
                 {item.label}
               </label>
@@ -124,14 +127,17 @@ export function PlayfulTodoList({
                   initial={false}
                   animate={getPathAnimate(checked[index])}
                   transition={getPathTransition(checked[index])}
-                  className="stroke-neutral-900 dark:stroke-neutral-100"
+                  className={cn(
+                    'stroke-white/80 transition-colors',
+                    checked[index] && 'stroke-white/38'
+                  )}
                 />
               </motion.svg>
             </div>
           </div>
 
           {index !== items.length - 1 ? (
-            <div className="border-t border-neutral-300 dark:border-neutral-700" />
+            <div className="border-t border-white/12" />
           ) : null}
         </div>
       ))}

@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 interface TextFlipProps {
   prefix?: string
   words: string[]
+  wordColors?: readonly string[]
   interval?: number
   className?: string
   wordClassName?: string
@@ -15,6 +16,7 @@ interface TextFlipProps {
 export function TextFlip({
   prefix = 'Coding is',
   words,
+  wordColors,
   interval = 2600,
   className,
   wordClassName,
@@ -47,7 +49,8 @@ export function TextFlip({
             animate={{ y: '0%', opacity: 1, rotateX: 0 }}
             exit={{ y: '-110%', opacity: 0, rotateX: 28 }}
             transition={{ duration: 0.52, ease: [0.16, 1, 0.3, 1] }}
-            className="col-start-1 row-start-1 text-left text-[var(--theme-accent-current)] [backface-visibility:hidden]"
+            className="col-start-1 row-start-1 text-left text-current [backface-visibility:hidden]"
+            style={{ color: wordColors?.[index % wordColors.length] }}
           >
             {words[index]}
           </motion.span>

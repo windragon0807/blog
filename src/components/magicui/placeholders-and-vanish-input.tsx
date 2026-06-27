@@ -23,6 +23,7 @@ interface PlaceholdersAndVanishInputProps {
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void
   onSubmit?: (value: string, event: FormEvent<HTMLFormElement>) => void
   className?: string
+  variant?: 'light' | 'glass'
 }
 
 export function PlaceholdersAndVanishInput({
@@ -30,6 +31,7 @@ export function PlaceholdersAndVanishInput({
   onChange,
   onSubmit,
   className,
+  variant = 'light',
 }: PlaceholdersAndVanishInputProps) {
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0)
   const [value, setValue] = useState('')
@@ -37,6 +39,7 @@ export function PlaceholdersAndVanishInput({
   const inputRef = useRef<HTMLInputElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const particlesRef = useRef<VanishParticle[]>([])
+  const isGlass = variant === 'glass'
 
   useEffect(() => {
     const id = window.setInterval(() => {
@@ -168,15 +171,19 @@ export function PlaceholdersAndVanishInput({
     <form
       onSubmit={handleSubmit}
       className={cn(
-        'relative mx-auto h-12 w-full max-w-xl overflow-hidden rounded-full bg-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-200 dark:bg-zinc-800',
-        value && 'bg-zinc-50',
+        'relative mx-auto h-12 w-full max-w-xl overflow-hidden rounded-full transition duration-200',
+        isGlass
+          ? 'border border-white/10 bg-white/[0.08] text-white shadow-[0_24px_90px_-52px_rgba(255,255,255,0.34)] backdrop-blur-md'
+          : 'bg-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)] dark:bg-zinc-800',
+        value && (isGlass ? 'bg-white/[0.11]' : 'bg-zinc-50'),
         className
       )}
     >
       <canvas
         ref={canvasRef}
         className={cn(
-          'pointer-events-none absolute left-2 top-[20%] origin-top-left scale-50 pr-20 text-base invert filter sm:left-4 dark:invert-0',
+          'pointer-events-none absolute left-2 top-[20%] origin-top-left scale-50 pr-20 text-base filter sm:left-4',
+          !isGlass && 'invert dark:invert-0',
           animating ? 'opacity-100' : 'opacity-0'
         )}
       />
@@ -190,14 +197,20 @@ export function PlaceholdersAndVanishInput({
           onChange?.(event)
         }}
         className={cn(
-          'relative z-50 h-full w-full rounded-full border-none bg-transparent pl-4 pr-20 text-sm text-black outline-none focus:outline-none focus:ring-0 sm:pl-6 sm:text-base dark:text-white',
+          'relative z-50 h-full w-full rounded-full border-none bg-transparent pl-4 pr-20 text-sm outline-none focus:outline-none focus:ring-0 sm:pl-6 sm:text-base',
+          isGlass ? 'text-white placeholder:text-white/45' : 'text-black dark:text-white',
           animating && 'text-transparent dark:text-transparent'
         )}
       />
       <button
         disabled={!value}
         type="submit"
-        className="absolute right-2 top-1/2 z-50 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-black text-zinc-300 transition duration-200 disabled:bg-zinc-100 dark:bg-zinc-900 dark:disabled:bg-zinc-800"
+        className={cn(
+          'absolute right-2 top-1/2 z-50 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full transition duration-200',
+          isGlass
+            ? 'border border-white/10 bg-white/[0.10] text-white/75 disabled:bg-white/[0.05] disabled:text-white/28'
+            : 'bg-black text-zinc-300 disabled:bg-zinc-100 dark:bg-zinc-900 dark:disabled:bg-zinc-800'
+        )}
         aria-label="Submit"
       >
         <motion.svg
@@ -229,7 +242,10 @@ export function PlaceholdersAndVanishInput({
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -15, opacity: 0 }}
               transition={{ duration: 0.3, ease: 'linear' }}
-              className="w-[calc(100%-2rem)] truncate pl-4 text-left text-sm font-normal text-neutral-500 sm:pl-6 sm:text-base dark:text-zinc-500"
+              className={cn(
+                'w-[calc(100%-2rem)] truncate pl-4 text-left text-sm font-normal sm:pl-6 sm:text-base',
+                isGlass ? 'text-white/45' : 'text-neutral-500 dark:text-zinc-500'
+              )}
             >
               {placeholders[currentPlaceholder]}
             </motion.p>

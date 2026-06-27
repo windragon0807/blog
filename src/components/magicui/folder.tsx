@@ -7,9 +7,14 @@ interface FolderProps {
   size?: number;
   items?: React.ReactNode[];
   className?: string;
+  paperVariant?: 'paper' | 'glass';
 }
 
 const darkenColor = (hex: string, percent: number): string => {
+  if (!/^#?[0-9a-f]{3}([0-9a-f]{3})?$/i.test(hex)) {
+    return `color-mix(in srgb, ${hex} ${Math.round((1 - percent) * 100)}%, black)`;
+  }
+
   let color = hex.startsWith('#') ? hex.slice(1) : hex;
   if (color.length === 3) {
     color = color
@@ -27,7 +32,13 @@ const darkenColor = (hex: string, percent: number): string => {
   return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
 };
 
-const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = [], className = '' }) => {
+const Folder: React.FC<FolderProps> = ({
+  color = '#5227FF',
+  size = 1,
+  items = [],
+  className = '',
+  paperVariant = 'paper',
+}) => {
   const maxItems = 3;
   const papers = items.slice(0, maxItems);
   while (papers.length < maxItems) {
@@ -86,7 +97,7 @@ const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = []
   const getOpenTransform = (index: number) => {
     if (index === 0) return 'translate(-120%, -70%) rotate(-15deg)';
     if (index === 1) return 'translate(10%, -70%) rotate(15deg)';
-    if (index === 2) return 'translate(-50%, -88%) rotate(5deg)';
+    if (index === 2) return 'translate(-50%, -100%) rotate(5deg)';
     return '';
   };
 
@@ -113,8 +124,11 @@ const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = []
         aria-label={open ? 'Close folder' : 'Open folder'}
       >
         <div
-          className="relative w-[100px] h-[80px] rounded-tl-0 rounded-tr-[10px] rounded-br-[10px] rounded-bl-[10px]"
-          style={{ backgroundColor: folderBackColor }}
+            className="relative w-[100px] h-[80px] rounded-tl-0 rounded-tr-[10px] rounded-br-[10px] rounded-bl-[10px]"
+            style={{
+              backgroundColor: folderBackColor,
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.2), 0 18px 40px rgba(0,0,0,0.22)',
+            }}
         >
           <span
             className="absolute z-0 bottom-[98%] left-0 w-[30px] h-[10px] rounded-tl-[5px] rounded-tr-[5px] rounded-bl-0 rounded-br-0"
@@ -129,6 +143,7 @@ const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = []
             const transformStyle = open
               ? `${getOpenTransform(i)} translate(${paperOffsets[i].x}px, ${paperOffsets[i].y}px)`
               : undefined;
+            const isGlassPaper = paperVariant === 'glass';
 
             return (
               <div
@@ -140,12 +155,24 @@ const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = []
                 } ${sizeClasses}`}
                 style={{
                   ...(!open ? {} : { transform: transformStyle }),
-                  backgroundColor: i === 0 ? paper1 : i === 1 ? paper2 : paper3,
-                  border: '1px solid rgba(148, 163, 184, 0.55)',
+                  background: isGlassPaper
+                    ? 'linear-gradient(145deg, rgba(255,255,255,0.2), rgba(255,255,255,0.055))'
+                    : undefined,
+                  backgroundColor: isGlassPaper
+                    ? undefined
+                    : i === 0 ? paper1 : i === 1 ? paper2 : paper3,
+                  border: isGlassPaper
+                    ? '1px solid rgba(255, 255, 255, 0.22)'
+                    : '1px solid rgba(148, 163, 184, 0.55)',
                   borderRadius: '10px',
+                  backdropFilter: isGlassPaper ? 'blur(12px)' : undefined,
                   boxShadow: open
-                    ? '0 14px 30px rgba(15, 23, 42, 0.16)'
-                    : '0 4px 12px rgba(15, 23, 42, 0.08)'
+                    ? isGlassPaper
+                      ? '0 20px 40px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255,255,255,0.2)'
+                      : '0 14px 30px rgba(15, 23, 42, 0.16)'
+                    : isGlassPaper
+                      ? '0 8px 18px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255,255,255,0.16)'
+                      : '0 4px 12px rgba(15, 23, 42, 0.08)'
                 }}
               >
                 {item}
@@ -159,6 +186,7 @@ const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = []
             style={{
               backgroundColor: color,
               borderRadius: '5px 10px 10px 10px',
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.24)',
               ...(open && { transform: 'skew(15deg) scaleY(0.6)' })
             }}
           ></div>
@@ -169,6 +197,7 @@ const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = []
             style={{
               backgroundColor: color,
               borderRadius: '5px 10px 10px 10px',
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.18)',
               ...(open && { transform: 'skew(-15deg) scaleY(0.6)' })
             }}
           ></div>

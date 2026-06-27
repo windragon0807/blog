@@ -130,12 +130,12 @@ export function AvatarGroup({
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 6, scale: 0.96 }}
                 transition={tooltipTransition}
-                className="pointer-events-none absolute bottom-[calc(100%+25px)] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground shadow-sm"
+                className="pointer-events-none absolute bottom-[calc(100%+26px)] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-md border border-white/[0.08] bg-[#3c3540]/95 px-3 py-1.5 text-xs text-white shadow-[0_16px_40px_-20px_rgba(0,0,0,0.9)] backdrop-blur-md"
               >
                 {item.tooltip ?? item.name}
                 <span
                   data-avatar-tooltip-arrow=""
-                  className="absolute left-1/2 top-full h-2 w-4 -translate-x-1/2 bg-primary [clip-path:polygon(50%_100%,0_0,100%_0)]"
+                  className="absolute left-1/2 top-[calc(100%-1px)] h-2 w-4 -translate-x-1/2 bg-[#3c3540]/95 [clip-path:polygon(50%_100%,0_0,100%_0)]"
                 />
               </motion.span>
             ) : null}

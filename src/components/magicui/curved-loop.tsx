@@ -8,6 +8,7 @@ interface CurvedLoopProps {
   marqueeText?: string;
   speed?: number;
   className?: string;
+  colors?: readonly string[];
   curveAmount?: number;
   direction?: 'left' | 'right';
   interactive?: boolean;
@@ -17,6 +18,7 @@ const CurvedLoop: FC<CurvedLoopProps> = ({
   marqueeText = '',
   speed = 2,
   className,
+  colors,
   curveAmount = 400,
   direction = 'left',
   interactive = true
@@ -33,7 +35,9 @@ const CurvedLoop: FC<CurvedLoopProps> = ({
   const [offset, setOffset] = useState(0);
   const uid = useId();
   const pathId = `curve-${uid}`;
+  const gradientId = `curve-gradient-${uid}`;
   const pathD = `M-100,40 Q500,${40 + curveAmount} 1540,40`;
+  const gradientColors = colors && colors.length > 0 ? colors : undefined;
 
   const dragRef = useRef(false);
   const lastXRef = useRef(0);
@@ -129,9 +133,33 @@ const CurvedLoop: FC<CurvedLoopProps> = ({
         </text>
         <defs>
           <path ref={pathRef} id={pathId} d={pathD} fill="none" stroke="transparent" />
+          {gradientColors ? (
+            <linearGradient
+              id={gradientId}
+              x1="-720"
+              y1="0"
+              x2="720"
+              y2="0"
+              gradientUnits="userSpaceOnUse"
+            >
+              {gradientColors.map((color, index) => (
+                <stop
+                  key={`${color}-${index}`}
+                  offset={`${(index / Math.max(gradientColors.length - 1, 1)) * 100}%`}
+                  stopColor={color}
+                />
+              ))}
+              <animate attributeName="x1" values="-720;0;720" dur="7s" repeatCount="indefinite" />
+              <animate attributeName="x2" values="720;1440;2160" dur="7s" repeatCount="indefinite" />
+            </linearGradient>
+          ) : null}
         </defs>
         {ready && (
-          <text xmlSpace="preserve" className={`fill-current ${className ?? ''}`}>
+          <text
+            xmlSpace="preserve"
+            className={className ?? ''}
+            fill={gradientColors ? `url(#${gradientId})` : 'currentColor'}
+          >
             <textPath ref={textPathRef} href={`#${pathId}`} startOffset={offset + 'px'} xmlSpace="preserve">
               {totalText}
             </textPath>

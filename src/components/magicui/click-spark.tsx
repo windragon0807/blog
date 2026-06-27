@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 
 interface ClickSparkProps {
   sparkColor?: string
+  sparkColors?: readonly string[]
   sparkSize?: number
   sparkRadius?: number
   sparkCount?: number
@@ -20,10 +21,12 @@ interface Spark {
   y: number
   angle: number
   startTime: number
+  color: string
 }
 
 const ClickSpark: React.FC<ClickSparkProps> = ({
   sparkColor = '#fff',
+  sparkColors,
   sparkSize = 10,
   sparkRadius = 15,
   sparkCount = 8,
@@ -117,7 +120,7 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
         const x2 = spark.x + (distance + lineLength) * Math.cos(spark.angle)
         const y2 = spark.y + (distance + lineLength) * Math.sin(spark.angle)
 
-        ctx.strokeStyle = sparkColor
+        ctx.strokeStyle = spark.color
         ctx.lineWidth = 2
         ctx.beginPath()
         ctx.moveTo(x1, y1)
@@ -135,7 +138,7 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
     return () => {
       cancelAnimationFrame(animationId)
     }
-  }, [sparkColor, sparkSize, sparkRadius, sparkCount, duration, easeFunc, extraScale])
+  }, [sparkSize, sparkRadius, sparkCount, duration, easeFunc, extraScale])
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>): void => {
     const canvas = canvasRef.current
@@ -145,11 +148,13 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
     const y = e.clientY - rect.top
 
     const now = performance.now()
+    const palette = sparkColors && sparkColors.length > 0 ? sparkColors : [sparkColor]
     const newSparks: Spark[] = Array.from({ length: sparkCount }, (_, i) => ({
       x,
       y,
       angle: (2 * Math.PI * i) / sparkCount,
       startTime: now,
+      color: palette[Math.floor(Math.random() * palette.length)],
     }))
 
     sparksRef.current.push(...newSparks)
@@ -157,10 +162,15 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
 
   return (
     <div
+      data-click-spark-root=""
       className={cn('relative flex min-h-[inherit] h-full w-full overflow-hidden rounded-[inherit]', className)}
       onClick={handleClick}
     >
-      <canvas ref={canvasRef} className="pointer-events-none absolute inset-0" />
+      <canvas
+        ref={canvasRef}
+        data-click-spark-canvas=""
+        className="pointer-events-none absolute inset-0"
+      />
       {children}
     </div>
   )
