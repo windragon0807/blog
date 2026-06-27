@@ -1124,7 +1124,7 @@ function BasePreviewContent({
     }
   })()
 
-  if (sample.categoryId === 'text') {
+  if (sample.categoryId === 'text-typography') {
     return <TextPreviewFont>{content}</TextPreviewFont>
   }
 

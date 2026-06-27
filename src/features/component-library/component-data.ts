@@ -1,16 +1,9 @@
 export type ComponentCategoryId =
-  | 'buttons'
-  | 'components'
-  | 'animations'
-  | 'backgrounds'
-  | 'cards'
-  | 'forms'
-  | 'effects'
-  | 'fabs'
-  | 'text'
-  | 'media'
-  | 'controls'
-  | 'data-display'
+  | 'actions-controls'
+  | 'content-media'
+  | 'data-structure'
+  | 'text-typography'
+  | 'effects-backgrounds'
 
 export type ComponentPreviewKind =
   | 'ripple-button'
@@ -193,71 +186,36 @@ function createSample({
 
 export const componentCategories: readonly ComponentCategory[] = [
   {
-    id: 'buttons',
-    name: 'Buttons',
-    description: 'Interactive Magic UI button components with motion feedback.',
+    id: 'actions-controls',
+    name: 'Actions & Controls',
+    description: 'Buttons, menus, inputs, toggles, and small interaction controls.',
   },
   {
-    id: 'components',
-    name: 'Components',
-    description: 'Magic UI interaction components ready for registry installs.',
+    id: 'content-media',
+    name: 'Content & Media',
+    description: 'Carousels, avatars, image tools, and content presentation patterns.',
   },
   {
-    id: 'animations',
-    name: 'Animations',
-    description: 'Pointer, click, and WebGL motion primitives for interaction-heavy UI.',
+    id: 'data-structure',
+    name: 'Data & Structure',
+    description: 'Tables, trees, counters, and progress indicators for structured information.',
   },
   {
-    id: 'backgrounds',
-    name: 'Backgrounds',
-    description: 'Animated background surfaces for immersive sections and demos.',
+    id: 'text-typography',
+    name: 'Text & Typography',
+    description: 'Animated text treatments for headings, numbers, and inline emphasis.',
   },
   {
-    id: 'cards',
-    name: 'Cards',
-    description: 'Interactive cards and preview surfaces.',
-  },
-  {
-    id: 'forms',
-    name: 'Forms',
-    description: 'Inputs, pickers, uploads, and form composition components.',
-  },
-  {
-    id: 'effects',
-    name: 'Effects',
-    description: 'Visual effects for cards, surfaces, canvas, and celebration UI.',
-  },
-  {
-    id: 'fabs',
-    name: 'FABs',
-    description: 'Floating action button menus for compact command surfaces.',
-  },
-  {
-    id: 'text',
-    name: 'Text',
-    description: 'Animated text treatments for headings and inline emphasis.',
-  },
-  {
-    id: 'media',
-    name: 'Media',
-    description: 'Image and avatar presentation components.',
-  },
-  {
-    id: 'controls',
-    name: 'Controls',
-    description: 'Toggles, cursors, and task controls.',
-  },
-  {
-    id: 'data-display',
-    name: 'Data Display',
-    description: 'Structured data presentation components.',
+    id: 'effects-backgrounds',
+    name: 'Effects & Backgrounds',
+    description: 'Pointer effects, ambient motion, particles, borders, and background surfaces.',
   },
 ]
 
 export const componentSamples: readonly ComponentSample[] = [
   createSample({
     slug: 'background-boxes',
-    categoryId: 'backgrounds',
+    categoryId: 'effects-backgrounds',
     title: 'Background Boxes',
     description: 'A hover-reactive grid background for hero and feature surfaces.',
     dependencies: ['motion'],
@@ -285,7 +243,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'keyboard',
-    categoryId: 'forms',
+    categoryId: 'actions-controls',
     title: 'Keyboard',
     description: 'A Mac-style keyboard with clickable and physical key states.',
     dependencies: ['motion'],
@@ -308,7 +266,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'placeholders-and-vanish-input',
-    categoryId: 'forms',
+    categoryId: 'actions-controls',
     title: 'Placeholders And Vanish Input',
     description: 'A search input with rotating placeholders and vanish submit motion.',
     dependencies: ['motion'],
@@ -329,7 +287,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'gooey-input',
-    categoryId: 'forms',
+    categoryId: 'actions-controls',
     title: 'Gooey Input',
     description: 'A collapsed search input that expands through a gooey SVG filter.',
     dependencies: ['motion'],
@@ -354,7 +312,7 @@ export default function Example() {
 
   createSample({
     slug: '3d-marquee',
-    categoryId: 'media',
+    categoryId: 'content-media',
     title: '3D Marquee',
     description: 'A perspective marquee grid for image or card strips.',
     dependencies: ['motion'],
@@ -375,7 +333,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'avatar-group',
-    categoryId: 'media',
+    categoryId: 'content-media',
     title: 'Avatar Group',
     description: 'A stacked avatar group with hover lift and tooltip motion.',
     dependencies: ['motion'],
@@ -401,7 +359,7 @@ export default function Example() {
 
   createSample({
     slug: 'playful-todolist',
-    categoryId: 'controls',
+    categoryId: 'actions-controls',
     title: 'Playful Todo List',
     description: 'A small animated todo list interaction.',
     dependencies: ['motion'],
@@ -421,7 +379,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'slide-arrow-button',
-    categoryId: 'buttons',
+    categoryId: 'actions-controls',
     title: 'Slide Arrow Button',
     description: 'A button with a sliding arrow hover transition.',
     dependencies: ['lucide-react'],
@@ -444,7 +402,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'flower-menu',
-    categoryId: 'fabs',
+    categoryId: 'actions-controls',
     title: 'Flower Menu',
     description: 'A radial floating action menu.',
     dependencies: [],
@@ -465,7 +423,7 @@ export default function Example() {
 
   createSample({
     slug: 'text-flip',
-    categoryId: 'text',
+    categoryId: 'text-typography',
     title: 'Text Flip',
     description: 'A rotating word flip animation.',
     dependencies: ['motion'],
@@ -487,7 +445,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'toggle-theme',
-    categoryId: 'controls',
+    categoryId: 'actions-controls',
     title: 'Toggle Theme',
     description: 'A minimal switch-style theme toggle.',
     dependencies: ['lucide-react', 'next-themes'],
@@ -509,7 +467,7 @@ export default function Example() {
   }),
   createSample({
     slug: '3d-image-carousel',
-    categoryId: 'media',
+    categoryId: 'content-media',
     title: '3D Image Carousel',
     description: 'A rotating perspective image carousel.',
     dependencies: ['lucide-react'],
@@ -532,7 +490,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'sparkle-cursor',
-    categoryId: 'effects',
+    categoryId: 'effects-backgrounds',
     title: 'Sparkle Cursor',
     description: 'A local cursor sparkle effect for a bounded surface.',
     dependencies: ['gsap'],
@@ -554,7 +512,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'data-table',
-    categoryId: 'data-display',
+    categoryId: 'data-structure',
     title: 'Table',
     description: 'A simple typed data table inspired by HeroUI table structure.',
     reference: {
@@ -574,7 +532,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'ripple-button',
-    categoryId: 'buttons',
+    categoryId: 'actions-controls',
     title: 'Ripple Button',
     description: 'A button that emits a click ripple from the pointer position.',
     usage: `import { RippleButton } from "@/components/magicui/ripple-button"
@@ -592,7 +550,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'shiny-button',
-    categoryId: 'buttons',
+    categoryId: 'actions-controls',
     title: 'Shiny Button',
     description: 'A button with a looping masked shine and spring tap feedback.',
     dependencies: ['motion'],
@@ -609,7 +567,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'marquee',
-    categoryId: 'components',
+    categoryId: 'content-media',
     title: 'Marquee',
     description:
       'An infinite scrolling component that can display text, images, or videos.',
@@ -636,7 +594,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'icon-cloud',
-    categoryId: 'components',
+    categoryId: 'content-media',
     title: 'Icon Cloud',
     description: 'An interactive 3D tag cloud component.',
     usage: `import { IconCloud } from "@/components/magicui/icon-cloud"
@@ -657,7 +615,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'lens',
-    categoryId: 'components',
+    categoryId: 'content-media',
     title: 'Lens',
     description:
       'An interactive component that enables zooming into images, videos, and other elements.',
@@ -682,7 +640,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'pointer',
-    categoryId: 'components',
+    categoryId: 'effects-backgrounds',
     title: 'Pointer',
     description: 'A component that displays a pointer when hovering over an element.',
     dependencies: ['motion'],
@@ -703,7 +661,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'file-tree',
-    categoryId: 'components',
+    categoryId: 'data-structure',
     title: 'File Tree',
     description: 'A nested file tree with selectable files, folders, and collapse controls.',
     dependencies: ['@radix-ui/react-accordion', '@radix-ui/react-scroll-area', 'lucide-react'],
@@ -735,7 +693,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'animated-circular-progress-bar',
-    categoryId: 'components',
+    categoryId: 'data-structure',
     title: 'Animated Circular Progress Bar',
     description: 'A circular gauge that animates between values with primary and secondary arcs.',
     usage: `import { AnimatedCircularProgressBar } from "@/components/magicui/animated-circular-progress-bar"
@@ -760,7 +718,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'curved-loop',
-    categoryId: 'text',
+    categoryId: 'text-typography',
     title: 'Curved Loop',
     description: 'A draggable SVG text marquee that loops along a curved path.',
     usage: `import { CurvedLoop } from "@/components/magicui/curved-loop"
@@ -786,7 +744,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'click-spark',
-    categoryId: 'animations',
+    categoryId: 'effects-backgrounds',
     title: 'Click Spark',
     description: 'A canvas overlay that emits radial sparks from every click.',
     usage: `import { ClickSpark } from "@/components/magicui/click-spark"
@@ -810,7 +768,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'magnet',
-    categoryId: 'animations',
+    categoryId: 'effects-backgrounds',
     title: 'Magnet',
     description: 'A hover target that pulls its child toward the pointer.',
     usage: `import { Magnet } from "@/components/magicui/magnet"
@@ -833,7 +791,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'stack',
-    categoryId: 'components',
+    categoryId: 'content-media',
     title: 'Stack',
     description: 'A draggable card stack that sends swiped cards to the back.',
     dependencies: ['motion'],
@@ -856,7 +814,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'folder',
-    categoryId: 'components',
+    categoryId: 'content-media',
     title: 'Folder',
     description: 'A clickable folder illustration that opens layered paper cards.',
     usage: `import { Folder } from "@/components/magicui/folder"
@@ -874,7 +832,7 @@ export default function Example() {
 
   createSample({
     slug: 'carousel',
-    categoryId: 'components',
+    categoryId: 'content-media',
     title: 'Carousel',
     description: 'A draggable, optionally autoplaying 3D card carousel.',
     dependencies: ['motion', 'react-icons'],
@@ -896,7 +854,7 @@ export default function Example() {
 
   createSample({
     slug: 'elastic-slider',
-    categoryId: 'components',
+    categoryId: 'actions-controls',
     title: 'Elastic Slider',
     description: 'A slider with elastic overflow and springy thumb movement.',
     dependencies: ['motion'],
@@ -917,7 +875,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'counter',
-    categoryId: 'components',
+    categoryId: 'data-structure',
     title: 'Counter',
     description: 'An animated rolling number counter with decimal place support.',
     dependencies: ['motion'],
@@ -957,7 +915,7 @@ export default function Example() {
 
   createSample({
     slug: 'shine-border',
-    categoryId: 'effects',
+    categoryId: 'effects-backgrounds',
     title: 'Shine Border',
     description: 'Shine border is an animated background border effect.',
     usage: `import { ShineBorder } from "@/components/magicui/shine-border"
@@ -979,7 +937,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'meteors',
-    categoryId: 'effects',
+    categoryId: 'effects-backgrounds',
     title: 'Meteors',
     description: 'A meteor shower effect.',
     usage: `import { Meteors } from "@/components/magicui/meteors"
@@ -1003,7 +961,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'confetti',
-    categoryId: 'effects',
+    categoryId: 'effects-backgrounds',
     title: 'Confetti',
     description:
       'Confetti animations are best used to delight users when something special happens.',
@@ -1022,7 +980,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'particles',
-    categoryId: 'effects',
+    categoryId: 'effects-backgrounds',
     title: 'Particles',
     description:
       'Particles add visual flair with depth, movement, and interactivity.',
@@ -1046,7 +1004,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'typing-animation',
-    categoryId: 'text',
+    categoryId: 'text-typography',
     title: 'Typing Animation',
     description: 'Characters appearing in typed animation.',
     dependencies: ['motion'],
@@ -1066,7 +1024,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'aurora-text',
-    categoryId: 'text',
+    categoryId: 'text-typography',
     title: 'Aurora Text',
     description: 'A beautiful aurora text effect.',
     usage: `import { AuroraText } from "@/components/magicui/aurora-text"
@@ -1083,7 +1041,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'video-text',
-    categoryId: 'text',
+    categoryId: 'text-typography',
     title: 'Video Text',
     description: 'A component that displays text with a video playing in the background.',
     usage: `import { VideoText } from "@/components/magicui/video-text"
@@ -1102,7 +1060,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'number-ticker',
-    categoryId: 'text',
+    categoryId: 'text-typography',
     title: 'Number Ticker',
     description: 'Animate numbers to count up or down to a target number.',
     dependencies: ['motion'],
@@ -1121,7 +1079,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'dia-text-reveal',
-    categoryId: 'text',
+    categoryId: 'text-typography',
     title: 'Dia Text Reveal',
     description:
       'A horizontal color band sweeps across text, revealing a gradient shine.',
@@ -1142,7 +1100,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'morphing-text',
-    categoryId: 'text',
+    categoryId: 'text-typography',
     title: 'Morphing Text',
     description: 'A dynamic text morphing component for Magic UI.',
     usage: `import { MorphingText } from "@/components/magicui/morphing-text"
@@ -1157,7 +1115,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'highlighter',
-    categoryId: 'text',
+    categoryId: 'text-typography',
     title: 'Highlighter',
     description:
       'A text highlighter that mimics the effect of a human-drawn marker stroke.',

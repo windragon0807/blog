@@ -48,30 +48,16 @@ const requiredNames = [
   'data-table',
 ]
 const requiredCategories = [
-  "id: 'buttons'",
-  "name: 'Buttons'",
-  "id: 'components'",
-  "name: 'Components'",
-  "id: 'animations'",
-  "name: 'Animations'",
-  "id: 'backgrounds'",
-  "name: 'Backgrounds'",
-  "id: 'cards'",
-  "name: 'Cards'",
-  "id: 'forms'",
-  "name: 'Forms'",
-  "id: 'effects'",
-  "name: 'Effects'",
-  "id: 'fabs'",
-  "name: 'FABs'",
-  "id: 'text'",
-  "name: 'Text'",
-  "id: 'media'",
-  "name: 'Media'",
-  "id: 'controls'",
-  "name: 'Controls'",
-  "id: 'data-display'",
-  "name: 'Data Display'",
+  "id: 'actions-controls'",
+  "name: 'Actions & Controls'",
+  "id: 'content-media'",
+  "name: 'Content & Media'",
+  "id: 'data-structure'",
+  "name: 'Data & Structure'",
+  "id: 'text-typography'",
+  "name: 'Text & Typography'",
+  "id: 'effects-backgrounds'",
+  "name: 'Effects & Backgrounds'",
 ]
 const removedNames = [
   'action-button',
@@ -113,6 +99,18 @@ const removedCategories = [
   'surfaces',
   'feedback',
   'typography',
+  'buttons',
+  'components',
+  'animations',
+  'backgrounds',
+  'cards',
+  'forms',
+  'effects',
+  'fabs',
+  'text',
+  'media',
+  'controls',
+  'data-display',
 ]
 const motionNames = [
   'shiny-button',
@@ -200,7 +198,8 @@ for (const category of requiredCategories) {
 
 for (const category of removedCategories) {
   assert(
-    !dataSource.includes(`id: '${category}'`),
+    !dataSource.includes(`id: '${category}'`) &&
+      !dataSource.includes(`categoryId: '${category}'`),
     `Removed category still exists: ${category}`
   )
 }
