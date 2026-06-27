@@ -45,7 +45,23 @@ const requiredNames = [
   'toggle-theme',
   '3d-image-carousel',
   'sparkle-cursor',
+  'mouse-invert-cursor',
+  'mouse-trail-cursor',
+  'mouse-ripple-cursor',
+  'mouse-custom-cursor',
+  'fairy-dust-cursor',
+  'bubble-cursor',
+  'character-cursor',
   'data-table',
+]
+const cursorEffectNames = [
+  'mouse-invert-cursor',
+  'mouse-trail-cursor',
+  'mouse-ripple-cursor',
+  'mouse-custom-cursor',
+  'fairy-dust-cursor',
+  'bubble-cursor',
+  'character-cursor',
 ]
 const requiredCategories = [
   "id: 'actions-controls'",
@@ -176,12 +192,19 @@ const installTabsPath = path.join(
   root,
   'src/features/component-library/install-command-tabs.tsx'
 )
+const cursorEffectRuntimePath = path.join(
+  root,
+  'src/components/magicui/cursor-effect-runtime.tsx'
+)
 const dataSource = fs.readFileSync(dataPath, 'utf8')
 const docsSource = fs.readFileSync(docsPath, 'utf8')
 const componentsPageSource = fs.readFileSync(componentsPagePath, 'utf8')
 const layoutSource = fs.readFileSync(layoutPath, 'utf8')
 const globalsSource = fs.readFileSync(globalsPath, 'utf8')
 const previewsSource = fs.readFileSync(previewsPath, 'utf8')
+const cursorEffectRuntimeSource = fs.existsSync(cursorEffectRuntimePath)
+  ? fs.readFileSync(cursorEffectRuntimePath, 'utf8')
+  : ''
 
 function assert(condition, message) {
   if (!condition) {
@@ -239,8 +262,9 @@ for (const name of requiredNames) {
   assert(registry.name === name, `${name} registry item has wrong name`)
   assert(registry.type === 'registry:ui', `${name} registry item has wrong type`)
   assert(
-    Array.isArray(registry.files) && registry.files.length === 1,
-    `${name} registry item should expose one source file`
+    Array.isArray(registry.files) &&
+      registry.files.length === (cursorEffectNames.includes(name) ? 2 : 1),
+    `${name} registry item should expose the expected source files`
   )
   assert(
     registry.files[0].path === `src/components/magicui/${name}.tsx`,
@@ -251,6 +275,38 @@ for (const name of requiredNames) {
       (/export (function|const) /.test(registry.files[0].content) ||
         registry.files[0].content.includes('export {')),
     `${name} registry item should include component source`
+  )
+}
+
+for (const name of cursorEffectNames) {
+  assert(
+    previewsSource.includes(`case '${name}'`),
+    `${name} preview should be wired into component-previews.tsx`
+  )
+
+  const registry = JSON.parse(
+    fs.readFileSync(path.join(root, `public/r/${name}.json`), 'utf8')
+  )
+  assert(
+    registry.files.some(
+      (file) => file.path === 'src/components/magicui/cursor-effect-runtime.tsx'
+    ),
+    `${name} registry item should include cursor-effect-runtime.tsx`
+  )
+}
+
+for (const requiredRuntimePart of [
+  'prefers-reduced-motion: reduce',
+  'matchMedia',
+  'ResizeObserver',
+  'requestAnimationFrame',
+  'cancelAnimationFrame',
+  'pointer-events-none',
+  'Adapted from',
+]) {
+  assert(
+    cursorEffectRuntimeSource.includes(requiredRuntimePart),
+    `cursor runtime missing performance/source marker: ${requiredRuntimePart}`
   )
 }
 

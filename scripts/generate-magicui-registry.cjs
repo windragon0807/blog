@@ -448,6 +448,55 @@ const items = [
     dependencies: ['gsap'],
   },
   {
+    name: 'mouse-invert-cursor',
+    title: 'Mouse Invert Cursor',
+    description: 'A scoped mix-blend-mode cursor adapted from mouse-animations Invert.',
+    dependencies: [],
+    sharedFiles: ['cursor-effect-runtime'],
+  },
+  {
+    name: 'mouse-trail-cursor',
+    title: 'Mouse Trail Cursor',
+    description: 'A bounded canvas dot trail adapted from mouse-animations Trail.',
+    dependencies: [],
+    sharedFiles: ['cursor-effect-runtime'],
+  },
+  {
+    name: 'mouse-ripple-cursor',
+    title: 'Mouse Ripple Cursor',
+    description: 'A click ripple adapted from mouse-animations Ripple.',
+    dependencies: [],
+    sharedFiles: ['cursor-effect-runtime'],
+  },
+  {
+    name: 'mouse-custom-cursor',
+    title: 'Mouse Custom Cursor',
+    description: 'A scoped dot and lagging ring adapted from mouse-animations CustomCursor.',
+    dependencies: [],
+    sharedFiles: ['cursor-effect-runtime'],
+  },
+  {
+    name: 'fairy-dust-cursor',
+    title: 'Fairy Dust Cursor',
+    description: 'A scoped star-dust trail adapted from tholman cursor-effects Fairy Dust.',
+    dependencies: [],
+    sharedFiles: ['cursor-effect-runtime'],
+  },
+  {
+    name: 'bubble-cursor',
+    title: 'Bubble Cursor',
+    description: 'A scoped bubble particle cursor adapted from tholman cursor-effects Bubbles.',
+    dependencies: [],
+    sharedFiles: ['cursor-effect-runtime'],
+  },
+  {
+    name: 'character-cursor',
+    title: 'Character Cursor',
+    description: 'A scoped character particle cursor adapted from tholman cursor-effects Character.',
+    dependencies: [],
+    sharedFiles: ['cursor-effect-runtime'],
+  },
+  {
     name: 'data-table',
     title: 'Table',
     description: 'A simple typed data table inspired by HeroUI table structure.',
@@ -466,6 +515,21 @@ for (const file of fs.readdirSync(outDir)) {
 for (const item of items) {
   const sourcePath = path.join(root, `src/components/magicui/${item.name}.tsx`)
   const content = fs.readFileSync(sourcePath, 'utf8')
+  const files = [
+    {
+      path: `src/components/magicui/${item.name}.tsx`,
+      content,
+      type: 'registry:ui',
+    },
+    ...(item.sharedFiles ?? []).map((sharedName) => {
+      const sharedPath = `src/components/magicui/${sharedName}.tsx`
+      return {
+        path: sharedPath,
+        content: fs.readFileSync(path.join(root, sharedPath), 'utf8'),
+        type: 'registry:ui',
+      }
+    }),
+  ]
   const registryItem = {
     $schema: 'https://ui.shadcn.com/schema/registry-item.json',
     name: item.name,
@@ -473,13 +537,7 @@ for (const item of items) {
     title: item.title,
     description: item.description,
     dependencies: item.dependencies,
-    files: [
-      {
-        path: `src/components/magicui/${item.name}.tsx`,
-        content,
-        type: 'registry:ui',
-      },
-    ],
+    files,
     ...(item.registryDependencies
       ? { registryDependencies: item.registryDependencies }
       : {}),

@@ -24,7 +24,9 @@ import { AnimatedCircularProgressBar } from '@/components/magicui/animated-circu
 import { AuroraText } from '@/components/magicui/aurora-text'
 import { AvatarGroup } from '@/components/magicui/avatar-group'
 import { BackgroundBoxes } from '@/components/magicui/background-boxes'
+import { BubbleCursor } from '@/components/magicui/bubble-cursor'
 import { Carousel } from '@/components/magicui/carousel'
+import { CharacterCursor } from '@/components/magicui/character-cursor'
 import { ClickSpark } from '@/components/magicui/click-spark'
 import { ConfettiButton } from '@/components/magicui/confetti'
 import { Counter } from '@/components/magicui/counter'
@@ -32,6 +34,7 @@ import { CurvedLoop } from '@/components/magicui/curved-loop'
 import { DataTable } from '@/components/magicui/data-table'
 import { DiaTextReveal } from '@/components/magicui/dia-text-reveal'
 import { ElasticSlider } from '@/components/magicui/elastic-slider'
+import { FairyDustCursor } from '@/components/magicui/fairy-dust-cursor'
 import { Tree, type TreeViewElement } from '@/components/magicui/file-tree'
 import { FlowerMenu } from '@/components/magicui/flower-menu'
 import { Folder } from '@/components/magicui/folder'
@@ -43,6 +46,10 @@ import { Lens } from '@/components/magicui/lens'
 import { Magnet } from '@/components/magicui/magnet'
 import { Marquee } from '@/components/magicui/marquee'
 import { Meteors } from '@/components/magicui/meteors'
+import { MouseCustomCursor } from '@/components/magicui/mouse-custom-cursor'
+import { MouseInvertCursor } from '@/components/magicui/mouse-invert-cursor'
+import { MouseRippleCursor } from '@/components/magicui/mouse-ripple-cursor'
+import { MouseTrailCursor } from '@/components/magicui/mouse-trail-cursor'
 import { MorphingText } from '@/components/magicui/morphing-text'
 import { NumberTicker } from '@/components/magicui/number-ticker'
 import { Particles } from '@/components/magicui/particles'
@@ -59,6 +66,7 @@ import { TextFlip } from '@/components/magicui/text-flip'
 import { ToggleTheme } from '@/components/magicui/toggle-theme'
 import { TypingAnimation } from '@/components/magicui/typing-animation'
 import { VideoText } from '@/components/magicui/video-text'
+import { cn } from '@/lib/utils'
 import type { ComponentSample } from './component-data'
 
 type PreviewMode = 'interactive' | 'thumbnail'
@@ -547,6 +555,155 @@ function DataTablePreview() {
   return (
     <OuterEffectSurface className="min-h-[26rem] p-4">
       <DataTable columns={tableColumns} rows={tableRows} />
+    </OuterEffectSurface>
+  )
+}
+
+function CursorDemoSurface({
+  title,
+  subtitle,
+  accentClassName,
+}: {
+  title: string
+  subtitle: string
+  accentClassName: string
+}) {
+  return (
+    <div className="relative flex min-h-[28rem] w-full items-center justify-center overflow-hidden rounded-[inherit] bg-[#0a0a0f] p-8 text-center text-white">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.08),transparent_62%)]" />
+      <div className={cn('pointer-events-none absolute inset-0 opacity-30', accentClassName)} />
+      <div className="relative z-10 max-w-md">
+        <p className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-white/60">
+          cursor effect
+        </p>
+        <p className="mt-5 text-5xl font-semibold tracking-normal">
+          {title}
+        </p>
+        <p className="mt-3 text-sm italic tracking-wide text-white/52">
+          {subtitle}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function MouseInvertCursorPreview({ mode }: { mode: PreviewMode }) {
+  return (
+    <OuterEffectSurface className="p-0">
+      <MouseInvertCursor
+        size={50}
+        smoothness={0.08}
+        disabled={mode === 'thumbnail'}
+      >
+        <CursorDemoSurface
+          title="Invert"
+          subtitle="// move to invert the surface"
+          accentClassName="bg-[radial-gradient(circle_at_center,rgba(244,63,94,0.34),transparent_55%)]"
+        />
+      </MouseInvertCursor>
+    </OuterEffectSurface>
+  )
+}
+
+function MouseTrailCursorPreview({ mode }: { mode: PreviewMode }) {
+  return (
+    <OuterEffectSurface className="p-0">
+      <MouseTrailCursor
+        color="#c084fc"
+        size={5}
+        length={20}
+        decay={0.05}
+        blur={0}
+        disabled={mode === 'thumbnail'}
+      >
+        <CursorDemoSurface
+          title="Trail"
+          subtitle="// fading dots follow your cursor"
+          accentClassName="bg-[radial-gradient(circle_at_center,rgba(192,132,252,0.32),transparent_55%)]"
+        />
+      </MouseTrailCursor>
+    </OuterEffectSurface>
+  )
+}
+
+function MouseRippleCursorPreview({ mode }: { mode: PreviewMode }) {
+  return (
+    <OuterEffectSurface className="p-0">
+      <MouseRippleCursor
+        color="rgba(96,165,250,0.60)"
+        duration={600}
+        maxSize={150}
+        disabled={mode === 'thumbnail'}
+      >
+        <CursorDemoSurface
+          title="Ripple"
+          subtitle="// click to expand"
+          accentClassName="bg-[radial-gradient(circle_at_center,rgba(96,165,250,0.34),transparent_55%)]"
+        />
+      </MouseRippleCursor>
+    </OuterEffectSurface>
+  )
+}
+
+function MouseCustomCursorPreview({ mode }: { mode: PreviewMode }) {
+  return (
+    <OuterEffectSurface className="p-0">
+      <MouseCustomCursor
+        innerSize={6}
+        outerSize={36}
+        innerColor="#34d399"
+        outerColor="rgba(52,211,153,0.3)"
+        smoothness={0.15}
+        disabled={mode === 'thumbnail'}
+      >
+        <CursorDemoSurface
+          title="Custom Cursor"
+          subtitle="// dot + ring following your cursor"
+          accentClassName="bg-[radial-gradient(circle_at_center,rgba(52,211,153,0.3),transparent_55%)]"
+        />
+      </MouseCustomCursor>
+    </OuterEffectSurface>
+  )
+}
+
+function FairyDustCursorPreview({ mode }: { mode: PreviewMode }) {
+  return (
+    <OuterEffectSurface className="p-0">
+      <FairyDustCursor disabled={mode === 'thumbnail'}>
+        <CursorDemoSurface
+          title="Fairy Dust"
+          subtitle="// stardust follows your cursor"
+          accentClassName="bg-[radial-gradient(circle_at_center,rgba(231,216,75,0.28),transparent_55%)]"
+        />
+      </FairyDustCursor>
+    </OuterEffectSurface>
+  )
+}
+
+function BubbleCursorPreview({ mode }: { mode: PreviewMode }) {
+  return (
+    <OuterEffectSurface className="p-0">
+      <BubbleCursor disabled={mode === 'thumbnail'}>
+        <CursorDemoSurface
+          title="Bubbles"
+          subtitle="// move to float bubbles"
+          accentClassName="bg-[radial-gradient(circle_at_center,rgba(58,146,197,0.32),transparent_55%)]"
+        />
+      </BubbleCursor>
+    </OuterEffectSurface>
+  )
+}
+
+function CharacterCursorPreview({ mode }: { mode: PreviewMode }) {
+  return (
+    <OuterEffectSurface className="p-0">
+      <CharacterCursor disabled={mode === 'thumbnail'}>
+        <CursorDemoSurface
+          title="Characters"
+          subtitle="// characters under your control"
+          accentClassName="bg-[radial-gradient(circle_at_center,rgba(167,85,194,0.3),transparent_55%)]"
+        />
+      </CharacterCursor>
     </OuterEffectSurface>
   )
 }
@@ -1143,6 +1300,20 @@ function BasePreviewContent({
       return <ThreeDImageCarouselPreview />
     case 'sparkle-cursor':
       return <SparkleCursorPreview />
+    case 'mouse-invert-cursor':
+      return <MouseInvertCursorPreview mode={mode} />
+    case 'mouse-trail-cursor':
+      return <MouseTrailCursorPreview mode={mode} />
+    case 'mouse-ripple-cursor':
+      return <MouseRippleCursorPreview mode={mode} />
+    case 'mouse-custom-cursor':
+      return <MouseCustomCursorPreview mode={mode} />
+    case 'fairy-dust-cursor':
+      return <FairyDustCursorPreview mode={mode} />
+    case 'bubble-cursor':
+      return <BubbleCursorPreview mode={mode} />
+    case 'character-cursor':
+      return <CharacterCursorPreview mode={mode} />
     case 'data-table':
       return <DataTablePreview />
     }

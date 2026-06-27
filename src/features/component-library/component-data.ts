@@ -46,6 +46,13 @@ export type ComponentPreviewKind =
   | 'toggle-theme'
   | '3d-image-carousel'
   | 'sparkle-cursor'
+  | 'mouse-invert-cursor'
+  | 'mouse-trail-cursor'
+  | 'mouse-ripple-cursor'
+  | 'mouse-custom-cursor'
+  | 'fairy-dust-cursor'
+  | 'bubble-cursor'
+  | 'character-cursor'
   | 'data-table'
 
 export interface ComponentCategory {
@@ -133,6 +140,16 @@ const reactBitsReferencePaths: Partial<Record<ComponentPreviewKind, string>> = {
   'elastic-slider': '/components/elastic-slider',
   counter: '/components/counter?value=17.8',
 }
+
+const mouseAnimationsReference = {
+  label: 'mouse-animations playground',
+  url: 'https://tgomilar.github.io/mouse-animations/',
+} satisfies ComponentReference
+
+const cursorEffectsReference = {
+  label: 'cursor-effects demo',
+  url: 'https://tholman.com/cursor-effects/',
+} satisfies ComponentReference
 
 function reactBitsReference(slug: ComponentPreviewKind, title: string) {
   const path = reactBitsReferencePaths[slug]
@@ -508,6 +525,182 @@ export default function Example() {
       classNameProp,
       prop('color', 'string', '"var(--theme-accent-current)"', 'Sparkle color.'),
       prop('fullScreen', 'boolean', 'false', 'Whether the canvas covers the viewport.'),
+    ],
+  }),
+  createSample({
+    slug: 'mouse-invert-cursor',
+    categoryId: 'effects-backgrounds',
+    title: 'Mouse Invert Cursor',
+    description: 'A scoped mix-blend-mode cursor adapted from mouse-animations Invert.',
+    reference: mouseAnimationsReference,
+    usage: `import { MouseInvertCursor } from "@/components/magicui/mouse-invert-cursor"
+
+export default function Example() {
+  return (
+    <MouseInvertCursor size={50} smoothness={0.08}>
+      <div className="min-h-64">Move inside</div>
+    </MouseInvertCursor>
+  )
+}`,
+    props: [
+      childrenProp,
+      classNameProp,
+      prop('size', 'number', '50', 'Invert cursor diameter in pixels.'),
+      prop('color', 'string', '"#ffffff"', 'Blend color used by the cursor circle.'),
+      prop('smoothness', 'number', '0.08', 'Lerp factor copied from the playground default.'),
+      prop('hideDefault', 'boolean', 'true', 'Whether to hide the native cursor inside the component.'),
+      prop('disabled', 'boolean', 'false', 'Whether to disable the cursor effect.'),
+    ],
+  }),
+  createSample({
+    slug: 'mouse-trail-cursor',
+    categoryId: 'effects-backgrounds',
+    title: 'Mouse Trail Cursor',
+    description: 'A bounded canvas dot trail adapted from mouse-animations Trail.',
+    reference: mouseAnimationsReference,
+    usage: `import { MouseTrailCursor } from "@/components/magicui/mouse-trail-cursor"
+
+export default function Example() {
+  return (
+    <MouseTrailCursor color="#c084fc" size={5} length={20} decay={0.05}>
+      <div className="min-h-64">Move inside</div>
+    </MouseTrailCursor>
+  )
+}`,
+    props: [
+      childrenProp,
+      classNameProp,
+      prop('color', 'string', '"#c084fc"', 'Trail dot color from the playground default.'),
+      prop('size', 'number', '5', 'Maximum dot radius in pixels.'),
+      prop('length', 'number', '20', 'Maximum number of trail points to keep.'),
+      prop('decay', 'number', '0.05', 'Alpha decay per frame.'),
+      prop('blur', 'number', '0', 'Canvas blur filter in pixels.'),
+      prop('disabled', 'boolean', 'false', 'Whether to disable the cursor effect.'),
+    ],
+  }),
+  createSample({
+    slug: 'mouse-ripple-cursor',
+    categoryId: 'effects-backgrounds',
+    title: 'Mouse Ripple Cursor',
+    description: 'A click ripple adapted from mouse-animations Ripple.',
+    reference: mouseAnimationsReference,
+    usage: `import { MouseRippleCursor } from "@/components/magicui/mouse-ripple-cursor"
+
+export default function Example() {
+  return (
+    <MouseRippleCursor color="rgba(96,165,250,0.60)" maxSize={150}>
+      <button>Click inside</button>
+    </MouseRippleCursor>
+  )
+}`,
+    props: [
+      childrenProp,
+      classNameProp,
+      prop('color', 'string', '"rgba(96,165,250,0.60)"', 'Ripple fill color from the playground default.'),
+      prop('duration', 'number', '600', 'Ripple animation duration in ms.'),
+      prop('maxSize', 'number', '150', 'Maximum ripple diameter in pixels.'),
+      prop('disabled', 'boolean', 'false', 'Whether to disable the cursor effect.'),
+    ],
+  }),
+  createSample({
+    slug: 'mouse-custom-cursor',
+    categoryId: 'effects-backgrounds',
+    title: 'Mouse Custom Cursor',
+    description: 'A scoped dot and lagging ring adapted from mouse-animations CustomCursor.',
+    reference: mouseAnimationsReference,
+    usage: `import { MouseCustomCursor } from "@/components/magicui/mouse-custom-cursor"
+
+export default function Example() {
+  return (
+    <MouseCustomCursor innerColor="#34d399" outerColor="rgba(52,211,153,0.3)">
+      <div className="min-h-64">Move inside</div>
+    </MouseCustomCursor>
+  )
+}`,
+    props: [
+      childrenProp,
+      classNameProp,
+      prop('innerSize', 'number', '6', 'Inner dot size in pixels.'),
+      prop('outerSize', 'number', '36', 'Outer ring size in pixels.'),
+      prop('innerColor', 'string', '"#34d399"', 'Inner dot color from the playground default.'),
+      prop('outerColor', 'string', '"rgba(52,211,153,0.3)"', 'Outer ring color from the playground default.'),
+      prop('smoothness', 'number', '0.15', 'Ring lerp factor copied from the playground default.'),
+      prop('hideDefault', 'boolean', 'true', 'Whether to hide the native cursor inside the component.'),
+      prop('disabled', 'boolean', 'false', 'Whether to disable the cursor effect.'),
+    ],
+  }),
+  createSample({
+    slug: 'fairy-dust-cursor',
+    categoryId: 'effects-backgrounds',
+    title: 'Fairy Dust Cursor',
+    description: 'A scoped star-dust trail adapted from tholman cursor-effects Fairy Dust.',
+    reference: cursorEffectsReference,
+    usage: `import { FairyDustCursor } from "@/components/magicui/fairy-dust-cursor"
+
+export default function Example() {
+  return (
+    <FairyDustCursor>
+      <div className="min-h-64">Move inside</div>
+    </FairyDustCursor>
+  )
+}`,
+    props: [
+      childrenProp,
+      classNameProp,
+      prop('colors', 'string[]', '["#D61C59", "#E7D84B", "#1B8798"]', 'Particle colors from the cursor-effects default.'),
+      prop('fairySymbol', 'string', '"*"', 'Character rendered as each dust particle.'),
+      prop('maxParticles', 'number', '160', 'Particle cap used to prevent runaway canvas work.'),
+      prop('disabled', 'boolean', 'false', 'Whether to disable the cursor effect.'),
+    ],
+  }),
+  createSample({
+    slug: 'bubble-cursor',
+    categoryId: 'effects-backgrounds',
+    title: 'Bubble Cursor',
+    description: 'A scoped bubble particle cursor adapted from tholman cursor-effects Bubbles.',
+    reference: cursorEffectsReference,
+    usage: `import { BubbleCursor } from "@/components/magicui/bubble-cursor"
+
+export default function Example() {
+  return (
+    <BubbleCursor fillColor="#e6f1f7" strokeColor="#3a92c5">
+      <div className="min-h-64">Move inside</div>
+    </BubbleCursor>
+  )
+}`,
+    props: [
+      childrenProp,
+      classNameProp,
+      prop('fillColor', 'string', '"#e6f1f7"', 'Bubble fill color from the cursor-effects default.'),
+      prop('strokeColor', 'string', '"#3a92c5"', 'Bubble stroke color from the cursor-effects default.'),
+      prop('maxParticles', 'number', '180', 'Particle cap used to prevent runaway canvas work.'),
+      prop('disabled', 'boolean', 'false', 'Whether to disable the cursor effect.'),
+    ],
+  }),
+  createSample({
+    slug: 'character-cursor',
+    categoryId: 'effects-backgrounds',
+    title: 'Character Cursor',
+    description: 'A scoped character particle cursor adapted from tholman cursor-effects Character.',
+    reference: cursorEffectsReference,
+    usage: `import { CharacterCursor } from "@/components/magicui/character-cursor"
+
+export default function Example() {
+  return (
+    <CharacterCursor characters={["h", "e", "l", "l", "o"]}>
+      <div className="min-h-64">Move inside</div>
+    </CharacterCursor>
+  )
+}`,
+    props: [
+      childrenProp,
+      classNameProp,
+      prop('characters', 'string[]', '["h", "e", "l", "l", "o"]', 'Characters rendered as particles.'),
+      prop('colors', 'string[]', 'cursor-effects palette', 'Particle colors from the cursor-effects default.'),
+      prop('font', 'string', '"15px serif"', 'Canvas font used for particle glyphs.'),
+      prop('cursorOffset', '{ x: number; y: number }', '{ x: 0, y: 0 }', 'Offset applied to each spawned character.'),
+      prop('maxParticles', 'number', '170', 'Particle cap used to prevent runaway canvas work.'),
+      prop('disabled', 'boolean', 'false', 'Whether to disable the cursor effect.'),
     ],
   }),
   createSample({

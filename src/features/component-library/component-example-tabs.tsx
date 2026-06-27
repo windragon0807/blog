@@ -18,6 +18,13 @@ export function ComponentExampleTabs({
     sample.preview.kind === 'keyboard' ||
     sample.preview.kind === '3d-marquee' ||
     sample.preview.kind === 'sparkle-cursor' ||
+    sample.preview.kind === 'mouse-invert-cursor' ||
+    sample.preview.kind === 'mouse-trail-cursor' ||
+    sample.preview.kind === 'mouse-ripple-cursor' ||
+    sample.preview.kind === 'mouse-custom-cursor' ||
+    sample.preview.kind === 'fairy-dust-cursor' ||
+    sample.preview.kind === 'bubble-cursor' ||
+    sample.preview.kind === 'character-cursor' ||
     sample.preview.kind === '3d-image-carousel' ||
     sample.preview.kind === 'data-table'
 
