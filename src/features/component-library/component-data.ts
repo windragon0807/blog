@@ -22,7 +22,6 @@ export type ComponentPreviewKind =
   | 'carousel'
   | 'elastic-slider'
   | 'counter'
-  | 'shine-border'
   | 'meteors'
   | 'confetti'
   | 'particles'
@@ -40,7 +39,6 @@ export type ComponentPreviewKind =
   | '3d-marquee'
   | 'avatar-group'
   | 'playful-todolist'
-  | 'slide-arrow-button'
   | 'flower-menu'
   | 'text-flip'
   | 'toggle-theme'
@@ -54,7 +52,6 @@ export type ComponentPreviewKind =
   | 'bubble-cursor'
   | 'character-cursor'
   | 'canvas-cursor'
-  | 'fluid-cursor'
   | 'data-table'
 
 export interface ComponentCategory {
@@ -156,11 +153,6 @@ const cursorEffectsReference = {
 const cursifyCanvasReference = {
   label: 'Cursify Canvas Cursor',
   url: 'https://cursify.ui-layouts.com/components/canvas-cursor',
-} satisfies ComponentReference
-
-const cursifyFluidReference = {
-  label: 'Cursify Fluid Cursor',
-  url: 'https://cursify.ui-layouts.com/components/fluid-cursor',
 } satisfies ComponentReference
 
 function reactBitsReference(slug: ComponentPreviewKind, title: string) {
@@ -404,29 +396,6 @@ export default function Example() {
     props: [
       classNameProp,
       prop('items', 'TodoItem[]', 'built-in list', 'Todo labels and initial checked states.'),
-    ],
-  }),
-  createSample({
-    slug: 'slide-arrow-button',
-    categoryId: 'actions-controls',
-    title: 'Slide Arrow Button',
-    description: 'A button with a sliding arrow hover transition.',
-    dependencies: ['lucide-react'],
-    reference: {
-      label: 'Animata Slide Arrow Button',
-      url: 'https://animata.design/docs/button/slide-arrow-button',
-    },
-    usage: `import { SlideArrowButton } from "@/components/magicui/slide-arrow-button"
-
-export default function Example() {
-  return <SlideArrowButton>Continue</SlideArrowButton>
-}`,
-    props: [
-      childrenProp,
-      classNameProp,
-      prop('text', 'string', '"Get Started"', 'Button text when children are not provided.'),
-      prop('primaryColor', 'string', '"var(--theme-accent-current)"', 'Color used by the sliding background.'),
-      prop('...props', 'ButtonHTMLAttributes<HTMLButtonElement>', '-', 'Native button props.'),
     ],
   }),
   createSample({
@@ -747,35 +716,6 @@ export default function Example() {
       prop('hueAmplitude', 'number', '85', 'Hue oscillator amplitude.'),
       prop('hueFrequency', 'number', '0.0015', 'Hue oscillator frequency.'),
       prop('opacity', 'number', '0.2', 'Trail stroke alpha.'),
-      prop('disabled', 'boolean', 'false', 'Whether to disable the cursor effect.'),
-    ],
-  }),
-  createSample({
-    slug: 'fluid-cursor',
-    categoryId: 'effects-backgrounds',
-    title: 'Fluid Cursor',
-    description: 'A bounded fluid dye cursor adapted from Cursify Fluid Cursor.',
-    reference: cursifyFluidReference,
-    usage: `import { FluidCursor } from "@/components/magicui/fluid-cursor"
-
-export default function Example() {
-  return (
-    <FluidCursor splatRadius={0.2} splatForce={6000}>
-      <div className="min-h-64">Move inside</div>
-    </FluidCursor>
-  )
-}`,
-    props: [
-      childrenProp,
-      classNameProp,
-      prop('colors', 'string[]', '["#22d3ee", "#8b5cf6", "#ec4899", "#f97316"]', 'Fluid dye colors.'),
-      prop('densityDissipation', 'number', '3.5', 'How quickly dye fades.'),
-      prop('velocityDissipation', 'number', '2', 'How quickly splat velocity settles.'),
-      prop('splatRadius', 'number', '0.2', 'Splat radius ratio from the Cursify default.'),
-      prop('splatForce', 'number', '6000', 'Velocity force scale from the Cursify default.'),
-      prop('colorUpdateSpeed', 'number', '10', 'How quickly the dye color advances.'),
-      prop('maxSplats', 'number', '96', 'Splat cap used to prevent runaway canvas work.'),
-      prop('blur', 'number', '18', 'Canvas blur filter in pixels.'),
       prop('disabled', 'boolean', 'false', 'Whether to disable the cursor effect.'),
     ],
   }),
@@ -1182,28 +1122,6 @@ export default function Example() {
     ],
   }),
 
-  createSample({
-    slug: 'shine-border',
-    categoryId: 'effects-backgrounds',
-    title: 'Shine Border',
-    description: 'Shine border is an animated background border effect.',
-    usage: `import { ShineBorder } from "@/components/magicui/shine-border"
-
-export default function Example() {
-  return (
-    <div className="relative rounded-xl border p-6">
-      <ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
-      Shine Border
-    </div>
-  )
-}`,
-    props: [
-      prop('borderWidth', 'number', '1', 'Width of the shine border.'),
-      prop('duration', 'number', '14', 'Animation duration in seconds.'),
-      prop('shineColor', 'string | string[]', '"#000000"', 'Border shine colors.'),
-      classNameProp,
-    ],
-  }),
   createSample({
     slug: 'meteors',
     categoryId: 'effects-backgrounds',

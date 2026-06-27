@@ -13,7 +13,6 @@ import {
   PenLine,
   Settings,
   Share2,
-  Sparkles,
   Trash2,
   Upload,
 } from 'lucide-react'
@@ -36,7 +35,6 @@ import { DataTable } from '@/components/magicui/data-table'
 import { DiaTextReveal } from '@/components/magicui/dia-text-reveal'
 import { ElasticSlider } from '@/components/magicui/elastic-slider'
 import { FairyDustCursor } from '@/components/magicui/fairy-dust-cursor'
-import { FluidCursor } from '@/components/magicui/fluid-cursor'
 import { Tree, type TreeViewElement } from '@/components/magicui/file-tree'
 import { FlowerMenu } from '@/components/magicui/flower-menu'
 import { Folder } from '@/components/magicui/folder'
@@ -59,9 +57,7 @@ import { PlaceholdersAndVanishInput } from '@/components/magicui/placeholders-an
 import { PlayfulTodoList } from '@/components/magicui/playful-todolist'
 import { Pointer } from '@/components/magicui/pointer'
 import { RippleButton } from '@/components/magicui/ripple-button'
-import { ShineBorder } from '@/components/magicui/shine-border'
 import { ShinyButton } from '@/components/magicui/shiny-button'
-import { SlideArrowButton } from '@/components/magicui/slide-arrow-button'
 import { SparkleCursor } from '@/components/magicui/sparkle-cursor'
 import { Stack } from '@/components/magicui/stack'
 import { TextFlip } from '@/components/magicui/text-flip'
@@ -364,7 +360,7 @@ function OuterEffectSurface({
 }) {
   return (
     <div
-      className={`relative flex min-h-60 w-full items-center justify-center overflow-hidden rounded-[inherit] bg-background text-center text-foreground ${className}`}
+      className={`relative flex min-h-[28rem] w-full items-center justify-center overflow-hidden rounded-[inherit] bg-background text-center text-foreground ${className}`}
     >
       {children}
     </div>
@@ -409,40 +405,60 @@ function useUserFontFamily() {
 
 function BackgroundBoxesPreview() {
   return (
-    <div className="relative h-[420px] w-full overflow-hidden rounded-[inherit] bg-slate-900">
-      <BackgroundBoxes />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,rgba(15,23,42,0.96)_78%)]" />
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-        <p className="text-4xl font-semibold text-white">
-          Background Boxes
-        </p>
-      </div>
-    </div>
+    <PreviewDemoSurface
+      label="ambient background"
+      title="Background Boxes"
+      subtitle="// move across the grid"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.24),transparent_58%)]"
+      overlay={
+        <>
+          <BackgroundBoxes />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,rgba(10,10,15,0.92)_76%)]" />
+        </>
+      }
+    />
   )
 }
 
 function KeyboardPreview() {
   return (
-    <OuterEffectSurface className="min-h-[34rem] overflow-visible p-8">
-      <Keyboard showPreview className="scale-[1.75]" />
-    </OuterEffectSurface>
+    <PreviewDemoSurface
+      label="action control"
+      title="Keyboard"
+      subtitle="// press keys or click keycaps"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.24),transparent_55%)]"
+      className="min-h-[44rem]"
+      contentClassName="max-w-5xl"
+    >
+      <Keyboard showPreview className="scale-[1.35] md:scale-[1.55]" />
+    </PreviewDemoSurface>
   )
 }
 
 function PlaceholdersAndVanishInputPreview() {
   return (
-    <OuterEffectSurface>
+    <PreviewDemoSurface
+      label="action control"
+      title="Vanish Input"
+      subtitle="// submit to collapse the search"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.26),transparent_55%)]"
+    >
       <PlaceholdersAndVanishInput
-        className="max-w-md"
+        className="max-w-md bg-white"
         placeholders={['Search components', 'Ask about registry', 'Find animations']}
       />
-    </OuterEffectSurface>
+    </PreviewDemoSurface>
   )
 }
 
 function GooeyInputPreview() {
   return (
-    <OuterEffectSurface>
+    <PreviewDemoSurface
+      label="action control"
+      title="Gooey Input"
+      subtitle="// click search to expand"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.24),transparent_55%)]"
+    >
       <GooeyInput
         placeholder="search"
         classNames={{
@@ -454,7 +470,7 @@ function GooeyInputPreview() {
             'bg-[var(--theme-accent-current)] text-[var(--background)]',
         }}
       />
-    </OuterEffectSurface>
+    </PreviewDemoSurface>
   )
 }
 
@@ -464,54 +480,80 @@ function ThreeDMarqueePreview() {
     .map((image) => image.src)
 
   return (
-    <div className="h-[600px] w-full overflow-hidden rounded-[inherit] bg-white dark:bg-zinc-950">
-      <ThreeDMarquee
-        images={marqueeImages}
-        className="rounded-[inherit]"
-      />
-    </div>
+    <PreviewDemoSurface
+      label="content motion"
+      title="3D Marquee"
+      subtitle="// perspective image strips"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.22),transparent_58%)]"
+      className="min-h-[38rem]"
+      overlay={
+        <>
+          <div className="absolute inset-0 opacity-55">
+            <ThreeDMarquee
+              images={marqueeImages}
+              className="h-full rounded-[inherit]"
+            />
+          </div>
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(10,10,15,0.34),rgba(10,10,15,0.92)_78%)]" />
+        </>
+      }
+    />
   )
 }
 
 function AvatarGroupPreview() {
   return (
-    <OuterEffectSurface>
+    <PreviewDemoSurface
+      label="content display"
+      title="Avatar Group"
+      subtitle="// compact people stack"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(244,114,182,0.24),transparent_55%)]"
+    >
       <AvatarGroup items={avatarItems} />
-    </OuterEffectSurface>
+    </PreviewDemoSurface>
   )
 }
 
 function PlayfulTodoListPreview() {
   return (
-    <OuterEffectSurface>
+    <PreviewDemoSurface
+      label="action control"
+      title="Playful Todo List"
+      subtitle="// check tasks with motion"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(34,197,94,0.24),transparent_55%)]"
+    >
       <PlayfulTodoList />
-    </OuterEffectSurface>
-  )
-}
-
-function SlideArrowButtonPreview() {
-  return (
-    <OuterEffectSurface>
-      <SlideArrowButton>Continue</SlideArrowButton>
-    </OuterEffectSurface>
+    </PreviewDemoSurface>
   )
 }
 
 function FlowerMenuPreview() {
   return (
-    <OuterEffectSurface>
+    <PreviewDemoSurface
+      label="action control"
+      title="Flower Menu"
+      subtitle="// open radial actions"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(236,72,153,0.24),transparent_55%)]"
+    >
       <FlowerMenu items={actionItems} />
-    </OuterEffectSurface>
+    </PreviewDemoSurface>
   )
 }
 
 function TextFlipPreview() {
   return (
-    <TextFlip
-      prefix="Coding is"
-      words={['fantastic', 'love', 'fire', 'awesome']}
-      className="text-foreground"
-      wordClassName="w-[10ch]"
+    <PreviewDemoSurface
+      label="text motion"
+      title={
+        <TextFlip
+          prefix="Coding is"
+          words={['fantastic', 'love', 'fire', 'awesome']}
+          className="[&>span:first-child]:!text-white"
+          wordClassName="w-[10ch]"
+        />
+      }
+      subtitle="// flip through short words"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(96,165,250,0.24),transparent_55%)]"
     />
   )
 }
@@ -533,7 +575,13 @@ const toggleThemePreviewAnimations = [
 
 function ToggleThemePreview() {
   return (
-    <OuterEffectSurface className="min-h-72">
+    <PreviewDemoSurface
+      label="theme control"
+      title="Toggle Theme"
+      subtitle="// switch with different transitions"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.22),transparent_55%)]"
+      contentClassName="max-w-3xl"
+    >
       <div className="flex flex-wrap items-center justify-center gap-3">
         {toggleThemePreviewAnimations.map((animationType) => (
           <ToggleTheme
@@ -544,26 +592,41 @@ function ToggleThemePreview() {
           />
         ))}
       </div>
-    </OuterEffectSurface>
+    </PreviewDemoSurface>
   )
 }
 
 function ThreeDImageCarouselPreview() {
   return (
-    <OuterEffectSurface className="min-h-[30rem] p-0">
-      <ThreeDImageCarousel items={previewImages} itemCount={3} />
-    </OuterEffectSurface>
+    <PreviewDemoSurface
+      label="content media"
+      title="3D Image Carousel"
+      subtitle="// rotate through image cards"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(125,211,252,0.22),transparent_58%)]"
+      className="min-h-[32rem]"
+      contentClassName="max-w-6xl"
+    >
+      <div className="w-full max-w-5xl overflow-visible [&_[data-3d-image-carousel]]:!bg-transparent [&_[data-3d-image-carousel]]:!overflow-visible">
+        <ThreeDImageCarousel
+          items={previewImages}
+          itemCount={3}
+          className="min-w-[760px]"
+        />
+      </div>
+    </PreviewDemoSurface>
   )
 }
 
 function SparkleCursorPreview() {
   return (
     <OuterEffectSurface className="p-0">
-      <SparkleCursor className="flex min-h-[28rem] items-center justify-center bg-[#0d0b12] text-white">
-        <div className="rounded-2xl border border-white/15 bg-white/5 px-8 py-6 text-center shadow-sm backdrop-blur">
-          <Sparkles className="mx-auto mb-3 h-6 w-6 text-yellow-300" />
-          <p className="text-xl font-semibold">Move the cursor</p>
-        </div>
+      <SparkleCursor className="block w-full">
+        <PreviewDemoSurface
+          label="cursor effect"
+          title="Sparkle Cursor"
+          subtitle="// move to scatter sparkles"
+          accentClassName="bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.28),transparent_55%)]"
+        />
       </SparkleCursor>
     </OuterEffectSurface>
   )
@@ -571,35 +634,65 @@ function SparkleCursorPreview() {
 
 function DataTablePreview() {
   return (
-    <OuterEffectSurface className="min-h-[26rem] p-4">
-      <DataTable columns={tableColumns} rows={tableRows} />
-    </OuterEffectSurface>
+    <PreviewDemoSurface
+      label="data structure"
+      title="Table"
+      subtitle="// scan sortable rows"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.24),transparent_55%)]"
+      contentClassName="max-w-5xl"
+    >
+      <div className="w-full max-w-4xl rounded-xl bg-white/95 p-3 text-left text-zinc-950 shadow-[0_24px_80px_-42px_rgba(255,255,255,0.42)]">
+        <DataTable columns={tableColumns} rows={tableRows} />
+      </div>
+    </PreviewDemoSurface>
   )
 }
 
-function CursorDemoSurface({
+function PreviewDemoSurface({
+  label = 'component preview',
   title,
   subtitle,
   accentClassName,
+  children,
+  overlay,
+  className,
+  contentClassName,
 }: {
-  title: string
+  label?: string
+  title: ReactNode
   subtitle: string
   accentClassName: string
+  children?: ReactNode
+  overlay?: ReactNode
+  className?: string
+  contentClassName?: string
 }) {
   return (
-    <div className="relative flex min-h-[28rem] w-full items-center justify-center overflow-hidden rounded-[inherit] bg-[#0a0a0f] p-8 text-center text-white">
+    <div
+      data-preview-demo-surface=""
+      className={cn(
+        'relative flex min-h-[28rem] w-full items-center justify-center overflow-hidden rounded-[inherit] bg-[#0a0a0f] p-8 text-center text-white',
+        className
+      )}
+    >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.08),transparent_62%)]" />
       <div className={cn('pointer-events-none absolute inset-0 opacity-30', accentClassName)} />
-      <div className="relative z-10 max-w-md">
+      {overlay}
+      <div className={cn('relative z-10 flex max-w-xl flex-col items-center', contentClassName)}>
         <p className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-white/60">
-          cursor effect
+          {label}
         </p>
-        <p className="mt-5 text-5xl font-semibold tracking-normal">
+        <div className="mt-5 text-5xl font-semibold tracking-normal">
           {title}
-        </p>
+        </div>
         <p className="mt-3 text-sm italic tracking-wide text-white/52">
           {subtitle}
         </p>
+        {children ? (
+          <div className="mt-8 flex w-full items-center justify-center">
+            {children}
+          </div>
+        ) : null}
       </div>
     </div>
   )
@@ -613,7 +706,8 @@ function MouseInvertCursorPreview({ mode }: { mode: PreviewMode }) {
         smoothness={0.08}
         disabled={mode === 'thumbnail'}
       >
-        <CursorDemoSurface
+        <PreviewDemoSurface
+          label="cursor effect"
           title="Invert"
           subtitle="// move to invert the surface"
           accentClassName="bg-[radial-gradient(circle_at_center,rgba(244,63,94,0.34),transparent_55%)]"
@@ -634,7 +728,8 @@ function MouseTrailCursorPreview({ mode }: { mode: PreviewMode }) {
         blur={0}
         disabled={mode === 'thumbnail'}
       >
-        <CursorDemoSurface
+        <PreviewDemoSurface
+          label="cursor effect"
           title="Trail"
           subtitle="// fading dots follow your cursor"
           accentClassName="bg-[radial-gradient(circle_at_center,rgba(192,132,252,0.32),transparent_55%)]"
@@ -653,7 +748,8 @@ function MouseRippleCursorPreview({ mode }: { mode: PreviewMode }) {
         maxSize={150}
         disabled={mode === 'thumbnail'}
       >
-        <CursorDemoSurface
+        <PreviewDemoSurface
+          label="cursor effect"
           title="Ripple"
           subtitle="// click to expand"
           accentClassName="bg-[radial-gradient(circle_at_center,rgba(96,165,250,0.34),transparent_55%)]"
@@ -674,7 +770,8 @@ function MouseCustomCursorPreview({ mode }: { mode: PreviewMode }) {
         smoothness={0.15}
         disabled={mode === 'thumbnail'}
       >
-        <CursorDemoSurface
+        <PreviewDemoSurface
+          label="cursor effect"
           title="Custom Cursor"
           subtitle="// dot + ring following your cursor"
           accentClassName="bg-[radial-gradient(circle_at_center,rgba(52,211,153,0.3),transparent_55%)]"
@@ -688,7 +785,8 @@ function FairyDustCursorPreview({ mode }: { mode: PreviewMode }) {
   return (
     <OuterEffectSurface className="p-0">
       <FairyDustCursor disabled={mode === 'thumbnail'}>
-        <CursorDemoSurface
+        <PreviewDemoSurface
+          label="cursor effect"
           title="Fairy Dust"
           subtitle="// stardust follows your cursor"
           accentClassName="bg-[radial-gradient(circle_at_center,rgba(231,216,75,0.28),transparent_55%)]"
@@ -702,7 +800,8 @@ function BubbleCursorPreview({ mode }: { mode: PreviewMode }) {
   return (
     <OuterEffectSurface className="p-0">
       <BubbleCursor disabled={mode === 'thumbnail'}>
-        <CursorDemoSurface
+        <PreviewDemoSurface
+          label="cursor effect"
           title="Bubbles"
           subtitle="// move to float bubbles"
           accentClassName="bg-[radial-gradient(circle_at_center,rgba(58,146,197,0.32),transparent_55%)]"
@@ -716,7 +815,8 @@ function CharacterCursorPreview({ mode }: { mode: PreviewMode }) {
   return (
     <OuterEffectSurface className="p-0">
       <CharacterCursor disabled={mode === 'thumbnail'}>
-        <CursorDemoSurface
+        <PreviewDemoSurface
+          label="cursor effect"
           title="Characters"
           subtitle="// characters under your control"
           accentClassName="bg-[radial-gradient(circle_at_center,rgba(167,85,194,0.3),transparent_55%)]"
@@ -730,7 +830,8 @@ function CanvasCursorPreview({ mode }: { mode: PreviewMode }) {
   return (
     <OuterEffectSurface className="p-0">
       <CanvasCursor disabled={mode === 'thumbnail'}>
-        <CursorDemoSurface
+        <PreviewDemoSurface
+          label="cursor effect"
           title="Canvas Cursor"
           subtitle="// spring lines follow your cursor"
           accentClassName="bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.28),transparent_55%)]"
@@ -740,72 +841,87 @@ function CanvasCursorPreview({ mode }: { mode: PreviewMode }) {
   )
 }
 
-function FluidCursorPreview({ mode }: { mode: PreviewMode }) {
-  return (
-    <OuterEffectSurface className="p-0">
-      <FluidCursor disabled={mode === 'thumbnail'}>
-        <CursorDemoSurface
-          title="Fluid Cursor"
-          subtitle="// move or press to push dye"
-          accentClassName="bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.32),transparent_55%)]"
-        />
-      </FluidCursor>
-    </OuterEffectSurface>
-  )
-}
-
 function RippleButtonPreview() {
   return (
-    <RippleButton
-      rippleColor="rgba(255,255,255,0.72)"
-      className="h-11 rounded-xl px-7 text-sm font-medium shadow-[0_18px_40px_-24px_var(--theme-accent-current)] transition-transform hover:-translate-y-0.5"
-      style={themeAccentButtonStyle}
+    <PreviewDemoSurface
+      label="action control"
+      title="Ripple Button"
+      subtitle="// click to send a ripple"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.3),transparent_55%)]"
     >
-      Ripple Button
-    </RippleButton>
+      <RippleButton
+        rippleColor="rgba(255,255,255,0.72)"
+        className="h-11 rounded-xl px-7 text-sm font-medium shadow-[0_18px_40px_-24px_var(--theme-accent-current)] transition-transform hover:-translate-y-0.5"
+        style={themeAccentButtonStyle}
+      >
+        search
+      </RippleButton>
+    </PreviewDemoSurface>
   )
 }
 
 function ShinyButtonPreview() {
   return (
-    <ShinyButton
-      className="h-11 rounded-xl px-7 shadow-[0_18px_40px_-24px_var(--theme-accent-current)]"
-      style={themeAccentButtonStyle}
+    <PreviewDemoSurface
+      label="action control"
+      title="Shiny Button"
+      subtitle="// hover for a soft shine"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(251,113,133,0.28),transparent_55%)]"
     >
-      Shiny Button
-    </ShinyButton>
+      <ShinyButton
+        className="h-11 rounded-xl px-7 shadow-[0_18px_40px_-24px_var(--theme-accent-current)]"
+        style={themeAccentButtonStyle}
+      >
+        continue
+      </ShinyButton>
+    </PreviewDemoSurface>
   )
 }
 
 function MarqueePreview() {
   return (
-    <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
-      <Marquee pauseOnHover className="[--duration:20s]">
-        {firstReviewRow.map((review) => (
-          <ReviewCard key={review.username} {...review} />
-        ))}
-      </Marquee>
-      <Marquee reverse pauseOnHover className="[--duration:20s]">
-        {secondReviewRow.map((review) => (
-          <ReviewCard key={review.username} {...review} />
-        ))}
-      </Marquee>
-      <div className="from-background pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r" />
-      <div className="from-background pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l" />
-    </div>
+    <PreviewDemoSurface
+      label="content motion"
+      title="Marquee"
+      subtitle="// hover to pause the rows"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(192,132,252,0.24),transparent_55%)]"
+      overlay={
+        <div className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 flex-col gap-4 opacity-45">
+          <Marquee pauseOnHover className="[--duration:20s]">
+            {firstReviewRow.map((review) => (
+              <ReviewCard key={review.username} {...review} />
+            ))}
+          </Marquee>
+          <Marquee reverse pauseOnHover className="[--duration:20s]">
+            {secondReviewRow.map((review) => (
+              <ReviewCard key={review.username} {...review} />
+            ))}
+          </Marquee>
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-[#0a0a0f]" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-[#0a0a0f]" />
+        </div>
+      }
+    />
   )
 }
 
 function FileTreePreview() {
   return (
-    <div className="relative h-72 w-full max-w-md rounded-xl border border-zinc-200 bg-white p-4 text-left shadow-[0_18px_48px_-34px_rgba(24,24,27,0.45)] dark:border-zinc-800 dark:bg-zinc-950">
-      <Tree
-        elements={fileTreeElements}
-        initialSelectedId="file-tree"
-        initialExpandedItems={['app', 'components', 'components-magicui']}
-        className="h-full"
-      />
-    </div>
+    <PreviewDemoSurface
+      label="data structure"
+      title="File Tree"
+      subtitle="// browse nested files"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(34,211,238,0.22),transparent_55%)]"
+    >
+      <div className="relative h-72 w-full max-w-md rounded-xl border border-zinc-200 bg-white p-4 text-left text-zinc-950 shadow-[0_24px_80px_-42px_rgba(255,255,255,0.42)]">
+        <Tree
+          elements={fileTreeElements}
+          initialSelectedId="file-tree"
+          initialExpandedItems={['app', 'components', 'components-magicui']}
+          className="h-full"
+        />
+      </div>
+    </PreviewDemoSurface>
   )
 }
 
@@ -825,49 +941,68 @@ function AnimatedCircularProgressBarPreview() {
   }, [])
 
   return (
-    <AnimatedCircularProgressBar
-      value={value}
-      gaugePrimaryColor={themeAccentColor}
-      gaugeSecondaryColor="#e4e4e7"
-      className="text-[var(--theme-accent-current)]"
-    />
+    <PreviewDemoSurface
+      label="data structure"
+      title="Circular Progress"
+      subtitle="// animate value changes"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(52,211,153,0.24),transparent_55%)]"
+    >
+      <AnimatedCircularProgressBar
+        value={value}
+        gaugePrimaryColor={themeAccentColor}
+        gaugeSecondaryColor="rgba(255,255,255,0.18)"
+        className="text-[var(--theme-accent-current)]"
+      />
+    </PreviewDemoSurface>
   )
 }
 
 function CurvedLoopPreview() {
   return (
-    <div className="relative flex min-h-64 w-full items-center justify-center overflow-hidden">
-      <CurvedLoop
-        marqueeText="React Bits ✦ Curved Loop ✦ "
-        speed={2.5}
-        curveAmount={76}
-        className="text-[58px] font-semibold tracking-normal text-[var(--theme-accent-current)]"
-      />
-    </div>
+    <PreviewDemoSurface
+      label="text motion"
+      title="Curved Loop"
+      subtitle="// curved marquee text"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(251,113,133,0.24),transparent_55%)]"
+      contentClassName="w-full max-w-none"
+    >
+      <div className="-mx-8 h-40 w-[calc(100%+4rem)] overflow-visible">
+        <CurvedLoop
+          marqueeText="React Bits ✦ Curved Loop ✦ "
+          speed={2.5}
+          curveAmount={76}
+          className="text-[76px] font-semibold tracking-normal text-[var(--theme-accent-current)]"
+        />
+      </div>
+    </PreviewDemoSurface>
   )
 }
 
 function ClickSparkPreview() {
-  const themeAccentColor = useThemeColor('--theme-accent-current', '#171717')
-
   return (
     <OuterEffectSurface className="min-h-[30rem] p-0">
       <ClickSpark
-        sparkColor={themeAccentColor}
+        sparkColor="#facc15"
         sparkRadius={38}
         sparkSize={14}
         sparkCount={10}
-        className="min-h-[30rem]"
+        className="min-h-[30rem] w-full [&>canvas]:z-20"
       >
-        <div className="flex min-h-[30rem] w-full cursor-crosshair items-center justify-center p-8">
+        <PreviewDemoSurface
+          label="interaction effect"
+          title="Click Spark"
+          subtitle="// click anywhere in the stage"
+          accentClassName="bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.28),transparent_55%)]"
+          className="min-h-[30rem] cursor-crosshair"
+        >
           <button
             type="button"
             className="rounded-xl px-6 py-3 text-sm font-medium text-white shadow-[0_18px_40px_-24px_var(--theme-accent-current)]"
             style={themeAccentButtonStyle}
           >
-            Click Spark
+            click
           </button>
-        </div>
+        </PreviewDemoSurface>
       </ClickSpark>
     </OuterEffectSurface>
   )
@@ -875,29 +1010,41 @@ function ClickSparkPreview() {
 
 function MagnetPreview() {
   return (
-    <OuterEffectSurface>
-      <Magnet padding={90} magnetStrength={3}>
-        <div
-          className="rounded-full px-7 py-4 text-sm font-semibold text-white shadow-[0_24px_70px_-28px_var(--theme-accent-current)]"
-          style={themeAccentButtonStyle}
-        >
-          Magnet
-        </div>
-      </Magnet>
+    <OuterEffectSurface className="p-0">
+      <PreviewDemoSurface
+        label="interaction effect"
+        title="Magnet"
+        subtitle="// move near the chip"
+        accentClassName="bg-[radial-gradient(circle_at_center,rgba(52,211,153,0.28),transparent_55%)]"
+      >
+        <Magnet padding={90} magnetStrength={3}>
+          <div
+            className="rounded-full px-7 py-4 text-sm font-semibold text-white shadow-[0_24px_70px_-28px_var(--theme-accent-current)]"
+            style={themeAccentButtonStyle}
+          >
+            Magnet
+          </div>
+        </Magnet>
+      </PreviewDemoSurface>
     </OuterEffectSurface>
   )
 }
 
 function StackPreview() {
   return (
-    <div className="relative flex min-h-[30rem] w-full items-center justify-center overflow-hidden rounded-[inherit] bg-white p-8">
+    <PreviewDemoSurface
+      label="content stack"
+      title="Stack"
+      subtitle="// click cards to send back"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(129,140,248,0.24),transparent_55%)]"
+    >
       <div className="relative h-64 w-64">
         <Stack
           cards={stackCards}
           sendToBackOnClick
         />
       </div>
-    </div>
+    </PreviewDemoSurface>
   )
 }
 
@@ -905,33 +1052,50 @@ function FolderPreview() {
   const themeAccentColor = useThemeColor('--theme-accent-current', '#171717')
 
   return (
-    <OuterEffectSurface className="min-h-[320px] pt-24">
-      <Folder
-        color={themeAccentColor}
-        size={1.2}
-        items={[
-          <div key="one" className="h-full rounded-md border border-zinc-200 bg-white/90" />,
-          <div key="two" className="h-full rounded-md border border-zinc-200 bg-white/90" />,
-          <div key="three" className="h-full rounded-md border border-zinc-200 bg-white/90" />,
-        ]}
-      />
-    </OuterEffectSurface>
+    <PreviewDemoSurface
+      label="content stack"
+      title="Folder"
+      subtitle="// click to open stacked items"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.2),transparent_55%)]"
+    >
+      <div className="mt-16 md:mt-20">
+        <Folder
+          color={themeAccentColor}
+          size={1.2}
+          items={[
+            <div key="one" className="h-full rounded-md border border-zinc-200 bg-white/90" />,
+            <div key="two" className="h-full rounded-md border border-zinc-200 bg-white/90" />,
+            <div key="three" className="h-full rounded-md border border-zinc-200 bg-white/90" />,
+          ]}
+        />
+      </div>
+    </PreviewDemoSurface>
   )
 }
 
 function CarouselPreview() {
   return (
-    <OuterEffectSurface>
+    <PreviewDemoSurface
+      label="content media"
+      title="Carousel"
+      subtitle="// autoplay through cards"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.24),transparent_55%)]"
+    >
       <Carousel autoplay loop pauseOnHover />
-    </OuterEffectSurface>
+    </PreviewDemoSurface>
   )
 }
 
 function ElasticSliderPreview() {
   return (
-    <OuterEffectSurface>
+    <PreviewDemoSurface
+      label="action control"
+      title="Elastic Slider"
+      subtitle="// drag the stepped handle"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.24),transparent_55%)]"
+    >
       <ElasticSlider defaultValue={62} isStepped stepSize={4} />
-    </OuterEffectSurface>
+    </PreviewDemoSurface>
   )
 }
 
@@ -940,68 +1104,89 @@ function CounterPreview() {
   const [value, setValue] = useState(17.8)
 
   return (
-    <div className="flex min-h-64 w-full flex-col items-center justify-center gap-5">
-      <Counter
-        value={value}
-        fontSize={78}
-        textColor={themeAccentColor}
-        fontWeight={700}
-        gradientFrom="var(--background)"
-      />
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-zinc-200 bg-white text-lg font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-200 dark:hover:bg-zinc-900"
-          aria-label="Decrease counter value"
-          onClick={() => setValue((current) => Number((current - 1).toFixed(1)))}
-        >
-          -
-        </button>
-        <button
-          type="button"
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-zinc-200 bg-white text-lg font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-200 dark:hover:bg-zinc-900"
-          aria-label="Increase counter value"
-          onClick={() => setValue((current) => Number((current + 1).toFixed(1)))}
-        >
-          +
-        </button>
+    <PreviewDemoSurface
+      label="data structure"
+      title="Counter"
+      subtitle="// increment decimal values"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(34,197,94,0.24),transparent_55%)]"
+    >
+      <div className="flex w-full flex-col items-center justify-center gap-5">
+        <Counter
+          value={value}
+          fontSize={78}
+          textColor={themeAccentColor}
+          fontWeight={700}
+          gradientHeight={0}
+        />
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-zinc-200 bg-white text-lg font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-200 dark:hover:bg-zinc-900"
+            aria-label="Decrease counter value"
+            onClick={() => setValue((current) => Number((current - 1).toFixed(1)))}
+          >
+            -
+          </button>
+          <button
+            type="button"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-zinc-200 bg-white text-lg font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-200 dark:hover:bg-zinc-900"
+            aria-label="Increase counter value"
+            onClick={() => setValue((current) => Number((current + 1).toFixed(1)))}
+          >
+            +
+          </button>
+        </div>
       </div>
-    </div>
+    </PreviewDemoSurface>
   )
 }
 
 function IconCloudPreview() {
   return (
-    <div className="relative flex size-full min-h-80 items-center justify-center overflow-hidden">
-      <IconCloud images={iconCloudImages} />
-    </div>
+    <PreviewDemoSurface
+      label="content display"
+      title="Icon Cloud"
+      subtitle="// drag the cloud of icons"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.24),transparent_55%)]"
+    >
+      <div className="relative flex size-72 items-center justify-center overflow-hidden">
+        <IconCloud images={iconCloudImages} />
+      </div>
+    </PreviewDemoSurface>
   )
 }
 
 function LensPreview() {
   return (
-    <div className="relative max-w-md overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-none dark:border-zinc-800 dark:bg-zinc-950">
-      <div className="p-6">
-        <Lens zoomFactor={2} lensSize={150} isStatic={false}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="https://images.unsplash.com/photo-1736606355698-5efdb410fe93?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            alt="image placeholder"
-            width={500}
-            height={500}
-            className="aspect-square w-full rounded-lg object-cover"
-          />
-        </Lens>
+    <PreviewDemoSurface
+      label="content media"
+      title="Lens"
+      subtitle="// hover to inspect the image"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(251,146,60,0.22),transparent_55%)]"
+    >
+      <div className="relative w-full max-w-sm overflow-hidden rounded-xl border border-white/15 bg-white shadow-none text-left text-zinc-950">
+        <div className="p-4">
+          <Lens zoomFactor={2} lensSize={150} isStatic={false}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://images.unsplash.com/photo-1736606355698-5efdb410fe93?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt="image placeholder"
+              width={500}
+              height={500}
+              className="aspect-square w-full rounded-lg object-cover"
+            />
+          </Lens>
+        </div>
+        <div className="space-y-1 px-4 pb-4">
+          <h3 className="text-xl font-semibold text-zinc-950">
+            Your next camp
+          </h3>
+          <p className="text-sm leading-6 text-zinc-500">
+            See our latest and best camp destinations across the globe.
+          </p>
+        </div>
       </div>
-      <div className="space-y-2 px-6 pb-6">
-        <h3 className="text-2xl font-semibold text-zinc-950 dark:text-zinc-50">
-          Your next camp
-        </h3>
-        <p className="text-sm leading-6 text-zinc-500 dark:text-zinc-400">
-          See our latest and best camp destinations across the globe.
-        </p>
-      </div>
-    </div>
+    </PreviewDemoSurface>
   )
 }
 
@@ -1051,12 +1236,12 @@ function PointerTile({
   children: ReactNode
 }) {
   return (
-    <div className="relative flex h-48 flex-col items-center justify-center overflow-hidden rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+    <div className="relative flex h-36 flex-col items-center justify-center overflow-hidden rounded-md border border-white/15 bg-white/[0.04] px-6 py-4">
       <div className="pointer-events-none flex flex-col items-center justify-center">
-        <h3 className="text-xl font-semibold text-foreground">
+        <h3 className="text-lg font-semibold text-white">
           {title}
         </h3>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-white/55">
           {description}
         </p>
       </div>
@@ -1067,78 +1252,82 @@ function PointerTile({
 
 function PointerPreview() {
   return (
-    <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 md:grid-rows-2">
-      <PointerTile title="Animated Pointer" description="Animated pointer">
-        <Pointer>
-          <HeartPointer />
-        </Pointer>
-      </PointerTile>
-      <PointerTile title="Colored Pointer" description="Custom color">
-        <Pointer className="fill-blue-500" />
-      </PointerTile>
-      <PointerTile title="Custom Shape" description="Custom SVG shape">
-        <Pointer>
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="12" cy="12" r="10" className="fill-purple-500" />
-            <circle cx="12" cy="12" r="5" className="fill-background" />
-          </svg>
-        </Pointer>
-      </PointerTile>
-      <PointerTile title="Text Pointer" description="Custom text">
-        <Pointer>
-          <div className="text-lg font-semibold text-rose-500">Click</div>
-        </Pointer>
-      </PointerTile>
-    </div>
-  )
-}
-
-function ShineBorderPreview() {
-  return (
-    <OuterEffectSurface>
-      <ShineBorder
-        borderWidth={2}
-        shineColor={['#A07CFE', '#FE8FB5', '#FFBE7B']}
-      />
-      <div>
-        <p className="text-2xl font-semibold">Shine Border</p>
-        <p className="mt-2 text-sm text-zinc-500">A soft animated border.</p>
+    <PreviewDemoSurface
+      label="cursor effect"
+      title="Pointer"
+      subtitle="// custom pointer shapes"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(244,114,182,0.24),transparent_55%)]"
+      contentClassName="max-w-3xl"
+    >
+      <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
+        <PointerTile title="Animated Pointer" description="Animated pointer">
+          <Pointer>
+            <HeartPointer />
+          </Pointer>
+        </PointerTile>
+        <PointerTile title="Colored Pointer" description="Custom color">
+          <Pointer className="fill-blue-500" />
+        </PointerTile>
+        <PointerTile title="Custom Shape" description="Custom SVG shape">
+          <Pointer>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="12" cy="12" r="10" className="fill-purple-500" />
+              <circle cx="12" cy="12" r="5" className="fill-background" />
+            </svg>
+          </Pointer>
+        </PointerTile>
+        <PointerTile title="Text Pointer" description="Custom text">
+          <Pointer>
+            <div className="text-lg font-semibold text-rose-500">Click</div>
+          </Pointer>
+        </PointerTile>
       </div>
-    </OuterEffectSurface>
+    </PreviewDemoSurface>
   )
 }
 
 function MeteorsPreview({ mode }: { mode: PreviewMode }) {
   return (
-    <OuterEffectSurface>
-      <Meteors
-        number={mode === 'thumbnail' ? 8 : 22}
-        className="text-[var(--theme-accent-current)] shadow-[0_0_0_1px_color-mix(in_srgb,var(--theme-accent-current)_20%,transparent)]"
+    <OuterEffectSurface className="p-0">
+      <PreviewDemoSurface
+        label="ambient effect"
+        title="Meteors"
+        subtitle="// streaks pass across the stage"
+        accentClassName="bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.28),transparent_55%)]"
+        overlay={
+          <Meteors
+            number={mode === 'thumbnail' ? 8 : 22}
+            className="text-sky-300 shadow-[0_0_0_1px_rgba(125,211,252,0.2)]"
+          />
+        }
       />
-      <div className="relative">
-        <p className="text-2xl font-semibold">Meteors</p>
-        <p className="mt-2 text-sm text-zinc-500">A shower across the card.</p>
-      </div>
     </OuterEffectSurface>
   )
 }
 
 function ConfettiPreview() {
   return (
-    <OuterEffectSurface>
-      <ConfettiButton
-        type="button"
-        className="relative rounded-lg border shadow-[0_18px_40px_-24px_var(--theme-accent-current)]"
-        style={themeAccentButtonStyle}
+    <OuterEffectSurface className="p-0">
+      <PreviewDemoSurface
+        label="interaction effect"
+        title="Confetti"
+        subtitle="// press to celebrate"
+        accentClassName="bg-[radial-gradient(circle_at_center,rgba(244,114,182,0.28),transparent_55%)]"
       >
-        Celebrate
-      </ConfettiButton>
+        <ConfettiButton
+          type="button"
+          className="relative rounded-lg border shadow-[0_18px_40px_-24px_var(--theme-accent-current)]"
+          style={themeAccentButtonStyle}
+        >
+          Celebrate
+        </ConfettiButton>
+      </PreviewDemoSurface>
     </OuterEffectSurface>
   )
 }
@@ -1147,38 +1336,56 @@ function ParticlesPreview({ mode }: { mode: PreviewMode }) {
   const themeAccentColor = useThemeColor('--theme-accent-current', '#171717')
 
   return (
-    <OuterEffectSurface>
-      <Particles
-        className="absolute inset-0"
-        quantity={mode === 'thumbnail' ? 40 : 90}
-        color={themeAccentColor}
-        ease={80}
+    <OuterEffectSurface className="p-0">
+      <PreviewDemoSurface
+        label="ambient effect"
+        title="Particles"
+        subtitle="// canvas depth and motion"
+        accentClassName="bg-[radial-gradient(circle_at_center,rgba(129,140,248,0.3),transparent_55%)]"
+        overlay={
+          <Particles
+            className="absolute inset-0"
+            quantity={mode === 'thumbnail' ? 40 : 90}
+            color={themeAccentColor}
+            ease={80}
+          />
+        }
       />
-      <div className="relative">
-        <p className="text-2xl font-semibold">Particles</p>
-        <p className="mt-2 text-sm text-zinc-500">Canvas depth and motion.</p>
-      </div>
     </OuterEffectSurface>
   )
 }
 
 function TypingAnimationPreview() {
   return (
-    <TypingAnimation
-      words={['Typing Animation', 'Typed Motion', 'Text Loop']}
-      loop
-      className="text-4xl font-semibold text-[var(--theme-accent-current)]"
+    <PreviewDemoSurface
+      label="text motion"
+      title={
+        <TypingAnimation
+          words={['Typing Animation', 'Typed Motion', 'Text Loop']}
+          loop
+          className="text-5xl font-semibold text-white"
+        />
+      }
+      subtitle="// loop through short phrases"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.28),transparent_55%)]"
     />
   )
 }
 
 function AuroraTextPreview() {
   return (
-    <p className="text-center text-5xl font-semibold tracking-normal">
-      <AuroraText colors={[...themeGradientColors]}>
-        Aurora Text
-      </AuroraText>
-    </p>
+    <PreviewDemoSurface
+      label="text motion"
+      title={
+        <span className="text-center text-5xl font-semibold tracking-normal">
+          <AuroraText colors={[...themeGradientColors]}>
+            Aurora Text
+          </AuroraText>
+        </span>
+      }
+      subtitle="// gradient color flows through text"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.28),transparent_55%)]"
+    />
   )
 }
 
@@ -1186,74 +1393,113 @@ function VideoTextPreview() {
   const userFontFamily = useUserFontFamily()
 
   return (
-    <OuterEffectSurface className="min-h-60 p-0">
+    <PreviewDemoSurface
+      label="text media"
+      title="Video Text"
+      subtitle="// video fills the letter mask"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(244,114,182,0.24),transparent_55%)]"
+      contentClassName="w-full max-w-4xl"
+    >
       <VideoText
         src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
-        fontSize={18}
+        fontSize={17}
         fontFamily={userFontFamily}
-        className="h-48 w-full"
+        className="h-72 w-full max-w-4xl"
       >
         VIDEO
       </VideoText>
-    </OuterEffectSurface>
+    </PreviewDemoSurface>
   )
 }
 
 function NumberTickerPreview() {
   return (
-    <p className="text-6xl font-semibold tabular-nums text-[var(--theme-accent-current)]">
-      <NumberTicker value={12840} />
-    </p>
+    <PreviewDemoSurface
+      label="text motion"
+      title={
+        <span className="text-6xl font-semibold tabular-nums text-white">
+          <NumberTicker value={12840} />
+        </span>
+      }
+      subtitle="// count up to the latest value"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(34,197,94,0.26),transparent_55%)]"
+    />
   )
 }
 
 function DiaTextRevealPreview() {
   return (
-    <DiaTextReveal
-      text={['Dia Text Reveal', 'Color Sweep', 'Magic UI']}
-      repeat
-      colors={[...themeGradientColors]}
-      className="text-center text-4xl font-semibold"
+    <PreviewDemoSurface
+      label="text motion"
+      title={
+        <DiaTextReveal
+          text={['Dia Text Reveal', 'Color Sweep', 'Magic UI']}
+          repeat
+          colors={[...themeGradientColors]}
+          textColor="#ffffff"
+          finalTextColor="#ffffff"
+          className="text-center text-4xl font-semibold text-white"
+        />
+      }
+      subtitle="// reveal letters with a color trail"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.28),transparent_55%)]"
     />
   )
 }
 
 function MorphingTextPreview() {
   return (
-    <MorphingText
-      texts={['Design', 'Build', 'Ship']}
-      className="h-20 text-[42px] text-[var(--theme-accent-current)] md:h-24"
+    <PreviewDemoSurface
+      label="text motion"
+      title={
+        <div className="flex w-[min(42rem,82vw)] max-w-full justify-center">
+          <MorphingText
+            texts={['Design', 'Build', 'Ship']}
+            className="mx-auto h-20 w-full text-center text-[42px] text-white md:h-24"
+          />
+        </div>
+      }
+      subtitle="// morph between words"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(236,72,153,0.26),transparent_55%)]"
+      contentClassName="w-full max-w-4xl"
     />
   )
 }
 
 function HighlighterPreview() {
   return (
-    <p className="max-w-full whitespace-nowrap text-center text-xl leading-relaxed text-foreground md:text-2xl">
-      The{' '}
-      <Highlighter
-        action="underline"
-        color="#FF9800"
-        strokeWidth={2}
-        animationDuration={900}
-        repeat
-        repeatDelay={1400}
-      >
-        Magic UI Highlighter
-      </Highlighter>{' '}
-      makes important{' '}
-      <Highlighter
-        action="highlight"
-        color="#87CEFA"
-        strokeWidth={2}
-        animationDuration={900}
-        repeat
-        repeatDelay={1400}
-      >
-        text stand out
-      </Highlighter>
-      {' '}effortlessly.
-    </p>
+    <PreviewDemoSurface
+      label="text emphasis"
+      title="Highlighter"
+      subtitle="// underline or mark important words"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.24),transparent_55%)]"
+    >
+      <p className="max-w-full whitespace-nowrap text-center text-lg leading-relaxed text-white md:text-xl">
+        The{' '}
+        <Highlighter
+          action="underline"
+          color="#FF9800"
+          strokeWidth={2}
+          animationDuration={900}
+          repeat
+          repeatDelay={1400}
+        >
+          Magic UI Highlighter
+        </Highlighter>{' '}
+        makes important{' '}
+        <Highlighter
+          action="highlight"
+          color="#87CEFA"
+          strokeWidth={2}
+          animationDuration={900}
+          repeat
+          repeatDelay={1400}
+        >
+          text stand out
+        </Highlighter>
+        {' '}effortlessly.
+      </p>
+    </PreviewDemoSurface>
   )
 }
 
@@ -1298,8 +1544,6 @@ function BasePreviewContent({
       return <ElasticSliderPreview />
     case 'counter':
       return <CounterPreview />
-    case 'shine-border':
-      return <ShineBorderPreview />
     case 'meteors':
       return <MeteorsPreview mode={mode} />
     case 'confetti':
@@ -1334,8 +1578,6 @@ function BasePreviewContent({
       return <AvatarGroupPreview />
     case 'playful-todolist':
       return <PlayfulTodoListPreview />
-    case 'slide-arrow-button':
-      return <SlideArrowButtonPreview />
     case 'flower-menu':
       return <FlowerMenuPreview />
     case 'text-flip':
@@ -1362,8 +1604,6 @@ function BasePreviewContent({
       return <CharacterCursorPreview mode={mode} />
     case 'canvas-cursor':
       return <CanvasCursorPreview mode={mode} />
-    case 'fluid-cursor':
-      return <FluidCursorPreview mode={mode} />
     case 'data-table':
       return <DataTablePreview />
     }

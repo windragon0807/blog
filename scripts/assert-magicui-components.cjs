@@ -21,7 +21,6 @@ const requiredNames = [
   'carousel',
   'elastic-slider',
   'counter',
-  'shine-border',
   'meteors',
   'confetti',
   'particles',
@@ -39,7 +38,6 @@ const requiredNames = [
   '3d-marquee',
   'avatar-group',
   'playful-todolist',
-  'slide-arrow-button',
   'flower-menu',
   'text-flip',
   'toggle-theme',
@@ -53,7 +51,6 @@ const requiredNames = [
   'bubble-cursor',
   'character-cursor',
   'canvas-cursor',
-  'fluid-cursor',
   'data-table',
 ]
 const cursorEffectNames = [
@@ -65,7 +62,6 @@ const cursorEffectNames = [
   'bubble-cursor',
   'character-cursor',
   'canvas-cursor',
-  'fluid-cursor',
 ]
 const requiredCategories = [
   "id: 'actions-controls'",
@@ -113,6 +109,9 @@ const removedNames = [
   'border-beam-button',
   'comet-card',
   'cool-theme-toggle',
+  'slide-arrow-button',
+  'fluid-cursor',
+  'shine-border',
 ]
 const removedCategories = [
   'core',
@@ -159,7 +158,6 @@ const reactIconsNames = ['carousel']
 const cssRegistryNames = [
   'ripple-button',
   'marquee',
-  'shine-border',
   'meteors',
   'typing-animation',
   'aurora-text',
@@ -549,44 +547,12 @@ assert(
   'Preview heading should match the Installation and Code section title style'
 )
 assert(
-  exampleTabsSource.includes('fullBleedPreviewKinds.includes(sample.preview.kind)') &&
-    exampleTabsSource.includes("isFullBleedPreview ? 'min-h-60 rounded-[inherit]' : 'min-h-60 p-6'") &&
-    exampleTabsSource.includes("isFullBleedPreview ? 'rounded-[inherit]' : ''") &&
-    !exampleTabsSource.includes("'data-table'"),
-  'Requested surface-heavy previews should render flush against the outer preview border'
+  !exampleTabsSource.includes('fullBleedPreviewKinds') &&
+    exampleTabsSource.includes('min-h-[28rem] rounded-[inherit]') &&
+    exampleTabsSource.includes('flex min-h-[28rem] items-center justify-center overflow-hidden rounded-[inherit]') &&
+    !exampleTabsSource.includes('p-6'),
+  'All component previews should render full-bleed with a 448px minimum height'
 )
-for (const requiredFullBleedPreviewKind of [
-  'shine-border',
-  'meteors',
-  'particles',
-  'background-boxes',
-  'keyboard',
-  'placeholders-and-vanish-input',
-  'gooey-input',
-  '3d-marquee',
-  'avatar-group',
-  'playful-todolist',
-  'slide-arrow-button',
-  'flower-menu',
-  'text-flip',
-  'toggle-theme',
-  '3d-image-carousel',
-  'sparkle-cursor',
-  'mouse-invert-cursor',
-  'mouse-trail-cursor',
-  'mouse-ripple-cursor',
-  'mouse-custom-cursor',
-  'fairy-dust-cursor',
-  'bubble-cursor',
-  'character-cursor',
-  'canvas-cursor',
-  'fluid-cursor',
-]) {
-  assert(
-    exampleTabsSource.includes(`'${requiredFullBleedPreviewKind}'`),
-    `Missing full-bleed preview kind: ${requiredFullBleedPreviewKind}`
-  )
-}
 assert(
   !previewsSource.includes('bg-background p-8') &&
     previewsSource.includes('bg-background text-center'),
@@ -671,6 +637,206 @@ assert(
     docsSource.includes('sample.reference.label') &&
     !docsSource.includes('sample.registry.dependencies'),
   'Component detail page should render reference links without dependency chips'
+)
+assert(
+  previewsSource.includes('function PreviewDemoSurface') &&
+    previewsSource.includes('data-preview-demo-surface') &&
+    !previewsSource.includes('function CursorDemoSurface'),
+  'Component previews should use the shared dark demo surface instead of cursor-only surface'
+)
+const previewSurfaceFunctionIndex = previewsSource.indexOf('function PreviewDemoSurface')
+assert(previewSurfaceFunctionIndex >= 0, 'Missing PreviewDemoSurface function')
+const previewSurfaceNextFunctionIndex = previewsSource.indexOf(
+  '\nfunction ',
+  previewSurfaceFunctionIndex + 1
+)
+const previewSurfaceSource = previewsSource.slice(
+  previewSurfaceFunctionIndex,
+  previewSurfaceNextFunctionIndex === -1 ? undefined : previewSurfaceNextFunctionIndex
+)
+assert(
+  previewSurfaceSource.indexOf('{label}') <
+    previewSurfaceSource.indexOf('{title}') &&
+    previewSurfaceSource.indexOf('{title}') <
+      previewSurfaceSource.indexOf('{subtitle}') &&
+    previewSurfaceSource.indexOf('{subtitle}') <
+      previewSurfaceSource.indexOf('{children ? ('),
+  'Preview demo surface should render component content below category, title, and subtitle'
+)
+assert(
+  previewsSource.includes('function KeyboardPreview') &&
+    previewsSource.includes('className="min-h-[44rem]"'),
+  'Keyboard preview should use a taller surface than the 448px minimum'
+)
+for (const requiredDemoSurfacePreview of [
+  'BackgroundBoxesPreview',
+  'KeyboardPreview',
+  'PlaceholdersAndVanishInputPreview',
+  'GooeyInputPreview',
+  'ThreeDMarqueePreview',
+  'AvatarGroupPreview',
+  'PlayfulTodoListPreview',
+  'FlowerMenuPreview',
+  'TextFlipPreview',
+  'ToggleThemePreview',
+  'ThreeDImageCarouselPreview',
+  'DataTablePreview',
+  'RippleButtonPreview',
+  'ShinyButtonPreview',
+  'MarqueePreview',
+  'IconCloudPreview',
+  'LensPreview',
+  'PointerPreview',
+  'FileTreePreview',
+  'AnimatedCircularProgressBarPreview',
+  'CurvedLoopPreview',
+  'ClickSparkPreview',
+  'MagnetPreview',
+  'StackPreview',
+  'FolderPreview',
+  'CarouselPreview',
+  'ElasticSliderPreview',
+  'CounterPreview',
+  'ConfettiPreview',
+  'SparkleCursorPreview',
+  'MeteorsPreview',
+  'ParticlesPreview',
+  'TypingAnimationPreview',
+  'AuroraTextPreview',
+  'NumberTickerPreview',
+  'DiaTextRevealPreview',
+  'MorphingTextPreview',
+  'HighlighterPreview',
+  'VideoTextPreview',
+  'MouseInvertCursorPreview',
+  'MouseTrailCursorPreview',
+  'MouseRippleCursorPreview',
+  'MouseCustomCursorPreview',
+  'FairyDustCursorPreview',
+  'BubbleCursorPreview',
+  'CharacterCursorPreview',
+  'CanvasCursorPreview',
+]) {
+  const functionIndex = previewsSource.indexOf(`function ${requiredDemoSurfacePreview}`)
+  assert(functionIndex >= 0, `Missing preview function: ${requiredDemoSurfacePreview}`)
+  const nextFunctionIndex = previewsSource.indexOf('\nfunction ', functionIndex + 1)
+  const previewFunctionSource = previewsSource.slice(
+    functionIndex,
+    nextFunctionIndex === -1 ? undefined : nextFunctionIndex
+  )
+  assert(
+    previewFunctionSource.includes('<PreviewDemoSurface'),
+    `${requiredDemoSurfacePreview} should use PreviewDemoSurface`
+  )
+}
+for (const removedPreviewPart of [
+  'SlideArrowButtonPreview',
+  "case 'slide-arrow-button'",
+  "import { SlideArrowButton }",
+]) {
+  assert(
+    !previewsSource.includes(removedPreviewPart),
+    `Slide Arrow Button should be removed from previews: ${removedPreviewPart}`
+  )
+}
+assert(
+  !fs.readFileSync(path.join(root, 'scripts/generate-magicui-registry.cjs'), 'utf8')
+    .includes("name: 'slide-arrow-button'"),
+  'Slide Arrow Button should be removed from registry generation'
+)
+for (const removedComponentPart of [
+  'FluidCursorPreview',
+  "case 'fluid-cursor'",
+  "import { FluidCursor }",
+  'ShineBorderPreview',
+  "case 'shine-border'",
+  "import { ShineBorder }",
+]) {
+  assert(
+    !previewsSource.includes(removedComponentPart),
+    `Removed component should be removed from previews: ${removedComponentPart}`
+  )
+}
+const generatorSource = fs.readFileSync(
+  path.join(root, 'scripts/generate-magicui-registry.cjs'),
+  'utf8'
+)
+for (const removedGeneratorName of ['fluid-cursor', 'shine-border']) {
+  assert(
+    !generatorSource.includes(`name: '${removedGeneratorName}'`),
+    `${removedGeneratorName} should be removed from registry generation`
+  )
+}
+const previewFunctionSource = (functionName) => {
+  const functionIndex = previewsSource.indexOf(`function ${functionName}`)
+  assert(functionIndex >= 0, `Missing preview function: ${functionName}`)
+  const nextFunctionIndex = previewsSource.indexOf('\nfunction ', functionIndex + 1)
+  return previewsSource.slice(
+    functionIndex,
+    nextFunctionIndex === -1 ? undefined : nextFunctionIndex
+  )
+}
+const threeDImageCarouselPreviewSource = previewFunctionSource('ThreeDImageCarouselPreview')
+assert(
+  threeDImageCarouselPreviewSource.includes('!bg-transparent') &&
+    threeDImageCarouselPreviewSource.includes('!overflow-visible'),
+  '3D Image Carousel preview should blend into the shared dark surface without clipping'
+)
+assert(
+  previewFunctionSource('FolderPreview').includes('mt-16'),
+  'Folder preview content should sit lower to leave room for expansion'
+)
+assert(
+  previewFunctionSource('CounterPreview').includes('gradientHeight={0}'),
+  'Counter preview should hide the white gradient bands'
+)
+assert(
+  previewFunctionSource('TextFlipPreview').includes('[&>span:first-child]:!text-white') &&
+    !previewFunctionSource('TextFlipPreview').includes('[&_span]:!text-white'),
+  'Text Flip preview should keep the rotating word themed while forcing only the prefix to white'
+)
+const curvedLoopPreviewSource = previewFunctionSource('CurvedLoopPreview')
+assert(
+  !curvedLoopPreviewSource.includes('overlay={') &&
+    curvedLoopPreviewSource.includes('<CurvedLoop') &&
+    curvedLoopPreviewSource.includes('contentClassName="w-full max-w-none"') &&
+    curvedLoopPreviewSource.includes('w-[calc(100%+4rem)]') &&
+    curvedLoopPreviewSource.includes('text-[76px]'),
+  'Curved Loop preview should render a larger full-width loop below the subtitle'
+)
+const videoTextPreviewSource = previewFunctionSource('VideoTextPreview')
+assert(
+  videoTextPreviewSource.includes('fontSize={17}') &&
+    videoTextPreviewSource.includes('h-72') &&
+    videoTextPreviewSource.includes('max-w-4xl') &&
+    videoTextPreviewSource.includes('contentClassName="w-full max-w-4xl"'),
+  'Video Text preview should render the masked text at roughly half of the parent width'
+)
+assert(
+  previewFunctionSource('DiaTextRevealPreview').includes('textColor="#ffffff"') &&
+    previewFunctionSource('DiaTextRevealPreview').includes('finalTextColor="#ffffff"'),
+  'Dia Text Reveal preview should leave white text after the color sweep'
+)
+assert(
+  previewFunctionSource('MorphingTextPreview').includes('contentClassName="w-full max-w-4xl"') &&
+    previewFunctionSource('MorphingTextPreview').includes('w-[min(42rem,82vw)]') &&
+    previewFunctionSource('MorphingTextPreview').includes('justify-center'),
+  'Morphing Text preview should center the morphing element'
+)
+assert(
+  !previewFunctionSource('SparkleCursorPreview').includes('<Sparkles'),
+  'Sparkle Cursor preview should not render the star icon below the subtitle'
+)
+assert(
+  previewFunctionSource('PointerTile').includes('h-36') &&
+    previewFunctionSource('PointerTile').includes('text-white') &&
+    previewFunctionSource('PointerTile').includes('text-white/55'),
+  'Pointer preview tiles should be shorter rectangles with white text'
+)
+assert(
+  previewFunctionSource('ClickSparkPreview').includes('sparkColor="#facc15"') &&
+    previewFunctionSource('ClickSparkPreview').includes('[&>canvas]:z-20'),
+  'Click Spark preview should draw visible sparks above the surface'
 )
 assert(
   fs.existsSync(sidebarPath),

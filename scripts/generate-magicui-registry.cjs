@@ -149,24 +149,6 @@ const items = [
   },
 
   {
-    name: 'shine-border',
-    title: 'Shine Border',
-    description: 'Shine border is an animated background border effect.',
-    dependencies: [],
-    cssVars: {
-      theme: {
-        'animate-shine': 'shine var(--duration) infinite linear',
-      },
-    },
-    css: {
-      '@keyframes shine': {
-        '0%': { 'background-position': '0% 0%' },
-        '50%': { 'background-position': '100% 100%' },
-        to: { 'background-position': '0% 0%' },
-      },
-    },
-  },
-  {
     name: 'meteors',
     title: 'Meteors',
     description: 'A meteor shower effect.',
@@ -334,12 +316,6 @@ const items = [
     dependencies: ['motion'],
   },
   {
-    name: 'slide-arrow-button',
-    title: 'Slide Arrow Button',
-    description: 'A button with a sliding arrow hover transition.',
-    dependencies: ['lucide-react'],
-  },
-  {
     name: 'flower-menu',
     title: 'Flower Menu',
     description: 'A radial floating action menu.',
@@ -423,13 +399,6 @@ const items = [
     name: 'canvas-cursor',
     title: 'Canvas Cursor',
     description: 'A scoped spring-line canvas trail adapted from Cursify Canvas Cursor.',
-    dependencies: [],
-    sharedFiles: ['cursor-effect-runtime'],
-  },
-  {
-    name: 'fluid-cursor',
-    title: 'Fluid Cursor',
-    description: 'A bounded fluid dye cursor adapted from Cursify Fluid Cursor.',
     dependencies: [],
     sharedFiles: ['cursor-effect-runtime'],
   },

@@ -133,7 +133,10 @@ export function AvatarGroup({
                 className="pointer-events-none absolute bottom-[calc(100%+25px)] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground shadow-sm"
               >
                 {item.tooltip ?? item.name}
-                <span className="absolute left-1/2 top-full size-3 -translate-x-1/2 -translate-y-px rotate-45 rounded-[2px] bg-primary" />
+                <span
+                  data-avatar-tooltip-arrow=""
+                  className="absolute left-1/2 top-full h-2 w-4 -translate-x-1/2 bg-primary [clip-path:polygon(50%_100%,0_0,100%_0)]"
+                />
               </motion.span>
             ) : null}
           </AnimatePresence>
