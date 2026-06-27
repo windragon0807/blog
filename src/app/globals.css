@@ -873,7 +873,13 @@ html.dark:not([data-code-theme]) .notion-code pre.shiki span {
 .brand-link {
   position: relative;
   align-items: center;
+  max-width: 100%;
+  overflow: visible;
+  text-overflow: clip;
   white-space: nowrap;
+  line-height: 1.35;
+  padding-block: 0.16em;
+  margin-block: -0.16em;
 }
 
 .brand-base {
@@ -918,13 +924,14 @@ html[data-logo-motion='slide'] .brand-animated-char {
 }
 
 html[data-logo-motion='jump'] .brand-animated-char {
-  animation: brand-logo-jump 2.7s cubic-bezier(0.2, 0.9, 0.22, 1) infinite;
-  animation-delay: calc(var(--brand-char-index, 0) * 80ms);
+  animation: brand-logo-jump 2.05s cubic-bezier(0.2, 0.9, 0.22, 1) infinite
+    both;
+  animation-delay: calc(var(--brand-char-index, 0) * 56ms);
 }
 
 html[data-logo-motion='wave'] .brand-animated-char {
-  animation: brand-logo-wave 2.8s ease-in-out infinite;
-  animation-delay: calc(var(--brand-char-index, 0) * 90ms);
+  animation: brand-logo-wave 1.85s ease-in-out infinite both;
+  animation-delay: calc(var(--brand-char-index, 0) * 52ms);
 }
 
 html[data-logo-motion='slide'] .brand-animated-char {
@@ -935,15 +942,22 @@ html[data-logo-motion='slide'] .brand-animated-char {
 
 @keyframes brand-logo-jump {
   0%,
-  18%,
+  31%,
   100% {
     transform: translateY(0);
+    opacity: 0.9;
   }
-  8% {
-    transform: translateY(-0.22em) scaleY(1.03);
+  9% {
+    transform: translateY(-0.28em) scaleY(1.04);
+    opacity: 1;
   }
-  12% {
+  15% {
     transform: translateY(0.04em) scaleY(0.98);
+    opacity: 0.96;
+  }
+  22% {
+    transform: translateY(0);
+    opacity: 0.94;
   }
 }
 
@@ -951,15 +965,19 @@ html[data-logo-motion='slide'] .brand-animated-char {
   0%,
   100% {
     transform: translateY(0);
-    opacity: 0.72;
+    opacity: 0.76;
   }
-  24% {
+  20% {
     transform: translateY(-0.16em);
     opacity: 1;
   }
-  52% {
+  42% {
     transform: translateY(0.03em);
     opacity: 0.92;
+  }
+  62% {
+    transform: translateY(0);
+    opacity: 0.96;
   }
 }
 

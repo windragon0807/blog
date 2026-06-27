@@ -14,16 +14,19 @@ import {
 import { cn } from "@/lib/utils"
 
 const DEFAULT_COLORS = ["#c679c4", "#fa3d1d", "#ffb005", "#e1e1fe", "#0358f7"]
-const BAND_HALF = 17
-const SWEEP_START = -BAND_HALF
-const SWEEP_END = 100 + BAND_HALF
+const DEFAULT_TRAIL_SIZE = 17
 
 const sweepEase = (t: number) =>
   t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2
 
-function buildGradient(pos: number, colors: string[], textColor: string) {
-  const bandStart = pos - BAND_HALF
-  const bandEnd = pos + BAND_HALF
+function buildGradient(
+  pos: number,
+  colors: string[],
+  textColor: string,
+  trailSize: number
+) {
+  const bandStart = pos - trailSize
+  const bandEnd = pos + trailSize
 
   if (bandStart >= 100) {
     return `linear-gradient(90deg, ${textColor}, ${textColor})`
@@ -35,7 +38,7 @@ function buildGradient(pos: number, colors: string[], textColor: string) {
     parts.push(`${textColor} 0%`, `${textColor} ${bandStart.toFixed(2)}%`)
 
   colors.forEach((c, i) => {
-    const pct = n === 1 ? pos : bandStart + (i / (n - 1)) * BAND_HALF * 2
+    const pct = n === 1 ? pos : bandStart + (i / (n - 1)) * trailSize * 2
     parts.push(`${c} ${pct.toFixed(2)}%`)
   })
 
@@ -79,10 +82,21 @@ export interface DiaTextRevealProps extends Omit<
    */
   colors?: string[]
   /**
+   * Half-width of the moving color band, in percent. Increase it for a longer color trail.
+   * @defaultValue `17`
+   */
+  trailSize?: number
+  /**
    * CSS color for revealed text after the sweep and for leading/trailing regions during the animation.
    * @defaultValue `"var(--foreground)"`
    */
   textColor?: string
+  /**
+   * CSS color kept on the element while the clipped background paints the visible text.
+   * Useful when `textColor` is `currentColor`.
+   * @defaultValue `"inherit"`
+   */
+  finalTextColor?: string
   /**
    * Duration of one sweep pass, in seconds.
    * @defaultValue `1.5`
@@ -127,7 +141,9 @@ export interface DiaTextRevealProps extends Omit<
 export function DiaTextReveal({
   text,
   colors = DEFAULT_COLORS,
+  trailSize = DEFAULT_TRAIL_SIZE,
   textColor = "var(--foreground)",
+  finalTextColor = "inherit",
   duration = 1.5,
   delay = 0,
   repeat = false,
@@ -146,6 +162,7 @@ export function DiaTextReveal({
   const spanRef = useRef<HTMLSpanElement>(null)
   const optsRef = useRef({
     colors,
+    trailSize,
     textColor,
     duration,
     delay,
@@ -162,10 +179,15 @@ export function DiaTextReveal({
   const [activeIndex, setActiveIndex] = useState(0)
   const [measuredWidths, setMeasuredWidths] = useState<number[]>([])
 
-  const sweepPos = useMotionValue(SWEEP_START)
+  const sweepPos = useMotionValue(-trailSize)
 
   const backgroundImage = useTransform(sweepPos, (pos) =>
-    buildGradient(pos, optsRef.current.colors, optsRef.current.textColor)
+    buildGradient(
+      pos,
+      optsRef.current.colors,
+      optsRef.current.textColor,
+      optsRef.current.trailSize
+    )
   )
 
   const isInView = useInView(spanRef, { once, amount: 0.1 })
@@ -173,6 +195,7 @@ export function DiaTextReveal({
   useEffect(() => {
     optsRef.current = {
       colors,
+      trailSize,
       textColor,
       duration,
       delay,
@@ -180,7 +203,17 @@ export function DiaTextReveal({
       repeatDelay,
       texts,
     }
-  }, [colors, textColor, duration, delay, repeat, repeatDelay, textKey, texts])
+  }, [
+    colors,
+    trailSize,
+    textColor,
+    duration,
+    delay,
+    repeat,
+    repeatDelay,
+    textKey,
+    texts,
+  ])
 
   useEffect(() => {
     const el = spanRef.current
@@ -189,11 +222,12 @@ export function DiaTextReveal({
   }, [isMulti, textKey, texts])
 
   const play = useCallback(() => {
-    const { duration, delay, repeat, repeatDelay, texts } = optsRef.current
+    const { duration, delay, repeat, repeatDelay, texts, trailSize } =
+      optsRef.current
 
-    sweepPos.set(SWEEP_START)
+    sweepPos.set(-trailSize)
 
-    const controls = animate(sweepPos, SWEEP_END, {
+    const controls = animate(sweepPos, 100 + trailSize, {
       duration,
       delay,
       ease: sweepEase,
@@ -217,7 +251,7 @@ export function DiaTextReveal({
 
   useEffect(() => {
     if (prefersReducedMotion) {
-      sweepPos.set(SWEEP_END)
+      sweepPos.set(100 + optsRef.current.trailSize)
       return
     }
     if (startOnView && !isInView) return
@@ -247,9 +281,10 @@ export function DiaTextReveal({
       className={cn("align-bottom leading-[100%] text-inherit", className)}
       style={{
         transform: "translateY(-2px)",
-        color: "transparent",
+        color: finalTextColor,
         backgroundClip: "text",
         WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
         backgroundSize: "100% 100%",
         backgroundImage,
         ...(isMulti && {

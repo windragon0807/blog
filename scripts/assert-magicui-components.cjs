@@ -192,6 +192,13 @@ const installTabsPath = path.join(
   root,
   'src/features/component-library/install-command-tabs.tsx'
 )
+const brandLogoPath = path.join(root, 'src/components/BrandLogo.tsx')
+const logoMotionsPath = path.join(root, 'src/lib/logoMotions.ts')
+const videoTextPath = path.join(root, 'src/components/magicui/video-text.tsx')
+const diaTextRevealPath = path.join(
+  root,
+  'src/components/magicui/dia-text-reveal.tsx'
+)
 const cursorEffectRuntimePath = path.join(
   root,
   'src/components/magicui/cursor-effect-runtime.tsx'
@@ -202,6 +209,10 @@ const componentsPageSource = fs.readFileSync(componentsPagePath, 'utf8')
 const layoutSource = fs.readFileSync(layoutPath, 'utf8')
 const globalsSource = fs.readFileSync(globalsPath, 'utf8')
 const previewsSource = fs.readFileSync(previewsPath, 'utf8')
+const brandLogoSource = fs.readFileSync(brandLogoPath, 'utf8')
+const logoMotionsSource = fs.readFileSync(logoMotionsPath, 'utf8')
+const videoTextSource = fs.readFileSync(videoTextPath, 'utf8')
+const diaTextRevealSource = fs.readFileSync(diaTextRevealPath, 'utf8')
 const cursorEffectRuntimeSource = fs.existsSync(cursorEffectRuntimePath)
   ? fs.readFileSync(cursorEffectRuntimePath, 'utf8')
   : ''
@@ -717,6 +728,79 @@ assert(
     previewsSource.includes('useUserFontFamily') &&
     previewsSource.includes('fontFamily={userFontFamily}'),
   'Text previews should inherit the selected blog font, including VideoText mask font'
+)
+assert(
+  videoTextSource.includes('escapeSvgAttribute') &&
+    videoTextSource.includes('escapeSvgText') &&
+    videoTextSource.includes('font-family="${escapeSvgAttribute(fontFamily)}"') &&
+    videoTextSource.includes('${escapeSvgText(content)}'),
+  'VideoText should escape SVG text and font-family values before building the mask'
+)
+for (const logoMotionPart of [
+  "'dia-text-reveal'",
+  "'highlighter'",
+  "label: 'Dia Text Reveal'",
+  "label: 'Highlighter'",
+]) {
+  assert(
+    logoMotionsSource.includes(logoMotionPart),
+    `Logo motion option missing: ${logoMotionPart}`
+  )
+}
+assert(
+  brandLogoSource.includes('DiaTextReveal') &&
+    brandLogoSource.includes('Highlighter') &&
+    brandLogoSource.includes("motion === 'dia-text-reveal'") &&
+    brandLogoSource.includes("motion === 'highlighter'") &&
+    brandLogoSource.includes('finalTextColor="currentColor"') &&
+    brandLogoSource.includes("type LogoHighlighterPhase = 'highlight' | 'underline'") &&
+    brandLogoSource.includes("setPhase((currentPhase) =>") &&
+    brandLogoSource.includes("currentPhase === 'highlight' ? 'underline' : 'highlight'") &&
+    brandLogoSource.includes("action={isHighlight ? 'highlight' : 'underline'}") &&
+    brandLogoSource.includes('data-logo-highlighter-phase={phase}') &&
+    brandLogoSource.includes("data-logo-highlighter-visible={visible ? 'true' : 'false'}") &&
+    brandLogoSource.includes('visible ?') &&
+    brandLogoSource.includes('LogoHighlighterAnnotation') &&
+    !brandLogoSource.includes('repeatDelay={2600}'),
+  'Brand logo should keep Dia Text Reveal text visible and sequence Highlighter phases'
+)
+assert(
+  globalsSource.includes('.brand-link') &&
+    globalsSource.includes('overflow: visible') &&
+    globalsSource.includes('text-overflow: clip') &&
+    globalsSource.includes('line-height: 1.35') &&
+    globalsSource.includes('padding-block: 0.16em') &&
+    globalsSource.includes('margin-block: -0.16em'),
+  'Brand logo link should leave vertical room for descenders and annotation strokes'
+)
+assert(
+  globalsSource.includes('brand-logo-jump 2.05s') &&
+    globalsSource.includes('var(--brand-char-index, 0) * 56ms') &&
+    globalsSource.includes('brand-logo-wave 1.85s') &&
+    globalsSource.includes('var(--brand-char-index, 0) * 52ms'),
+  'Brand logo jump and wave timing should use a faster ordered stagger'
+)
+assert(
+  brandLogoSource.includes('brand-logo-highlight-frame') &&
+    brandLogoSource.includes('relative z-10') &&
+    brandLogoSource.includes('z-0') &&
+    brandLogoSource.includes('brand-logo-highlighter-target') &&
+    brandLogoSource.includes("width: 'calc(100% + 0.5em)'") &&
+    brandLogoSource.includes("transform: 'translateY(0.5em)'") &&
+    brandLogoSource.includes('[&>span]:w-full') &&
+    brandLogoSource.includes('absolute inset-x-0 -inset-y-1') &&
+    brandLogoSource.includes('trailSize={28}') &&
+    brandLogoSource.includes('iterations={2}') &&
+    brandLogoSource.includes('padding={isHighlight ? 4 : 3}'),
+  'Brand logo Dia and Highlighter variants should leave enough visual trail, stroke room, and text clarity'
+)
+assert(
+  diaTextRevealSource.includes('trailSize?: number') &&
+    diaTextRevealSource.includes('const DEFAULT_TRAIL_SIZE = 17') &&
+    diaTextRevealSource.includes('function buildGradient(') &&
+    diaTextRevealSource.includes('optsRef.current.trailSize') &&
+    diaTextRevealSource.includes('100 + trailSize'),
+  'Dia Text Reveal should support a scoped trail size without changing the default'
 )
 assert(
   previewsSource.includes('themeGradientColors') &&

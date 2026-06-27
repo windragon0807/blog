@@ -3,6 +3,8 @@ export const LOGO_MOTION_VALUES = [
   'jump',
   'wave',
   'slide',
+  'dia-text-reveal',
+  'highlighter',
 ] as const
 
 export type LogoMotionName = (typeof LOGO_MOTION_VALUES)[number]
@@ -15,6 +17,8 @@ export const LOGO_MOTION_OPTIONS: ReadonlyArray<{
   { value: 'jump', label: 'Jump' },
   { value: 'wave', label: 'Wave' },
   { value: 'slide', label: 'Slide Reveal' },
+  { value: 'dia-text-reveal', label: 'Dia Text Reveal' },
+  { value: 'highlighter', label: 'Highlighter' },
 ]
 
 export const DEFAULT_LOGO_MOTION: LogoMotionName = 'typing'
