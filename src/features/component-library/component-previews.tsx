@@ -25,6 +25,7 @@ import { AuroraText } from '@/components/magicui/aurora-text'
 import { AvatarGroup } from '@/components/magicui/avatar-group'
 import { BackgroundBoxes } from '@/components/magicui/background-boxes'
 import { BubbleCursor } from '@/components/magicui/bubble-cursor'
+import { CanvasCursor } from '@/components/magicui/canvas-cursor'
 import { Carousel } from '@/components/magicui/carousel'
 import { CharacterCursor } from '@/components/magicui/character-cursor'
 import { ClickSpark } from '@/components/magicui/click-spark'
@@ -35,6 +36,7 @@ import { DataTable } from '@/components/magicui/data-table'
 import { DiaTextReveal } from '@/components/magicui/dia-text-reveal'
 import { ElasticSlider } from '@/components/magicui/elastic-slider'
 import { FairyDustCursor } from '@/components/magicui/fairy-dust-cursor'
+import { FluidCursor } from '@/components/magicui/fluid-cursor'
 import { Tree, type TreeViewElement } from '@/components/magicui/file-tree'
 import { FlowerMenu } from '@/components/magicui/flower-menu'
 import { Folder } from '@/components/magicui/folder'
@@ -708,6 +710,34 @@ function CharacterCursorPreview({ mode }: { mode: PreviewMode }) {
   )
 }
 
+function CanvasCursorPreview({ mode }: { mode: PreviewMode }) {
+  return (
+    <OuterEffectSurface className="p-0">
+      <CanvasCursor disabled={mode === 'thumbnail'}>
+        <CursorDemoSurface
+          title="Canvas Cursor"
+          subtitle="// spring lines follow your cursor"
+          accentClassName="bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.28),transparent_55%)]"
+        />
+      </CanvasCursor>
+    </OuterEffectSurface>
+  )
+}
+
+function FluidCursorPreview({ mode }: { mode: PreviewMode }) {
+  return (
+    <OuterEffectSurface className="p-0">
+      <FluidCursor disabled={mode === 'thumbnail'}>
+        <CursorDemoSurface
+          title="Fluid Cursor"
+          subtitle="// move or press to push dye"
+          accentClassName="bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.32),transparent_55%)]"
+        />
+      </FluidCursor>
+    </OuterEffectSurface>
+  )
+}
+
 function RippleButtonPreview() {
   return (
     <RippleButton
@@ -1314,6 +1344,10 @@ function BasePreviewContent({
       return <BubbleCursorPreview mode={mode} />
     case 'character-cursor':
       return <CharacterCursorPreview mode={mode} />
+    case 'canvas-cursor':
+      return <CanvasCursorPreview mode={mode} />
+    case 'fluid-cursor':
+      return <FluidCursorPreview mode={mode} />
     case 'data-table':
       return <DataTablePreview />
     }

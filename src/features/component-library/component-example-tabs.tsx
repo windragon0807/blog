@@ -25,6 +25,8 @@ export function ComponentExampleTabs({
     sample.preview.kind === 'fairy-dust-cursor' ||
     sample.preview.kind === 'bubble-cursor' ||
     sample.preview.kind === 'character-cursor' ||
+    sample.preview.kind === 'canvas-cursor' ||
+    sample.preview.kind === 'fluid-cursor' ||
     sample.preview.kind === '3d-image-carousel' ||
     sample.preview.kind === 'data-table'
 

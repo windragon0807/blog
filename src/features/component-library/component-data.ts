@@ -53,6 +53,8 @@ export type ComponentPreviewKind =
   | 'fairy-dust-cursor'
   | 'bubble-cursor'
   | 'character-cursor'
+  | 'canvas-cursor'
+  | 'fluid-cursor'
   | 'data-table'
 
 export interface ComponentCategory {
@@ -149,6 +151,16 @@ const mouseAnimationsReference = {
 const cursorEffectsReference = {
   label: 'cursor-effects demo',
   url: 'https://tholman.com/cursor-effects/',
+} satisfies ComponentReference
+
+const cursifyCanvasReference = {
+  label: 'Cursify Canvas Cursor',
+  url: 'https://cursify.ui-layouts.com/components/canvas-cursor',
+} satisfies ComponentReference
+
+const cursifyFluidReference = {
+  label: 'Cursify Fluid Cursor',
+  url: 'https://cursify.ui-layouts.com/components/fluid-cursor',
 } satisfies ComponentReference
 
 function reactBitsReference(slug: ComponentPreviewKind, title: string) {
@@ -700,6 +712,66 @@ export default function Example() {
       prop('font', 'string', '"15px serif"', 'Canvas font used for particle glyphs.'),
       prop('cursorOffset', '{ x: number; y: number }', '{ x: 0, y: 0 }', 'Offset applied to each spawned character.'),
       prop('maxParticles', 'number', '170', 'Particle cap used to prevent runaway canvas work.'),
+      prop('disabled', 'boolean', 'false', 'Whether to disable the cursor effect.'),
+    ],
+  }),
+  createSample({
+    slug: 'canvas-cursor',
+    categoryId: 'effects-backgrounds',
+    title: 'Canvas Cursor',
+    description: 'A scoped spring-line canvas trail adapted from Cursify Canvas Cursor.',
+    reference: cursifyCanvasReference,
+    usage: `import { CanvasCursor } from "@/components/magicui/canvas-cursor"
+
+export default function Example() {
+  return (
+    <CanvasCursor trails={20} nodeCount={50}>
+      <div className="min-h-64">Move inside</div>
+    </CanvasCursor>
+  )
+}`,
+    props: [
+      childrenProp,
+      classNameProp,
+      prop('trails', 'number', '20', 'Number of spring trails.'),
+      prop('nodeCount', 'number', '50', 'Number of nodes in each trail.'),
+      prop('friction', 'number', '0.5', 'Trail friction from the Cursify default.'),
+      prop('dampening', 'number', '0.25', 'Velocity transfer between trail nodes.'),
+      prop('tension', 'number', '0.98', 'Spring tension decay across nodes.'),
+      prop('lineWidth', 'number', '1', 'Canvas stroke width in pixels.'),
+      prop('hueOffset', 'number', '285', 'Base hue from the Cursify oscillator.'),
+      prop('hueAmplitude', 'number', '85', 'Hue oscillator amplitude.'),
+      prop('hueFrequency', 'number', '0.0015', 'Hue oscillator frequency.'),
+      prop('opacity', 'number', '0.2', 'Trail stroke alpha.'),
+      prop('disabled', 'boolean', 'false', 'Whether to disable the cursor effect.'),
+    ],
+  }),
+  createSample({
+    slug: 'fluid-cursor',
+    categoryId: 'effects-backgrounds',
+    title: 'Fluid Cursor',
+    description: 'A bounded fluid dye cursor adapted from Cursify Fluid Cursor.',
+    reference: cursifyFluidReference,
+    usage: `import { FluidCursor } from "@/components/magicui/fluid-cursor"
+
+export default function Example() {
+  return (
+    <FluidCursor splatRadius={0.2} splatForce={6000}>
+      <div className="min-h-64">Move inside</div>
+    </FluidCursor>
+  )
+}`,
+    props: [
+      childrenProp,
+      classNameProp,
+      prop('colors', 'string[]', '["#22d3ee", "#8b5cf6", "#ec4899", "#f97316"]', 'Fluid dye colors.'),
+      prop('densityDissipation', 'number', '3.5', 'How quickly dye fades.'),
+      prop('velocityDissipation', 'number', '2', 'How quickly splat velocity settles.'),
+      prop('splatRadius', 'number', '0.2', 'Splat radius ratio from the Cursify default.'),
+      prop('splatForce', 'number', '6000', 'Velocity force scale from the Cursify default.'),
+      prop('colorUpdateSpeed', 'number', '10', 'How quickly the dye color advances.'),
+      prop('maxSplats', 'number', '96', 'Splat cap used to prevent runaway canvas work.'),
+      prop('blur', 'number', '18', 'Canvas blur filter in pixels.'),
       prop('disabled', 'boolean', 'false', 'Whether to disable the cursor effect.'),
     ],
   }),

@@ -497,6 +497,20 @@ const items = [
     sharedFiles: ['cursor-effect-runtime'],
   },
   {
+    name: 'canvas-cursor',
+    title: 'Canvas Cursor',
+    description: 'A scoped spring-line canvas trail adapted from Cursify Canvas Cursor.',
+    dependencies: [],
+    sharedFiles: ['cursor-effect-runtime'],
+  },
+  {
+    name: 'fluid-cursor',
+    title: 'Fluid Cursor',
+    description: 'A bounded fluid dye cursor adapted from Cursify Fluid Cursor.',
+    dependencies: [],
+    sharedFiles: ['cursor-effect-runtime'],
+  },
+  {
     name: 'data-table',
     title: 'Table',
     description: 'A simple typed data table inspired by HeroUI table structure.',

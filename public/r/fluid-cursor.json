@@ -1,14 +1,14 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
-  "name": "mouse-trail-cursor",
+  "name": "fluid-cursor",
   "type": "registry:ui",
-  "title": "Mouse Trail Cursor",
-  "description": "A bounded canvas dot trail adapted from mouse-animations Trail.",
+  "title": "Fluid Cursor",
+  "description": "A bounded fluid dye cursor adapted from Cursify Fluid Cursor.",
   "dependencies": [],
   "files": [
     {
-      "path": "src/components/magicui/mouse-trail-cursor.tsx",
-      "content": "'use client'\n\nexport {\n  MouseTrailCursor,\n  type MouseTrailCursorProps,\n} from './cursor-effect-runtime'\n",
+      "path": "src/components/magicui/fluid-cursor.tsx",
+      "content": "'use client'\n\nexport {\n  FluidCursor,\n  type FluidCursorProps,\n} from './cursor-effect-runtime'\n",
       "type": "registry:ui"
     },
     {

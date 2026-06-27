@@ -52,6 +52,8 @@ const requiredNames = [
   'fairy-dust-cursor',
   'bubble-cursor',
   'character-cursor',
+  'canvas-cursor',
+  'fluid-cursor',
   'data-table',
 ]
 const cursorEffectNames = [
@@ -62,6 +64,8 @@ const cursorEffectNames = [
   'fairy-dust-cursor',
   'bubble-cursor',
   'character-cursor',
+  'canvas-cursor',
+  'fluid-cursor',
 ]
 const requiredCategories = [
   "id: 'actions-controls'",
@@ -312,7 +316,10 @@ for (const requiredRuntimePart of [
   'ResizeObserver',
   'requestAnimationFrame',
   'cancelAnimationFrame',
+  'IntersectionObserver',
+  'contentvisibilityautostatechange',
   'pointer-events-none',
+  'cursify',
   'Adapted from',
 ]) {
   assert(

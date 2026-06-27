@@ -1,14 +1,14 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
-  "name": "mouse-trail-cursor",
+  "name": "canvas-cursor",
   "type": "registry:ui",
-  "title": "Mouse Trail Cursor",
-  "description": "A bounded canvas dot trail adapted from mouse-animations Trail.",
+  "title": "Canvas Cursor",
+  "description": "A scoped spring-line canvas trail adapted from Cursify Canvas Cursor.",
   "dependencies": [],
   "files": [
     {
-      "path": "src/components/magicui/mouse-trail-cursor.tsx",
-      "content": "'use client'\n\nexport {\n  MouseTrailCursor,\n  type MouseTrailCursorProps,\n} from './cursor-effect-runtime'\n",
+      "path": "src/components/magicui/canvas-cursor.tsx",
+      "content": "'use client'\n\nexport {\n  CanvasCursor,\n  type CanvasCursorProps,\n} from './cursor-effect-runtime'\n",
       "type": "registry:ui"
     },
     {
