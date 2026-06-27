@@ -489,7 +489,8 @@ export default function Example() {
 }`,
     props: [
       classNameProp,
-      prop('animationType', '"circle" | "wipe" | "blur" | "fade"', '"circle"', 'View transition animation style.'),
+      prop('duration', 'number', '400', 'View Transition animation duration in milliseconds.'),
+      prop('animationType', '"none" | "circle-spread" | "round-morph" | "swipe-left" | "swipe-up" | "diag-down-right" | "fade-in-out" | "shrink-grow" | "flip-x-in" | "split-vertical" | "swipe-right" | "swipe-down" | "wave-ripple"', '"circle-spread"', 'Lightswind View Transition animation style.'),
       prop('defaultChecked', 'boolean', 'false', 'Initial checked state.'),
       prop('onChange', '(checked: boolean) => void', '-', 'Change handler.'),
     ],

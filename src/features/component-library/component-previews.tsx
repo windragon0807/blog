@@ -516,14 +516,30 @@ function TextFlipPreview() {
   )
 }
 
+const toggleThemePreviewAnimations = [
+  'circle-spread',
+  'round-morph',
+  'swipe-left',
+  'swipe-up',
+  'diag-down-right',
+  'fade-in-out',
+  'shrink-grow',
+  'flip-x-in',
+  'split-vertical',
+  'swipe-right',
+  'swipe-down',
+  'wave-ripple',
+] as const
+
 function ToggleThemePreview() {
   return (
     <OuterEffectSurface className="min-h-72">
       <div className="flex flex-wrap items-center justify-center gap-3">
-        {(['circle', 'wipe', 'blur', 'fade'] as const).map((animationType) => (
+        {toggleThemePreviewAnimations.map((animationType) => (
           <ToggleTheme
             key={animationType}
             animationType={animationType}
+            duration={360}
             label={animationType}
           />
         ))}
