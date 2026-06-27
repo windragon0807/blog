@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { ComponentSidebar } from '@/features/component-library/component-sidebar'
 
 export default function ComponentsLayout({ children }: { children: ReactNode }) {
@@ -11,14 +12,15 @@ export default function ComponentsLayout({ children }: { children: ReactNode }) 
         <div className="components-sidebar-slot min-w-0">
           <ComponentSidebar />
         </div>
-        <div
-          className="components-content-scroll min-w-0 lg:h-full lg:overflow-y-auto lg:overscroll-contain"
+        <ScrollArea
+          className="components-content-scroll min-w-0 lg:h-full lg:overscroll-contain"
           data-lenis-prevent-wheel
+          orientation="vertical"
         >
           <div className="components-content-inner lg:pb-20 lg:pr-10">
             {children}
           </div>
-        </div>
+        </ScrollArea>
       </div>
     </div>
   )

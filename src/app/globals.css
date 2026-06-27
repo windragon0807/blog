@@ -1,4 +1,5 @@
 @import 'pretendard/dist/web/static/pretendard-dynamic-subset.css';
+@import 'overlayscrollbars/styles/overlayscrollbars.css';
 @import "tailwindcss";
 @import "tw-animate-css";
 @custom-variant dark (&:where(html.dark, html.dark *));
@@ -90,6 +91,11 @@
   --theme-inline-code-dark-bg: rgba(228, 228, 231, 0.08);
   --theme-inline-code-dark-border: rgba(228, 228, 231, 0.18);
   --theme-inline-code-dark-text: #e4e4e7;
+  --scrollbar-thumb: rgba(39, 39, 42, 0.34);
+  --scrollbar-thumb-hover: rgba(39, 39, 42, 0.52);
+  --scrollbar-thumb-active: rgba(39, 39, 42, 0.66);
+  --scrollbar-track: rgba(244, 244, 245, 0.72);
+  --scrollbar-track-hover: rgba(228, 228, 231, 0.88);
 }
 
 html[data-font-theme='pretendard'] {
@@ -138,6 +144,11 @@ html.dark {
   --sidebar-border: rgba(82, 82, 91, 0.78);
   --sidebar-ring: #71717a;
   --theme-accent-current: var(--theme-accent-dark);
+  --scrollbar-thumb: rgba(212, 212, 216, 0.36);
+  --scrollbar-thumb-hover: rgba(228, 228, 231, 0.58);
+  --scrollbar-thumb-active: rgba(244, 244, 245, 0.72);
+  --scrollbar-track: rgba(39, 39, 42, 0.44);
+  --scrollbar-track-hover: rgba(63, 63, 70, 0.68);
 }
 
 html:not(.dark) {
@@ -325,6 +336,63 @@ body {
   color: var(--foreground);
   font-family: var(--font-user) !important;
   overflow-x: clip;
+}
+
+html,
+.custom-scrollbar {
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+  scrollbar-width: thin;
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --scrollbar-thumb: #000000;
+    --scrollbar-thumb-hover: #000000;
+    --scrollbar-thumb-active: #000000;
+    --scrollbar-track: #ffffff;
+    --scrollbar-track-hover: #ffffff;
+  }
+
+  html.dark {
+    --scrollbar-thumb: #ffffff;
+    --scrollbar-thumb-hover: #ffffff;
+    --scrollbar-thumb-active: #ffffff;
+    --scrollbar-track: #000000;
+    --scrollbar-track-hover: #000000;
+  }
+}
+
+.os-theme-ryonglog {
+  --os-size: 11px;
+  --os-padding-perpendicular: 2px;
+  --os-padding-axis: 3px;
+  --os-track-border-radius: 999px;
+  --os-track-bg: transparent;
+  --os-track-bg-hover: var(--scrollbar-track-hover);
+  --os-track-bg-active: var(--scrollbar-track-hover);
+  --os-handle-border-radius: 999px;
+  --os-handle-bg: var(--scrollbar-thumb);
+  --os-handle-bg-hover: var(--scrollbar-thumb-hover);
+  --os-handle-bg-active: var(--scrollbar-thumb-active);
+  --os-handle-min-size: 42px;
+  --os-handle-perpendicular-size: 6px;
+  --os-handle-perpendicular-size-hover: 8px;
+  --os-handle-perpendicular-size-active: 8px;
+  --os-handle-interactive-area-offset: 4px;
+}
+
+.os-scrollbar.os-theme-ryonglog {
+  transition:
+    opacity 420ms ease,
+    visibility 420ms ease,
+    top 160ms ease,
+    right 160ms ease,
+    bottom 160ms ease,
+    left 160ms ease;
+}
+
+.os-theme-ryonglog.os-scrollbar-horizontal {
+  --os-size: 12px;
 }
 
 ::view-transition-old(root),

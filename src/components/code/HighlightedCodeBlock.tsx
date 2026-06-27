@@ -6,6 +6,7 @@ import { getCodeLanguageIconSrc } from '@/lib/codeLanguageIcons'
 import { Badge } from '@/components/ui/badge'
 import { CodeCopyButton } from '@/components/code/CodeCopyButton'
 import { RichTextRenderer } from '@/components/notion/RichTextRenderer'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 interface HighlightedCodeBlockProps {
   blockId: string
@@ -62,12 +63,15 @@ export async function HighlightedCodeBlock({
         </div>
         <CodeCopyButton code={code} />
       </div>
-      <div className="bg-white dark:bg-zinc-800">
+      <ScrollArea
+        orientation="horizontal"
+        className="custom-scrollbar bg-white dark:bg-zinc-800"
+      >
         <div
-          className="[&>pre]:!bg-transparent [&>pre]:overflow-x-auto [&>pre]:px-0 [&>pre]:py-3 [&>pre]:text-sm [&>pre]:leading-relaxed"
+          className="[&>pre]:min-w-max [&>pre]:!bg-transparent [&>pre]:px-0 [&>pre]:py-3 [&>pre]:text-sm [&>pre]:leading-relaxed"
           dangerouslySetInnerHTML={{ __html: decoratedHtml }}
         />
-      </div>
+      </ScrollArea>
     </div>
   )
 

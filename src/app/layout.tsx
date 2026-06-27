@@ -4,6 +4,7 @@ import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { ThemeProvider } from 'next-themes'
+import { BodyScrollbars } from '@/components/BodyScrollbars'
 import { Header } from '@/components/Header'
 import { HeaderBrandScopeProvider } from '@/components/HeaderBrandScopeProvider'
 import { QueryProvider } from '@/components/providers/QueryProvider'
@@ -185,6 +186,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <QueryProvider>
             <HeaderBrandScopeProvider>
+              <BodyScrollbars />
               <SmoothScrollProvider />
               <Header />
               <main className="max-w-3xl mx-auto px-4 pt-8 pb-16">{children}</main>

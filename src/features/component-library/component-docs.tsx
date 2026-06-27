@@ -2,6 +2,7 @@ import { componentCategories, type ComponentSample } from './component-data'
 import { CodeBlock } from './component-code-block'
 import { ComponentExampleTabs } from './component-example-tabs'
 import { ComponentPreviewContent } from './component-previews'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   InstallCommandTabs,
   type InstallCommandPanel,
@@ -71,7 +72,10 @@ function getPackageManagerCommand(manager: PackageManager, target: string) {
 
 function PropsTable({ sample }: { sample: ComponentSample }) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
+    <ScrollArea
+      orientation="horizontal"
+      className="custom-scrollbar rounded-xl border border-zinc-200 dark:border-zinc-800"
+    >
       <table className="min-w-full border-collapse text-sm">
         <thead>
           <tr className="border-b border-zinc-200 bg-zinc-50 text-left dark:border-zinc-800 dark:bg-zinc-900/70">
@@ -111,7 +115,7 @@ function PropsTable({ sample }: { sample: ComponentSample }) {
           ))}
         </tbody>
       </table>
-    </div>
+    </ScrollArea>
   )
 }
 

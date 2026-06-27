@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { componentCategories, componentSamples } from './component-data'
 
 const baseLinkClass =
@@ -20,10 +21,12 @@ export function ComponentSidebar() {
   const isIntroActive = pathname === '/components'
 
   return (
-    <aside
+    <ScrollArea
+      element="aside"
       aria-label="컴포넌트 문서 탐색"
-      className="lg:h-full lg:scroll-pb-24 lg:overflow-y-auto lg:overscroll-contain lg:pr-4"
+      className="lg:h-full lg:scroll-pb-24 lg:overscroll-contain lg:pr-4"
       data-lenis-prevent-wheel
+      orientation="vertical"
     >
       <nav aria-label="Component categories" className="space-y-7 px-1 pb-24 pt-1">
         <div>
@@ -68,6 +71,6 @@ export function ComponentSidebar() {
           )
         })}
       </nav>
-    </aside>
+    </ScrollArea>
   )
 }

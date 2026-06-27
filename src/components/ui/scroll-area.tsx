@@ -1,57 +1,133 @@
 'use client'
 
 import * as React from 'react'
-import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area'
+import type { EventListeners, PartialOptions } from 'overlayscrollbars'
+import {
+  OverlayScrollbarsComponent,
+  type OverlayScrollbarsComponentRef,
+} from 'overlayscrollbars-react'
 import { cn } from '@/lib/utils'
 
-function ScrollArea({
-  className,
-  children,
-  ...props
-}: React.ComponentProps<typeof ScrollAreaPrimitive.Root>) {
-  return (
-    <ScrollAreaPrimitive.Root
-      data-slot="scroll-area"
-      className={cn('relative', className)}
-      {...props}
-    >
-      <ScrollAreaPrimitive.Viewport
-        data-slot="scroll-area-viewport"
-        className="focus-visible:ring-ring/50 size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1"
-      >
-        {children}
-      </ScrollAreaPrimitive.Viewport>
-      <ScrollBar />
-      <ScrollAreaPrimitive.Corner />
-    </ScrollAreaPrimitive.Root>
-  )
+type ScrollAreaOrientation = 'vertical' | 'horizontal' | 'both'
+
+type ScrollAreaProps = Omit<React.ComponentPropsWithoutRef<'div'>, 'children'> & {
+  children?: React.ReactNode
+  defer?: boolean | IdleRequestOptions
+  element?: React.ElementType
+  events?: EventListeners | false | null
+  options?: PartialOptions | false | null
+  orientation?: ScrollAreaOrientation
 }
 
-function ScrollBar({
-  className,
-  orientation = 'vertical',
-  ...props
-}: React.ComponentProps<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>) {
-  return (
-    <ScrollAreaPrimitive.ScrollAreaScrollbar
-      data-slot="scroll-area-scrollbar"
-      orientation={orientation}
-      className={cn(
-        'flex touch-none p-px transition-colors select-none',
-        orientation === 'vertical' &&
-          'h-full w-2.5 border-l border-l-transparent',
-        orientation === 'horizontal' &&
-          'h-2.5 flex-col border-t border-t-transparent',
-        className
-      )}
-      {...props}
-    >
-      <ScrollAreaPrimitive.ScrollAreaThumb
-        data-slot="scroll-area-thumb"
-        className="bg-border relative flex-1 rounded-full"
-      />
-    </ScrollAreaPrimitive.ScrollAreaScrollbar>
-  )
+const DEFAULT_SCROLLBAR_OPTIONS = {
+  autoHide: 'scroll',
+  autoHideDelay: 640,
+  clickScroll: true,
+  dragScroll: true,
+  theme: 'os-theme-ryonglog',
+} satisfies NonNullable<PartialOptions['scrollbars']>
+
+function getOverflowOptions(orientation: ScrollAreaOrientation) {
+  if (orientation === 'horizontal') {
+    return { x: 'scroll', y: 'hidden' } satisfies PartialOptions['overflow']
+  }
+
+  if (orientation === 'both') {
+    return { x: 'scroll', y: 'scroll' } satisfies PartialOptions['overflow']
+  }
+
+  return { x: 'hidden', y: 'scroll' } satisfies PartialOptions['overflow']
+}
+
+function getScrollAreaOptions(
+  orientation: ScrollAreaOrientation,
+  options: ScrollAreaProps['options']
+) {
+  if (options === false || options === null) return options
+
+  return {
+    ...options,
+    overflow: {
+      ...getOverflowOptions(orientation),
+      ...options?.overflow,
+    },
+    scrollbars: {
+      ...DEFAULT_SCROLLBAR_OPTIONS,
+      ...options?.scrollbars,
+    },
+  } satisfies PartialOptions
+}
+
+function callEventHandlers(value: unknown, args: unknown[]) {
+  if (Array.isArray(value)) {
+    value.forEach((handler) => callEventHandlers(handler, args))
+    return
+  }
+
+  if (typeof value === 'function') {
+    value(...args)
+  }
+}
+
+function getScrollAreaEvents(events: ScrollAreaProps['events']) {
+  if (events === false || events === null) return events
+
+  return {
+    ...events,
+    initialized: (...args) => {
+      callEventHandlers(events?.initialized, args)
+    },
+    updated: (...args) => {
+      callEventHandlers(events?.updated, args)
+    },
+  } satisfies EventListeners
+}
+
+const ScrollArea = React.forwardRef<HTMLElement, ScrollAreaProps>(
+  function ScrollArea(
+    {
+      className,
+      children,
+      defer = true,
+      element = 'div',
+      events,
+      options,
+      orientation = 'vertical',
+      ...props
+    },
+    forwardedRef
+  ) {
+    const componentRef = React.useRef<OverlayScrollbarsComponentRef | null>(null)
+
+    React.useImperativeHandle(
+      forwardedRef,
+      () => componentRef.current?.getElement() as HTMLElement,
+      []
+    )
+
+    return (
+      <OverlayScrollbarsComponent
+        ref={componentRef}
+        data-slot="scroll-area"
+        data-overlayscrollbars-initialize=""
+        defer={defer}
+        element={element}
+        events={getScrollAreaEvents(events)}
+        options={getScrollAreaOptions(orientation, options)}
+        className={cn(
+          'relative transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1',
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </OverlayScrollbarsComponent>
+    )
+  }
+)
+
+function ScrollBar() {
+  return null
 }
 
 export { ScrollArea, ScrollBar }

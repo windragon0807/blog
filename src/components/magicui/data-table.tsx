@@ -1,5 +1,6 @@
 'use client'
 
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 
 export interface DataTableColumn<T> {
@@ -25,7 +26,7 @@ export function DataTable<T extends Record<string, string | number>>({
         className
       )}
     >
-      <div className="overflow-x-auto">
+      <ScrollArea orientation="horizontal" className="custom-scrollbar">
         <table className="w-full min-w-[640px] border-separate border-spacing-0 text-base">
           <thead className="text-zinc-500 dark:text-zinc-400">
             <tr>
@@ -72,7 +73,7 @@ export function DataTable<T extends Record<string, string | number>>({
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollArea>
     </div>
   )
 }

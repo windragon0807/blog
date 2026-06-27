@@ -4,6 +4,7 @@ import { getBookmarkMetadata, parseBookmarkUrl } from '@/lib/bookmark'
 import { getHeadingId } from '@/lib/toc'
 import type { Block, KnownBlock, RichText } from '@/types/notion'
 import { Badge } from '@/components/ui/badge'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Surface } from '@/components/common/Surface'
 import { StatusNotice } from '@/components/common/StatusNotice'
@@ -228,7 +229,10 @@ const knownBlockRenderers = {
       'border-b border-zinc-200 px-3 py-2 align-top text-sm font-semibold text-zinc-800 dark:border-zinc-700/70 dark:text-zinc-100'
 
     return (
-      <div className="my-5 overflow-x-auto rounded-lg border border-zinc-200 dark:border-zinc-700/70">
+      <ScrollArea
+        orientation="horizontal"
+        className="custom-scrollbar my-5 rounded-lg border border-zinc-200 dark:border-zinc-700/70"
+      >
         <table className="min-w-full border-collapse">
           {headerRow && (
             <thead>
@@ -263,7 +267,7 @@ const knownBlockRenderers = {
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollArea>
     )
   },
 
