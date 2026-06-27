@@ -166,9 +166,6 @@ const fileTreeElements: TreeViewElement[] = [
     children: [{ id: 'lib-utils', name: 'utils.ts' }],
   },
 ]
-const textPreviewFontStyle = {
-  fontFamily: "'Hancom MalangMalang', Pretendard, sans-serif",
-} as const
 const themeAccentButtonStyle = {
   backgroundColor: 'var(--theme-accent-current)',
   borderColor: 'var(--theme-accent-current)',
@@ -364,15 +361,40 @@ function OuterEffectSurface({
   )
 }
 
-function TextPreviewFont({ children }: { children: ReactNode }) {
-  return (
-    <div
-      className="flex min-h-60 w-full items-center justify-center"
-      style={textPreviewFontStyle}
-    >
-      {children}
-    </div>
-  )
+function getUserFontFamily() {
+  const rootStyles = window.getComputedStyle(document.documentElement)
+  const userFont = rootStyles.getPropertyValue('--font-user').trim()
+
+  return userFont || window.getComputedStyle(document.body).fontFamily || 'sans-serif'
+}
+
+function useUserFontFamily() {
+  const [userFontFamily, setUserFontFamily] = useState('var(--font-user)')
+
+  useEffect(() => {
+    const syncFontFamily = () => {
+      const nextFontFamily = getUserFontFamily()
+      setUserFontFamily((currentFontFamily) =>
+        currentFontFamily === nextFontFamily ? currentFontFamily : nextFontFamily
+      )
+    }
+    const root = document.documentElement
+    const observer = new MutationObserver(syncFontFamily)
+
+    syncFontFamily()
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ['style', 'data-font-theme'],
+    })
+    window.addEventListener('storage', syncFontFamily)
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('storage', syncFontFamily)
+    }
+  }, [])
+
+  return userFontFamily
 }
 
 function BackgroundBoxesPreview() {
@@ -958,12 +980,14 @@ function AuroraTextPreview() {
 }
 
 function VideoTextPreview() {
+  const userFontFamily = useUserFontFamily()
+
   return (
     <OuterEffectSurface className="min-h-60 p-0">
       <VideoText
         src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
         fontSize={18}
-        fontFamily="Hancom MalangMalang"
+        fontFamily={userFontFamily}
         className="h-48 w-full"
       >
         VIDEO
@@ -1123,10 +1147,6 @@ function BasePreviewContent({
       return <DataTablePreview />
     }
   })()
-
-  if (sample.categoryId === 'text-typography') {
-    return <TextPreviewFont>{content}</TextPreviewFont>
-  }
 
   return content
 }

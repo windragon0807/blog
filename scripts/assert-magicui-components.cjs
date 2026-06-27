@@ -626,7 +626,6 @@ for (const requiredPreviewPart of [
   'ParticlesPreview',
   'VideoTextPreview',
   'HighlighterPreview',
-  'TextPreviewFont',
   'bg-background',
   'theme-accent-current',
 ]) {
@@ -656,10 +655,12 @@ assert(
   'Install tabs should use a moving rounded background indicator instead of an underline'
 )
 assert(
-  previewsSource.includes('Hancom MalangMalang') &&
-    previewsSource.includes('TextPreviewFont') &&
-    previewsSource.includes('fontFamily="Hancom MalangMalang"'),
-  'Text previews should use Hancom MalangMalang, including VideoText mask font'
+  !previewsSource.includes('TextPreviewFont') &&
+    !previewsSource.includes('textPreviewFontStyle') &&
+    !previewsSource.includes('fontFamily="Hancom MalangMalang"') &&
+    previewsSource.includes('useUserFontFamily') &&
+    previewsSource.includes('fontFamily={userFontFamily}'),
+  'Text previews should inherit the selected blog font, including VideoText mask font'
 )
 assert(
   previewsSource.includes('themeGradientColors') &&
