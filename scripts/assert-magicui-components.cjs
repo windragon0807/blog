@@ -623,6 +623,14 @@ assert(
   'Component pages should not render Ready status badges'
 )
 assert(
+  !componentsPageSource.includes('componentSamples.map') &&
+    !componentsPageSource.includes('<PreviewFrame sample={sample} mode="thumbnail" />') &&
+    !componentsPageSource.includes('id="components"') &&
+    !componentsPageSource.includes('>\n          Components\n        </h1>') &&
+    !componentsPageSource.includes('Browse components'),
+  'Components introduction page should not render or label the removed component preview section'
+)
+assert(
   docsSource.includes('sample.reference.url') &&
     docsSource.includes('sample.reference.label') &&
     !docsSource.includes('sample.registry.dependencies'),
