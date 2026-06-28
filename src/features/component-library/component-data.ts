@@ -1,9 +1,11 @@
 export type ComponentCategoryId =
-  | 'actions-controls'
-  | 'content-media'
-  | 'data-structure'
-  | 'text-typography'
-  | 'effects-backgrounds'
+  | 'controls-inputs'
+  | 'menus-actions'
+  | 'content-display'
+  | 'data-status'
+  | 'text-effects'
+  | 'background-atmosphere'
+  | 'cursor-interaction-effects'
 
 export type ComponentPreviewKind =
   | 'ripple-button'
@@ -35,7 +37,6 @@ export type ComponentPreviewKind =
   | 'background-boxes'
   | 'keyboard'
   | 'placeholders-and-vanish-input'
-  | 'gooey-input'
   | '3d-marquee'
   | 'avatar-group'
   | 'playful-todolist'
@@ -185,7 +186,7 @@ function createSample({
     description,
     status: 'Ready',
     installCommand: `pnpm dlx shadcn@latest add https://ryong.dev/r/${slug}.json`,
-    filePath: `components/magicui/${slug}.tsx`,
+    filePath: `components/${slug}.tsx`,
     preview: {
       kind: slug,
       label: title,
@@ -196,7 +197,7 @@ function createSample({
       dependencies,
     },
     reference: reference ?? reactBitsReference(slug, title) ?? {
-      label: `Magic UI ${title}`,
+      label: `Reference ${title}`,
       url: `https://magicui.design/docs/components/${slug}`,
     },
     code: usage,
@@ -207,36 +208,46 @@ function createSample({
 
 export const componentCategories: readonly ComponentCategory[] = [
   {
-    id: 'actions-controls',
-    name: 'Actions & Controls',
-    description: '버튼, 메뉴, 입력, 토글처럼 사용자의 직접 조작을 받는 작은 컨트롤입니다.',
+    id: 'controls-inputs',
+    name: 'Controls & Inputs',
+    description: '버튼, 입력, 슬라이더, 토글처럼 사용자가 값을 바꾸는 컨트롤입니다.',
   },
   {
-    id: 'content-media',
-    name: 'Content & Media',
-    description: '캐러셀, 아바타, 이미지 도구처럼 콘텐츠를 보여주는 패턴입니다.',
+    id: 'menus-actions',
+    name: 'Menus & Actions',
+    description: '메뉴, 키보드, 투두처럼 액션 선택이나 조작 흐름을 보여주는 컴포넌트입니다.',
   },
   {
-    id: 'data-structure',
-    name: 'Data & Structure',
-    description: '테이블, 트리, 카운터, 진행률처럼 구조화된 정보를 다루는 컴포넌트입니다.',
+    id: 'content-display',
+    name: 'Content Display',
+    description: '캐러셀, 마키, 아바타, 이미지, 카드처럼 콘텐츠를 보여주는 패턴입니다.',
   },
   {
-    id: 'text-typography',
-    name: 'Text & Typography',
-    description: '제목, 숫자, 강조 텍스트에 움직임을 더하는 타이포그래피 컴포넌트입니다.',
+    id: 'data-status',
+    name: 'Data & Status',
+    description: '테이블, 트리, 진행률, 카운터처럼 구조화된 정보와 상태를 보여주는 컴포넌트입니다.',
   },
   {
-    id: 'effects-backgrounds',
-    name: 'Effects & Backgrounds',
-    description: '포인터 효과, 배경 모션, 파티클처럼 화면 분위기를 만드는 효과입니다.',
+    id: 'text-effects',
+    name: 'Text Effects',
+    description: '타이핑, 플립, 모핑, 하이라이트처럼 텍스트 자체를 강조하는 효과입니다.',
+  },
+  {
+    id: 'background-atmosphere',
+    name: 'Background & Atmosphere',
+    description: '섹션 배경과 화면 분위기를 만드는 배경형 효과입니다.',
+  },
+  {
+    id: 'cursor-interaction-effects',
+    name: 'Cursor & Interaction Effects',
+    description: '마우스 움직임, 클릭, 호버에 반응하는 인터랙션 효과입니다.',
   },
 ]
 
 export const componentSamples: readonly ComponentSample[] = [
   createSample({
     slug: 'background-boxes',
-    categoryId: 'effects-backgrounds',
+    categoryId: 'background-atmosphere',
     title: 'Background Boxes',
     description: '히어로 영역이나 기능 섹션에 쓰기 좋은, 호버에 반응하는 격자 배경입니다.',
     dependencies: ['motion'],
@@ -244,7 +255,7 @@ export const componentSamples: readonly ComponentSample[] = [
       label: 'Aceternity Background Boxes',
       url: 'https://ui.aceternity.com/components/background-boxes',
     },
-    usage: `import { BackgroundBoxes } from "@/components/magicui/background-boxes"
+    usage: `import { BackgroundBoxes } from "@/components/background-boxes"
 
 export default function Example() {
   return (
@@ -264,7 +275,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'keyboard',
-    categoryId: 'actions-controls',
+    categoryId: 'menus-actions',
     title: 'Keyboard',
     description: '클릭과 실제 키 입력 상태를 함께 보여주는 맥 스타일 키보드입니다.',
     dependencies: ['motion'],
@@ -272,7 +283,7 @@ export default function Example() {
       label: 'Aceternity Keyboard',
       url: 'https://ui.aceternity.com/components/keyboard',
     },
-    usage: `import { Keyboard } from "@/components/magicui/keyboard"
+    usage: `import { Keyboard } from "@/components/keyboard"
 
 export default function Example() {
   return <Keyboard showPreview />
@@ -287,7 +298,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'placeholders-and-vanish-input',
-    categoryId: 'actions-controls',
+    categoryId: 'controls-inputs',
     title: 'Placeholders And Vanish Input',
     description: '플레이스홀더가 순환되고 제출 시 텍스트가 사라지는 검색 입력입니다.',
     dependencies: ['motion'],
@@ -295,7 +306,7 @@ export default function Example() {
       label: 'Aceternity Placeholders And Vanish Input',
       url: 'https://ui.aceternity.com/components/placeholders-and-vanish-input',
     },
-    usage: `import { PlaceholdersAndVanishInput } from "@/components/magicui/placeholders-and-vanish-input"
+    usage: `import { PlaceholdersAndVanishInput } from "@/components/placeholders-and-vanish-input"
 
 export default function Example() {
   return <PlaceholdersAndVanishInput placeholders={["Search docs", "Ask AI"]} />
@@ -308,36 +319,8 @@ export default function Example() {
     ],
   }),
   createSample({
-    slug: 'gooey-input',
-    categoryId: 'actions-controls',
-    title: 'Gooey Input',
-    description: '접힌 검색창이 끈적한 SVG 필터 효과와 함께 확장되는 입력 컴포넌트입니다.',
-    dependencies: ['motion'],
-    reference: {
-      label: 'Aceternity Gooey Input',
-      url: 'https://ui.aceternity.com/components/gooey-input',
-    },
-    usage: `import { GooeyInput } from "@/components/magicui/gooey-input"
-
-export default function Example() {
-  return <GooeyInput placeholder="Search..." />
-}`,
-    props: [
-      classNameProp,
-      prop('placeholder', 'string', '"Type to search..."', 'Input placeholder.'),
-      prop('collapsedLabel', 'string', '-', 'Label shown while collapsed.'),
-      prop('classNames', 'GooeyInputClassNames', '-', 'Slot class overrides for trigger, input, and bubble surfaces.'),
-      prop('collapsedWidth', 'number', '115', 'Collapsed control width.'),
-      prop('expandedWidth', 'number', '200', 'Expanded control width.'),
-      prop('expandedOffset', 'number', '50', 'Offset used by the detached search bubble.'),
-      prop('gooeyBlur', 'number', '5', 'SVG gooey filter blur. Use 0 to disable the filter.'),
-      prop('onValueChange', '(value: string) => void', '-', 'Value change handler.'),
-    ],
-  }),
-
-  createSample({
     slug: '3d-marquee',
-    categoryId: 'content-media',
+    categoryId: 'content-display',
     title: '3D Marquee',
     description: '이미지나 카드 스트립을 원근감 있는 흐름으로 보여주는 3D 마키입니다.',
     dependencies: ['motion'],
@@ -345,7 +328,7 @@ export default function Example() {
       label: 'Aceternity 3D Marquee',
       url: 'https://ui.aceternity.com/components/3d-marquee',
     },
-    usage: `import { ThreeDMarquee } from "@/components/magicui/3d-marquee"
+    usage: `import { ThreeDMarquee } from "@/components/3d-marquee"
 
 export default function Example() {
   return <ThreeDMarquee images={images} />
@@ -358,7 +341,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'avatar-group',
-    categoryId: 'content-media',
+    categoryId: 'content-display',
     title: 'Avatar Group',
     description: '겹쳐진 아바타가 호버 시 떠오르고 안내 말풍선을 보여주는 아바타 그룹입니다.',
     dependencies: ['motion'],
@@ -366,7 +349,7 @@ export default function Example() {
       label: 'Animate UI Avatar Group',
       url: 'https://animate-ui.com/docs/components/animate/avatar-group',
     },
-    usage: `import { AvatarGroup } from "@/components/magicui/avatar-group"
+    usage: `import { AvatarGroup } from "@/components/avatar-group"
 
 export default function Example() {
   return <AvatarGroup items={users} />
@@ -384,7 +367,7 @@ export default function Example() {
 
   createSample({
     slug: 'playful-todolist',
-    categoryId: 'actions-controls',
+    categoryId: 'menus-actions',
     title: 'Playful Todo List',
     description: '체크 동작에 짧은 애니메이션을 더한 작은 투두 리스트입니다.',
     dependencies: ['motion'],
@@ -392,7 +375,7 @@ export default function Example() {
       label: 'Animate UI Playful TodoList',
       url: 'https://animate-ui.com/docs/components/community/playful-todolist',
     },
-    usage: `import { PlayfulTodoList } from "@/components/magicui/playful-todolist"
+    usage: `import { PlayfulTodoList } from "@/components/playful-todolist"
 
 export default function Example() {
   return <PlayfulTodoList />
@@ -404,7 +387,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'flower-menu',
-    categoryId: 'actions-controls',
+    categoryId: 'menus-actions',
     title: 'Flower Menu',
     description: '중앙 버튼을 기준으로 액션이 꽃처럼 펼쳐지는 플로팅 메뉴입니다.',
     dependencies: [],
@@ -412,7 +395,7 @@ export default function Example() {
       label: 'Animata Flower Menu',
       url: 'https://animata.design/docs/fabs/flower-menu',
     },
-    usage: `import { FlowerMenu } from "@/components/magicui/flower-menu"
+    usage: `import { FlowerMenu } from "@/components/flower-menu"
 
 export default function Example() {
   return <FlowerMenu items={items} />
@@ -426,7 +409,7 @@ export default function Example() {
 
   createSample({
     slug: 'text-flip',
-    categoryId: 'text-typography',
+    categoryId: 'text-effects',
     title: 'Text Flip',
     description: '짧은 단어가 차례로 뒤집히며 교체되는 텍스트 애니메이션입니다.',
     dependencies: ['motion'],
@@ -434,7 +417,7 @@ export default function Example() {
       label: 'Animata Text Flip',
       url: 'https://animata.design/docs/text/text-flip',
     },
-    usage: `import { TextFlip } from "@/components/magicui/text-flip"
+    usage: `import { TextFlip } from "@/components/text-flip"
 
 export default function Example() {
   return <TextFlip prefix="Coding is" words={["fantastic", "love", "fire"]} />
@@ -448,7 +431,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'toggle-theme',
-    categoryId: 'actions-controls',
+    categoryId: 'controls-inputs',
     title: 'Toggle Theme',
     description: '라이트/다크 테마를 전환하는 간결한 스위치형 토글입니다.',
     dependencies: ['lucide-react', 'next-themes'],
@@ -456,7 +439,7 @@ export default function Example() {
       label: 'Lightswind Toggle Theme',
       url: 'https://lightswind.com/components/toggle-theme',
     },
-    usage: `import { ToggleTheme } from "@/components/magicui/toggle-theme"
+    usage: `import { ToggleTheme } from "@/components/toggle-theme"
 
 export default function Example() {
   return <ToggleTheme />
@@ -472,7 +455,7 @@ export default function Example() {
   }),
   createSample({
     slug: '3d-image-carousel',
-    categoryId: 'content-media',
+    categoryId: 'content-display',
     title: '3D Image Carousel',
     description: '이미지 카드를 원근감 있게 회전시키는 3D 캐러셀입니다.',
     dependencies: ['lucide-react'],
@@ -480,7 +463,7 @@ export default function Example() {
       label: 'Lightswind 3D Image Carousel',
       url: 'https://lightswind.com/components/3d-image-carousel',
     },
-    usage: `import { ThreeDImageCarousel } from "@/components/magicui/3d-image-carousel"
+    usage: `import { ThreeDImageCarousel } from "@/components/3d-image-carousel"
 
 export default function Example() {
   return <ThreeDImageCarousel items={items} />
@@ -498,7 +481,7 @@ export default function Example() {
   }),
   createSample({
     slug: 'sparkle-cursor',
-    categoryId: 'effects-backgrounds',
+    categoryId: 'cursor-interaction-effects',
     title: 'Sparkle Cursor',
     description: '지정된 영역 안에서 커서 움직임에 따라 반짝임을 뿌리는 효과입니다.',
     dependencies: ['gsap'],
@@ -506,7 +489,7 @@ export default function Example() {
       label: 'Lightswind Sparkle Cursor',
       url: 'https://lightswind.com/components/sparkle-cursor',
     },
-    usage: `import { SparkleCursor } from "@/components/magicui/sparkle-cursor"
+    usage: `import { SparkleCursor } from "@/components/sparkle-cursor"
 
 export default function Example() {
   return <SparkleCursor>Move here</SparkleCursor>
@@ -520,11 +503,11 @@ export default function Example() {
   }),
   createSample({
     slug: 'mouse-invert-cursor',
-    categoryId: 'effects-backgrounds',
+    categoryId: 'cursor-interaction-effects',
     title: 'Mouse Invert Cursor',
     description: '영역 안에서 배경을 반전시키는 혼합 모드 커서 효과입니다.',
     reference: mouseAnimationsReference,
-    usage: `import { MouseInvertCursor } from "@/components/magicui/mouse-invert-cursor"
+    usage: `import { MouseInvertCursor } from "@/components/mouse-invert-cursor"
 
 export default function Example() {
   return (
@@ -545,11 +528,11 @@ export default function Example() {
   }),
   createSample({
     slug: 'mouse-trail-cursor',
-    categoryId: 'effects-backgrounds',
+    categoryId: 'cursor-interaction-effects',
     title: 'Mouse Trail Cursor',
     description: '영역 안에서 커서 뒤를 작은 점들이 따라오는 캔버스 트레일 효과입니다.',
     reference: mouseAnimationsReference,
-    usage: `import { MouseTrailCursor } from "@/components/magicui/mouse-trail-cursor"
+    usage: `import { MouseTrailCursor } from "@/components/mouse-trail-cursor"
 
 export default function Example() {
   return (
@@ -571,11 +554,11 @@ export default function Example() {
   }),
   createSample({
     slug: 'mouse-ripple-cursor',
-    categoryId: 'effects-backgrounds',
+    categoryId: 'cursor-interaction-effects',
     title: 'Mouse Ripple Cursor',
     description: '클릭한 지점에서 원형 리플이 퍼지는 커서 인터랙션입니다.',
     reference: mouseAnimationsReference,
-    usage: `import { MouseRippleCursor } from "@/components/magicui/mouse-ripple-cursor"
+    usage: `import { MouseRippleCursor } from "@/components/mouse-ripple-cursor"
 
 export default function Example() {
   return (
@@ -595,11 +578,11 @@ export default function Example() {
   }),
   createSample({
     slug: 'mouse-custom-cursor',
-    categoryId: 'effects-backgrounds',
+    categoryId: 'cursor-interaction-effects',
     title: 'Mouse Custom Cursor',
     description: '작은 점과 늦게 따라오는 링으로 커서를 대체하는 영역형 효과입니다.',
     reference: mouseAnimationsReference,
-    usage: `import { MouseCustomCursor } from "@/components/magicui/mouse-custom-cursor"
+    usage: `import { MouseCustomCursor } from "@/components/mouse-custom-cursor"
 
 export default function Example() {
   return (
@@ -622,11 +605,11 @@ export default function Example() {
   }),
   createSample({
     slug: 'fairy-dust-cursor',
-    categoryId: 'effects-backgrounds',
+    categoryId: 'cursor-interaction-effects',
     title: 'Fairy Dust Cursor',
     description: '커서 이동을 따라 작은 별가루가 흩어지는 영역형 파티클 효과입니다.',
     reference: cursorEffectsReference,
-    usage: `import { FairyDustCursor } from "@/components/magicui/fairy-dust-cursor"
+    usage: `import { FairyDustCursor } from "@/components/fairy-dust-cursor"
 
 export default function Example() {
   return (
@@ -646,11 +629,11 @@ export default function Example() {
   }),
   createSample({
     slug: 'bubble-cursor',
-    categoryId: 'effects-backgrounds',
+    categoryId: 'cursor-interaction-effects',
     title: 'Bubble Cursor',
     description: '커서 움직임을 따라 거품 파티클이 떠오르는 영역형 효과입니다.',
     reference: cursorEffectsReference,
-    usage: `import { BubbleCursor } from "@/components/magicui/bubble-cursor"
+    usage: `import { BubbleCursor } from "@/components/bubble-cursor"
 
 export default function Example() {
   return (
@@ -670,11 +653,11 @@ export default function Example() {
   }),
   createSample({
     slug: 'character-cursor',
-    categoryId: 'effects-backgrounds',
+    categoryId: 'cursor-interaction-effects',
     title: 'Character Cursor',
     description: '커서 주변에 문자 파티클이 생성되는 영역형 효과입니다.',
     reference: cursorEffectsReference,
-    usage: `import { CharacterCursor } from "@/components/magicui/character-cursor"
+    usage: `import { CharacterCursor } from "@/components/character-cursor"
 
 export default function Example() {
   return (
@@ -696,11 +679,11 @@ export default function Example() {
   }),
   createSample({
     slug: 'canvas-cursor',
-    categoryId: 'effects-backgrounds',
+    categoryId: 'cursor-interaction-effects',
     title: 'Canvas Cursor',
     description: '스프링처럼 이어진 선이 커서를 따라오는 캔버스 트레일 효과입니다.',
     reference: cursifyCanvasReference,
-    usage: `import { CanvasCursor } from "@/components/magicui/canvas-cursor"
+    usage: `import { CanvasCursor } from "@/components/canvas-cursor"
 
 export default function Example() {
   return (
@@ -727,14 +710,14 @@ export default function Example() {
   }),
   createSample({
     slug: 'data-table',
-    categoryId: 'data-structure',
+    categoryId: 'data-status',
     title: 'Table',
     description: 'HeroUI 테이블 구조를 참고한 타입 기반 데이터 테이블입니다.',
     reference: {
       label: 'HeroUI Table',
       url: 'https://heroui.com/en/docs/react/components/table',
     },
-    usage: `import { DataTable } from "@/components/magicui/data-table"
+    usage: `import { DataTable } from "@/components/data-table"
 
 export default function Example() {
   return <DataTable columns={columns} rows={rows} />
@@ -747,10 +730,10 @@ export default function Example() {
   }),
   createSample({
     slug: 'ripple-button',
-    categoryId: 'actions-controls',
+    categoryId: 'controls-inputs',
     title: 'Ripple Button',
     description: '클릭한 포인터 위치에서 리플이 퍼지는 버튼입니다.',
-    usage: `import { RippleButton } from "@/components/magicui/ripple-button"
+    usage: `import { RippleButton } from "@/components/ripple-button"
 
 export default function Example() {
   return <RippleButton>Click me</RippleButton>
@@ -765,11 +748,11 @@ export default function Example() {
   }),
   createSample({
     slug: 'shiny-button',
-    categoryId: 'actions-controls',
+    categoryId: 'controls-inputs',
     title: 'Shiny Button',
     description: '반복되는 광택 마스크와 탄성 있는 탭 피드백을 가진 버튼입니다.',
     dependencies: ['motion'],
-    usage: `import { ShinyButton } from "@/components/magicui/shiny-button"
+    usage: `import { ShinyButton } from "@/components/shiny-button"
 
 export default function Example() {
   return <ShinyButton>Shiny Button</ShinyButton>
@@ -783,10 +766,10 @@ export default function Example() {
   }),
   createSample({
     slug: 'marquee',
-    categoryId: 'content-media',
+    categoryId: 'content-display',
     title: 'Marquee',
     description: '텍스트, 이미지, 비디오를 끊김 없이 흘려보낼 수 있는 마키 컴포넌트입니다.',
-    usage: `import { Marquee } from "@/components/magicui/marquee"
+    usage: `import { Marquee } from "@/components/marquee"
 
 export default function Example() {
   return (
@@ -809,10 +792,10 @@ export default function Example() {
   }),
   createSample({
     slug: 'icon-cloud',
-    categoryId: 'content-media',
+    categoryId: 'content-display',
     title: 'Icon Cloud',
     description: '아이콘이나 이미지를 3D 구름처럼 회전시키는 컴포넌트입니다.',
-    usage: `import { IconCloud } from "@/components/magicui/icon-cloud"
+    usage: `import { IconCloud } from "@/components/icon-cloud"
 
 const images = [
   "https://cdn.simpleicons.org/typescript/typescript",
@@ -830,11 +813,11 @@ export default function Example() {
   }),
   createSample({
     slug: 'lens',
-    categoryId: 'content-media',
+    categoryId: 'content-display',
     title: 'Lens',
     description: '이미지, 비디오, 기타 요소를 렌즈처럼 확대해 볼 수 있는 컴포넌트입니다.',
     dependencies: ['motion'],
-    usage: `import { Lens } from "@/components/magicui/lens"
+    usage: `import { Lens } from "@/components/lens"
 
 export default function Example() {
   return (
@@ -854,11 +837,11 @@ export default function Example() {
   }),
   createSample({
     slug: 'pointer',
-    categoryId: 'effects-backgrounds',
+    categoryId: 'cursor-interaction-effects',
     title: 'Pointer',
     description: '요소에 호버했을 때 사용자 지정 포인터를 보여주는 컴포넌트입니다.',
     dependencies: ['motion'],
-    usage: `import { Pointer } from "@/components/magicui/pointer"
+    usage: `import { Pointer } from "@/components/pointer"
 
 export default function Example() {
   return (
@@ -875,11 +858,11 @@ export default function Example() {
   }),
   createSample({
     slug: 'file-tree',
-    categoryId: 'data-structure',
+    categoryId: 'data-status',
     title: 'File Tree',
     description: '파일과 폴더를 선택하고 접을 수 있는 중첩 파일 트리입니다.',
     dependencies: ['@radix-ui/react-accordion', '@radix-ui/react-scroll-area', 'lucide-react'],
-    usage: `import { Tree, type TreeViewElement } from "@/components/magicui/file-tree"
+    usage: `import { Tree, type TreeViewElement } from "@/components/file-tree"
 
 const elements: TreeViewElement[] = [
   {
@@ -907,10 +890,10 @@ export default function Example() {
   }),
   createSample({
     slug: 'animated-circular-progress-bar',
-    categoryId: 'data-structure',
+    categoryId: 'data-status',
     title: 'Animated Circular Progress Bar',
     description: '기본 호와 보조 호가 값 변화에 맞춰 움직이는 원형 게이지입니다.',
-    usage: `import { AnimatedCircularProgressBar } from "@/components/magicui/animated-circular-progress-bar"
+    usage: `import { AnimatedCircularProgressBar } from "@/components/animated-circular-progress-bar"
 
 export default function Example() {
   return (
@@ -932,10 +915,10 @@ export default function Example() {
   }),
   createSample({
     slug: 'curved-loop',
-    categoryId: 'text-typography',
+    categoryId: 'text-effects',
     title: 'Curved Loop',
     description: '곡선 경로를 따라 텍스트가 반복되고 드래그로 흐름을 제어할 수 있는 SVG 마키입니다.',
-    usage: `import { CurvedLoop } from "@/components/magicui/curved-loop"
+    usage: `import { CurvedLoop } from "@/components/curved-loop"
 
 export default function Example() {
   return (
@@ -959,10 +942,10 @@ export default function Example() {
   }),
   createSample({
     slug: 'click-spark',
-    categoryId: 'effects-backgrounds',
+    categoryId: 'cursor-interaction-effects',
     title: 'Click Spark',
     description: '클릭할 때마다 방사형 불꽃이 캔버스 위에 그려지는 효과입니다.',
-    usage: `import { ClickSpark } from "@/components/magicui/click-spark"
+    usage: `import { ClickSpark } from "@/components/click-spark"
 
 export default function Example() {
   return (
@@ -984,10 +967,10 @@ export default function Example() {
   }),
   createSample({
     slug: 'magnet',
-    categoryId: 'effects-backgrounds',
+    categoryId: 'cursor-interaction-effects',
     title: 'Magnet',
     description: '호버 시 자식 요소가 포인터 쪽으로 끌려오는 자기장 효과입니다.',
-    usage: `import { Magnet } from "@/components/magicui/magnet"
+    usage: `import { Magnet } from "@/components/magnet"
 
 export default function Example() {
   return (
@@ -1007,11 +990,11 @@ export default function Example() {
   }),
   createSample({
     slug: 'stack',
-    categoryId: 'content-media',
+    categoryId: 'content-display',
     title: 'Stack',
     description: '드래그한 카드를 뒤로 보내며 순환시키는 카드 스택입니다.',
     dependencies: ['motion'],
-    usage: `import { Stack } from "@/components/magicui/stack"
+    usage: `import { Stack } from "@/components/stack"
 
 export default function Example() {
   return (
@@ -1030,10 +1013,10 @@ export default function Example() {
   }),
   createSample({
     slug: 'folder',
-    categoryId: 'content-media',
+    categoryId: 'content-display',
     title: 'Folder',
     description: '클릭하면 여러 장의 종이 카드가 펼쳐지는 폴더 일러스트입니다.',
-    usage: `import { Folder } from "@/components/magicui/folder"
+    usage: `import { Folder } from "@/components/folder"
 
 export default function Example() {
   return <Folder color="#5227ff" />
@@ -1049,11 +1032,11 @@ export default function Example() {
 
   createSample({
     slug: 'carousel',
-    categoryId: 'content-media',
+    categoryId: 'content-display',
     title: 'Carousel',
     description: '드래그와 자동 재생을 지원하는 3D 카드 캐러셀입니다.',
     dependencies: ['motion', 'react-icons'],
-    usage: `import { Carousel } from "@/components/magicui/carousel"
+    usage: `import { Carousel } from "@/components/carousel"
 
 export default function Example() {
   return <Carousel autoplay loop pauseOnHover />
@@ -1071,11 +1054,11 @@ export default function Example() {
 
   createSample({
     slug: 'elastic-slider',
-    categoryId: 'actions-controls',
+    categoryId: 'controls-inputs',
     title: 'Elastic Slider',
     description: '탄성 있는 초과 움직임과 스프링 움직임을 가진 슬라이더입니다.',
     dependencies: ['motion'],
-    usage: `import { ElasticSlider } from "@/components/magicui/elastic-slider"
+    usage: `import { ElasticSlider } from "@/components/elastic-slider"
 
 export default function Example() {
   return <ElasticSlider defaultValue={45} />
@@ -1092,12 +1075,12 @@ export default function Example() {
   }),
   createSample({
     slug: 'counter',
-    categoryId: 'data-structure',
+    categoryId: 'data-status',
     title: 'Counter',
     description: '소수점 자리까지 지원하며 숫자가 굴러가듯 바뀌는 카운터입니다.',
     dependencies: ['motion'],
     usage: `import { useState } from "react"
-import { Counter } from "@/components/magicui/counter"
+import { Counter } from "@/components/counter"
 
 export default function Example() {
   const [value, setValue] = useState(17.8)
@@ -1132,10 +1115,10 @@ export default function Example() {
 
   createSample({
     slug: 'meteors',
-    categoryId: 'effects-backgrounds',
+    categoryId: 'background-atmosphere',
     title: 'Meteors',
     description: '화면 위로 유성이 떨어지는 듯한 배경 효과입니다.',
-    usage: `import { Meteors } from "@/components/magicui/meteors"
+    usage: `import { Meteors } from "@/components/meteors"
 
 export default function Example() {
   return (
@@ -1156,11 +1139,11 @@ export default function Example() {
   }),
   createSample({
     slug: 'confetti',
-    categoryId: 'effects-backgrounds',
+    categoryId: 'cursor-interaction-effects',
     title: 'Confetti',
     description: '완료, 성공, 축하 같은 순간에 짧은 즐거움을 더하는 색종이 효과입니다.',
     dependencies: ['canvas-confetti', '@types/canvas-confetti'],
-    usage: `import { ConfettiButton } from "@/components/magicui/confetti"
+    usage: `import { ConfettiButton } from "@/components/confetti"
 
 export default function Example() {
   return <ConfettiButton>Celebrate</ConfettiButton>
@@ -1174,10 +1157,10 @@ export default function Example() {
   }),
   createSample({
     slug: 'particles',
-    categoryId: 'effects-backgrounds',
+    categoryId: 'background-atmosphere',
     title: 'Particles',
     description: '깊이감과 움직임, 인터랙션으로 배경에 생동감을 더하는 파티클 효과입니다.',
-    usage: `import { Particles } from "@/components/magicui/particles"
+    usage: `import { Particles } from "@/components/particles"
 
 export default function Example() {
   return (
@@ -1198,11 +1181,11 @@ export default function Example() {
   }),
   createSample({
     slug: 'typing-animation',
-    categoryId: 'text-typography',
+    categoryId: 'text-effects',
     title: 'Typing Animation',
     description: '문자가 타이핑되듯 순서대로 나타나는 텍스트 애니메이션입니다.',
     dependencies: ['motion'],
-    usage: `import { TypingAnimation } from "@/components/magicui/typing-animation"
+    usage: `import { TypingAnimation } from "@/components/typing-animation"
 
 export default function Example() {
   return <TypingAnimation>Typing Animation</TypingAnimation>
@@ -1218,10 +1201,10 @@ export default function Example() {
   }),
   createSample({
     slug: 'aurora-text',
-    categoryId: 'text-typography',
+    categoryId: 'text-effects',
     title: 'Aurora Text',
     description: '오로라처럼 흐르는 그라데이션을 텍스트에 입히는 효과입니다.',
-    usage: `import { AuroraText } from "@/components/magicui/aurora-text"
+    usage: `import { AuroraText } from "@/components/aurora-text"
 
 export default function Example() {
   return <AuroraText>Aurora Text</AuroraText>
@@ -1235,10 +1218,10 @@ export default function Example() {
   }),
   createSample({
     slug: 'video-text',
-    categoryId: 'text-typography',
+    categoryId: 'text-effects',
     title: 'Video Text',
     description: '텍스트 마스크 안쪽으로 비디오가 재생되는 타이포그래피 컴포넌트입니다.',
-    usage: `import { VideoText } from "@/components/magicui/video-text"
+    usage: `import { VideoText } from "@/components/video-text"
 
 export default function Example() {
   return <VideoText src="/videos/demo.mp4">VIDEO</VideoText>
@@ -1254,11 +1237,11 @@ export default function Example() {
   }),
   createSample({
     slug: 'number-ticker',
-    categoryId: 'text-typography',
+    categoryId: 'data-status',
     title: 'Number Ticker',
     description: '목표 숫자까지 자연스럽게 증가하거나 감소하는 숫자 애니메이션입니다.',
     dependencies: ['motion'],
-    usage: `import { NumberTicker } from "@/components/magicui/number-ticker"
+    usage: `import { NumberTicker } from "@/components/number-ticker"
 
 export default function Example() {
   return <NumberTicker value={1200} />
@@ -1273,11 +1256,11 @@ export default function Example() {
   }),
   createSample({
     slug: 'dia-text-reveal',
-    categoryId: 'text-typography',
+    categoryId: 'text-effects',
     title: 'Dia Text Reveal',
     description: '가로 색상 띠가 텍스트를 지나가며 그라데이션 빛을 드러내는 애니메이션입니다.',
     dependencies: ['motion'],
-    usage: `import { DiaTextReveal } from "@/components/magicui/dia-text-reveal"
+    usage: `import { DiaTextReveal } from "@/components/dia-text-reveal"
 
 export default function Example() {
   return <DiaTextReveal text="Dia Text Reveal" />
@@ -1293,10 +1276,10 @@ export default function Example() {
   }),
   createSample({
     slug: 'morphing-text',
-    categoryId: 'text-typography',
+    categoryId: 'text-effects',
     title: 'Morphing Text',
     description: '단어가 흐림과 투명도 변화로 서로 녹아들듯 전환되는 텍스트 컴포넌트입니다.',
-    usage: `import { MorphingText } from "@/components/magicui/morphing-text"
+    usage: `import { MorphingText } from "@/components/morphing-text"
 
 export default function Example() {
   return <MorphingText texts={["Design", "Code", "Ship"]} />
@@ -1308,11 +1291,11 @@ export default function Example() {
   }),
   createSample({
     slug: 'highlighter',
-    categoryId: 'text-typography',
+    categoryId: 'text-effects',
     title: 'Highlighter',
     description: '사람이 직접 그은 마커 획처럼 텍스트를 밑줄 또는 형광펜으로 강조합니다.',
     dependencies: ['motion', 'rough-notation'],
-    usage: `import { Highlighter } from "@/components/magicui/highlighter"
+    usage: `import { Highlighter } from "@/components/highlighter"
 
 export default function Example() {
   return (

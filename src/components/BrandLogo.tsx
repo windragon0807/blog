@@ -13,8 +13,8 @@ import {
   isLogoMotionName,
   type LogoMotionName,
 } from '@/lib/logoMotions'
-import { DiaTextReveal } from './magicui/dia-text-reveal'
-import { Highlighter } from './magicui/highlighter'
+import { DiaTextReveal } from './dia-text-reveal'
+import { Highlighter } from './highlighter'
 import TypingText from './TypingText'
 
 // data-logo-motion 외부 store 구독 — useState/useEffect 없이 SSR/hydration 일관성 유지

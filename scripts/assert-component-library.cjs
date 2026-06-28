@@ -4,6 +4,9 @@ const fs = require('node:fs')
 const path = require('node:path')
 
 const root = process.cwd()
+const packageJsonPath = path.join(root, 'package.json')
+const removedSearchInputName = ['goo' + 'ey', 'input'].join('-')
+const removedSearchInputComponent = ['Goo' + 'ey', 'Input'].join('')
 const requiredNames = [
   'ripple-button',
   'shiny-button',
@@ -34,7 +37,6 @@ const requiredNames = [
   'background-boxes',
   'keyboard',
   'placeholders-and-vanish-input',
-  'gooey-input',
   '3d-marquee',
   'avatar-group',
   'playful-todolist',
@@ -64,16 +66,20 @@ const cursorEffectNames = [
   'canvas-cursor',
 ]
 const requiredCategories = [
-  "id: 'actions-controls'",
-  "name: 'Actions & Controls'",
-  "id: 'content-media'",
-  "name: 'Content & Media'",
-  "id: 'data-structure'",
-  "name: 'Data & Structure'",
-  "id: 'text-typography'",
-  "name: 'Text & Typography'",
-  "id: 'effects-backgrounds'",
-  "name: 'Effects & Backgrounds'",
+  "id: 'controls-inputs'",
+  "name: 'Controls & Inputs'",
+  "id: 'menus-actions'",
+  "name: 'Menus & Actions'",
+  "id: 'content-display'",
+  "name: 'Content Display'",
+  "id: 'data-status'",
+  "name: 'Data & Status'",
+  "id: 'text-effects'",
+  "name: 'Text Effects'",
+  "id: 'background-atmosphere'",
+  "name: 'Background & Atmosphere'",
+  "id: 'cursor-interaction-effects'",
+  "name: 'Cursor & Interaction Effects'",
 ]
 const removedNames = [
   'action-button',
@@ -112,8 +118,14 @@ const removedNames = [
   'slide-arrow-button',
   'fluid-cursor',
   'shine-border',
+  removedSearchInputName,
 ]
 const removedCategories = [
+  'actions-controls',
+  'content-media',
+  'data-structure',
+  'text-typography',
+  'effects-backgrounds',
   'core',
   'surfaces',
   'feedback',
@@ -146,7 +158,6 @@ const motionNames = [
   'background-boxes',
   'keyboard',
   'placeholders-and-vanish-input',
-  'gooey-input',
   '3d-marquee',
   'avatar-group',
   'playful-todolist',
@@ -196,23 +207,23 @@ const installTabsPath = path.join(
 )
 const brandLogoPath = path.join(root, 'src/components/BrandLogo.tsx')
 const logoMotionsPath = path.join(root, 'src/lib/logoMotions.ts')
-const videoTextPath = path.join(root, 'src/components/magicui/video-text.tsx')
+const videoTextPath = path.join(root, 'src/components/video-text.tsx')
 const diaTextRevealPath = path.join(
   root,
-  'src/components/magicui/dia-text-reveal.tsx'
+  'src/components/dia-text-reveal.tsx'
 )
-const toggleThemePath = path.join(root, 'src/components/magicui/toggle-theme.tsx')
+const toggleThemePath = path.join(root, 'src/components/toggle-theme.tsx')
 const playfulTodoListPath = path.join(
   root,
-  'src/components/magicui/playful-todolist.tsx'
+  'src/components/playful-todolist.tsx'
 )
-const avatarGroupPath = path.join(root, 'src/components/magicui/avatar-group.tsx')
-const dataTablePath = path.join(root, 'src/components/magicui/data-table.tsx')
-const fileTreePath = path.join(root, 'src/components/magicui/file-tree.tsx')
-const textFlipPath = path.join(root, 'src/components/magicui/text-flip.tsx')
+const avatarGroupPath = path.join(root, 'src/components/avatar-group.tsx')
+const dataTablePath = path.join(root, 'src/components/data-table.tsx')
+const fileTreePath = path.join(root, 'src/components/file-tree.tsx')
+const textFlipPath = path.join(root, 'src/components/text-flip.tsx')
 const cursorEffectRuntimePath = path.join(
   root,
-  'src/components/magicui/cursor-effect-runtime.tsx'
+  'src/components/cursor-effect-runtime.tsx'
 )
 const dataSource = fs.readFileSync(dataPath, 'utf8')
 const docsSource = fs.readFileSync(docsPath, 'utf8')
@@ -240,6 +251,58 @@ function assert(condition, message) {
   }
 }
 
+const externalPathSegment = 'magic' + 'ui'
+const externalSourcePath = `src/components/${externalPathSegment}`
+const removedComponentName = removedSearchInputName
+
+assert(
+  !fs.existsSync(path.join(root, externalSourcePath)),
+  `External-branded component folder should be removed: ${externalSourcePath}`
+)
+assert(
+    !fs.existsSync(path.join(root, `src/components/${removedComponentName}.tsx`)) &&
+    !fs.existsSync(path.join(root, `public/r/${removedComponentName}.json`)) &&
+    !dataSource.includes(`slug: '${removedComponentName}'`) &&
+    !previewsSource.includes(removedSearchInputComponent),
+  'Removed input should be removed from source, registry, data, and previews'
+)
+
+const localBrandMarkers = [
+  `src/components/${externalPathSegment}`,
+  `components/${externalPathSegment}`,
+  `@/components/${externalPathSegment}`,
+  `./${externalPathSegment}`,
+  `components-${externalPathSegment}`,
+  `name: '${externalPathSegment}'`,
+  `generate-${externalPathSegment}-registry`,
+  `assert-${externalPathSegment}-components`,
+]
+const textFilesToScan = [
+  packageJsonPath,
+  dataPath,
+  docsPath,
+  componentsPagePath,
+  layoutPath,
+  sidebarPath,
+  previewsPath,
+  brandLogoPath,
+  path.join(root, 'scripts/generate-component-registry.cjs'),
+  ...fs
+    .readdirSync(path.join(root, 'public/r'))
+    .filter((name) => name.endsWith('.json'))
+    .map((name) => path.join(root, 'public/r', name)),
+]
+
+for (const filePath of textFilesToScan) {
+  const source = fs.readFileSync(filePath, 'utf8')
+  for (const marker of localBrandMarkers) {
+    assert(
+      !source.includes(marker),
+      `External-branded local marker still exists in ${filePath}: ${marker}`
+    )
+  }
+}
+
 for (const category of requiredCategories) {
   assert(
     dataSource.includes(category),
@@ -261,7 +324,7 @@ for (const name of removedNames) {
     `Removed sample still exists: ${name}`
   )
   assert(
-    !fs.existsSync(path.join(root, `src/components/magicui/${name}.tsx`)),
+    !fs.existsSync(path.join(root, `src/components/${name}.tsx`)),
     `Removed source file still exists: ${name}`
   )
   assert(
@@ -276,7 +339,7 @@ for (const name of requiredNames) {
     `Missing ${name} sample in component-data.ts`
   )
 
-  const sourcePath = path.join(root, `src/components/magicui/${name}.tsx`)
+  const sourcePath = path.join(root, `src/components/${name}.tsx`)
   assert(fs.existsSync(sourcePath), `Missing source file: ${sourcePath}`)
 
   const registryPath = path.join(root, `public/r/${name}.json`)
@@ -295,7 +358,7 @@ for (const name of requiredNames) {
     `${name} registry item should expose the expected source files`
   )
   assert(
-    registry.files[0].path === `src/components/magicui/${name}.tsx`,
+    registry.files[0].path === `src/components/${name}.tsx`,
     `${name} registry file path should match local source path`
   )
   assert(
@@ -317,7 +380,7 @@ for (const name of cursorEffectNames) {
   )
   assert(
     registry.files.some(
-      (file) => file.path === 'src/components/magicui/cursor-effect-runtime.tsx'
+      (file) => file.path === 'src/components/cursor-effect-runtime.tsx'
     ),
     `${name} registry item should include cursor-effect-runtime.tsx`
   )
@@ -478,7 +541,7 @@ for (const name of cssRegistryNames) {
   )
   assert(
     registry.css || registry.cssVars,
-    `${name} registry item should include Magic UI CSS metadata`
+    `${name} registry item should include component CSS metadata`
   )
 }
 
@@ -505,63 +568,59 @@ const highlightedCodeBlockSource = fs.readFileSync(highlightedCodeBlockPath, 'ut
 const notionCodeBlockSource = fs.readFileSync(notionCodeBlockPath, 'utf8')
 const installTabsSource = fs.readFileSync(installTabsPath, 'utf8')
 const meteorsSource = fs.readFileSync(
-  path.join(root, 'src/components/magicui/meteors.tsx'),
+  path.join(root, 'src/components/meteors.tsx'),
   'utf8'
 )
 const carouselSource = fs.readFileSync(
-  path.join(root, 'src/components/magicui/carousel.tsx'),
+  path.join(root, 'src/components/carousel.tsx'),
   'utf8'
 )
 const folderSource = fs.readFileSync(
-  path.join(root, 'src/components/magicui/folder.tsx'),
+  path.join(root, 'src/components/folder.tsx'),
   'utf8'
 )
 const elasticSliderSource = fs.readFileSync(
-  path.join(root, 'src/components/magicui/elastic-slider.tsx'),
+  path.join(root, 'src/components/elastic-slider.tsx'),
   'utf8'
 )
 const stackSource = fs.readFileSync(
-  path.join(root, 'src/components/magicui/stack.tsx'),
+  path.join(root, 'src/components/stack.tsx'),
   'utf8'
 )
 const shinyButtonSource = fs.readFileSync(
-  path.join(root, 'src/components/magicui/shiny-button.tsx'),
+  path.join(root, 'src/components/shiny-button.tsx'),
   'utf8'
 )
 const flowerMenuSource = fs.readFileSync(
-  path.join(root, 'src/components/magicui/flower-menu.tsx'),
-  'utf8'
-)
-const gooeyInputSource = fs.readFileSync(
-  path.join(root, 'src/components/magicui/gooey-input.tsx'),
+  path.join(root, 'src/components/flower-menu.tsx'),
   'utf8'
 )
 const auroraTextSource = fs.readFileSync(
-  path.join(root, 'src/components/magicui/aurora-text.tsx'),
+  path.join(root, 'src/components/aurora-text.tsx'),
   'utf8'
 )
 const curvedLoopSource = fs.readFileSync(
-  path.join(root, 'src/components/magicui/curved-loop.tsx'),
+  path.join(root, 'src/components/curved-loop.tsx'),
   'utf8'
 )
 const clickSparkSource = fs.readFileSync(
-  path.join(root, 'src/components/magicui/click-spark.tsx'),
+  path.join(root, 'src/components/click-spark.tsx'),
   'utf8'
 )
 const particlesSource = fs.readFileSync(
-  path.join(root, 'src/components/magicui/particles.tsx'),
+  path.join(root, 'src/components/particles.tsx'),
   'utf8'
 )
 const placeholdersAndVanishInputSource = fs.readFileSync(
-  path.join(root, 'src/components/magicui/placeholders-and-vanish-input.tsx'),
+  path.join(root, 'src/components/placeholders-and-vanish-input.tsx'),
   'utf8'
 )
 const threeDImageCarouselSource = fs.readFileSync(
-  path.join(root, 'src/components/magicui/3d-image-carousel.tsx'),
+  path.join(root, 'src/components/3d-image-carousel.tsx'),
   'utf8'
 )
 const highlighterSource = fs.readFileSync(
-  path.join(root, 'src/components/magicui/highlighter.tsx'),
+  path.join(root, 'src/components/highlighter.tsx'),
   'utf8'
 )
 assert(
@@ -726,7 +785,6 @@ for (const requiredDemoSurfacePreview of [
   'BackgroundBoxesPreview',
   'KeyboardPreview',
   'PlaceholdersAndVanishInputPreview',
-  'GooeyInputPreview',
   'ThreeDMarqueePreview',
   'AvatarGroupPreview',
   'PlayfulTodoListPreview',
@@ -794,7 +852,7 @@ for (const removedPreviewPart of [
   )
 }
 assert(
-  !fs.readFileSync(path.join(root, 'scripts/generate-magicui-registry.cjs'), 'utf8')
+  !fs.readFileSync(path.join(root, 'scripts/generate-component-registry.cjs'), 'utf8')
     .includes("name: 'slide-arrow-button'"),
   'Slide Arrow Button should be removed from registry generation'
 )
@@ -812,7 +870,7 @@ for (const removedComponentPart of [
   )
 }
 const generatorSource = fs.readFileSync(
-  path.join(root, 'scripts/generate-magicui-registry.cjs'),
+  path.join(root, 'scripts/generate-component-registry.cjs'),
   'utf8'
 )
 for (const removedGeneratorName of ['fluid-cursor', 'shine-border']) {
@@ -974,27 +1032,6 @@ assert(
     clickSparkSource.includes('color: string') &&
     clickSparkSource.includes('ctx.strokeStyle = spark.color'),
   'Click Spark preview should spark from the full surface with stable per-spark Aurora colors'
-)
-assert(
-  previewFunctionSource('GooeyInputPreview').includes('placeholder="Search Something"') &&
-    previewFunctionSource('GooeyInputPreview').includes('collapsedLabel="Search Something"') &&
-    previewFunctionSource('GooeyInputPreview').includes('collapsedWidth={420}') &&
-    previewFunctionSource('GooeyInputPreview').includes('expandedWidth={388}') &&
-    previewFunctionSource('GooeyInputPreview').includes('expandedOffset={56}') &&
-    previewFunctionSource('GooeyInputPreview').includes('gooeyBlur={5}') &&
-    previewFunctionSource('GooeyInputPreview').includes('className="w-full max-w-md"') &&
-    previewFunctionSource('GooeyInputPreview').includes('filterWrap:') &&
-    previewFunctionSource('GooeyInputPreview').includes('h-12') &&
-    gooeyInputSource.includes('data-gooey-filter-wrap') &&
-    gooeyInputSource.includes('data-gooey-trigger') &&
-    gooeyInputSource.includes('data-gooey-bubble') &&
-    !gooeyInputSource.includes('data-gooey-filter-layer') &&
-    !previewFunctionSource('GooeyInputPreview').includes('gooLayer:') &&
-    previewFunctionSource('GooeyInputPreview').includes('bg-[#25282d]') &&
-    previewFunctionSource('GooeyInputPreview').includes('text-white/75') &&
-    previewFunctionSource('GooeyInputPreview').includes('shadow-[0_24px_90px_-52px_rgba(255,255,255,0.34)]') &&
-    previewFunctionSource('GooeyInputPreview').includes('placeholder:text-white/45'),
-  'Gooey Input preview should keep the original gooey animation structure while using a taller Vanish Input-like outer shell'
 )
 assert(
   previewFunctionSource('FlowerMenuPreview').includes('variant="glass"') &&
@@ -1189,7 +1226,7 @@ assert(
     !previewsSource.includes("case 'text-animate'") &&
     !previewsSource.includes("case 'animated-shiny-text'") &&
     !previewsSource.includes("case 'animated-gradient-text'"),
-  'Component previews should not include removed Magic UI components'
+  'Component previews should not include removed legacy components'
 )
 for (const requiredPreviewPart of [
   'OuterEffectSurface',
@@ -1211,7 +1248,7 @@ assert(
     previewsSource.includes('action="highlight"') &&
     previewsSource.includes('color="#87CEFA"') &&
     previewsSource.includes('animationDuration={900}'),
-  'Highlighter preview should exercise Magic UI highlighter props with visible animation colors'
+  'Highlighter preview should exercise highlighter props with visible animation colors'
 )
 assert(
   !sidebarSource.includes('Getting Started') &&
@@ -1417,4 +1454,4 @@ assert(
   'Components layout should import the client sidebar entrypoint'
 )
 
-console.log('Magic UI component registry assertions passed')
+console.log('Component library assertions passed')

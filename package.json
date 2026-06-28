@@ -12,7 +12,7 @@
     "build": "next build",
     "start": "next start -p 3200",
     "lint": "eslint",
-    "registry:generate": "node scripts/generate-magicui-registry.cjs",
+    "registry:generate": "node scripts/generate-component-registry.cjs",
     "test:resume": "playwright test -c playwright.config.ts",
     "test:resume:server": "RESUME_TEST_START_SERVER=1 playwright test -c playwright.config.ts"
   },

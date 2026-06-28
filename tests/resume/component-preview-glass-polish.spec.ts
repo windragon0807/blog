@@ -132,60 +132,9 @@ test.describe('component preview glass polish', () => {
     await assertNoErrors()
   })
 
-  test('gooey input and shiny button keep their visible preview surfaces', async ({
-    page,
-  }) => {
+  test('shiny button keeps its visible preview surface', async ({ page }) => {
     const assertNoErrors = await expectNoConsoleErrors(page)
     await page.setViewportSize({ width: 1440, height: 900 })
-
-    await page.goto('/components/gooey-input')
-    const gooeyButton = page.getByRole('button', { name: /search something/i })
-    await expect(gooeyButton).toBeVisible()
-    await expect(gooeyButton).toHaveCSS('opacity', '1')
-
-    const gooeyMetrics = await gooeyButton.evaluate((element) => {
-      const rect = element.getBoundingClientRect()
-      const style = getComputedStyle(element)
-      const surface = element.closest('[data-preview-demo-surface]')
-      const filterWrap = surface?.querySelector<HTMLElement>('[data-gooey-filter-wrap]')
-
-      return {
-        width: rect.width,
-        height: rect.height,
-        filter: filterWrap ? getComputedStyle(filterWrap).filter : '',
-        backgroundColor: style.backgroundColor,
-        color: style.color,
-      }
-    })
-
-    expect(gooeyMetrics.width).toBeGreaterThan(390)
-    expect(gooeyMetrics.height).toBeGreaterThan(44)
-    expect(gooeyMetrics.filter).toContain('url(')
-    expect(gooeyMetrics.backgroundColor).not.toBe('rgb(255, 255, 255)')
-    expect(gooeyMetrics.color).toContain('/ 0.75')
-
-    await gooeyButton.click()
-    await expect(page.getByPlaceholder('Search Something')).toBeVisible()
-    await page.waitForTimeout(450)
-    const expandedGooeyMetrics = await page
-      .locator('[data-preview-demo-surface]')
-      .first()
-      .evaluate((surface) => {
-        const trigger = surface.querySelector<HTMLElement>('[data-gooey-trigger]')
-        const bubble = surface.querySelector<HTMLElement>('[data-gooey-bubble]')
-        const triggerRect = trigger?.getBoundingClientRect()
-        const bubbleRect = bubble?.getBoundingClientRect()
-
-        return {
-          triggerWidth: triggerRect?.width ?? 0,
-          bubbleWidth: bubbleRect?.width ?? 0,
-          gap: triggerRect && bubbleRect ? triggerRect.left - bubbleRect.right : 0,
-        }
-      })
-
-    expect(expandedGooeyMetrics.triggerWidth).toBeGreaterThan(360)
-    expect(expandedGooeyMetrics.bubbleWidth).toBeGreaterThan(40)
-    expect(expandedGooeyMetrics.gap).toBeGreaterThan(0)
 
     await page.goto('/components/shiny-button')
     const shinyButton = page.getByRole('button', { name: /continue/i })

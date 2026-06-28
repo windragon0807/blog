@@ -261,7 +261,7 @@ const items = [
   {
     name: 'morphing-text',
     title: 'Morphing Text',
-    description: 'A dynamic text morphing component for Magic UI.',
+    description: 'A dynamic text morphing component.',
     dependencies: [],
   },
   {
@@ -287,12 +287,6 @@ const items = [
     name: 'placeholders-and-vanish-input',
     title: 'Placeholders And Vanish Input',
     description: 'A search input with rotating placeholders and vanish submit motion.',
-    dependencies: ['motion'],
-  },
-  {
-    name: 'gooey-input',
-    title: 'Gooey Input',
-    description: 'A collapsed search input that expands through a gooey SVG filter.',
     dependencies: ['motion'],
   },
 
@@ -419,16 +413,16 @@ for (const file of fs.readdirSync(outDir)) {
 }
 
 for (const item of items) {
-  const sourcePath = path.join(root, `src/components/magicui/${item.name}.tsx`)
+  const sourcePath = path.join(root, `src/components/${item.name}.tsx`)
   const content = fs.readFileSync(sourcePath, 'utf8')
   const files = [
     {
-      path: `src/components/magicui/${item.name}.tsx`,
+      path: `src/components/${item.name}.tsx`,
       content,
       type: 'registry:ui',
     },
     ...(item.sharedFiles ?? []).map((sharedName) => {
-      const sharedPath = `src/components/magicui/${sharedName}.tsx`
+      const sharedPath = `src/components/${sharedName}.tsx`
       return {
         path: sharedPath,
         content: fs.readFileSync(path.join(root, sharedPath), 'utf8'),
@@ -457,4 +451,4 @@ for (const item of items) {
   )
 }
 
-console.log(`Generated ${items.length} Magic UI registry items`)
+console.log(`Generated ${items.length} component registry items`)

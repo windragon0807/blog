@@ -35,7 +35,7 @@ declare global {
 
 test('toggle theme keeps the Lightswind View Transition implementation shape', async () => {
   const componentSource = readFileSync(
-    join(process.cwd(), 'src/components/magicui/toggle-theme.tsx'),
+    join(process.cwd(), 'src/components/toggle-theme.tsx'),
     'utf8'
   )
   const globalStylesSource = readFileSync(

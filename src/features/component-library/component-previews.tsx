@@ -16,53 +16,52 @@ import {
   Upload,
 } from 'lucide-react'
 import { motion } from 'motion/react'
-import { ThreeDImageCarousel } from '@/components/magicui/3d-image-carousel'
-import { ThreeDMarquee } from '@/components/magicui/3d-marquee'
-import { AnimatedCircularProgressBar } from '@/components/magicui/animated-circular-progress-bar'
-import { AuroraText } from '@/components/magicui/aurora-text'
-import { AvatarGroup } from '@/components/magicui/avatar-group'
-import { BackgroundBoxes } from '@/components/magicui/background-boxes'
-import { BubbleCursor } from '@/components/magicui/bubble-cursor'
-import { CanvasCursor } from '@/components/magicui/canvas-cursor'
-import { Carousel } from '@/components/magicui/carousel'
-import { CharacterCursor } from '@/components/magicui/character-cursor'
-import { ClickSpark } from '@/components/magicui/click-spark'
-import { ConfettiButton } from '@/components/magicui/confetti'
-import { Counter } from '@/components/magicui/counter'
-import { CurvedLoop } from '@/components/magicui/curved-loop'
-import { DataTable } from '@/components/magicui/data-table'
-import { DiaTextReveal } from '@/components/magicui/dia-text-reveal'
-import { ElasticSlider } from '@/components/magicui/elastic-slider'
-import { FairyDustCursor } from '@/components/magicui/fairy-dust-cursor'
-import { Tree, type TreeViewElement } from '@/components/magicui/file-tree'
-import { FlowerMenu } from '@/components/magicui/flower-menu'
-import { Folder } from '@/components/magicui/folder'
-import { GooeyInput } from '@/components/magicui/gooey-input'
-import { Highlighter } from '@/components/magicui/highlighter'
-import { IconCloud } from '@/components/magicui/icon-cloud'
-import { Keyboard } from '@/components/magicui/keyboard'
-import { Lens } from '@/components/magicui/lens'
-import { Magnet } from '@/components/magicui/magnet'
-import { Marquee } from '@/components/magicui/marquee'
-import { Meteors } from '@/components/magicui/meteors'
-import { MouseCustomCursor } from '@/components/magicui/mouse-custom-cursor'
-import { MouseInvertCursor } from '@/components/magicui/mouse-invert-cursor'
-import { MouseRippleCursor } from '@/components/magicui/mouse-ripple-cursor'
-import { MouseTrailCursor } from '@/components/magicui/mouse-trail-cursor'
-import { MorphingText } from '@/components/magicui/morphing-text'
-import { NumberTicker } from '@/components/magicui/number-ticker'
-import { Particles } from '@/components/magicui/particles'
-import { PlaceholdersAndVanishInput } from '@/components/magicui/placeholders-and-vanish-input'
-import { PlayfulTodoList } from '@/components/magicui/playful-todolist'
-import { Pointer } from '@/components/magicui/pointer'
-import { RippleButton } from '@/components/magicui/ripple-button'
-import { ShinyButton } from '@/components/magicui/shiny-button'
-import { SparkleCursor } from '@/components/magicui/sparkle-cursor'
-import { Stack } from '@/components/magicui/stack'
-import { TextFlip } from '@/components/magicui/text-flip'
-import { ToggleTheme } from '@/components/magicui/toggle-theme'
-import { TypingAnimation } from '@/components/magicui/typing-animation'
-import { VideoText } from '@/components/magicui/video-text'
+import { ThreeDImageCarousel } from '@/components/3d-image-carousel'
+import { ThreeDMarquee } from '@/components/3d-marquee'
+import { AnimatedCircularProgressBar } from '@/components/animated-circular-progress-bar'
+import { AuroraText } from '@/components/aurora-text'
+import { AvatarGroup } from '@/components/avatar-group'
+import { BackgroundBoxes } from '@/components/background-boxes'
+import { BubbleCursor } from '@/components/bubble-cursor'
+import { CanvasCursor } from '@/components/canvas-cursor'
+import { Carousel } from '@/components/carousel'
+import { CharacterCursor } from '@/components/character-cursor'
+import { ClickSpark } from '@/components/click-spark'
+import { ConfettiButton } from '@/components/confetti'
+import { Counter } from '@/components/counter'
+import { CurvedLoop } from '@/components/curved-loop'
+import { DataTable } from '@/components/data-table'
+import { DiaTextReveal } from '@/components/dia-text-reveal'
+import { ElasticSlider } from '@/components/elastic-slider'
+import { FairyDustCursor } from '@/components/fairy-dust-cursor'
+import { Tree, type TreeViewElement } from '@/components/file-tree'
+import { FlowerMenu } from '@/components/flower-menu'
+import { Folder } from '@/components/folder'
+import { Highlighter } from '@/components/highlighter'
+import { IconCloud } from '@/components/icon-cloud'
+import { Keyboard } from '@/components/keyboard'
+import { Lens } from '@/components/lens'
+import { Magnet } from '@/components/magnet'
+import { Marquee } from '@/components/marquee'
+import { Meteors } from '@/components/meteors'
+import { MouseCustomCursor } from '@/components/mouse-custom-cursor'
+import { MouseInvertCursor } from '@/components/mouse-invert-cursor'
+import { MouseRippleCursor } from '@/components/mouse-ripple-cursor'
+import { MouseTrailCursor } from '@/components/mouse-trail-cursor'
+import { MorphingText } from '@/components/morphing-text'
+import { NumberTicker } from '@/components/number-ticker'
+import { Particles } from '@/components/particles'
+import { PlaceholdersAndVanishInput } from '@/components/placeholders-and-vanish-input'
+import { PlayfulTodoList } from '@/components/playful-todolist'
+import { Pointer } from '@/components/pointer'
+import { RippleButton } from '@/components/ripple-button'
+import { ShinyButton } from '@/components/shiny-button'
+import { SparkleCursor } from '@/components/sparkle-cursor'
+import { Stack } from '@/components/stack'
+import { TextFlip } from '@/components/text-flip'
+import { ToggleTheme } from '@/components/toggle-theme'
+import { TypingAnimation } from '@/components/typing-animation'
+import { VideoText } from '@/components/video-text'
 import { cn } from '@/lib/utils'
 import type { ComponentSample } from './component-data'
 
@@ -154,15 +153,9 @@ const fileTreeElements: TreeViewElement[] = [
     id: 'components',
     name: 'components',
     children: [
-      {
-        id: 'components-magicui',
-        name: 'magicui',
-        children: [
-          { id: 'ripple-button', name: 'ripple-button.tsx' },
-          { id: 'file-tree', name: 'file-tree.tsx' },
-          { id: 'shiny-button', name: 'shiny-button.tsx' },
-        ],
-      },
+      { id: 'ripple-button', name: 'ripple-button.tsx' },
+      { id: 'file-tree', name: 'file-tree.tsx' },
+      { id: 'shiny-button', name: 'shiny-button.tsx' },
     ],
   },
   {
@@ -434,41 +427,6 @@ function PlaceholdersAndVanishInputPreview() {
         variant="glass"
         className="max-w-md"
         placeholders={['Search components', 'Ask about registry', 'Find animations']}
-      />
-    </PreviewDemoSurface>
-  )
-}
-
-function GooeyInputPreview() {
-  return (
-    <PreviewDemoSurface
-      label="action control"
-      title="Gooey Input"
-      subtitle="click search to expand"
-      accentClassName="bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.24),transparent_55%)]"
-    >
-      <GooeyInput
-        placeholder="Search Something"
-        collapsedLabel="Search Something"
-        collapsedWidth={420}
-        expandedWidth={388}
-        expandedOffset={56}
-        gooeyBlur={5}
-        className="w-full max-w-md"
-        classNames={{
-          filterWrap:
-            'h-12',
-          buttonRow:
-            'h-12',
-          trigger:
-            'h-12 border border-white/10 bg-[#25282d] px-6 text-base text-white/75 shadow-[0_24px_90px_-52px_rgba(255,255,255,0.34)] transition duration-200',
-          input:
-            'text-base text-white placeholder:text-white/45',
-          bubble:
-            'size-12',
-          bubbleSurface:
-            'size-12 border border-white/10 bg-[#25282d] text-white/75 shadow-[0_24px_90px_-52px_rgba(255,255,255,0.34)]',
-        }}
       />
     </PreviewDemoSurface>
   )
@@ -926,7 +884,7 @@ function FileTreePreview() {
         <Tree
           elements={fileTreeElements}
           initialSelectedId="file-tree"
-          initialExpandedItems={['app', 'components', 'components-magicui']}
+          initialExpandedItems={['app', 'components']}
           className="h-full text-base"
         />
       </div>
@@ -1437,7 +1395,7 @@ function DiaTextRevealPreview() {
       label="text motion"
       title={
         <DiaTextReveal
-          text={['Dia Text Reveal', 'Color Sweep', 'Magic UI']}
+          text={['Dia Text Reveal', 'Color Sweep', 'Gradient Text']}
           repeat
           colors={[...originalGradientColors]}
           textColor="#ffffff"
@@ -1488,7 +1446,7 @@ function HighlighterPreview() {
           repeat
           repeatDelay={1400}
         >
-          Magic UI Highlighter
+          Marker Highlighter
         </Highlighter>{' '}
         makes important{' '}
         <Highlighter
@@ -1574,8 +1532,6 @@ function BasePreviewContent({
       return <KeyboardPreview />
     case 'placeholders-and-vanish-input':
       return <PlaceholdersAndVanishInputPreview />
-    case 'gooey-input':
-      return <GooeyInputPreview />
     case '3d-marquee':
       return <ThreeDMarqueePreview />
     case 'avatar-group':
