@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "flower-menu",
   "type": "registry:ui",
-  "title": "Flower Menu",
+  "title": "Radial Action Menu",
   "description": "A radial floating action menu.",
   "dependencies": [],
   "files": [

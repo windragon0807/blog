@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "video-text",
   "type": "registry:ui",
-  "title": "Video Text",
+  "title": "Video Mask Text",
   "description": "A component that displays text with a video playing in the background.",
   "dependencies": [],
   "files": [

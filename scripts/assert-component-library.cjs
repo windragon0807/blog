@@ -251,6 +251,76 @@ function assert(condition, message) {
   }
 }
 
+const expectedComponentTitles = [
+  ['background-boxes', 'Hover Grid Background'],
+  ['keyboard', 'Interactive Keyboard'],
+  ['placeholders-and-vanish-input', 'Rotating Search Input'],
+  ['3d-marquee', 'Perspective Image Marquee'],
+  ['avatar-group', 'Hover Avatar Group'],
+  ['playful-todolist', 'Animated Task List'],
+  ['flower-menu', 'Radial Action Menu'],
+  ['text-flip', 'Rotating Word Flip'],
+  ['toggle-theme', 'Theme Toggle'],
+  ['3d-image-carousel', 'Depth Image Carousel'],
+  ['sparkle-cursor', 'Sparkle Cursor Trail'],
+  ['mouse-invert-cursor', 'Invert Cursor'],
+  ['mouse-trail-cursor', 'Dot Cursor Trail'],
+  ['mouse-ripple-cursor', 'Click Ripple Cursor'],
+  ['mouse-custom-cursor', 'Ring Cursor'],
+  ['fairy-dust-cursor', 'Star Particle Cursor'],
+  ['bubble-cursor', 'Bubble Cursor Trail'],
+  ['character-cursor', 'Character Particle Cursor'],
+  ['canvas-cursor', 'Spring Line Cursor'],
+  ['data-table', 'Typed Data Table'],
+  ['ripple-button', 'Click Ripple Button'],
+  ['shiny-button', 'Shine Button'],
+  ['marquee', 'Continuous Marquee'],
+  ['icon-cloud', 'Rotating Icon Cloud'],
+  ['lens', 'Magnifier Lens'],
+  ['pointer', 'Hover Pointer'],
+  ['file-tree', 'Collapsible File Tree'],
+  ['animated-circular-progress-bar', 'Circular Progress Meter'],
+  ['curved-loop', 'Curved Text Marquee'],
+  ['click-spark', 'Click Spark Burst'],
+  ['magnet', 'Magnetic Hover'],
+  ['stack', 'Swipe Card Stack'],
+  ['folder', 'Expandable Folder'],
+  ['carousel', 'Card Carousel'],
+  ['elastic-slider', 'Spring Slider'],
+  ['counter', 'Rolling Number Counter'],
+  ['meteors', 'Meteor Background'],
+  ['confetti', 'Confetti Button'],
+  ['particles', 'Particle Background'],
+  ['typing-animation', 'Typewriter Text'],
+  ['aurora-text', 'Gradient Text'],
+  ['video-text', 'Video Mask Text'],
+  ['number-ticker', 'Animated Number'],
+  ['dia-text-reveal', 'Color Sweep Text'],
+  ['morphing-text', 'Morphing Word'],
+  ['highlighter', 'Marker Highlight'],
+]
+
+for (const [slug, title] of expectedComponentTitles) {
+  const registryPath = path.join(root, `public/r/${slug}.json`)
+  const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'))
+
+  assert(
+    dataSource.includes(`slug: '${slug}'`) &&
+      dataSource.includes(`title: '${title}'`),
+    `Component should use intuitive display title: ${slug} / ${title}`
+  )
+  assert(
+    registry.title === title,
+    `Component registry should use intuitive display title: ${slug} / ${title}`
+  )
+}
+
+assert(
+  !docsSource.includes('원본 구현과 인터랙션 흐름은') &&
+    !docsSource.includes('를 기준으로 확인할 수 있습니다.'),
+  'Reference section should render as a simple link, not prose'
+)
+
 const externalPathSegment = 'magic' + 'ui'
 const externalSourcePath = `src/components/${externalPathSegment}`
 const removedComponentName = removedSearchInputName

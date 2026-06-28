@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "3d-image-carousel",
   "type": "registry:ui",
-  "title": "3D Image Carousel",
+  "title": "Depth Image Carousel",
   "description": "A rotating perspective image carousel.",
   "dependencies": [
     "lucide-react"

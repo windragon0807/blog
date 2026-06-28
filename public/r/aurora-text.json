@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "aurora-text",
   "type": "registry:ui",
-  "title": "Aurora Text",
+  "title": "Gradient Text",
   "description": "A beautiful aurora text effect.",
   "dependencies": [],
   "files": [

@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "canvas-cursor",
   "type": "registry:ui",
-  "title": "Canvas Cursor",
+  "title": "Spring Line Cursor",
   "description": "A scoped spring-line canvas trail adapted from Cursify Canvas Cursor.",
   "dependencies": [],
   "files": [

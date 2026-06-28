@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "pointer",
   "type": "registry:ui",
-  "title": "Pointer",
+  "title": "Hover Pointer",
   "description": "A component that displays a pointer when hovering over an element.",
   "dependencies": [
     "motion"

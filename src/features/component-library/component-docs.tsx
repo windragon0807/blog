@@ -194,18 +194,14 @@ export function ComponentSection({ sample }: { sample: ComponentSample }) {
         >
           Reference
         </h2>
-        <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-          원본 구현과 인터랙션 흐름은{' '}
-          <a
-            href={sample.reference.url}
-            target="_blank"
-            rel="noreferrer"
-            className="font-medium text-[var(--theme-accent-current)] underline underline-offset-4 transition-opacity hover:opacity-75"
-          >
-            {sample.reference.label}
-          </a>
-          를 기준으로 확인할 수 있습니다.
-        </p>
+        <a
+          href={sample.reference.url}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-3 inline-flex text-sm font-medium text-[var(--theme-accent-current)] underline underline-offset-4 transition-opacity hover:opacity-75"
+        >
+          {sample.reference.label}
+        </a>
       </section>
     </article>
   )

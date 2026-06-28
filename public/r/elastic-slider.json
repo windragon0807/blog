@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "elastic-slider",
   "type": "registry:ui",
-  "title": "Elastic Slider",
+  "title": "Spring Slider",
   "description": "A slider with elastic overflow and springy thumb movement.",
   "dependencies": [
     "motion"

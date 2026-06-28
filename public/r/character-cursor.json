@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "character-cursor",
   "type": "registry:ui",
-  "title": "Character Cursor",
+  "title": "Character Particle Cursor",
   "description": "A scoped character particle cursor adapted from tholman cursor-effects Character.",
   "dependencies": [],
   "files": [

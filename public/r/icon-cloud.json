@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "icon-cloud",
   "type": "registry:ui",
-  "title": "Icon Cloud",
+  "title": "Rotating Icon Cloud",
   "description": "An interactive 3D tag cloud component.",
   "dependencies": [],
   "files": [

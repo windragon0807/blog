@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "text-flip",
   "type": "registry:ui",
-  "title": "Text Flip",
+  "title": "Rotating Word Flip",
   "description": "A rotating word flip animation.",
   "dependencies": [
     "motion"

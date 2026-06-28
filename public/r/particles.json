@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "particles",
   "type": "registry:ui",
-  "title": "Particles",
+  "title": "Particle Background",
   "description": "Particles add visual flair with depth, movement, and interactivity.",
   "dependencies": [],
   "files": [

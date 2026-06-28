@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "mouse-trail-cursor",
   "type": "registry:ui",
-  "title": "Mouse Trail Cursor",
+  "title": "Dot Cursor Trail",
   "description": "A bounded canvas dot trail adapted from mouse-animations Trail.",
   "dependencies": [],
   "files": [

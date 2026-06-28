@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "playful-todolist",
   "type": "registry:ui",
-  "title": "Playful Todo List",
+  "title": "Animated Task List",
   "description": "A small animated todo list interaction.",
   "dependencies": [
     "motion"

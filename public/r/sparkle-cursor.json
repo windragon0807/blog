@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "sparkle-cursor",
   "type": "registry:ui",
-  "title": "Sparkle Cursor",
+  "title": "Sparkle Cursor Trail",
   "description": "A local cursor sparkle effect for a bounded surface.",
   "dependencies": [
     "gsap"

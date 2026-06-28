@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "magnet",
   "type": "registry:ui",
-  "title": "Magnet",
+  "title": "Magnetic Hover",
   "description": "A hover target that pulls its child toward the pointer.",
   "dependencies": [],
   "files": [

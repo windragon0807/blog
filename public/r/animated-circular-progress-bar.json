@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "animated-circular-progress-bar",
   "type": "registry:ui",
-  "title": "Animated Circular Progress Bar",
+  "title": "Circular Progress Meter",
   "description": "A circular gauge that animates between values with primary and secondary arcs.",
   "dependencies": [],
   "files": [

@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "typing-animation",
   "type": "registry:ui",
-  "title": "Typing Animation",
+  "title": "Typewriter Text",
   "description": "Characters appearing in typed animation.",
   "dependencies": [
     "motion"

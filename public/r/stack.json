@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "stack",
   "type": "registry:ui",
-  "title": "Stack",
+  "title": "Swipe Card Stack",
   "description": "A draggable card stack that sends swiped cards to the back.",
   "dependencies": [
     "motion"

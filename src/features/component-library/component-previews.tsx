@@ -385,7 +385,7 @@ function BackgroundBoxesPreview() {
   return (
     <PreviewDemoSurface
       label="ambient background"
-      title="Background Boxes"
+      title="Hover Grid Background"
       subtitle="move across the grid"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.24),transparent_58%)]"
       overlay={
@@ -402,7 +402,7 @@ function KeyboardPreview() {
   return (
     <PreviewDemoSurface
       label="action control"
-      title="Keyboard"
+      title="Interactive Keyboard"
       subtitle="press keys or click keycaps"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.24),transparent_55%)]"
       className="min-h-[44rem]"
@@ -440,7 +440,7 @@ function ThreeDMarqueePreview() {
   return (
     <PreviewDemoSurface
       label="content motion"
-      title="3D Marquee"
+      title="Perspective Image Marquee"
       subtitle="perspective image strips"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.22),transparent_58%)]"
       className="min-h-[38rem]"
@@ -463,7 +463,7 @@ function AvatarGroupPreview() {
   return (
     <PreviewDemoSurface
       label="content display"
-      title="Avatar Group"
+      title="Hover Avatar Group"
       subtitle="compact people stack"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(244,114,182,0.24),transparent_55%)]"
       contentGapClassName="mt-16"
@@ -477,7 +477,7 @@ function PlayfulTodoListPreview() {
   return (
     <PreviewDemoSurface
       label="action control"
-      title="Playful Todo List"
+      title="Animated Task List"
       subtitle="check tasks with motion"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(34,197,94,0.24),transparent_55%)]"
     >
@@ -490,7 +490,7 @@ function FlowerMenuPreview() {
   return (
     <PreviewDemoSurface
       label="action control"
-      title="Flower Menu"
+      title="Radial Action Menu"
       subtitle="open radial actions"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(236,72,153,0.24),transparent_55%)]"
     >
@@ -540,7 +540,7 @@ function ToggleThemePreview() {
   return (
     <PreviewDemoSurface
       label="theme control"
-      title="Toggle Theme"
+      title="Theme Toggle"
       subtitle="switch with different transitions"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.22),transparent_55%)]"
       contentClassName="max-w-3xl"
@@ -564,7 +564,7 @@ function ThreeDImageCarouselPreview() {
   return (
     <PreviewDemoSurface
       label="content media"
-      title="3D Image Carousel"
+      title="Depth Image Carousel"
       subtitle="rotate through image cards"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(125,211,252,0.22),transparent_58%)]"
       className="min-h-[32rem]"
@@ -587,7 +587,7 @@ function SparkleCursorPreview() {
       <SparkleCursor className="block w-full">
         <PreviewDemoSurface
           label="cursor effect"
-          title="Sparkle Cursor"
+          title="Sparkle Cursor Trail"
           subtitle="move to scatter sparkles"
           accentClassName="bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.28),transparent_55%)]"
         />
@@ -600,7 +600,7 @@ function DataTablePreview() {
   return (
     <PreviewDemoSurface
       label="data structure"
-      title="Table"
+      title="Typed Data Table"
       subtitle="scan sortable rows"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.24),transparent_55%)]"
       contentClassName="max-w-5xl"
@@ -800,7 +800,7 @@ function CanvasCursorPreview({ mode }: { mode: PreviewMode }) {
       <CanvasCursor disabled={mode === 'thumbnail'}>
         <PreviewDemoSurface
           label="cursor effect"
-          title="Canvas Cursor"
+          title="Spring Line Cursor"
           subtitle="spring lines follow your cursor"
           accentClassName="bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.28),transparent_55%)]"
         />
@@ -813,7 +813,7 @@ function RippleButtonPreview() {
   return (
     <PreviewDemoSurface
       label="action control"
-      title="Ripple Button"
+      title="Click Ripple Button"
       subtitle="click to send a ripple"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.3),transparent_55%)]"
     >
@@ -831,7 +831,7 @@ function ShinyButtonPreview() {
   return (
     <PreviewDemoSurface
       label="action control"
-      title="Shiny Button"
+      title="Shine Button"
       subtitle="hover for a soft shine"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(251,113,133,0.28),transparent_55%)]"
     >
@@ -849,7 +849,7 @@ function MarqueePreview() {
   return (
     <PreviewDemoSurface
       label="content motion"
-      title="Marquee"
+      title="Continuous Marquee"
       subtitle="hover to pause the rows"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(192,132,252,0.24),transparent_55%)]"
       overlay={
@@ -876,7 +876,7 @@ function FileTreePreview() {
   return (
     <PreviewDemoSurface
       label="data structure"
-      title="File Tree"
+      title="Collapsible File Tree"
       subtitle="browse nested files"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(34,211,238,0.22),transparent_55%)]"
     >
@@ -936,7 +936,7 @@ function CurvedLoopPreview() {
   return (
     <PreviewDemoSurface
       label="text motion"
-      title="Curved Loop"
+      title="Curved Text Marquee"
       subtitle="curved marquee text"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(251,113,133,0.24),transparent_55%)]"
       contentClassName="w-full max-w-none"
@@ -966,7 +966,7 @@ function ClickSparkPreview() {
       >
         <PreviewDemoSurface
           label="interaction effect"
-          title="Click Spark"
+          title="Click Spark Burst"
           subtitle="click anywhere in the stage"
           accentClassName="bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.28),transparent_55%)]"
           className="min-h-[30rem] cursor-crosshair"
@@ -981,7 +981,7 @@ function MagnetPreview() {
     <OuterEffectSurface className="p-0">
       <PreviewDemoSurface
         label="interaction effect"
-        title="Magnet"
+        title="Magnetic Hover"
         subtitle="move near the chip"
         accentClassName="bg-[radial-gradient(circle_at_center,rgba(52,211,153,0.28),transparent_55%)]"
       >
@@ -1001,7 +1001,7 @@ function StackPreview() {
   return (
     <PreviewDemoSurface
       label="content stack"
-      title="Stack"
+      title="Swipe Card Stack"
       subtitle="click cards to send back"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(129,140,248,0.24),transparent_55%)]"
     >
@@ -1019,7 +1019,7 @@ function FolderPreview() {
   return (
     <PreviewDemoSurface
       label="content stack"
-      title="Folder"
+      title="Expandable Folder"
       subtitle="click to open stacked items"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.2),transparent_55%)]"
     >
@@ -1043,7 +1043,7 @@ function CarouselPreview() {
   return (
     <PreviewDemoSurface
       label="content media"
-      title="Carousel"
+      title="Card Carousel"
       subtitle="autoplay through cards"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.24),transparent_55%)]"
     >
@@ -1056,7 +1056,7 @@ function ElasticSliderPreview() {
   return (
     <PreviewDemoSurface
       label="action control"
-      title="Elastic Slider"
+      title="Spring Slider"
       subtitle="drag the stepped handle"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.24),transparent_55%)]"
     >
@@ -1071,7 +1071,7 @@ function CounterPreview() {
   return (
     <PreviewDemoSurface
       label="data structure"
-      title="Counter"
+      title="Rolling Number Counter"
       subtitle="increment decimal values"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(34,197,94,0.24),transparent_55%)]"
     >
@@ -1110,7 +1110,7 @@ function IconCloudPreview() {
   return (
     <PreviewDemoSurface
       label="content display"
-      title="Icon Cloud"
+      title="Rotating Icon Cloud"
       subtitle="drag the cloud of icons"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.24),transparent_55%)]"
     >
@@ -1125,7 +1125,7 @@ function LensPreview() {
   return (
     <PreviewDemoSurface
       label="content media"
-      title="Lens"
+      title="Magnifier Lens"
       subtitle="hover to inspect the image"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(251,146,60,0.22),transparent_55%)]"
     >
@@ -1219,7 +1219,7 @@ function PointerPreview() {
   return (
     <PreviewDemoSurface
       label="cursor effect"
-      title="Pointer"
+      title="Hover Pointer"
       subtitle="custom pointer shapes"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(244,114,182,0.24),transparent_55%)]"
       contentClassName="max-w-3xl"
@@ -1262,7 +1262,7 @@ function MeteorsPreview({ mode }: { mode: PreviewMode }) {
     <OuterEffectSurface className="p-0">
       <PreviewDemoSurface
         label="ambient effect"
-        title="Meteors"
+        title="Meteor Background"
         subtitle="streaks pass across the stage"
         accentClassName="bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.28),transparent_55%)]"
         overlay={
@@ -1281,7 +1281,7 @@ function ConfettiPreview() {
     <OuterEffectSurface className="p-0">
       <PreviewDemoSurface
         label="interaction effect"
-        title="Confetti"
+        title="Confetti Button"
         subtitle="press to celebrate"
         accentClassName="bg-[radial-gradient(circle_at_center,rgba(244,114,182,0.28),transparent_55%)]"
       >
@@ -1301,7 +1301,7 @@ function ParticlesPreview({ mode }: { mode: PreviewMode }) {
     <OuterEffectSurface className="p-0">
       <PreviewDemoSurface
         label="ambient effect"
-        title="Particles"
+        title="Particle Background"
         subtitle="canvas depth and motion"
         accentClassName="bg-[radial-gradient(circle_at_center,rgba(129,140,248,0.3),transparent_55%)]"
         overlay={
@@ -1357,7 +1357,7 @@ function VideoTextPreview() {
   return (
     <PreviewDemoSurface
       label="text media"
-      title="Video Text"
+      title="Video Mask Text"
       subtitle="video fills the letter mask"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(244,114,182,0.24),transparent_55%)]"
       contentClassName="w-full max-w-4xl"
@@ -1432,7 +1432,7 @@ function HighlighterPreview() {
   return (
     <PreviewDemoSurface
       label="text emphasis"
-      title="Highlighter"
+      title="Marker Highlight"
       subtitle="underline or mark important words"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.24),transparent_55%)]"
     >

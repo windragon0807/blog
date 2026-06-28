@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "dia-text-reveal",
   "type": "registry:ui",
-  "title": "Dia Text Reveal",
+  "title": "Color Sweep Text",
   "description": "A horizontal color band sweeps across text, revealing a gradient shine before settling on the base color.",
   "dependencies": [
     "motion"

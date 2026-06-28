@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "number-ticker",
   "type": "registry:ui",
-  "title": "Number Ticker",
+  "title": "Animated Number",
   "description": "Animate numbers to count up or down to a target number.",
   "dependencies": [
     "motion"

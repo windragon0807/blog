@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "bubble-cursor",
   "type": "registry:ui",
-  "title": "Bubble Cursor",
+  "title": "Bubble Cursor Trail",
   "description": "A scoped bubble particle cursor adapted from tholman cursor-effects Bubbles.",
   "dependencies": [],
   "files": [

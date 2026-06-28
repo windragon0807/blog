@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "curved-loop",
   "type": "registry:ui",
-  "title": "Curved Loop",
+  "title": "Curved Text Marquee",
   "description": "A draggable SVG text marquee that loops along a curved path.",
   "dependencies": [],
   "files": [

@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "keyboard",
   "type": "registry:ui",
-  "title": "Keyboard",
+  "title": "Interactive Keyboard",
   "description": "A Mac-style keyboard with clickable and physical key states.",
   "dependencies": [
     "motion"

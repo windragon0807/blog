@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "counter",
   "type": "registry:ui",
-  "title": "Counter",
+  "title": "Rolling Number Counter",
   "description": "An animated rolling number counter with decimal place support.",
   "dependencies": [
     "motion"

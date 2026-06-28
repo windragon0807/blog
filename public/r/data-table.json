@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "data-table",
   "type": "registry:ui",
-  "title": "Table",
+  "title": "Typed Data Table",
   "description": "A simple typed data table inspired by HeroUI table structure.",
   "dependencies": [],
   "files": [

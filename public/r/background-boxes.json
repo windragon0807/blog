@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "background-boxes",
   "type": "registry:ui",
-  "title": "Background Boxes",
+  "title": "Hover Grid Background",
   "description": "A hover-reactive grid background for hero and feature surfaces.",
   "dependencies": [
     "motion"

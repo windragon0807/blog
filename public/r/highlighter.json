@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "highlighter",
   "type": "registry:ui",
-  "title": "Highlighter",
+  "title": "Marker Highlight",
   "description": "A text highlighter that mimics the effect of a human-drawn marker stroke.",
   "dependencies": [
     "motion",

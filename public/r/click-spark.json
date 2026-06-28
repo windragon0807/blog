@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "click-spark",
   "type": "registry:ui",
-  "title": "Click Spark",
+  "title": "Click Spark Burst",
   "description": "A canvas overlay that emits radial sparks from every click.",
   "dependencies": [],
   "files": [

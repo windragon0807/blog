@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "ripple-button",
   "type": "registry:ui",
-  "title": "Ripple Button",
+  "title": "Click Ripple Button",
   "description": "A button that emits a click ripple from the pointer position.",
   "dependencies": [],
   "files": [

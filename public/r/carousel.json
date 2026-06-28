@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "carousel",
   "type": "registry:ui",
-  "title": "Carousel",
+  "title": "Card Carousel",
   "description": "A draggable, optionally autoplaying 3D card carousel.",
   "dependencies": [
     "motion",

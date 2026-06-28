@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "meteors",
   "type": "registry:ui",
-  "title": "Meteors",
+  "title": "Meteor Background",
   "description": "A meteor shower effect.",
   "dependencies": [],
   "files": [

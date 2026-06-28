@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "toggle-theme",
   "type": "registry:ui",
-  "title": "Toggle Theme",
+  "title": "Theme Toggle",
   "description": "A minimal switch-style theme toggle.",
   "dependencies": [
     "lucide-react",

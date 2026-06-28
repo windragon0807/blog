@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "confetti",
   "type": "registry:ui",
-  "title": "Confetti",
+  "title": "Confetti Button",
   "description": "Confetti animations are best used to delight your users when something special happens.",
   "dependencies": [
     "canvas-confetti",

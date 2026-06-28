@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "morphing-text",
   "type": "registry:ui",
-  "title": "Morphing Text",
+  "title": "Morphing Word",
   "description": "A dynamic text morphing component.",
   "dependencies": [],
   "files": [

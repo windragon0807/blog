@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "fairy-dust-cursor",
   "type": "registry:ui",
-  "title": "Fairy Dust Cursor",
+  "title": "Star Particle Cursor",
   "description": "A scoped star-dust trail adapted from tholman cursor-effects Fairy Dust.",
   "dependencies": [],
   "files": [

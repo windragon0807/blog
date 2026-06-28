@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "shiny-button",
   "type": "registry:ui",
-  "title": "Shiny Button",
+  "title": "Shine Button",
   "description": "A button with a looping masked shine and spring tap feedback.",
   "dependencies": [
     "motion"

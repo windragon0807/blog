@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "folder",
   "type": "registry:ui",
-  "title": "Folder",
+  "title": "Expandable Folder",
   "description": "A clickable folder illustration that opens layered paper cards.",
   "dependencies": [],
   "files": [

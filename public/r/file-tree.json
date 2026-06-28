@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "file-tree",
   "type": "registry:ui",
-  "title": "File Tree",
+  "title": "Collapsible File Tree",
   "description": "A nested file tree with selectable files, folders, and collapse controls.",
   "dependencies": [
     "@radix-ui/react-accordion",

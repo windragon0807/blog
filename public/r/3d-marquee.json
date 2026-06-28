@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "3d-marquee",
   "type": "registry:ui",
-  "title": "3D Marquee",
+  "title": "Perspective Image Marquee",
   "description": "A perspective marquee grid for image or card strips.",
   "dependencies": [
     "motion"

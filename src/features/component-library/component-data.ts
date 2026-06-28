@@ -248,7 +248,7 @@ export const componentSamples: readonly ComponentSample[] = [
   createSample({
     slug: 'background-boxes',
     categoryId: 'background-atmosphere',
-    title: 'Background Boxes',
+    title: 'Hover Grid Background',
     description: '히어로 영역이나 기능 섹션에 쓰기 좋은, 호버에 반응하는 격자 배경입니다.',
     dependencies: ['motion'],
     reference: {
@@ -276,7 +276,7 @@ export default function Example() {
   createSample({
     slug: 'keyboard',
     categoryId: 'menus-actions',
-    title: 'Keyboard',
+    title: 'Interactive Keyboard',
     description: '클릭과 실제 키 입력 상태를 함께 보여주는 맥 스타일 키보드입니다.',
     dependencies: ['motion'],
     reference: {
@@ -299,7 +299,7 @@ export default function Example() {
   createSample({
     slug: 'placeholders-and-vanish-input',
     categoryId: 'controls-inputs',
-    title: 'Placeholders And Vanish Input',
+    title: 'Rotating Search Input',
     description: '플레이스홀더가 순환되고 제출 시 텍스트가 사라지는 검색 입력입니다.',
     dependencies: ['motion'],
     reference: {
@@ -321,7 +321,7 @@ export default function Example() {
   createSample({
     slug: '3d-marquee',
     categoryId: 'content-display',
-    title: '3D Marquee',
+    title: 'Perspective Image Marquee',
     description: '이미지나 카드 스트립을 원근감 있는 흐름으로 보여주는 3D 마키입니다.',
     dependencies: ['motion'],
     reference: {
@@ -342,7 +342,7 @@ export default function Example() {
   createSample({
     slug: 'avatar-group',
     categoryId: 'content-display',
-    title: 'Avatar Group',
+    title: 'Hover Avatar Group',
     description: '겹쳐진 아바타가 호버 시 떠오르고 안내 말풍선을 보여주는 아바타 그룹입니다.',
     dependencies: ['motion'],
     reference: {
@@ -368,7 +368,7 @@ export default function Example() {
   createSample({
     slug: 'playful-todolist',
     categoryId: 'menus-actions',
-    title: 'Playful Todo List',
+    title: 'Animated Task List',
     description: '체크 동작에 짧은 애니메이션을 더한 작은 투두 리스트입니다.',
     dependencies: ['motion'],
     reference: {
@@ -388,7 +388,7 @@ export default function Example() {
   createSample({
     slug: 'flower-menu',
     categoryId: 'menus-actions',
-    title: 'Flower Menu',
+    title: 'Radial Action Menu',
     description: '중앙 버튼을 기준으로 액션이 꽃처럼 펼쳐지는 플로팅 메뉴입니다.',
     dependencies: [],
     reference: {
@@ -410,7 +410,7 @@ export default function Example() {
   createSample({
     slug: 'text-flip',
     categoryId: 'text-effects',
-    title: 'Text Flip',
+    title: 'Rotating Word Flip',
     description: '짧은 단어가 차례로 뒤집히며 교체되는 텍스트 애니메이션입니다.',
     dependencies: ['motion'],
     reference: {
@@ -432,7 +432,7 @@ export default function Example() {
   createSample({
     slug: 'toggle-theme',
     categoryId: 'controls-inputs',
-    title: 'Toggle Theme',
+    title: 'Theme Toggle',
     description: '라이트/다크 테마를 전환하는 간결한 스위치형 토글입니다.',
     dependencies: ['lucide-react', 'next-themes'],
     reference: {
@@ -456,7 +456,7 @@ export default function Example() {
   createSample({
     slug: '3d-image-carousel',
     categoryId: 'content-display',
-    title: '3D Image Carousel',
+    title: 'Depth Image Carousel',
     description: '이미지 카드를 원근감 있게 회전시키는 3D 캐러셀입니다.',
     dependencies: ['lucide-react'],
     reference: {
@@ -482,7 +482,7 @@ export default function Example() {
   createSample({
     slug: 'sparkle-cursor',
     categoryId: 'cursor-interaction-effects',
-    title: 'Sparkle Cursor',
+    title: 'Sparkle Cursor Trail',
     description: '지정된 영역 안에서 커서 움직임에 따라 반짝임을 뿌리는 효과입니다.',
     dependencies: ['gsap'],
     reference: {
@@ -504,7 +504,7 @@ export default function Example() {
   createSample({
     slug: 'mouse-invert-cursor',
     categoryId: 'cursor-interaction-effects',
-    title: 'Mouse Invert Cursor',
+    title: 'Invert Cursor',
     description: '영역 안에서 배경을 반전시키는 혼합 모드 커서 효과입니다.',
     reference: mouseAnimationsReference,
     usage: `import { MouseInvertCursor } from "@/components/mouse-invert-cursor"
@@ -529,7 +529,7 @@ export default function Example() {
   createSample({
     slug: 'mouse-trail-cursor',
     categoryId: 'cursor-interaction-effects',
-    title: 'Mouse Trail Cursor',
+    title: 'Dot Cursor Trail',
     description: '영역 안에서 커서 뒤를 작은 점들이 따라오는 캔버스 트레일 효과입니다.',
     reference: mouseAnimationsReference,
     usage: `import { MouseTrailCursor } from "@/components/mouse-trail-cursor"
@@ -555,7 +555,7 @@ export default function Example() {
   createSample({
     slug: 'mouse-ripple-cursor',
     categoryId: 'cursor-interaction-effects',
-    title: 'Mouse Ripple Cursor',
+    title: 'Click Ripple Cursor',
     description: '클릭한 지점에서 원형 리플이 퍼지는 커서 인터랙션입니다.',
     reference: mouseAnimationsReference,
     usage: `import { MouseRippleCursor } from "@/components/mouse-ripple-cursor"
@@ -579,7 +579,7 @@ export default function Example() {
   createSample({
     slug: 'mouse-custom-cursor',
     categoryId: 'cursor-interaction-effects',
-    title: 'Mouse Custom Cursor',
+    title: 'Ring Cursor',
     description: '작은 점과 늦게 따라오는 링으로 커서를 대체하는 영역형 효과입니다.',
     reference: mouseAnimationsReference,
     usage: `import { MouseCustomCursor } from "@/components/mouse-custom-cursor"
@@ -606,7 +606,7 @@ export default function Example() {
   createSample({
     slug: 'fairy-dust-cursor',
     categoryId: 'cursor-interaction-effects',
-    title: 'Fairy Dust Cursor',
+    title: 'Star Particle Cursor',
     description: '커서 이동을 따라 작은 별가루가 흩어지는 영역형 파티클 효과입니다.',
     reference: cursorEffectsReference,
     usage: `import { FairyDustCursor } from "@/components/fairy-dust-cursor"
@@ -630,7 +630,7 @@ export default function Example() {
   createSample({
     slug: 'bubble-cursor',
     categoryId: 'cursor-interaction-effects',
-    title: 'Bubble Cursor',
+    title: 'Bubble Cursor Trail',
     description: '커서 움직임을 따라 거품 파티클이 떠오르는 영역형 효과입니다.',
     reference: cursorEffectsReference,
     usage: `import { BubbleCursor } from "@/components/bubble-cursor"
@@ -654,7 +654,7 @@ export default function Example() {
   createSample({
     slug: 'character-cursor',
     categoryId: 'cursor-interaction-effects',
-    title: 'Character Cursor',
+    title: 'Character Particle Cursor',
     description: '커서 주변에 문자 파티클이 생성되는 영역형 효과입니다.',
     reference: cursorEffectsReference,
     usage: `import { CharacterCursor } from "@/components/character-cursor"
@@ -680,7 +680,7 @@ export default function Example() {
   createSample({
     slug: 'canvas-cursor',
     categoryId: 'cursor-interaction-effects',
-    title: 'Canvas Cursor',
+    title: 'Spring Line Cursor',
     description: '스프링처럼 이어진 선이 커서를 따라오는 캔버스 트레일 효과입니다.',
     reference: cursifyCanvasReference,
     usage: `import { CanvasCursor } from "@/components/canvas-cursor"
@@ -711,7 +711,7 @@ export default function Example() {
   createSample({
     slug: 'data-table',
     categoryId: 'data-status',
-    title: 'Table',
+    title: 'Typed Data Table',
     description: 'HeroUI 테이블 구조를 참고한 타입 기반 데이터 테이블입니다.',
     reference: {
       label: 'HeroUI Table',
@@ -731,7 +731,7 @@ export default function Example() {
   createSample({
     slug: 'ripple-button',
     categoryId: 'controls-inputs',
-    title: 'Ripple Button',
+    title: 'Click Ripple Button',
     description: '클릭한 포인터 위치에서 리플이 퍼지는 버튼입니다.',
     usage: `import { RippleButton } from "@/components/ripple-button"
 
@@ -749,7 +749,7 @@ export default function Example() {
   createSample({
     slug: 'shiny-button',
     categoryId: 'controls-inputs',
-    title: 'Shiny Button',
+    title: 'Shine Button',
     description: '반복되는 광택 마스크와 탄성 있는 탭 피드백을 가진 버튼입니다.',
     dependencies: ['motion'],
     usage: `import { ShinyButton } from "@/components/shiny-button"
@@ -767,7 +767,7 @@ export default function Example() {
   createSample({
     slug: 'marquee',
     categoryId: 'content-display',
-    title: 'Marquee',
+    title: 'Continuous Marquee',
     description: '텍스트, 이미지, 비디오를 끊김 없이 흘려보낼 수 있는 마키 컴포넌트입니다.',
     usage: `import { Marquee } from "@/components/marquee"
 
@@ -793,7 +793,7 @@ export default function Example() {
   createSample({
     slug: 'icon-cloud',
     categoryId: 'content-display',
-    title: 'Icon Cloud',
+    title: 'Rotating Icon Cloud',
     description: '아이콘이나 이미지를 3D 구름처럼 회전시키는 컴포넌트입니다.',
     usage: `import { IconCloud } from "@/components/icon-cloud"
 
@@ -814,7 +814,7 @@ export default function Example() {
   createSample({
     slug: 'lens',
     categoryId: 'content-display',
-    title: 'Lens',
+    title: 'Magnifier Lens',
     description: '이미지, 비디오, 기타 요소를 렌즈처럼 확대해 볼 수 있는 컴포넌트입니다.',
     dependencies: ['motion'],
     usage: `import { Lens } from "@/components/lens"
@@ -838,7 +838,7 @@ export default function Example() {
   createSample({
     slug: 'pointer',
     categoryId: 'cursor-interaction-effects',
-    title: 'Pointer',
+    title: 'Hover Pointer',
     description: '요소에 호버했을 때 사용자 지정 포인터를 보여주는 컴포넌트입니다.',
     dependencies: ['motion'],
     usage: `import { Pointer } from "@/components/pointer"
@@ -859,7 +859,7 @@ export default function Example() {
   createSample({
     slug: 'file-tree',
     categoryId: 'data-status',
-    title: 'File Tree',
+    title: 'Collapsible File Tree',
     description: '파일과 폴더를 선택하고 접을 수 있는 중첩 파일 트리입니다.',
     dependencies: ['@radix-ui/react-accordion', '@radix-ui/react-scroll-area', 'lucide-react'],
     usage: `import { Tree, type TreeViewElement } from "@/components/file-tree"
@@ -891,7 +891,7 @@ export default function Example() {
   createSample({
     slug: 'animated-circular-progress-bar',
     categoryId: 'data-status',
-    title: 'Animated Circular Progress Bar',
+    title: 'Circular Progress Meter',
     description: '기본 호와 보조 호가 값 변화에 맞춰 움직이는 원형 게이지입니다.',
     usage: `import { AnimatedCircularProgressBar } from "@/components/animated-circular-progress-bar"
 
@@ -916,7 +916,7 @@ export default function Example() {
   createSample({
     slug: 'curved-loop',
     categoryId: 'text-effects',
-    title: 'Curved Loop',
+    title: 'Curved Text Marquee',
     description: '곡선 경로를 따라 텍스트가 반복되고 드래그로 흐름을 제어할 수 있는 SVG 마키입니다.',
     usage: `import { CurvedLoop } from "@/components/curved-loop"
 
@@ -943,7 +943,7 @@ export default function Example() {
   createSample({
     slug: 'click-spark',
     categoryId: 'cursor-interaction-effects',
-    title: 'Click Spark',
+    title: 'Click Spark Burst',
     description: '클릭할 때마다 방사형 불꽃이 캔버스 위에 그려지는 효과입니다.',
     usage: `import { ClickSpark } from "@/components/click-spark"
 
@@ -968,7 +968,7 @@ export default function Example() {
   createSample({
     slug: 'magnet',
     categoryId: 'cursor-interaction-effects',
-    title: 'Magnet',
+    title: 'Magnetic Hover',
     description: '호버 시 자식 요소가 포인터 쪽으로 끌려오는 자기장 효과입니다.',
     usage: `import { Magnet } from "@/components/magnet"
 
@@ -991,7 +991,7 @@ export default function Example() {
   createSample({
     slug: 'stack',
     categoryId: 'content-display',
-    title: 'Stack',
+    title: 'Swipe Card Stack',
     description: '드래그한 카드를 뒤로 보내며 순환시키는 카드 스택입니다.',
     dependencies: ['motion'],
     usage: `import { Stack } from "@/components/stack"
@@ -1014,7 +1014,7 @@ export default function Example() {
   createSample({
     slug: 'folder',
     categoryId: 'content-display',
-    title: 'Folder',
+    title: 'Expandable Folder',
     description: '클릭하면 여러 장의 종이 카드가 펼쳐지는 폴더 일러스트입니다.',
     usage: `import { Folder } from "@/components/folder"
 
@@ -1033,7 +1033,7 @@ export default function Example() {
   createSample({
     slug: 'carousel',
     categoryId: 'content-display',
-    title: 'Carousel',
+    title: 'Card Carousel',
     description: '드래그와 자동 재생을 지원하는 3D 카드 캐러셀입니다.',
     dependencies: ['motion', 'react-icons'],
     usage: `import { Carousel } from "@/components/carousel"
@@ -1055,7 +1055,7 @@ export default function Example() {
   createSample({
     slug: 'elastic-slider',
     categoryId: 'controls-inputs',
-    title: 'Elastic Slider',
+    title: 'Spring Slider',
     description: '탄성 있는 초과 움직임과 스프링 움직임을 가진 슬라이더입니다.',
     dependencies: ['motion'],
     usage: `import { ElasticSlider } from "@/components/elastic-slider"
@@ -1076,7 +1076,7 @@ export default function Example() {
   createSample({
     slug: 'counter',
     categoryId: 'data-status',
-    title: 'Counter',
+    title: 'Rolling Number Counter',
     description: '소수점 자리까지 지원하며 숫자가 굴러가듯 바뀌는 카운터입니다.',
     dependencies: ['motion'],
     usage: `import { useState } from "react"
@@ -1116,7 +1116,7 @@ export default function Example() {
   createSample({
     slug: 'meteors',
     categoryId: 'background-atmosphere',
-    title: 'Meteors',
+    title: 'Meteor Background',
     description: '화면 위로 유성이 떨어지는 듯한 배경 효과입니다.',
     usage: `import { Meteors } from "@/components/meteors"
 
@@ -1140,7 +1140,7 @@ export default function Example() {
   createSample({
     slug: 'confetti',
     categoryId: 'cursor-interaction-effects',
-    title: 'Confetti',
+    title: 'Confetti Button',
     description: '완료, 성공, 축하 같은 순간에 짧은 즐거움을 더하는 색종이 효과입니다.',
     dependencies: ['canvas-confetti', '@types/canvas-confetti'],
     usage: `import { ConfettiButton } from "@/components/confetti"
@@ -1158,7 +1158,7 @@ export default function Example() {
   createSample({
     slug: 'particles',
     categoryId: 'background-atmosphere',
-    title: 'Particles',
+    title: 'Particle Background',
     description: '깊이감과 움직임, 인터랙션으로 배경에 생동감을 더하는 파티클 효과입니다.',
     usage: `import { Particles } from "@/components/particles"
 
@@ -1182,7 +1182,7 @@ export default function Example() {
   createSample({
     slug: 'typing-animation',
     categoryId: 'text-effects',
-    title: 'Typing Animation',
+    title: 'Typewriter Text',
     description: '문자가 타이핑되듯 순서대로 나타나는 텍스트 애니메이션입니다.',
     dependencies: ['motion'],
     usage: `import { TypingAnimation } from "@/components/typing-animation"
@@ -1202,7 +1202,7 @@ export default function Example() {
   createSample({
     slug: 'aurora-text',
     categoryId: 'text-effects',
-    title: 'Aurora Text',
+    title: 'Gradient Text',
     description: '오로라처럼 흐르는 그라데이션을 텍스트에 입히는 효과입니다.',
     usage: `import { AuroraText } from "@/components/aurora-text"
 
@@ -1219,7 +1219,7 @@ export default function Example() {
   createSample({
     slug: 'video-text',
     categoryId: 'text-effects',
-    title: 'Video Text',
+    title: 'Video Mask Text',
     description: '텍스트 마스크 안쪽으로 비디오가 재생되는 타이포그래피 컴포넌트입니다.',
     usage: `import { VideoText } from "@/components/video-text"
 
@@ -1238,7 +1238,7 @@ export default function Example() {
   createSample({
     slug: 'number-ticker',
     categoryId: 'data-status',
-    title: 'Number Ticker',
+    title: 'Animated Number',
     description: '목표 숫자까지 자연스럽게 증가하거나 감소하는 숫자 애니메이션입니다.',
     dependencies: ['motion'],
     usage: `import { NumberTicker } from "@/components/number-ticker"
@@ -1257,7 +1257,7 @@ export default function Example() {
   createSample({
     slug: 'dia-text-reveal',
     categoryId: 'text-effects',
-    title: 'Dia Text Reveal',
+    title: 'Color Sweep Text',
     description: '가로 색상 띠가 텍스트를 지나가며 그라데이션 빛을 드러내는 애니메이션입니다.',
     dependencies: ['motion'],
     usage: `import { DiaTextReveal } from "@/components/dia-text-reveal"
@@ -1277,7 +1277,7 @@ export default function Example() {
   createSample({
     slug: 'morphing-text',
     categoryId: 'text-effects',
-    title: 'Morphing Text',
+    title: 'Morphing Word',
     description: '단어가 흐림과 투명도 변화로 서로 녹아들듯 전환되는 텍스트 컴포넌트입니다.',
     usage: `import { MorphingText } from "@/components/morphing-text"
 
@@ -1292,7 +1292,7 @@ export default function Example() {
   createSample({
     slug: 'highlighter',
     categoryId: 'text-effects',
-    title: 'Highlighter',
+    title: 'Marker Highlight',
     description: '사람이 직접 그은 마커 획처럼 텍스트를 밑줄 또는 형광펜으로 강조합니다.',
     dependencies: ['motion', 'rough-notation'],
     usage: `import { Highlighter } from "@/components/highlighter"
