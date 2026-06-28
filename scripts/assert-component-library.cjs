@@ -205,8 +205,20 @@ const installTabsPath = path.join(
   root,
   'src/features/component-library/install-command-tabs.tsx'
 )
-const brandLogoPath = path.join(root, 'src/components/BrandLogo.tsx')
-const logoMotionsPath = path.join(root, 'src/lib/logoMotions.ts')
+const headerPath = path.join(root, 'src/components/Header.tsx')
+const headerIconsPath = path.join(root, 'src/components/icons/header-icons.tsx')
+const themeSettingsMenuPath = path.join(root, 'src/components/ThemeSettingsMenu.tsx')
+const rootLayoutPath = path.join(root, 'src/app/layout.tsx')
+const seoPath = path.join(root, 'src/lib/seo.ts')
+const homePagePath = path.join(root, 'src/app/(tabs)/page.tsx')
+const componentDetailPagePath = path.join(root, 'src/app/components/[slug]/page.tsx')
+const portfolioPagePath = path.join(root, 'src/app/portfolio/page.tsx')
+const resumePagePath = path.join(root, 'src/app/resume/page.tsx')
+const postDetailPagePath = path.join(root, 'src/app/posts/[slug]/page.tsx')
+const tagPagePath = path.join(root, 'src/app/tags/[tag]/page.tsx')
+const seriesPagePath = path.join(root, 'src/app/series/[series]/page.tsx')
+const lightboxImagePath = path.join(root, 'src/components/notion/LightboxImage.tsx')
+const blockRenderersPath = path.join(root, 'src/components/notion/block-renderers.tsx')
 const videoTextPath = path.join(root, 'src/components/video-text.tsx')
 const diaTextRevealPath = path.join(
   root,
@@ -230,9 +242,22 @@ const docsSource = fs.readFileSync(docsPath, 'utf8')
 const componentsPageSource = fs.readFileSync(componentsPagePath, 'utf8')
 const layoutSource = fs.readFileSync(layoutPath, 'utf8')
 const globalsSource = fs.readFileSync(globalsPath, 'utf8')
+const sidebarSource = fs.readFileSync(sidebarPath, 'utf8')
 const previewsSource = fs.readFileSync(previewsPath, 'utf8')
-const brandLogoSource = fs.readFileSync(brandLogoPath, 'utf8')
-const logoMotionsSource = fs.readFileSync(logoMotionsPath, 'utf8')
+const headerSource = fs.readFileSync(headerPath, 'utf8')
+const headerIconsSource = fs.readFileSync(headerIconsPath, 'utf8')
+const themeSettingsMenuSource = fs.readFileSync(themeSettingsMenuPath, 'utf8')
+const rootLayoutSource = fs.readFileSync(rootLayoutPath, 'utf8')
+const seoSource = fs.readFileSync(seoPath, 'utf8')
+const homePageSource = fs.readFileSync(homePagePath, 'utf8')
+const componentDetailPageSource = fs.readFileSync(componentDetailPagePath, 'utf8')
+const portfolioPageSource = fs.readFileSync(portfolioPagePath, 'utf8')
+const resumePageSource = fs.readFileSync(resumePagePath, 'utf8')
+const postDetailPageSource = fs.readFileSync(postDetailPagePath, 'utf8')
+const tagPageSource = fs.readFileSync(tagPagePath, 'utf8')
+const seriesPageSource = fs.readFileSync(seriesPagePath, 'utf8')
+const lightboxImageSource = fs.readFileSync(lightboxImagePath, 'utf8')
+const blockRenderersSource = fs.readFileSync(blockRenderersPath, 'utf8')
 const videoTextSource = fs.readFileSync(videoTextPath, 'utf8')
 const diaTextRevealSource = fs.readFileSync(diaTextRevealPath, 'utf8')
 const toggleThemeSource = fs.readFileSync(toggleThemePath, 'utf8')
@@ -249,6 +274,49 @@ function assert(condition, message) {
   if (!condition) {
     throw new Error(message)
   }
+}
+
+function getRegistryItem(name) {
+  return JSON.parse(fs.readFileSync(path.join(root, `public/r/${name}.json`), 'utf8'))
+}
+
+function getRegistryFilePaths(name) {
+  return getRegistryItem(name).files.map((file) => file.path)
+}
+
+function getLocalImportSpecifiers(source) {
+  return [...source.matchAll(/from\s+['"]([^'"]+)['"]/g)]
+    .map((match) => match[1])
+    .filter(
+      (specifier) =>
+        specifier.startsWith('@/lib/') ||
+        specifier.startsWith('@/components/ui/') ||
+        specifier.startsWith('./') ||
+        specifier.startsWith('../')
+    )
+}
+
+function resolveComponentRegistryImport(importSpecifier, fromComponentName) {
+  if (importSpecifier === '@/lib/utils') {
+    return 'src/lib/utils.ts'
+  }
+
+  if (importSpecifier.startsWith('@/components/ui/')) {
+    return `${importSpecifier.replace('@/', 'src/')}.tsx`
+  }
+
+  if (importSpecifier.startsWith('./') || importSpecifier.startsWith('../')) {
+    return path.posix.normalize(
+      path.posix.join(
+        'src/components',
+        fromComponentName,
+        '..',
+        `${importSpecifier}.tsx`
+      )
+    )
+  }
+
+  return null
 }
 
 const expectedComponentTitles = [
@@ -321,6 +389,113 @@ assert(
   'Reference section should render as a simple link, not prose'
 )
 
+assert(
+  layoutSource.includes('ComponentMobileSidebarTrigger') &&
+    layoutSource.includes('hidden') &&
+    layoutSource.includes('lg:block') &&
+    sidebarSource.includes('lg:hidden'),
+  'Components layout should hide the long sidebar on mobile and expose a drawer trigger instead'
+)
+
+for (const sidebarMarker of [
+  'ComponentMobileSidebarTrigger',
+  'ComponentSidebarContent',
+  'components-sidebar-list-scroll',
+  'components-sidebar-fog-top',
+  'components-sidebar-fog-bottom',
+  '컴포넌트 메뉴 열기',
+]) {
+  assert(
+    sidebarSource.includes(sidebarMarker),
+    `Component sidebar missing mobile/fog marker: ${sidebarMarker}`
+  )
+}
+
+assert(
+  !headerSource.includes('BrandLogo') &&
+    !headerSource.includes('useHeaderBrandScope') &&
+    !headerSource.includes('brandLabel') &&
+    !headerSource.includes('shouldShowHomeButton') &&
+    headerSource.includes('aria-label="홈으로 이동"') &&
+    headerSource.includes('GitHubIcon') &&
+    headerSource.includes('https://github.com/windragon0807') &&
+    headerSource.includes('justify-center'),
+  'Header should remove the brand logo, center icon controls, and include the GitHub profile button'
+)
+
+assert(
+  headerIconsSource.includes('function GitHubIcon') &&
+    headerIconsSource.includes('viewBox="0 0 24 24"') &&
+    headerIconsSource.includes('fill="currentColor"'),
+  'Header icons should include a filled GitHub icon that matches the icon button system'
+)
+
+assert(
+  !themeSettingsMenuSource.includes('LogoMotionSelect') &&
+    !themeSettingsMenuSource.includes('Logo Animation'),
+  'Settings menu should not expose logo animation settings after the header logo is removed'
+)
+
+assert(
+  !rootLayoutSource.includes('logoMotionBootScript') &&
+    !rootLayoutSource.includes('data-logo-motion') &&
+    !rootLayoutSource.includes('HeaderBrandScopeProvider') &&
+    !postDetailPageSource.includes('HeaderBrandScopeHydrator'),
+  'Root layout and post pages should not keep logo-motion or header brand scope runtime wiring'
+)
+
+assert(
+  lightboxImageSource.includes('data-lightbox-image-trigger') &&
+    lightboxImageSource.includes('event.preventDefault()') &&
+    lightboxImageSource.includes('event.stopPropagation()') &&
+    lightboxImageSource.includes('cursor-zoom-in') &&
+    lightboxImageSource.includes('lightbox-panel') &&
+    lightboxImageSource.includes('DialogOverlay'),
+  'Post body images should open the dimmed animated lightbox instead of falling through to download/navigation behavior'
+)
+
+assert(
+  blockRenderersSource.includes('<LightboxImage') &&
+    !blockRenderersSource.includes('download=') &&
+    !blockRenderersSource.includes('href={src}'),
+  'Notion image renderer should use LightboxImage and should not wrap images in download links'
+)
+
+for (const [sourceName, source] of [
+  ['root layout', rootLayoutSource],
+  ['home page', homePageSource],
+  ['components page', componentsPageSource],
+  ['component detail page', componentDetailPageSource],
+  ['portfolio page', portfolioPageSource],
+  ['resume page', resumePageSource],
+  ['post detail page', postDetailPageSource],
+  ['tag page', tagPageSource],
+  ['series page', seriesPageSource],
+]) {
+  assert(
+    source.includes('openGraph') || source.includes('createPageMetadata'),
+    `${sourceName} should define Open Graph metadata`
+  )
+  assert(
+    source.includes('twitter') || source.includes('createPageMetadata'),
+    `${sourceName} should define Twitter metadata`
+  )
+  assert(
+    source.includes('alternates') || source.includes('createPageMetadata'),
+    `${sourceName} should define canonical metadata`
+  )
+}
+
+assert(
+  seoSource.includes('openGraph') &&
+    seoSource.includes('twitter') &&
+    seoSource.includes('canonical') &&
+    seoSource.includes('SITE_DESCRIPTION') &&
+    seoSource.includes('https://ryong.dev') &&
+    !seoSource.includes('http://localhost:3000'),
+  'Shared SEO helper should emit canonical, Open Graph, and Twitter metadata'
+)
+
 const externalPathSegment = 'magic' + 'ui'
 const externalSourcePath = `src/components/${externalPathSegment}`
 const removedComponentName = removedSearchInputName
@@ -355,7 +530,6 @@ const textFilesToScan = [
   layoutPath,
   sidebarPath,
   previewsPath,
-  brandLogoPath,
   path.join(root, 'scripts/generate-component-registry.cjs'),
   ...fs
     .readdirSync(path.join(root, 'public/r'))
@@ -415,7 +589,8 @@ for (const name of requiredNames) {
   const registryPath = path.join(root, `public/r/${name}.json`)
   assert(fs.existsSync(registryPath), `Missing registry file: ${registryPath}`)
 
-  const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'))
+  const registry = getRegistryItem(name)
+  const registryFilePaths = getRegistryFilePaths(name)
   assert(
     registry.$schema === 'https://ui.shadcn.com/schema/registry-item.json',
     `${name} registry item has wrong schema`
@@ -423,9 +598,8 @@ for (const name of requiredNames) {
   assert(registry.name === name, `${name} registry item has wrong name`)
   assert(registry.type === 'registry:ui', `${name} registry item has wrong type`)
   assert(
-    Array.isArray(registry.files) &&
-      registry.files.length === (cursorEffectNames.includes(name) ? 2 : 1),
-    `${name} registry item should expose the expected source files`
+    Array.isArray(registry.files) && registry.files.length >= 1,
+    `${name} registry item should expose source files`
   )
   assert(
     registry.files[0].path === `src/components/${name}.tsx`,
@@ -437,6 +611,25 @@ for (const name of requiredNames) {
         registry.files[0].content.includes('export {')),
     `${name} registry item should include component source`
   )
+
+  const componentSource = fs.readFileSync(sourcePath, 'utf8')
+  if (componentSource.includes('@/lib/utils')) {
+    assert(
+      registryFilePaths.includes('src/lib/utils.ts'),
+      `${name} registry item should include utils when the component imports it`
+    )
+  }
+
+  for (const importSpecifier of getLocalImportSpecifiers(componentSource)) {
+    const requiredPath = resolveComponentRegistryImport(importSpecifier, name)
+
+    if (!requiredPath) continue
+
+    assert(
+      registryFilePaths.includes(requiredPath),
+      `${name} registry item should include imported local file ${requiredPath}`
+    )
+  }
 }
 
 for (const name of cursorEffectNames) {
@@ -533,15 +726,44 @@ for (const name of reactIconsNames) {
   assert(
     Array.isArray(registry.dependencies) &&
       registry.dependencies.includes('@radix-ui/react-accordion') &&
-      registry.dependencies.includes('@radix-ui/react-scroll-area') &&
       registry.dependencies.includes('lucide-react'),
     'file-tree registry item should include tree dependencies'
   )
   assert(
-    Array.isArray(registry.registryDependencies) &&
-      registry.registryDependencies.includes('button') &&
-      registry.registryDependencies.includes('scroll-area'),
-    'file-tree registry item should include button and scroll-area registry dependencies'
+    registry.files.some((file) => file.path === 'src/components/ui/button.tsx') &&
+      registry.files.some((file) => file.path === 'src/lib/utils.ts'),
+    'file-tree registry item should bundle local button and utils files used by its imports'
+  )
+  assert(
+    !fileTreeSource.includes('@/components/ui/scroll-area') &&
+      !registry.files.some(
+        (file) => file.path === 'src/components/ui/scroll-area.tsx'
+      ) &&
+      !registry.dependencies.includes('overlayscrollbars') &&
+      !registry.dependencies.includes('overlayscrollbars-react'),
+    'file-tree registry item should not require the site-specific OverlayScrollbars runtime'
+  )
+  assert(
+    registry.css?.['@keyframes accordion-down'] &&
+      registry.css?.['@keyframes accordion-up'] &&
+      registry.cssVars?.theme?.['animate-accordion-down'] &&
+      registry.cssVars?.theme?.['animate-accordion-up'],
+    'file-tree registry item should include accordion animation CSS'
+  )
+}
+
+{
+  const registry = JSON.parse(
+    fs.readFileSync(path.join(root, 'public/r/data-table.json'), 'utf8')
+  )
+  assert(
+    !dataTableSource.includes('@/components/ui/scroll-area') &&
+      !registry.files.some(
+        (file) => file.path === 'src/components/ui/scroll-area.tsx'
+      ) &&
+      !registry.dependencies.includes('overlayscrollbars') &&
+      !registry.dependencies.includes('overlayscrollbars-react'),
+    'data-table registry item should use plain overflow scrolling and avoid site-specific OverlayScrollbars'
   )
 }
 
@@ -556,9 +778,9 @@ for (const name of reactIconsNames) {
     'confetti registry item should include canvas-confetti dependencies'
   )
   assert(
-    Array.isArray(registry.registryDependencies) &&
-      registry.registryDependencies.includes('button'),
-    'confetti registry item should include button registry dependency'
+    registry.files.some((file) => file.path === 'src/components/ui/button.tsx') &&
+      registry.files.some((file) => file.path === 'src/lib/utils.ts'),
+    'confetti registry item should bundle local button and utils files used by its imports'
   )
 }
 
@@ -1187,7 +1409,6 @@ assert(
   fs.existsSync(sidebarPath),
   `Missing active sidebar file: ${sidebarPath}`
 )
-const sidebarSource = fs.readFileSync(sidebarPath, 'utf8')
 assert(
   sidebarSource.includes('useState') &&
     sidebarSource.includes('componentSearchQuery') &&
@@ -1198,10 +1419,10 @@ assert(
 )
 assert(
   sidebarSource.includes('AnimatePresence') &&
-    sidebarSource.includes('layoutId="component-sidebar-active-indicator"') &&
+    sidebarSource.includes('component-sidebar-active-indicator-${layoutScope}') &&
     sidebarSource.includes('layoutDependency={pathname}') &&
-    sidebarSource.includes('transform-gpu') &&
-    sidebarSource.includes('backdrop-blur') &&
+    sidebarSource.includes('bg-white px-1 pb-3 pt-1') &&
+    sidebarSource.includes('dark:bg-zinc-950') &&
     sidebarSource.includes('willChange:') &&
     sidebarSource.includes('contain:') &&
     sidebarSource.includes('translateZ(0)'),
@@ -1246,19 +1467,17 @@ assert(
   'Component sidebar should mark the current page with pathname-based active state'
 )
 assert(
-  sidebarSource.includes('space-y-7 px-1 pb-24 pt-1') &&
+  sidebarSource.includes('space-y-7 px-1 pb-[max(6rem,env(safe-area-inset-bottom))] pt-3') &&
     sidebarSource.includes('border border-transparent') &&
     sidebarSource.includes('border-zinc-200') &&
     !sidebarSource.includes('ring-1'),
   'Component sidebar active state should have padded, non-clipped inner borders'
 )
 assert(
-  sidebarSource.includes('lg:h-full') &&
-    sidebarSource.includes('lg:overflow-y-auto') &&
-    sidebarSource.includes('lg:overscroll-contain') &&
-    sidebarSource.includes('lg:scroll-pb-24') &&
+  sidebarSource.includes('components-sidebar-list-scroll') &&
+    sidebarSource.includes('h-full scroll-pb-24 overflow-y-auto overscroll-contain') &&
     sidebarSource.includes('data-lenis-prevent-wheel'),
-  'Component sidebar should be an independent desktop scroll container that bypasses Lenis wheel smoothing'
+  'Component sidebar list should be an independent scroll container below the fixed search input'
 )
 assert(
   layoutSource.includes('lg:fixed') &&
@@ -1348,63 +1567,15 @@ assert(
     videoTextSource.includes('${escapeSvgText(content)}'),
   'VideoText should escape SVG text and font-family values before building the mask'
 )
-for (const logoMotionPart of [
-  "'dia-text-reveal'",
-  "'highlighter'",
-  "label: 'Dia Text Reveal'",
-  "label: 'Highlighter'",
-]) {
-  assert(
-    logoMotionsSource.includes(logoMotionPart),
-    `Logo motion option missing: ${logoMotionPart}`
-  )
-}
 assert(
-  brandLogoSource.includes('DiaTextReveal') &&
-    brandLogoSource.includes('Highlighter') &&
-    brandLogoSource.includes("motion === 'dia-text-reveal'") &&
-    brandLogoSource.includes("motion === 'highlighter'") &&
-    brandLogoSource.includes('finalTextColor="currentColor"') &&
-    brandLogoSource.includes("type LogoHighlighterPhase = 'highlight' | 'underline'") &&
-    brandLogoSource.includes("setPhase((currentPhase) =>") &&
-    brandLogoSource.includes("currentPhase === 'highlight' ? 'underline' : 'highlight'") &&
-    brandLogoSource.includes("action={isHighlight ? 'highlight' : 'underline'}") &&
-    brandLogoSource.includes('data-logo-highlighter-phase={phase}') &&
-    brandLogoSource.includes("data-logo-highlighter-visible={visible ? 'true' : 'false'}") &&
-    brandLogoSource.includes('visible ?') &&
-    brandLogoSource.includes('LogoHighlighterAnnotation') &&
-    !brandLogoSource.includes('repeatDelay={2600}'),
-  'Brand logo should keep Dia Text Reveal text visible and sequence Highlighter phases'
-)
-assert(
-  globalsSource.includes('.brand-link') &&
-    globalsSource.includes('overflow: visible') &&
-    globalsSource.includes('text-overflow: clip') &&
-    globalsSource.includes('line-height: 1.35') &&
-    globalsSource.includes('padding-block: 0.16em') &&
-    globalsSource.includes('margin-block: -0.16em'),
-  'Brand logo link should leave vertical room for descenders and annotation strokes'
-)
-assert(
-  globalsSource.includes('brand-logo-jump 2.05s') &&
-    globalsSource.includes('var(--brand-char-index, 0) * 56ms') &&
-    globalsSource.includes('brand-logo-wave 1.85s') &&
-    globalsSource.includes('var(--brand-char-index, 0) * 52ms'),
-  'Brand logo jump and wave timing should use a faster ordered stagger'
-)
-assert(
-  brandLogoSource.includes('brand-logo-highlight-frame') &&
-    brandLogoSource.includes('relative z-10') &&
-    brandLogoSource.includes('z-0') &&
-    brandLogoSource.includes('brand-logo-highlighter-target') &&
-    brandLogoSource.includes("width: 'calc(100% + 0.5em)'") &&
-    brandLogoSource.includes("transform: 'translateY(0.5em)'") &&
-    brandLogoSource.includes('[&>span]:w-full') &&
-    brandLogoSource.includes('absolute inset-x-0 -inset-y-1') &&
-    brandLogoSource.includes('trailSize={28}') &&
-    brandLogoSource.includes('iterations={2}') &&
-    brandLogoSource.includes('padding={isHighlight ? 4 : 3}'),
-  'Brand logo Dia and Highlighter variants should leave enough visual trail, stroke room, and text clarity'
+  !fs.existsSync(path.join(root, 'src/components/BrandLogo.tsx')) &&
+    !fs.existsSync(path.join(root, 'src/components/LogoMotionSelect.tsx')) &&
+    !fs.existsSync(path.join(root, 'src/lib/logoMotions.ts')) &&
+    !fs.existsSync(path.join(root, 'src/components/HeaderBrandScopeProvider.tsx')) &&
+    !fs.existsSync(path.join(root, 'src/components/HeaderBrandScopeHydrator.tsx')) &&
+    !globalsSource.includes('brand-link') &&
+    !globalsSource.includes('data-logo-motion'),
+  'Removed header brand logo should not leave logo runtime files or CSS behind'
 )
 assert(
   diaTextRevealSource.includes('trailSize?: number') &&

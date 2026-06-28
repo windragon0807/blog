@@ -1,15 +1,18 @@
 import type { Metadata } from 'next'
 import { getPosts } from '@/lib/notion'
 import { PostExplorer } from '@/components/PostExplorer'
+import { createPageMetadata } from '@/lib/seo'
 
 export const revalidate = 3600 // ISR: 1시간마다 재생성
 
 export const metadata: Metadata = {
-  title: 'ryong.log',
-  description: '개발하며 배운 것들을 기록합니다.',
-  alternates: {
-    canonical: '/',
-  },
+  ...createPageMetadata({
+    title: 'ryong.log',
+    description:
+      '프론트엔드 개발, UI 구현, 제품 개발 과정에서 배운 내용을 기록합니다.',
+    path: '/',
+    tags: ['Frontend', 'React', 'Next.js', 'UI'],
+  }),
 }
 
 export default async function HomePage() {

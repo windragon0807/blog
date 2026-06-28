@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getPostsByTag, getAllTags } from '@/lib/notion'
 import { PostExplorer } from '@/components/PostExplorer'
 import { TagFilter } from '@/components/TagFilter'
+import { createPageMetadata } from '@/lib/seo'
 
 export const revalidate = 3600 // ISR: 1시간마다 재생성
 
@@ -17,13 +18,13 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { tag } = await params
   const decodedTag = decodeURIComponent(tag)
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
   return {
-    title: `#${decodedTag}`,
-    description: `${decodedTag} 관련 글 모음`,
-    alternates: {
-      canonical: `${siteUrl}/tags/${encodeURIComponent(decodedTag)}`,
-    },
+    ...createPageMetadata({
+      title: `#${decodedTag}`,
+      description: `${decodedTag} 태그로 묶인 개발 글 모음입니다.`,
+      path: `/tags/${encodeURIComponent(decodedTag)}`,
+      tags: [decodedTag, '개발 블로그'],
+    }),
   }
 }
 

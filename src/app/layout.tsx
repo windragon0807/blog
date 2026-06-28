@@ -6,7 +6,6 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import { ThemeProvider } from 'next-themes'
 import { BodyScrollbars } from '@/components/BodyScrollbars'
 import { Header } from '@/components/Header'
-import { HeaderBrandScopeProvider } from '@/components/HeaderBrandScopeProvider'
 import { QueryProvider } from '@/components/providers/QueryProvider'
 import { SmoothScrollProvider } from '@/components/SmoothScrollProvider'
 import { ScrollToTopButton } from '@/components/ScrollToTopButton'
@@ -21,7 +20,13 @@ import {
   FONT_THEME_VALUES,
   getFontThemeStack,
 } from '@/lib/fontThemes'
-import { DEFAULT_LOGO_MOTION, LOGO_MOTION_VALUES } from '@/lib/logoMotions'
+import {
+  SITE_AUTHOR,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+  ogImageUrl,
+} from '@/lib/seo'
 import './globals.css'
 
 const geistSans = Geist({
@@ -111,40 +116,46 @@ const blogThemeBootScript = `(() => {
   }
 })();`
 
-const logoMotionBootScript = `(() => {
-  try {
-    const supportedMotions = ${JSON.stringify(LOGO_MOTION_VALUES)};
-    const defaultMotion = ${JSON.stringify(DEFAULT_LOGO_MOTION)};
-    const stored = localStorage.getItem('logo-motion');
-    const motion = stored && supportedMotions.includes(stored) ? stored : defaultMotion;
-    document.documentElement.setAttribute('data-logo-motion', motion);
-  } catch {
-    document.documentElement.setAttribute('data-logo-motion', ${JSON.stringify(DEFAULT_LOGO_MOTION)});
-  }
-})();`
-
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: 'ryong.log',
-    template: '%s | ryong.log',
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
   },
-  description: '개발 블로그',
+  description: SITE_DESCRIPTION,
+  authors: [{ name: SITE_AUTHOR }],
+  creator: SITE_AUTHOR,
+  keywords: [
+    '프론트엔드',
+    'Next.js',
+    'React',
+    'UI 컴포넌트',
+    '개발 블로그',
+  ],
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: 'ryong.log',
-    description: '개발 블로그',
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
     type: 'website',
     locale: 'ko_KR',
     url: '/',
-    siteName: 'ryong.log',
+    siteName: SITE_NAME,
+    images: [
+      {
+        url: ogImageUrl(SITE_NAME, ['Frontend', 'React', 'Next.js']),
+        width: 1200,
+        height: 630,
+        alt: SITE_NAME,
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ryong.log',
-    description: '개발 블로그',
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: [ogImageUrl(SITE_NAME, ['Frontend', 'React', 'Next.js'])],
   },
   icons: {
     icon: [{ url: '/icon.png', type: 'image/png' }],
@@ -159,11 +170,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html
-      lang="ko"
-      suppressHydrationWarning
-      data-logo-motion={DEFAULT_LOGO_MOTION}
-    >
+    <html lang="ko" suppressHydrationWarning>
       <head>
         <style id="code-theme-style-map">{CODE_THEME_STYLE_TEXT}</style>
       </head>
@@ -180,18 +187,13 @@ export default function RootLayout({
         <Script id="font-theme-init" strategy="beforeInteractive">
           {fontThemeBootScript}
         </Script>
-        <Script id="logo-motion-init" strategy="beforeInteractive">
-          {logoMotionBootScript}
-        </Script>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <QueryProvider>
-            <HeaderBrandScopeProvider>
-              <BodyScrollbars />
-              <SmoothScrollProvider />
-              <Header />
-              <main className="max-w-3xl mx-auto px-4 pt-8 pb-16">{children}</main>
-              <ScrollToTopButton />
-            </HeaderBrandScopeProvider>
+            <BodyScrollbars />
+            <SmoothScrollProvider />
+            <Header />
+            <main className="max-w-3xl mx-auto px-4 pt-8 pb-16">{children}</main>
+            <ScrollToTopButton />
           </QueryProvider>
         </ThemeProvider>
         <Analytics />

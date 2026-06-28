@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
-import { HeaderBrandScopeHydrator } from '@/components/HeaderBrandScopeHydrator'
 import { getPostBySlug, getAllSlugs } from '@/lib/notion'
 import { getRelatedPosts } from '@/lib/postContent'
 import { RelatedPosts } from '@/components/RelatedPosts'
@@ -11,6 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { PostPageIcon } from '@/components/notion/PostPageIcon'
 import { PostReadingTime } from '@/components/notion/PostReadingTime'
 import { PostBodyFallback, PostBodyStream } from '@/components/notion/PostBodyStream'
+import { SITE_AUTHOR, SITE_NAME, absoluteUrl, ogImageUrl } from '@/lib/seo'
 
 export const revalidate = 3600 // ISR: 1시간마다 재생성
 
@@ -28,33 +28,41 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const post = await getPostBySlug(slug)
   if (!post) return { title: '글을 찾을 수 없습니다' }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+  const canonicalUrl = absoluteUrl(`/posts/${post.slug}`)
+  const fallbackImage = ogImageUrl(post.title, post.tags)
 
   return {
     title: post.title,
     description: post.description,
     alternates: {
-      canonical: `${siteUrl}/posts/${post.slug}`,
+      canonical: canonicalUrl,
     },
     keywords: post.tags,
+    authors: [{ name: SITE_AUTHOR }],
     openGraph: {
       title: post.title,
       description: post.description,
       type: 'article',
+      locale: 'ko_KR',
+      siteName: SITE_NAME,
       publishedTime: post.date,
       tags: post.tags,
-      url: `${siteUrl}/posts/${post.slug}`,
+      url: canonicalUrl,
       images: post.cover
         ? [
             {
               url: post.cover,
+              width: 1200,
+              height: 630,
+              alt: post.title,
             },
           ]
         : [
             {
-              url: `${siteUrl}/api/og?title=${encodeURIComponent(post.title)}&tags=${encodeURIComponent(post.tags.join(','))}`,
+              url: fallbackImage,
               width: 1200,
               height: 630,
+              alt: post.title,
             },
           ],
     },
@@ -64,7 +72,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: post.description,
       images: post.cover
         ? [post.cover]
-        : [`${siteUrl}/api/og?title=${encodeURIComponent(post.title)}&tags=${encodeURIComponent(post.tags.join(','))}`],
+        : [fallbackImage],
     },
   }
 }
@@ -74,8 +82,7 @@ export default async function PostPage({ params }: PageProps) {
   const post = await getPostBySlug(slug)
   if (!post) notFound()
   const relatedPosts = await getRelatedPosts(post, 3)
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
-  const canonicalUrl = `${siteUrl}/posts/${post.slug}`
+  const canonicalUrl = absoluteUrl(`/posts/${post.slug}`)
 
   const formattedDate = new Date(post.date).toLocaleDateString('ko-KR', {
     year: 'numeric',
@@ -92,18 +99,15 @@ export default async function PostPage({ params }: PageProps) {
     dateModified: post.date,
     author: {
       '@type': 'Person',
-      name: 'ryong',
+      name: SITE_AUTHOR,
     },
     mainEntityOfPage: canonicalUrl,
-    image: post.cover ? [post.cover] : [`${siteUrl}/api/og?title=${encodeURIComponent(post.title)}`],
+    image: post.cover ? [post.cover] : [ogImageUrl(post.title, post.tags)],
     keywords: post.tags.join(', '),
   }
 
   return (
     <>
-      <HeaderBrandScopeHydrator
-        scope={post.source === 'portfolio' ? 'portfolio' : 'log'}
-      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}

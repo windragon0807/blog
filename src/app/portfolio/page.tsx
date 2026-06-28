@@ -3,15 +3,19 @@ import { ArrowLeft } from 'lucide-react'
 import { ActionLink } from '@/components/common/ActionControl'
 import { PostExplorer } from '@/components/PostExplorer'
 import { getPortfolioPosts } from '@/lib/notion'
+import { createPageMetadata } from '@/lib/seo'
 
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'portfolio | ryong.log',
-  description: '작업 기록과 포트폴리오를 모아둔 목록입니다.',
-  alternates: {
-    canonical: '/portfolio',
-  },
+  ...createPageMetadata({
+    title: 'portfolio',
+    description:
+      '정승룡의 프론트엔드 제품 개발 작업 기록과 포트폴리오를 모아둔 페이지입니다.',
+    path: '/portfolio',
+    imageTitle: 'ryong.portfolio',
+    tags: ['Portfolio', 'Frontend', 'Product Engineering'],
+  }),
 }
 
 export default async function PortfolioPage() {

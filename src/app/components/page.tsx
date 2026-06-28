@@ -2,13 +2,17 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { InstallCommand } from '@/features/component-library/component-docs'
 import { componentSamples } from '@/features/component-library/component-data'
+import { createPageMetadata } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  title: 'components | ryong.log',
-  description: 'shadcn, Tailwind v4, React/Next 기준 컴포넌트 레지스트리',
-  alternates: {
-    canonical: '/components',
-  },
+  ...createPageMetadata({
+    title: 'components',
+    description:
+      'shadcn, Tailwind v4, React/Next 기준으로 정리한 개인 UI 컴포넌트 레지스트리입니다.',
+    path: '/components',
+    imageTitle: 'ryong.components',
+    tags: ['UI Components', 'shadcn', 'Tailwind CSS', 'React'],
+  }),
 }
 
 export default function ComponentsPage() {

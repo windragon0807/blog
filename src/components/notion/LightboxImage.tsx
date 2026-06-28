@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type MouseEvent } from 'react'
 import { X } from 'lucide-react'
 import { RetryableImage, type NotionMediaRefreshConfig } from '@/components/RetryableImage'
 import {
@@ -57,11 +57,19 @@ export function LightboxImage({
     }
   }, [open])
 
+  const openLightbox = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setOpen(true)
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        data-lightbox-image-trigger=""
+        onClick={openLightbox}
+        onDragStart={(event) => event.preventDefault()}
         className="group relative block w-full cursor-zoom-in"
         style={{ aspectRatio }}
         aria-label="이미지 확대"
@@ -84,7 +92,14 @@ export function LightboxImage({
 
       <DialogPortal>
         <DialogOverlay className="lightbox-overlay z-[90] bg-black/86" />
-        <DialogRawContent className="fixed inset-0 z-[91] flex items-center justify-center p-4 outline-none">
+        <DialogRawContent
+          className="fixed inset-0 z-[91] flex items-center justify-center p-4 outline-none"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              setOpen(false)
+            }
+          }}
+        >
           <DialogTitle className="sr-only">이미지 확대 보기</DialogTitle>
           <button
             type="button"
@@ -102,6 +117,8 @@ export function LightboxImage({
             data-state={open ? 'open' : 'closed'}
             loading="eager"
             decoding="async"
+            draggable={false}
+            onClick={(event) => event.stopPropagation()}
           />
         </DialogRawContent>
       </DialogPortal>

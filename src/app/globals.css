@@ -331,6 +331,53 @@ html {
   }
 }
 
+.components-sidebar-fog-top,
+.components-sidebar-fog-bottom {
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  right: 1rem;
+  z-index: 20;
+  height: 2.25rem;
+}
+
+.components-sidebar-fog-top {
+  top: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--background) 8%,
+    color-mix(in srgb, var(--background) 82%, transparent) 54%,
+    transparent 100%
+  );
+}
+
+.components-sidebar-fog-bottom {
+  bottom: 0;
+  height: 3rem;
+  background: linear-gradient(
+    to top,
+    var(--background) 8%,
+    color-mix(in srgb, var(--background) 82%, transparent) 54%,
+    transparent 100%
+  );
+}
+
+.component-mobile-nav-panel {
+  transition:
+    opacity 220ms ease,
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.component-mobile-nav-panel[data-state='closed'] {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.component-mobile-nav-panel[data-state='open'] {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -826,39 +873,6 @@ html.dark:not([data-code-theme]) .notion-code pre.shiki span {
   animation: hero-fade-up 440ms cubic-bezier(0.22, 1, 0.36, 1) 280ms both;
 }
 
-.brand-link {
-  position: relative;
-  align-items: center;
-  max-width: 100%;
-  overflow: visible;
-  text-overflow: clip;
-  white-space: nowrap;
-  line-height: 1.35;
-  padding-block: 0.16em;
-  margin-block: -0.16em;
-}
-
-.brand-base {
-  grid-area: 1 / 1;
-  transition: opacity 140ms ease;
-  opacity: 0;
-}
-
-.brand-animated-layer {
-  pointer-events: none;
-  grid-area: 1 / 1;
-  display: inline-flex;
-  align-items: flex-end;
-  white-space: nowrap;
-  opacity: 1;
-  transition: opacity 140ms ease;
-}
-
-.brand-animated-char {
-  display: inline-block;
-  transform-origin: center bottom;
-}
-
 /* TypingText 의 커서 — 실제 터미널처럼 sharp on/off 깜빡임.
    Tailwind v4 가 @theme 의 --animate-cursor-blink 토큰을 보고 animate-cursor-blink 유틸리티를 생성. */
 @keyframes typing-cursor-blink {
@@ -869,92 +883,6 @@ html.dark:not([data-code-theme]) .notion-code pre.shiki span {
   50.01%,
   100% {
     opacity: 0;
-  }
-}
-
-/* will-change 는 무한 키프레임을 도는 모션에만 부여 (typing 은 RAF + 1회성이라 GPU 레이어 유지 불필요) */
-html[data-logo-motion='jump'] .brand-animated-char,
-html[data-logo-motion='wave'] .brand-animated-char,
-html[data-logo-motion='slide'] .brand-animated-char {
-  will-change: transform, opacity, filter;
-}
-
-html[data-logo-motion='jump'] .brand-animated-char {
-  animation: brand-logo-jump 2.05s cubic-bezier(0.2, 0.9, 0.22, 1) infinite
-    both;
-  animation-delay: calc(var(--brand-char-index, 0) * 56ms);
-}
-
-html[data-logo-motion='wave'] .brand-animated-char {
-  animation: brand-logo-wave 1.85s ease-in-out infinite both;
-  animation-delay: calc(var(--brand-char-index, 0) * 52ms);
-}
-
-html[data-logo-motion='slide'] .brand-animated-char {
-  opacity: 0;
-  animation: brand-logo-slide 3.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-  animation-delay: calc(var(--brand-char-index, 0) * 80ms);
-}
-
-@keyframes brand-logo-jump {
-  0%,
-  31%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.9;
-  }
-  9% {
-    transform: translateY(-0.28em) scaleY(1.04);
-    opacity: 1;
-  }
-  15% {
-    transform: translateY(0.04em) scaleY(0.98);
-    opacity: 0.96;
-  }
-  22% {
-    transform: translateY(0);
-    opacity: 0.94;
-  }
-}
-
-@keyframes brand-logo-wave {
-  0%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.76;
-  }
-  20% {
-    transform: translateY(-0.16em);
-    opacity: 1;
-  }
-  42% {
-    transform: translateY(0.03em);
-    opacity: 0.92;
-  }
-  62% {
-    transform: translateY(0);
-    opacity: 0.96;
-  }
-}
-
-@keyframes brand-logo-slide {
-  0%,
-  16% {
-    opacity: 0;
-    transform: translateY(0.6em);
-    filter: blur(10px);
-  }
-  28%,
-  72% {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-  88%,
-  100% {
-    opacity: 0;
-    transform: translateY(-0.08em);
-    filter: blur(0);
   }
 }
 
@@ -1092,23 +1020,12 @@ html[data-logo-motion='slide'] .brand-animated-char {
     animation: none !important;
   }
 
-  .brand-base {
-    opacity: 1;
-  }
-
-  .brand-animated-layer,
-  .brand-animated-char {
-    opacity: 0;
-    animation: none !important;
-    transform: none !important;
-    filter: none !important;
-  }
-
   .post-card-surface {
     transition: none !important;
   }
 
   .toc-active-rail,
+  .component-mobile-nav-panel,
   .settings-popover,
   .lightbox-overlay,
   .lightbox-panel,

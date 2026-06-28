@@ -29,7 +29,7 @@ test('component library scroll regions use OverlayScrollbars', async ({ page }) 
   await page.goto('/components')
 
   const contentScroll = page.locator('.components-content-scroll')
-  const sidebarScroll = page.locator('aside[aria-label="컴포넌트 문서 탐색"]')
+  const sidebarScroll = page.locator('.components-sidebar-list-scroll')
 
   await expect(contentScroll).toHaveAttribute(
     'data-overlayscrollbars-initialize',
@@ -45,7 +45,7 @@ test('component library scroll regions use OverlayScrollbars', async ({ page }) 
   ).toHaveCount(1)
   await expect(
     page.locator(
-      'aside[aria-label="컴포넌트 문서 탐색"] > .os-scrollbar-vertical'
+      '.components-sidebar-list-scroll > .os-scrollbar-vertical'
     )
   ).toHaveCount(1)
 

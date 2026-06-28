@@ -186,7 +186,7 @@ function createSample({
     description,
     status: 'Ready',
     installCommand: `pnpm dlx shadcn@latest add https://ryong.dev/r/${slug}.json`,
-    filePath: `components/${slug}.tsx`,
+    filePath: `src/components/${slug}.tsx`,
     preview: {
       kind: slug,
       label: title,

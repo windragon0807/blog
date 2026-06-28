@@ -3,6 +3,7 @@ import { getAllSeries, getPostsBySeries } from '@/lib/notion'
 import { PostExplorer } from '@/components/PostExplorer'
 import { SeriesFilter } from '@/components/SeriesFilter'
 import { SeriesTimeline } from '@/components/SeriesTimeline'
+import { createPageMetadata } from '@/lib/seo'
 
 export const revalidate = 3600
 
@@ -18,13 +19,13 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { series } = await params
   const decodedSeries = decodeURIComponent(series)
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
   return {
-    title: `${decodedSeries} 시리즈`,
-    description: `${decodedSeries} 시리즈 글 모음`,
-    alternates: {
-      canonical: `${siteUrl}/series/${encodeURIComponent(decodedSeries)}`,
-    },
+    ...createPageMetadata({
+      title: `${decodedSeries} 시리즈`,
+      description: `${decodedSeries} 시리즈에 속한 개발 글과 작업 기록 모음입니다.`,
+      path: `/series/${encodeURIComponent(decodedSeries)}`,
+      tags: [decodedSeries, 'Series', '개발 블로그'],
+    }),
   }
 }
 

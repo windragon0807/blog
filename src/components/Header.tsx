@@ -1,69 +1,35 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { HouseIcon, PuzzleIcon } from '@/components/icons'
+import { GitHubIcon, HouseIcon, PuzzleIcon } from '@/components/icons'
 import { usePostsPrefetch } from '@/hooks/usePostsPrefetch'
 import { AppLauncherMenu } from './AppLauncherMenu'
-import { BrandLogo } from './BrandLogo'
-import { useHeaderBrandScope } from './HeaderBrandScopeProvider'
 import { ICON_CONTROL_BUTTON_CLASS_NAME } from './IconControlButton'
 import { ThemeModeButton } from './ThemeModeButton'
 import { ThemeSettingsMenu } from './ThemeSettingsMenu'
 
 export function Header() {
-  const pathname = usePathname()
   const prefetchPosts = usePostsPrefetch()
-  const { scope } = useHeaderBrandScope()
-  const shouldShowHomeButton =
-    pathname === '/resume' ||
-    pathname === '/portfolio' ||
-    pathname.startsWith('/components')
-  const brandLabel =
-    scope === 'resume'
-      ? 'ryong.resume'
-      : scope === 'portfolio'
-        ? 'ryong.portfolio'
-        : scope === 'components'
-          ? 'ryong.components'
-        : 'ryong.log'
-  const brandHref =
-    scope === 'portfolio'
-      ? '/portfolio'
-      : scope === 'components'
-        ? '/components'
-        : '/'
 
   return (
     <header className="glass-surface header-sticky top-0 z-50 w-full">
       <div className="w-full px-5 md:px-6">
-        <div className="flex min-h-14 items-center justify-between gap-3 py-2 sm:gap-4 sm:py-0">
-          <div className="min-w-0">
+        <div className="flex min-h-14 items-center justify-center py-2 sm:py-0">
+          <nav
+            aria-label="주요 이동"
+            className="flex shrink-0 items-center justify-center gap-1.5 sm:gap-2"
+          >
             <Link
-              href={brandHref}
-              className="brand-link relative inline-grid max-w-full truncate font-bold text-lg text-zinc-900 dark:text-zinc-100"
-              onFocus={brandHref === '/' ? prefetchPosts : undefined}
-              onMouseEnter={brandHref === '/' ? prefetchPosts : undefined}
-              onTouchStart={brandHref === '/' ? prefetchPosts : undefined}
+              href="/"
+              aria-label="홈으로 이동"
+              className={ICON_CONTROL_BUTTON_CLASS_NAME}
+              onFocus={prefetchPosts}
+              onMouseEnter={prefetchPosts}
+              onTouchStart={prefetchPosts}
             >
-              <BrandLogo label={brandLabel} />
+              <span className="sr-only">홈으로 이동</span>
+              <HouseIcon className="h-[18px] w-[18px]" />
             </Link>
-          </div>
-
-          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-            {shouldShowHomeButton && (
-              <Link
-                href="/"
-                aria-label="홈으로 이동"
-                className={ICON_CONTROL_BUTTON_CLASS_NAME}
-                onFocus={prefetchPosts}
-                onMouseEnter={prefetchPosts}
-                onTouchStart={prefetchPosts}
-              >
-                <span className="sr-only">홈으로 이동</span>
-                <HouseIcon className="h-[18px] w-[18px]" />
-              </Link>
-            )}
             <ThemeModeButton />
             <Link
               href="/components"
@@ -74,8 +40,18 @@ export function Header() {
               <PuzzleIcon className="h-[18px] w-[18px]" />
             </Link>
             <AppLauncherMenu />
+            <Link
+              href="https://github.com/windragon0807"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="GitHub 프로필 새 창으로 열기"
+              className={ICON_CONTROL_BUTTON_CLASS_NAME}
+            >
+              <span className="sr-only">GitHub 프로필 새 창으로 열기</span>
+              <GitHubIcon className="h-[18px] w-[18px]" />
+            </Link>
             <ThemeSettingsMenu />
-          </div>
+          </nav>
         </div>
       </div>
     </header>

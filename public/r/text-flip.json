@@ -5,13 +5,20 @@
   "title": "Rotating Word Flip",
   "description": "A rotating word flip animation.",
   "dependencies": [
-    "motion"
+    "clsx",
+    "motion",
+    "tailwind-merge"
   ],
   "files": [
     {
       "path": "src/components/text-flip.tsx",
       "content": "'use client'\n\nimport { useEffect, useState } from 'react'\nimport { AnimatePresence, motion } from 'motion/react'\nimport { cn } from '@/lib/utils'\n\ninterface TextFlipProps {\n  prefix?: string\n  words: string[]\n  wordColors?: readonly string[]\n  interval?: number\n  className?: string\n  wordClassName?: string\n}\n\nexport function TextFlip({\n  prefix = 'Coding is',\n  words,\n  wordColors,\n  interval = 2600,\n  className,\n  wordClassName,\n}: TextFlipProps) {\n  const [index, setIndex] = useState(0)\n\n  useEffect(() => {\n    if (words.length <= 1) return\n\n    const id = window.setInterval(() => {\n      setIndex((current) => (current + 1) % words.length)\n    }, interval)\n\n    return () => window.clearInterval(id)\n  }, [interval, words.length])\n\n  return (\n    <span\n      className={cn(\n        'box-content inline-flex items-center gap-4 text-5xl font-semibold leading-none',\n        className\n      )}\n    >\n      <span className=\"text-foreground\">{prefix}</span>\n      <span className={cn('relative inline-grid w-[10ch] overflow-hidden text-left', wordClassName)}>\n        <AnimatePresence mode=\"popLayout\" initial={false}>\n          <motion.span\n            key={words[index]}\n            initial={{ y: '110%', opacity: 0, rotateX: -28 }}\n            animate={{ y: '0%', opacity: 1, rotateX: 0 }}\n            exit={{ y: '-110%', opacity: 0, rotateX: 28 }}\n            transition={{ duration: 0.52, ease: [0.16, 1, 0.3, 1] }}\n            className=\"col-start-1 row-start-1 text-left text-current [backface-visibility:hidden]\"\n            style={{ color: wordColors?.[index % wordColors.length] }}\n          >\n            {words[index]}\n          </motion.span>\n        </AnimatePresence>\n      </span>\n    </span>\n  )\n}\n",
       "type": "registry:ui"
+    },
+    {
+      "path": "src/lib/utils.ts",
+      "content": "import { clsx, type ClassValue } from 'clsx'\nimport { twMerge } from 'tailwind-merge'\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs))\n}\n",
+      "type": "registry:lib"
     }
   ]
 }

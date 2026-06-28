@@ -6,6 +6,94 @@ const path = require('node:path')
 const root = process.cwd()
 const outDir = path.join(root, 'public/r')
 
+const ignoredPackageDependencies = new Set(['next', 'react', 'react-dom'])
+
+function getRegistryFileType(filePath) {
+  if (filePath.startsWith('src/lib/')) return 'registry:lib'
+  return 'registry:ui'
+}
+
+function getPackageName(importSpecifier) {
+  if (importSpecifier.startsWith('@')) {
+    return importSpecifier.split('/').slice(0, 2).join('/')
+  }
+
+  return importSpecifier.split('/')[0]
+}
+
+function getImportSpecifiers(source) {
+  return [...source.matchAll(/from\s+['"]([^'"]+)['"]/g)].map(
+    (match) => match[1]
+  )
+}
+
+function resolveLocalImport(importSpecifier, importerPath) {
+  if (importSpecifier === '@/lib/utils') {
+    return 'src/lib/utils.ts'
+  }
+
+  if (importSpecifier.startsWith('@/components/ui/')) {
+    return `${importSpecifier.replace('@/', 'src/')}.tsx`
+  }
+
+  if (importSpecifier.startsWith('./') || importSpecifier.startsWith('../')) {
+    return `${path
+      .posix
+      .normalize(path.posix.join(path.posix.dirname(importerPath), importSpecifier))}.tsx`
+  }
+
+  return null
+}
+
+function collectRegistryFiles(entryPath, visited = new Set()) {
+  if (visited.has(entryPath)) return []
+
+  visited.add(entryPath)
+
+  const absolutePath = path.join(root, entryPath)
+  const content = fs.readFileSync(absolutePath, 'utf8')
+  const files = [
+    {
+      path: entryPath,
+      content,
+      type: getRegistryFileType(entryPath),
+    },
+  ]
+
+  for (const importSpecifier of getImportSpecifiers(content)) {
+    const localPath = resolveLocalImport(importSpecifier, entryPath)
+
+    if (!localPath) continue
+
+    files.push(...collectRegistryFiles(localPath, visited))
+  }
+
+  return files
+}
+
+function collectDependencies(files, explicitDependencies) {
+  const dependencies = new Set(explicitDependencies)
+
+  for (const file of files) {
+    for (const importSpecifier of getImportSpecifiers(file.content)) {
+      const isLocal =
+        importSpecifier.startsWith('@/') ||
+        importSpecifier.startsWith('./') ||
+        importSpecifier.startsWith('../')
+
+      if (isLocal) continue
+
+      const packageName = getPackageName(importSpecifier)
+
+      if (!ignoredPackageDependencies.has(packageName)) {
+        dependencies.add(packageName)
+      }
+    }
+  }
+
+  return [...dependencies].sort()
+}
+
 const items = [
   {
     name: 'ripple-button',
@@ -88,8 +176,25 @@ const items = [
     name: 'file-tree',
     title: 'Collapsible File Tree',
     description: 'A nested file tree with selectable files, folders, and collapse controls.',
-    dependencies: ['@radix-ui/react-accordion', '@radix-ui/react-scroll-area', 'lucide-react'],
-    registryDependencies: ['button', 'scroll-area'],
+    dependencies: ['@radix-ui/react-accordion', 'lucide-react'],
+    cssVars: {
+      theme: {
+        'animate-accordion-down':
+          'accordion-down 0.2s ease-out',
+        'animate-accordion-up':
+          'accordion-up 0.2s ease-out',
+      },
+    },
+    css: {
+      '@keyframes accordion-down': {
+        from: { height: '0' },
+        to: { height: 'var(--radix-accordion-content-height)' },
+      },
+      '@keyframes accordion-up': {
+        from: { height: 'var(--radix-accordion-content-height)' },
+        to: { height: '0' },
+      },
+    },
   },
   {
     name: 'animated-circular-progress-bar',
@@ -178,7 +283,6 @@ const items = [
     description:
       'Confetti animations are best used to delight your users when something special happens.',
     dependencies: ['canvas-confetti', '@types/canvas-confetti'],
-    registryDependencies: ['button'],
   },
   {
     name: 'particles',
@@ -413,30 +517,15 @@ for (const file of fs.readdirSync(outDir)) {
 }
 
 for (const item of items) {
-  const sourcePath = path.join(root, `src/components/${item.name}.tsx`)
-  const content = fs.readFileSync(sourcePath, 'utf8')
-  const files = [
-    {
-      path: `src/components/${item.name}.tsx`,
-      content,
-      type: 'registry:ui',
-    },
-    ...(item.sharedFiles ?? []).map((sharedName) => {
-      const sharedPath = `src/components/${sharedName}.tsx`
-      return {
-        path: sharedPath,
-        content: fs.readFileSync(path.join(root, sharedPath), 'utf8'),
-        type: 'registry:ui',
-      }
-    }),
-  ]
+  const files = collectRegistryFiles(`src/components/${item.name}.tsx`)
+  const dependencies = collectDependencies(files, item.dependencies)
   const registryItem = {
     $schema: 'https://ui.shadcn.com/schema/registry-item.json',
     name: item.name,
     type: 'registry:ui',
     title: item.title,
     description: item.description,
-    dependencies: item.dependencies,
+    dependencies,
     files,
     ...(item.registryDependencies
       ? { registryDependencies: item.registryDependencies }

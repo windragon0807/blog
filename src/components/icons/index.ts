@@ -1,4 +1,5 @@
 export {
+  GitHubIcon,
   HouseIcon,
   LayoutGridIcon,
   MoonIcon,

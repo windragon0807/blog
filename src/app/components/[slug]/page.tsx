@@ -5,6 +5,7 @@ import {
   componentSamples,
   getComponentSampleBySlug,
 } from '@/features/component-library/component-data'
+import { createPageMetadata } from '@/lib/seo'
 
 interface ComponentDetailPageProps {
   params: Promise<{
@@ -31,11 +32,13 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${sample.title} | ryong.components`,
-    description: sample.description,
-    alternates: {
-      canonical: `/components/${sample.slug}`,
-    },
+    ...createPageMetadata({
+      title: `${sample.title} | components`,
+      description: sample.description,
+      path: `/components/${sample.slug}`,
+      imageTitle: sample.title,
+      tags: ['UI Components', sample.title, sample.categoryId],
+    }),
   }
 }
 

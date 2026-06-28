@@ -1,6 +1,9 @@
 import type { ReactNode } from 'react'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { ComponentSidebar } from '@/features/component-library/component-sidebar'
+import {
+  ComponentMobileSidebarTrigger,
+  ComponentSidebar,
+} from '@/features/component-library/component-sidebar'
 
 export default function ComponentsLayout({ children }: { children: ReactNode }) {
   return (
@@ -9,7 +12,7 @@ export default function ComponentsLayout({ children }: { children: ReactNode }) 
       data-lenis-prevent-wheel
     >
       <div className="components-shell-grid h-full w-full px-4 pb-20 pt-6 md:px-8 lg:overflow-hidden lg:px-0 lg:pb-0">
-        <div className="components-sidebar-slot min-w-0">
+        <div className="components-sidebar-slot hidden min-w-0 lg:block">
           <ComponentSidebar />
         </div>
         <ScrollArea
@@ -18,6 +21,7 @@ export default function ComponentsLayout({ children }: { children: ReactNode }) 
           orientation="vertical"
         >
           <div className="components-content-inner lg:pb-20 lg:pr-10">
+            <ComponentMobileSidebarTrigger />
             {children}
           </div>
         </ScrollArea>

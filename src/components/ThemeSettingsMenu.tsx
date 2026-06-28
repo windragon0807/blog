@@ -12,7 +12,6 @@ import { BlogThemeSelect } from './BlogThemeSelect'
 import { CodeThemeSelect } from './CodeThemeSelect'
 import { FontThemeSelect } from './FontThemeSelect'
 import { IconControlButton } from './IconControlButton'
-import { LogoMotionSelect } from './LogoMotionSelect'
 
 const SETTINGS_MENU_PORTAL_SELECTOR = '[data-settings-menu-portal]'
 
@@ -58,9 +57,6 @@ export function ThemeSettingsMenu() {
           </SettingsSection>
           <SettingsSection label="Theme" delayMs={180}>
             <BlogThemeSelect className="h-10 w-full text-sm" />
-          </SettingsSection>
-          <SettingsSection label="Logo Animation" delayMs={240}>
-            <LogoMotionSelect className="h-10 w-full text-sm" />
           </SettingsSection>
         </div>
       </PopoverContent>
