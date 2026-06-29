@@ -343,6 +343,7 @@ html {
 
 .components-sidebar-fog-top {
   top: 0;
+  height: 1rem;
   background: linear-gradient(
     to bottom,
     var(--background) 8%,
@@ -353,7 +354,7 @@ html {
 
 .components-sidebar-fog-bottom {
   bottom: 0;
-  height: 3rem;
+  height: 2.25rem;
   background: linear-gradient(
     to top,
     var(--background) 8%,
@@ -616,6 +617,12 @@ html body[data-scroll-locked][data-scroll-locked] {
 
 .scroll-to-top-button:hover {
   transform: translateX(-50%) translateY(-0.125rem);
+}
+
+@media (min-width: 1024px) {
+  .scroll-to-top-button {
+    display: none;
+  }
 }
 
 .notion-content strong,

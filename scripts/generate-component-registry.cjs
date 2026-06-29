@@ -506,6 +506,12 @@ const items = [
     description: 'A simple typed data table inspired by HeroUI table structure.',
     dependencies: [],
   },
+  {
+    name: 'physics-number-picker',
+    title: 'Physics Number Picker',
+    description: 'A numeric wheel picker with momentum scrolling and snap physics.',
+    dependencies: [],
+  },
 ]
 
 fs.mkdirSync(outDir, { recursive: true })

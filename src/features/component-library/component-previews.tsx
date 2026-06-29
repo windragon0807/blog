@@ -51,6 +51,10 @@ import { MouseTrailCursor } from '@/components/mouse-trail-cursor'
 import { MorphingText } from '@/components/morphing-text'
 import { NumberTicker } from '@/components/number-ticker'
 import { Particles } from '@/components/particles'
+import {
+  PhysicsNumberPicker,
+  type PhysicsNumberPickerStyle,
+} from '@/components/physics-number-picker'
 import { PlaceholdersAndVanishInput } from '@/components/placeholders-and-vanish-input'
 import { PlayfulTodoList } from '@/components/playful-todolist'
 import { Pointer } from '@/components/pointer'
@@ -570,11 +574,11 @@ function ThreeDImageCarouselPreview() {
       className="min-h-[32rem]"
       contentClassName="max-w-6xl"
     >
-      <div className="w-full max-w-5xl overflow-visible [&_[data-3d-image-carousel]]:!overflow-visible">
+      <div className="w-full max-w-5xl min-w-0 overflow-visible [&_[data-3d-image-carousel]]:!overflow-visible">
         <ThreeDImageCarousel
           items={previewImages}
           itemCount={3}
-          className="min-w-[760px]"
+          className="w-full min-w-0"
         />
       </div>
     </PreviewDemoSurface>
@@ -610,6 +614,55 @@ function DataTablePreview() {
   )
 }
 
+function PhysicsNumberPickerPreview() {
+  const [value, setValue] = useState(24)
+
+  return (
+    <PreviewDemoSurface
+      label="value control"
+      title="Physics Number Picker"
+      subtitle="drag or scroll to settle"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.26),transparent_56%)]"
+      contentGapClassName="mt-7 sm:mt-8"
+    >
+      <div
+        data-physics-picker-preview-stage=""
+        className="relative isolate flex h-[17rem] w-[min(18rem,82vw)] items-center justify-center sm:h-[19rem]"
+      >
+        <div className="pointer-events-none absolute inset-x-8 top-10 h-28 rounded-full bg-teal-300/16 blur-3xl" />
+        <PhysicsNumberPicker
+          value={value}
+          min={0}
+          max={59}
+          onValueChange={setValue}
+          label="Pace seconds"
+          itemHeight={48}
+          visibleItems={5}
+          className="!w-24 !rounded-[1.75rem] !bg-transparent !shadow-none sm:!w-28"
+          style={{
+            '--picker-fade-color': 'transparent',
+            '--picker-selection-bg': 'rgba(255,255,255,0.11)',
+            '--picker-selection-border': 'rgba(255,255,255,0.16)',
+            '--picker-selection-highlight': 'rgba(255,255,255,0.26)',
+            '--picker-selection-shadow': 'rgba(45,212,191,0.48)',
+          } as PhysicsNumberPickerStyle}
+          formatValue={(itemValue, isSelected) => (
+            <span
+              className={
+                isSelected
+                  ? 'text-[2.5rem] font-black tabular-nums text-white sm:text-[2.875rem]'
+                  : 'text-[2.1rem] font-black tabular-nums text-white/35 sm:text-[2.45rem]'
+              }
+            >
+              {String(itemValue).padStart(2, '0')}
+            </span>
+          )}
+        />
+      </div>
+    </PreviewDemoSurface>
+  )
+}
+
 function PreviewDemoSurface({
   label = 'component preview',
   title,
@@ -637,7 +690,7 @@ function PreviewDemoSurface({
     <div
       data-preview-demo-surface=""
       className={cn(
-        'relative flex min-h-[28rem] w-full items-center justify-center overflow-hidden rounded-[inherit] bg-[#0a0a0f] px-6 py-14 text-center text-white sm:px-8 sm:py-16 md:py-20',
+        'relative flex min-h-[22rem] w-full items-center justify-center overflow-hidden rounded-[inherit] bg-[#0a0a0f] px-4 py-9 text-center text-white sm:min-h-[24rem] sm:px-6 sm:py-12 md:min-h-[28rem] md:px-8 md:py-16 lg:py-20',
         className
       )}
     >
@@ -646,18 +699,24 @@ function PreviewDemoSurface({
       {overlay}
       <div className={cn('relative z-10 flex max-w-xl flex-col items-center', contentClassName)}>
         <div className={cn('flex flex-col items-center', headingClassName)}>
-          <p className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-white/60">
+          <p className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-[0.65rem] font-medium uppercase tracking-[0.14em] text-white/60 sm:text-xs sm:tracking-[0.18em]">
             {label}
           </p>
-          <div className="mt-5 text-5xl font-semibold tracking-normal">
+          <div
+            data-preview-demo-title=""
+            className="mt-4 max-w-full text-balance text-3xl font-semibold leading-[1.05] tracking-normal sm:text-4xl md:text-5xl"
+          >
             {title}
           </div>
-          <p className="mt-3 text-sm italic tracking-wide text-white/52">
+          <p className="mt-2 text-xs italic tracking-wide text-white/52 sm:mt-3 sm:text-sm">
             {subtitle}
           </p>
         </div>
         {children ? (
-          <div className={cn('mt-10 flex w-full items-center justify-center', contentGapClassName)}>
+          <div
+            data-preview-demo-content=""
+            className={cn('mt-7 flex w-full items-center justify-center sm:mt-10', contentGapClassName)}
+          >
             {children}
           </div>
         ) : null}
@@ -1566,6 +1625,8 @@ function BasePreviewContent({
       return <CanvasCursorPreview mode={mode} />
     case 'data-table':
       return <DataTablePreview />
+    case 'physics-number-picker':
+      return <PhysicsNumberPickerPreview />
     }
   })()
 

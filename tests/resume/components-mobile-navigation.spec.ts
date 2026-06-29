@@ -94,6 +94,64 @@ test('header renders centered icon controls with GitHub link', async ({ page }) 
   ).toBeLessThan(4)
 })
 
+test('desktop component sidebar keeps active text above the moving indicator', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/components/placeholders-and-vanish-input')
+
+  await page.getByRole('link', { name: 'Theme Toggle' }).click()
+  await expect(page).toHaveURL(/\/components\/toggle-theme$/)
+
+  const activeLink = page.getByRole('link', { name: 'Theme Toggle' })
+  await expect(activeLink).toBeVisible()
+
+  const hitTarget = await activeLink.evaluate((link) => {
+    const label = link.querySelector('[data-component-sidebar-label]')
+    if (!label) return { hasLabel: false, topElementIsHiddenLayer: true }
+
+    const rect = label.getBoundingClientRect()
+    const topElement = document.elementFromPoint(
+      rect.left + rect.width / 2,
+      rect.top + rect.height / 2
+    )
+
+    return {
+      hasLabel: true,
+      topElementIsHiddenLayer: topElement?.getAttribute('aria-hidden') === 'true',
+    }
+  })
+
+  expect(hitTarget.hasLabel).toBe(true)
+  expect(hitTarget.topElementIsHiddenLayer).toBe(false)
+})
+
+test('desktop component sidebar top fog does not crowd the introduction link', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/components')
+
+  const metrics = await page
+    .locator('.components-sidebar-list-scroll')
+    .evaluate((scrollShell) => {
+      const viewport =
+        scrollShell.querySelector('[data-overlayscrollbars-viewport]') ??
+        scrollShell
+      const introLink = scrollShell.querySelector('a[href="/components"]')
+      const fog = scrollShell.parentElement?.querySelector(
+        '.components-sidebar-fog-top'
+      )
+      const viewportRect = viewport.getBoundingClientRect()
+      const introRect = introLink?.getBoundingClientRect()
+      const fogRect = fog?.getBoundingClientRect()
+
+      return {
+        introTopOffset: introRect ? introRect.top - viewportRect.top : -1,
+        fogHeight: fogRect?.height ?? 0,
+      }
+    })
+
+  expect(metrics.introTopOffset).toBeGreaterThanOrEqual(metrics.fogHeight + 4)
+  expect(metrics.introTopOffset).toBeLessThanOrEqual(metrics.fogHeight + 16)
+})
+
 test('scroll shortcut stays fixed at the bottom center on mobile', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/components/shiny-button')
@@ -117,4 +175,11 @@ test('scroll shortcut stays fixed at the bottom center on mobile', async ({ page
     Math.abs(((scrolledBox?.x ?? 0) + (scrolledBox?.width ?? 0) / 2) - 195)
   ).toBeLessThanOrEqual(3)
   expect(Math.abs((scrolledBox?.y ?? 0) - (initialBox?.y ?? 0))).toBeLessThanOrEqual(2)
+})
+
+test('scroll shortcut is hidden on desktop', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/components/shiny-button')
+
+  await expect(page.getByRole('button', { name: '맨 위로 이동' })).toBeHidden()
 })

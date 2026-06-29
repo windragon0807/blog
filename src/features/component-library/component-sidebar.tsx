@@ -61,13 +61,15 @@ function SidebarLink({
             layoutId={`component-sidebar-active-indicator-${layoutScope}`}
             layoutDependency={layoutDependency}
             aria-hidden="true"
-            className="absolute inset-0 z-0 rounded-lg border border-zinc-200 bg-zinc-100 shadow-[0_10px_24px_-18px_rgba(24,24,27,0.42)] dark:border-zinc-800 dark:bg-zinc-900"
+            className="component-sidebar-active-indicator pointer-events-none absolute inset-0 z-[1] rounded-lg border border-zinc-200 bg-zinc-100 shadow-[0_10px_24px_-18px_rgba(24,24,27,0.42)] dark:border-zinc-800 dark:bg-zinc-900"
             style={stableStickyStyle}
             transition={{ type: 'spring', stiffness: 520, damping: 42, mass: 0.7 }}
           />
         ) : null}
       </AnimatePresence>
-      <span className="relative z-10">{children}</span>
+      <span data-component-sidebar-label="" className="relative z-[2]">
+        {children}
+      </span>
     </Link>
   )
 }
@@ -157,7 +159,7 @@ function ComponentSidebarContent({
           data-lenis-prevent-wheel
           orientation="vertical"
         >
-          <div className="space-y-7 px-1 pb-[max(6rem,env(safe-area-inset-bottom))] pt-3">
+          <div className="space-y-6 px-1 pb-[max(5rem,env(safe-area-inset-bottom))] pt-5 lg:pt-6">
             {showIntroLink ? (
               <div>
                 <SidebarLink

@@ -54,6 +54,7 @@ const requiredNames = [
   'character-cursor',
   'canvas-cursor',
   'data-table',
+  'physics-number-picker',
 ]
 const cursorEffectNames = [
   'mouse-invert-cursor',
@@ -233,6 +234,10 @@ const playfulTodoListPath = path.join(
 )
 const avatarGroupPath = path.join(root, 'src/components/avatar-group.tsx')
 const dataTablePath = path.join(root, 'src/components/data-table.tsx')
+const physicsNumberPickerPath = path.join(
+  root,
+  'src/components/physics-number-picker.tsx'
+)
 const fileTreePath = path.join(root, 'src/components/file-tree.tsx')
 const textFlipPath = path.join(root, 'src/components/text-flip.tsx')
 const cursorEffectRuntimePath = path.join(
@@ -268,6 +273,7 @@ const toggleThemeSource = fs.readFileSync(toggleThemePath, 'utf8')
 const playfulTodoListSource = fs.readFileSync(playfulTodoListPath, 'utf8')
 const avatarGroupSource = fs.readFileSync(avatarGroupPath, 'utf8')
 const dataTableSource = fs.readFileSync(dataTablePath, 'utf8')
+const physicsNumberPickerSource = fs.readFileSync(physicsNumberPickerPath, 'utf8')
 const fileTreeSource = fs.readFileSync(fileTreePath, 'utf8')
 const textFlipSource = fs.readFileSync(textFlipPath, 'utf8')
 const cursorEffectRuntimeSource = fs.existsSync(cursorEffectRuntimePath)
@@ -344,6 +350,7 @@ const expectedComponentTitles = [
   ['character-cursor', 'Character Particle Cursor'],
   ['canvas-cursor', 'Spring Line Cursor'],
   ['data-table', 'Typed Data Table'],
+  ['physics-number-picker', 'Physics Number Picker'],
   ['ripple-button', 'Click Ripple Button'],
   ['shiny-button', 'Shine Button'],
   ['marquee', 'Continuous Marquee'],
@@ -405,6 +412,8 @@ for (const sidebarMarker of [
   'ComponentMobileSidebarTrigger',
   'ComponentSidebarContent',
   'component-mobile-bottom-sheet',
+  'component-sidebar-active-indicator',
+  'data-component-sidebar-label',
   'data-component-mobile-menu-trigger',
   'components-sidebar-list-scroll',
   'components-sidebar-fog-top',
@@ -418,12 +427,27 @@ for (const sidebarMarker of [
 }
 
 assert(
+  sidebarSource.includes('pointer-events-none') &&
+    sidebarSource.includes('z-[1]') &&
+    sidebarSource.includes('z-[2]') &&
+    sidebarSource.includes('pt-5 lg:pt-6'),
+  'Component sidebar active indicator should stay below text and the top list padding should clear the fog'
+)
+
+assert(
   !sidebarSource.includes('component-mobile-nav-panel') &&
     !sidebarSource.includes('Browse') &&
     !sidebarSource.includes('currentTitle') &&
     !sidebarSource.includes('w-[min(22rem,86vw)]') &&
     sidebarSource.includes('bottom-0'),
   'Mobile component navigation should be an icon-only trigger with a bottom sheet, not a labeled side drawer'
+)
+
+assert(
+  globalsSource.includes('.components-sidebar-fog-top') &&
+    globalsSource.includes('height: 1rem;') &&
+    globalsSource.includes('height: 2.25rem;'),
+  'Component sidebar fog should be shallow enough to avoid crowding the first list item'
 )
 
 assert(
@@ -515,6 +539,8 @@ assert(
     globalsSource.includes('left: 50%') &&
     globalsSource.includes('bottom: max(1.25rem, env(safe-area-inset-bottom))') &&
     globalsSource.includes('translateX(-50%)') &&
+    globalsSource.includes('@media (min-width: 1024px)') &&
+    globalsSource.includes('display: none') &&
     !scrollToTopButtonSource.includes('right-4') &&
     !scrollToTopButtonSource.includes('SHOW_AFTER_SCROLL_Y') &&
     !scrollToTopButtonSource.includes('window.scrollY') &&
@@ -835,6 +861,65 @@ for (const name of reactIconsNames) {
   )
 }
 
+for (const [name, source] of [
+  ['physics-number-picker', physicsNumberPickerSource],
+]) {
+  const registry = JSON.parse(
+    fs.readFileSync(path.join(root, `public/r/${name}.json`), 'utf8')
+  )
+  const registryEntry = registry.files.find(
+    (file) => file.path === `src/components/${name}.tsx`
+  )
+
+  assert(
+    registryEntry?.content === source &&
+      registry.dependencies.length === 0 &&
+      !source.includes('@openrun') &&
+      !source.includes('framer-motion') &&
+      !source.includes('@hooks/') &&
+      !source.includes('@shared/'),
+    `${name} should be standalone and installable without OpenRun app aliases or extra runtime packages`
+  )
+}
+
+assert(
+  dataSource.includes("slug: 'physics-number-picker'") &&
+    dataSource.includes("categoryId: 'controls-inputs'") &&
+    previewsSource.includes('PhysicsNumberPickerPreview') &&
+    !dataSource.includes("slug: 'draggable-bottom-sheet'") &&
+    !previewsSource.includes('DraggableBottomSheetPreview') &&
+    !fs.existsSync(path.join(root, 'src/components/draggable-bottom-sheet.tsx')) &&
+    !fs.existsSync(path.join(root, 'public/r/draggable-bottom-sheet.json')),
+  'Physics Number Picker should remain in the library and Draggable Bottom Sheet should be removed from source, registry, data, and previews'
+)
+
+assert(
+  physicsNumberPickerSource.includes('role="spinbutton"') &&
+    physicsNumberPickerSource.includes('requestAnimationFrame') &&
+    physicsNumberPickerSource.includes('DECELERATION_RATE_MS: 0.9945') &&
+    physicsNumberPickerSource.includes('MOMENTUM_GAIN: 0.94') &&
+    physicsNumberPickerSource.includes('MAX_PROJECTED_ROWS: 12') &&
+    physicsNumberPickerSource.includes('MAX_RELEASE_VELOCITY: 4200') &&
+    physicsNumberPickerSource.includes('SETTLE_VELOCITY: 8') &&
+    physicsNumberPickerSource.includes('getProjectedTargetPosition') &&
+    physicsNumberPickerSource.includes('settleToTarget') &&
+    physicsNumberPickerSource.includes('MAX_RELEASE_VELOCITY: BASE_PHYSICS.MAX_RELEASE_VELOCITY * scale') &&
+    !physicsNumberPickerSource.includes('SNAP_FORCE') &&
+    !physicsNumberPickerSource.includes('nearBoundary') &&
+    physicsNumberPickerSource.includes('data-picker-item') &&
+    physicsNumberPickerSource.includes('data-picker-scroll-y') &&
+    physicsNumberPickerSource.includes('onWheel') &&
+    physicsNumberPickerSource.includes('focus({ preventScroll: true })') &&
+    physicsNumberPickerSource.includes('type PhysicsNumberPickerStyle') &&
+    physicsNumberPickerSource.includes('pendingSyncIndexRef') &&
+    physicsNumberPickerSource.includes('flushPendingSync') &&
+    physicsNumberPickerSource.includes('--picker-fade-color') &&
+    physicsNumberPickerSource.includes('--picker-item-height') &&
+    physicsNumberPickerSource.includes('h-[var(--picker-item-height)]') &&
+    physicsNumberPickerSource.includes('targetPosition = wrap ? roundedIndex * itemHeight'),
+  'Physics Number Picker should preserve momentum, snapping, wheel, and accessible spinbutton behavior'
+)
+
 {
   const registry = JSON.parse(
     fs.readFileSync(path.join(root, 'public/r/confetti.json'), 'utf8')
@@ -1135,11 +1220,15 @@ assert(
   'Keyboard preview should use a taller surface than the 448px minimum'
 )
 assert(
-  previewSurfaceSource.includes('py-16') &&
-    previewSurfaceSource.includes('md:py-20') &&
+  previewSurfaceSource.includes('min-h-[22rem]') &&
+    previewSurfaceSource.includes('sm:min-h-[24rem]') &&
+    previewSurfaceSource.includes('md:min-h-[28rem]') &&
+    previewSurfaceSource.includes('text-3xl') &&
+    previewSurfaceSource.includes('data-preview-demo-title') &&
+    previewSurfaceSource.includes('data-preview-demo-content') &&
     previewSurfaceSource.includes('contentGapClassName') &&
     previewSurfaceSource.includes('children ? ('),
-  'Preview demo surface should keep a 448px minimum while giving taller content generous vertical padding'
+  'Preview demo surface should scale typography and spacing down for mobile while keeping desktop depth'
 )
 for (const requiredDemoSurfacePreview of [
   'BackgroundBoxesPreview',
@@ -1251,8 +1340,22 @@ const previewFunctionSource = (functionName) => {
 const threeDImageCarouselPreviewSource = previewFunctionSource('ThreeDImageCarouselPreview')
 assert(
   !threeDImageCarouselPreviewSource.includes('!bg-transparent') &&
-    threeDImageCarouselPreviewSource.includes('!overflow-visible'),
-  '3D Image Carousel preview should let the component own the transparent stage without clipping'
+    threeDImageCarouselPreviewSource.includes('!overflow-visible') &&
+    threeDImageCarouselPreviewSource.includes('min-w-0') &&
+    !threeDImageCarouselPreviewSource.includes('min-w-[760px]'),
+  '3D Image Carousel preview should let the component own the transparent stage without clipping or forcing desktop width'
+)
+const physicsNumberPickerPreviewSource = previewFunctionSource('PhysicsNumberPickerPreview')
+assert(
+  physicsNumberPickerPreviewSource.includes('data-physics-picker-preview-stage') &&
+    physicsNumberPickerPreviewSource.includes('itemHeight={48}') &&
+    physicsNumberPickerPreviewSource.includes("'--picker-fade-color': 'transparent'") &&
+    physicsNumberPickerPreviewSource.includes('--picker-selection-bg') &&
+    !physicsNumberPickerPreviewSource.includes('via-white/12') &&
+    !physicsNumberPickerPreviewSource.includes('w-px -translate-x-1/2') &&
+    !physicsNumberPickerPreviewSource.includes('sec</div>') &&
+    !physicsNumberPickerPreviewSource.includes('24 sec'),
+  'Physics Number Picker preview should use a transparent stage without the separate value chip or center guide'
 )
 assert(
   previewFunctionSource('FolderPreview').includes('mt-16'),
@@ -1535,7 +1638,7 @@ assert(
   'Component sidebar should mark the current page with pathname-based active state'
 )
 assert(
-  sidebarSource.includes('space-y-7 px-1 pb-[max(6rem,env(safe-area-inset-bottom))] pt-3') &&
+  sidebarSource.includes('space-y-6 px-1 pb-[max(5rem,env(safe-area-inset-bottom))] pt-5 lg:pt-6') &&
     sidebarSource.includes('border border-transparent') &&
     sidebarSource.includes('border-zinc-200') &&
     !sidebarSource.includes('ring-1'),

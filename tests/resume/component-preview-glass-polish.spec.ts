@@ -132,6 +132,260 @@ test.describe('component preview glass polish', () => {
     await assertNoErrors()
   })
 
+  test('physics picker renders as a transparent installable interactive component', async ({
+    page,
+  }) => {
+    const assertNoErrors = await expectNoConsoleErrors(page)
+    await page.setViewportSize({ width: 1440, height: 900 })
+
+    await page.goto('/components/physics-number-picker')
+    await expect(
+      page.getByRole('heading', { name: 'Physics Number Picker' }).first()
+    ).toBeVisible()
+    await expect(
+      page.getByText('/r/physics-number-picker.json').first()
+    ).toBeVisible()
+
+    const spinbutton = page.getByRole('spinbutton', { name: 'Pace seconds' })
+    await expect(spinbutton).toBeVisible()
+    await expect(spinbutton).toHaveAttribute('aria-valuenow', '24')
+    await expect(page.getByText(/\d{2} sec/)).toHaveCount(0)
+    const visualMetrics = await spinbutton.evaluate((element) => {
+      const style = getComputedStyle(element)
+      return {
+        backgroundColor: style.backgroundColor,
+        pickerFadeColor: element.style.getPropertyValue('--picker-fade-color'),
+        hasCenterGuide: Boolean(
+          element.parentElement?.querySelector('.via-white\\/12.w-px')
+        ),
+      }
+    })
+    expect(visualMetrics.backgroundColor).toBe('rgba(0, 0, 0, 0)')
+    expect(visualMetrics.pickerFadeColor.trim()).toBe('transparent')
+    expect(visualMetrics.hasCenterGuide).toBe(false)
+    await spinbutton.click()
+    await expect(spinbutton).toBeFocused()
+    await spinbutton.press('ArrowDown')
+    await expect(spinbutton).toHaveAttribute('aria-valuenow', '25')
+    const valueAfterKeyboard = await spinbutton.getAttribute('aria-valuenow')
+    const pickerBox = await spinbutton.boundingBox()
+    expect(pickerBox).not.toBeNull()
+    if (pickerBox) {
+      await page.mouse.move(
+        pickerBox.x + pickerBox.width / 2,
+        pickerBox.y + pickerBox.height / 2
+      )
+      await page.mouse.down()
+      await page.mouse.move(
+        pickerBox.x + pickerBox.width / 2,
+        pickerBox.y + pickerBox.height / 2 - 108,
+        { steps: 8 }
+      )
+      await page.mouse.up()
+      await expect
+        .poll(() => spinbutton.getAttribute('aria-valuenow'))
+        .not.toBe(valueAfterKeyboard)
+    }
+
+    await assertNoErrors()
+  })
+
+  test('physics picker turns a fast drag exit into momentum without waiting for pointer up', async ({
+    page,
+  }) => {
+    const assertNoErrors = await expectNoConsoleErrors(page)
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto('/components/physics-number-picker')
+
+    const spinbutton = page.getByRole('spinbutton', { name: 'Pace seconds' })
+    await expect(spinbutton).toBeVisible()
+    await expect(spinbutton).toHaveAttribute('aria-valuenow', '24')
+
+    const pickerBox = await spinbutton.boundingBox()
+    expect(pickerBox).not.toBeNull()
+    if (!pickerBox) return
+
+    await page.mouse.move(
+      pickerBox.x + pickerBox.width / 2,
+      pickerBox.y + pickerBox.height / 2
+    )
+    await page.mouse.down()
+    await page.mouse.move(
+      pickerBox.x + pickerBox.width / 2,
+      pickerBox.y - 96,
+      { steps: 4 }
+    )
+
+    await expect
+      .poll(() => spinbutton.getAttribute('aria-valuenow'))
+      .not.toBe('24')
+
+    await page.mouse.up()
+    await assertNoErrors()
+  })
+
+  test('physics picker carries a moderate flick with lighter momentum', async ({
+    page,
+  }) => {
+    const assertNoErrors = await expectNoConsoleErrors(page)
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto('/components/physics-number-picker')
+
+    const spinbutton = page.getByRole('spinbutton', { name: 'Pace seconds' })
+    await expect(spinbutton).toBeVisible()
+    await expect(spinbutton).toHaveAttribute('aria-valuenow', '24')
+
+    const pickerBox = await spinbutton.boundingBox()
+    expect(pickerBox).not.toBeNull()
+    if (!pickerBox) return
+
+    await spinbutton.click()
+    await expect(spinbutton).toBeFocused()
+    await page.mouse.move(
+      pickerBox.x + pickerBox.width / 2,
+      pickerBox.y + pickerBox.height / 2
+    )
+    await page.mouse.down()
+    await page.mouse.move(
+      pickerBox.x + pickerBox.width / 2,
+      pickerBox.y + pickerBox.height / 2 - 84,
+      { steps: 6 }
+    )
+    await page.mouse.up()
+
+    await expect
+      .poll(async () => Number(await spinbutton.getAttribute('aria-valuenow')), {
+        timeout: 5_000,
+      })
+      .toBeGreaterThanOrEqual(27)
+
+    const settledValue = Number(await spinbutton.getAttribute('aria-valuenow'))
+    expect(settledValue).toBeGreaterThanOrEqual(27)
+    expect(settledValue).toBeLessThanOrEqual(34)
+
+    await assertNoErrors()
+  })
+
+  test('physics picker keeps motion continuous while settling into the selected row', async ({
+    page,
+  }) => {
+    const assertNoErrors = await expectNoConsoleErrors(page)
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto('/components/physics-number-picker')
+
+    const spinbutton = page.getByRole('spinbutton', { name: 'Pace seconds' })
+    await expect(spinbutton).toBeVisible()
+
+    const pickerBox = await spinbutton.boundingBox()
+    expect(pickerBox).not.toBeNull()
+    if (!pickerBox) return
+
+    const samplesPromise = spinbutton.evaluate((element) => {
+      return new Promise<number[]>((resolve) => {
+        const samples: number[] = []
+        const startedAt = performance.now()
+
+        const sample = () => {
+          const scrollY = Number(element.getAttribute('data-picker-scroll-y'))
+          if (Number.isFinite(scrollY)) samples.push(scrollY)
+
+          if (performance.now() - startedAt >= 620) {
+            resolve(samples)
+            return
+          }
+
+          requestAnimationFrame(sample)
+        }
+
+        requestAnimationFrame(sample)
+      })
+    })
+
+    await page.mouse.move(
+      pickerBox.x + pickerBox.width / 2,
+      pickerBox.y + pickerBox.height / 2
+    )
+    await page.mouse.down()
+    await page.mouse.move(
+      pickerBox.x + pickerBox.width / 2,
+      pickerBox.y + pickerBox.height / 2 - 96,
+      { steps: 7 }
+    )
+    await page.mouse.up()
+
+    const samples = await samplesPromise
+    const frameDeltas = samples
+      .slice(1)
+      .map((sample, index) => Math.abs(sample - samples[index]))
+    const largestFrameDelta = Math.max(...frameDeltas)
+
+    expect(samples.length).toBeGreaterThanOrEqual(8)
+    expect(largestFrameDelta).toBeLessThanOrEqual(24)
+    await expect
+      .poll(async () => {
+        const offset = await spinbutton.evaluate((element) => {
+          const selected = element.querySelector<HTMLElement>(
+            '[data-picker-selected="true"]'
+          )
+          if (!selected) return Number.POSITIVE_INFINITY
+
+          const pickerRect = element.getBoundingClientRect()
+          const selectedRect = selected.getBoundingClientRect()
+          return Math.abs(
+            selectedRect.top +
+              selectedRect.height / 2 -
+              (pickerRect.top + pickerRect.height / 2)
+          )
+        })
+
+        return offset
+      })
+      .toBeLessThanOrEqual(1)
+
+    await assertNoErrors()
+  })
+
+  test('component preview surface scales down inside a mobile viewport', async ({
+    page,
+  }) => {
+    const assertNoErrors = await expectNoConsoleErrors(page)
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/components/physics-number-picker')
+
+    const surface = page.locator('[data-preview-demo-surface]').first()
+    const previewTitle = surface.locator('[data-preview-demo-title]')
+    const spinbutton = page.getByRole('spinbutton', { name: 'Pace seconds' })
+
+    await expect(surface).toBeVisible()
+    await expect(previewTitle).toBeVisible()
+    await expect(spinbutton).toBeVisible()
+
+    const metrics = await surface.evaluate((element) => {
+      const title = element.querySelector<HTMLElement>('[data-preview-demo-title]')
+      const content = element.querySelector<HTMLElement>('[data-preview-demo-content]')
+      const picker = element.querySelector<HTMLElement>('[data-physics-number-picker]')
+      const surfaceRect = element.getBoundingClientRect()
+      const titleRect = title?.getBoundingClientRect()
+      const contentRect = content?.getBoundingClientRect()
+      const pickerRect = picker?.getBoundingClientRect()
+      const titleStyle = title ? getComputedStyle(title) : null
+
+      return {
+        surfaceWidth: surfaceRect.width,
+        titleWidth: titleRect?.width ?? 0,
+        contentWidth: contentRect?.width ?? 0,
+        pickerWidth: pickerRect?.width ?? 0,
+        titleFontSize: Number.parseFloat(titleStyle?.fontSize ?? '0'),
+      }
+    })
+
+    expect(metrics.titleWidth).toBeLessThanOrEqual(metrics.surfaceWidth - 32)
+    expect(metrics.contentWidth).toBeLessThanOrEqual(metrics.surfaceWidth - 32)
+    expect(metrics.pickerWidth).toBeLessThanOrEqual(112)
+    expect(metrics.titleFontSize).toBeLessThanOrEqual(32)
+    await assertNoErrors()
+  })
+
   test('shiny button keeps its visible preview surface', async ({ page }) => {
     const assertNoErrors = await expectNoConsoleErrors(page)
     await page.setViewportSize({ width: 1440, height: 900 })

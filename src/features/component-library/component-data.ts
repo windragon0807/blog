@@ -54,6 +54,7 @@ export type ComponentPreviewKind =
   | 'character-cursor'
   | 'canvas-cursor'
   | 'data-table'
+  | 'physics-number-picker'
 
 export interface ComponentCategory {
   id: ComponentCategoryId
@@ -406,7 +407,6 @@ export default function Example() {
       prop('variant', '"default" | "glass"', '"default"', 'Visual surface style.'),
     ],
   }),
-
   createSample({
     slug: 'text-flip',
     categoryId: 'text-effects',
@@ -726,6 +726,47 @@ export default function Example() {
       classNameProp,
       prop('columns', 'DataTableColumn<T>[]', '-', 'Column definitions.'),
       prop('rows', 'T[]', '-', 'Rows to render.'),
+    ],
+  }),
+  createSample({
+    slug: 'physics-number-picker',
+    categoryId: 'controls-inputs',
+    title: 'Physics Number Picker',
+    description: '관성 스크롤과 스냅 물리를 결합한 숫자 선택 입력 컴포넌트입니다.',
+    reference: {
+      label: 'OpenRun ChainPicker',
+      url: 'https://github.com/windragon0807/open-run',
+    },
+    usage: `"use client"
+
+import { useState } from "react"
+import { PhysicsNumberPicker } from "@/components/physics-number-picker"
+
+export default function Example() {
+  const [value, setValue] = useState(24)
+
+  return (
+    <PhysicsNumberPicker
+      value={value}
+      min={0}
+      max={59}
+      onValueChange={setValue}
+    />
+  )
+}`,
+    props: [
+      classNameProp,
+      prop('value', 'number', '-', 'Controlled selected value.'),
+      prop('defaultValue', 'number', '-', 'Initial value for uncontrolled usage.'),
+      prop('min', 'number', '0', 'Minimum selectable value.'),
+      prop('max', 'number', '59', 'Maximum selectable value.'),
+      prop('onValueChange', '(value: number) => void', '-', 'Called when the picker snaps to a new value.'),
+      prop('wrap', 'boolean', 'true', 'Whether values loop from max to min.'),
+      prop('itemHeight', 'number', '56', 'Height of each picker row in pixels.'),
+      prop('visibleItems', '5 | 7 | 9', '7', 'Odd number of visible rows.'),
+      prop('formatValue', '(value: number, isSelected: boolean) => React.ReactNode', '-', 'Custom renderer for each value.'),
+      prop('label', 'string', '"Number picker"', 'Accessible spinbutton label.'),
+      prop('style', 'React.CSSProperties', '-', 'Inline style and picker CSS variables.'),
     ],
   }),
   createSample({
