@@ -5,5 +5,6 @@ export {
   MoonIcon,
   PuzzleIcon,
   SettingsIcon,
+  SmileStorageIcon,
   SunIcon,
 } from './header-icons'

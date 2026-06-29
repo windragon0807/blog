@@ -1,7 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { GitHubIcon, HouseIcon, PuzzleIcon } from '@/components/icons'
+import {
+  GitHubIcon,
+  HouseIcon,
+  PuzzleIcon,
+  SmileStorageIcon,
+} from '@/components/icons'
 import { usePostsPrefetch } from '@/hooks/usePostsPrefetch'
 import { AppLauncherMenu } from './AppLauncherMenu'
 import { ICON_CONTROL_BUTTON_CLASS_NAME } from './IconControlButton'
@@ -38,6 +43,14 @@ export function Header() {
             >
               <span className="sr-only">컴포넌트 라이브러리로 이동</span>
               <PuzzleIcon className="h-[18px] w-[18px]" />
+            </Link>
+            <Link
+              href="/emoticons"
+              aria-label="이모티콘 스토리지로 이동"
+              className={ICON_CONTROL_BUTTON_CLASS_NAME}
+            >
+              <span className="sr-only">이모티콘 스토리지로 이동</span>
+              <SmileStorageIcon className="h-[18px] w-[18px]" />
             </Link>
             <AppLauncherMenu />
             <Link

@@ -13,6 +13,7 @@ export function SmoothScrollProvider() {
   const prefersReducedMotion = usePrefersReducedMotion()
 
   useEffect(() => {
+    if (pathname === '/emoticons') return
     if (prefersReducedMotion) return
     if (window.innerWidth < DESKTOP_BREAKPOINT) return
     if (window.matchMedia('(pointer: coarse)').matches) return
@@ -60,7 +61,7 @@ export function SmoothScrollProvider() {
         delete window.__lenis
       }
     }
-  }, [prefersReducedMotion])
+  }, [pathname, prefersReducedMotion])
 
   useEffect(() => {
     const lenis = getLenisInstance()
