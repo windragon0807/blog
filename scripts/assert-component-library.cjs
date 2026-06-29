@@ -217,7 +217,9 @@ const resumePagePath = path.join(root, 'src/app/resume/page.tsx')
 const postDetailPagePath = path.join(root, 'src/app/posts/[slug]/page.tsx')
 const tagPagePath = path.join(root, 'src/app/tags/[tag]/page.tsx')
 const seriesPagePath = path.join(root, 'src/app/series/[series]/page.tsx')
+const scrollToTopButtonPath = path.join(root, 'src/components/ScrollToTopButton.tsx')
 const lightboxImagePath = path.join(root, 'src/components/notion/LightboxImage.tsx')
+const retryableImagePath = path.join(root, 'src/components/RetryableImage.tsx')
 const blockRenderersPath = path.join(root, 'src/components/notion/block-renderers.tsx')
 const videoTextPath = path.join(root, 'src/components/video-text.tsx')
 const diaTextRevealPath = path.join(
@@ -256,7 +258,9 @@ const resumePageSource = fs.readFileSync(resumePagePath, 'utf8')
 const postDetailPageSource = fs.readFileSync(postDetailPagePath, 'utf8')
 const tagPageSource = fs.readFileSync(tagPagePath, 'utf8')
 const seriesPageSource = fs.readFileSync(seriesPagePath, 'utf8')
+const scrollToTopButtonSource = fs.readFileSync(scrollToTopButtonPath, 'utf8')
 const lightboxImageSource = fs.readFileSync(lightboxImagePath, 'utf8')
+const retryableImageSource = fs.readFileSync(retryableImagePath, 'utf8')
 const blockRenderersSource = fs.readFileSync(blockRenderersPath, 'utf8')
 const videoTextSource = fs.readFileSync(videoTextPath, 'utf8')
 const diaTextRevealSource = fs.readFileSync(diaTextRevealPath, 'utf8')
@@ -394,12 +398,14 @@ assert(
     layoutSource.includes('hidden') &&
     layoutSource.includes('lg:block') &&
     sidebarSource.includes('lg:hidden'),
-  'Components layout should hide the long sidebar on mobile and expose a drawer trigger instead'
+  'Components layout should hide the long sidebar on mobile and expose a mobile menu trigger instead'
 )
 
 for (const sidebarMarker of [
   'ComponentMobileSidebarTrigger',
   'ComponentSidebarContent',
+  'component-mobile-bottom-sheet',
+  'data-component-mobile-menu-trigger',
   'components-sidebar-list-scroll',
   'components-sidebar-fog-top',
   'components-sidebar-fog-bottom',
@@ -410,6 +416,28 @@ for (const sidebarMarker of [
     `Component sidebar missing mobile/fog marker: ${sidebarMarker}`
   )
 }
+
+assert(
+  !sidebarSource.includes('component-mobile-nav-panel') &&
+    !sidebarSource.includes('Browse') &&
+    !sidebarSource.includes('currentTitle') &&
+    !sidebarSource.includes('w-[min(22rem,86vw)]') &&
+    sidebarSource.includes('bottom-0'),
+  'Mobile component navigation should be an icon-only trigger with a bottom sheet, not a labeled side drawer'
+)
+
+assert(
+  globalsSource.includes('.component-mobile-bottom-sheet') &&
+    globalsSource.includes('translateY(100%)') &&
+    globalsSource.includes('translateY(0)') &&
+    globalsSource.includes('@keyframes component-mobile-bottom-sheet-enter') &&
+    globalsSource.includes('animation: component-mobile-bottom-sheet-enter') &&
+    globalsSource.includes('inline-size: fit-content') &&
+    globalsSource.includes('margin-inline: auto 1.25rem') &&
+    !globalsSource.includes('component-mobile-nav-panel') &&
+    !globalsSource.includes('min(960px'),
+  'Global CSS should animate the mobile menu as a bottom sheet and keep the header sized to its icon controls'
+)
 
 assert(
   !headerSource.includes('BrandLogo') &&
@@ -445,13 +473,53 @@ assert(
 )
 
 assert(
-  lightboxImageSource.includes('data-lightbox-image-trigger') &&
+    lightboxImageSource.includes('data-lightbox-image-trigger') &&
+    lightboxImageSource.includes('resolvedSrc') &&
+    lightboxImageSource.includes('handleSourceResolved') &&
+    lightboxImageSource.includes('onSourceResolved') &&
+    lightboxImageSource.includes('src={resolvedSrc}') &&
+    lightboxImageSource.includes('key={resolvedSrc}') &&
+    lightboxImageSource.includes('imageScale') &&
+    lightboxImageSource.includes('ZoomIn') &&
+    lightboxImageSource.includes('ZoomOut') &&
+    lightboxImageSource.includes('data-lightbox-zoom-in') &&
+    lightboxImageSource.includes('data-lightbox-zoom-out') &&
+    !lightboxImageSource.includes('<img\n            src={src}') &&
     lightboxImageSource.includes('event.preventDefault()') &&
     lightboxImageSource.includes('event.stopPropagation()') &&
     lightboxImageSource.includes('cursor-zoom-in') &&
     lightboxImageSource.includes('lightbox-panel') &&
     lightboxImageSource.includes('DialogOverlay'),
   'Post body images should open the dimmed animated lightbox instead of falling through to download/navigation behavior'
+)
+
+assert(
+  globalsSource.includes('@keyframes lightbox-overlay-enter') &&
+    globalsSource.includes('@keyframes lightbox-image-enter') &&
+    globalsSource.includes('animation: lightbox-overlay-enter') &&
+    globalsSource.includes('animation: lightbox-image-enter') &&
+    globalsSource.includes('--lightbox-scale'),
+  'Lightbox overlay and image should enter smoothly together and support zoom scaling'
+)
+
+assert(
+  retryableImageSource.includes('onSourceResolved?:') &&
+    retryableImageSource.includes('onSourceResolved?.(currentSourceKey)'),
+  'RetryableImage should expose the successfully loaded image URL so LightboxImage can avoid stale Notion media URLs'
+)
+
+assert(
+  scrollToTopButtonSource.includes('scroll-to-top-button') &&
+    globalsSource.includes('.scroll-to-top-button') &&
+    globalsSource.includes('position: fixed') &&
+    globalsSource.includes('left: 50%') &&
+    globalsSource.includes('bottom: max(1.25rem, env(safe-area-inset-bottom))') &&
+    globalsSource.includes('translateX(-50%)') &&
+    !scrollToTopButtonSource.includes('right-4') &&
+    !scrollToTopButtonSource.includes('SHOW_AFTER_SCROLL_Y') &&
+    !scrollToTopButtonSource.includes('window.scrollY') &&
+    !scrollToTopButtonSource.includes('pointer-events-none'),
+  'Scroll shortcut should stay visible as a centered fixed bottom action, not hide off to the side or behind scroll state'
 )
 
 assert(

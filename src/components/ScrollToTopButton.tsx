@@ -1,37 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
 import { ArrowUp } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { getLenisInstance } from '@/lib/lenis'
 
-const SHOW_AFTER_SCROLL_Y = 280
-
 export function ScrollToTopButton() {
-  const [visible, setVisible] = useState(false)
-  const pathname = usePathname()
-  const isPostDetailPage = pathname.startsWith('/posts/')
-
-  useEffect(() => {
-    let ticking = false
-
-    const updateVisible = () => {
-      setVisible(window.scrollY > SHOW_AFTER_SCROLL_Y)
-      ticking = false
-    }
-
-    const onScroll = () => {
-      if (ticking) return
-      ticking = true
-      window.requestAnimationFrame(updateVisible)
-    }
-
-    updateVisible()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
   const handleClick = () => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const lenis = getLenisInstance()
@@ -51,13 +24,7 @@ export function ScrollToTopButton() {
       size="iconLg"
       onClick={handleClick}
       aria-label="맨 위로 이동"
-      className={`fixed right-4 bottom-6 z-40 rounded-full bg-white/95 text-zinc-600 shadow-lg dark:bg-zinc-900/95 dark:text-zinc-300 ${
-        isPostDetailPage ? 'hidden md:inline-flex' : 'inline-flex'
-      } ${
-        visible
-          ? 'translate-y-0 opacity-100 hover:-translate-y-0.5 hover:bg-zinc-100 dark:hover:bg-zinc-800'
-          : 'pointer-events-none translate-y-2 opacity-0'
-      }`}
+      className="scroll-to-top-button z-[60] inline-flex rounded-full bg-white/95 text-zinc-600 opacity-100 shadow-lg hover:bg-zinc-100 dark:bg-zinc-900/95 dark:text-zinc-300 dark:hover:bg-zinc-800"
     >
       <ArrowUp className="h-[18px] w-[18px]" aria-hidden="true" />
     </Button>

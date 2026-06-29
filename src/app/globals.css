@@ -362,20 +362,46 @@ html {
   );
 }
 
-.component-mobile-nav-panel {
+.component-mobile-bottom-sheet {
   transition:
     opacity 220ms ease,
     transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.component-mobile-nav-panel[data-state='closed'] {
+.component-mobile-bottom-sheet[data-state='closed'] {
   opacity: 0;
-  transform: translateX(-100%);
+  transform: translateY(100%);
+  animation: component-mobile-bottom-sheet-exit 180ms ease both;
 }
 
-.component-mobile-nav-panel[data-state='open'] {
+.component-mobile-bottom-sheet[data-state='open'] {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateY(0);
+  animation: component-mobile-bottom-sheet-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes component-mobile-bottom-sheet-enter {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes component-mobile-bottom-sheet-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(100%);
+  }
 }
 
 body {
@@ -484,7 +510,8 @@ html body[data-scroll-locked][data-scroll-locked] {
   position: sticky;
   top: 0.75rem;
   isolation: isolate;
-  inline-size: min(960px, calc(100% - 1rem));
+  inline-size: fit-content;
+  max-inline-size: calc(100% - 1rem);
   margin-block-start: 0.75rem;
   margin-inline: auto;
   border-style: solid;
@@ -573,10 +600,22 @@ html body[data-scroll-locked][data-scroll-locked] {
   opacity: 0.4;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .glass-surface.header-sticky {
-    inline-size: min(960px, calc(100% - 2rem));
+    max-inline-size: calc(100% - 2.5rem);
+    margin-inline: auto 1.25rem;
   }
+}
+
+.scroll-to-top-button {
+  position: fixed;
+  left: 50%;
+  bottom: max(1.25rem, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+}
+
+.scroll-to-top-button:hover {
+  transform: translateX(-50%) translateY(-0.125rem);
 }
 
 .notion-content strong,
@@ -972,25 +1011,70 @@ html.dark:not([data-code-theme]) .notion-code pre.shiki span {
 .lightbox-overlay[data-state='open'] {
   opacity: 1;
   backdrop-filter: blur(4px);
+  animation: lightbox-overlay-enter 240ms ease both;
 }
 
 .lightbox-panel {
+  --lightbox-scale: 1;
+  transform-origin: center;
+  will-change: opacity, transform;
   transition:
-    opacity 220ms ease,
-    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 260ms ease,
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .lightbox-panel[data-state='entering'],
 .lightbox-panel[data-state='exiting'],
 .lightbox-panel[data-state='closed'] {
   opacity: 0;
-  transform: scale(0.975) translateY(8px);
+  transform: scale(0.96) translateY(10px);
 }
 
 .lightbox-panel[data-state='entered'],
 .lightbox-panel[data-state='open'] {
   opacity: 1;
-  transform: scale(1) translateY(0);
+  transform: scale(var(--lightbox-scale)) translateY(0);
+  animation: lightbox-image-enter 280ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.lightbox-controls {
+  animation: lightbox-controls-enter 260ms ease both;
+}
+
+@keyframes lightbox-overlay-enter {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+
+  to {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+}
+
+@keyframes lightbox-image-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(var(--lightbox-scale)) translateY(0);
+  }
+}
+
+@keyframes lightbox-controls-enter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }
 
 .code-copy-toast {
@@ -1025,11 +1109,13 @@ html.dark:not([data-code-theme]) .notion-code pre.shiki span {
   }
 
   .toc-active-rail,
-  .component-mobile-nav-panel,
+  .component-mobile-bottom-sheet,
   .settings-popover,
   .lightbox-overlay,
   .lightbox-panel,
+  .lightbox-controls,
   .code-copy-toast {
+    animation: none !important;
     transition: none !important;
   }
 

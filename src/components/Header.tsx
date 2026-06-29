@@ -12,8 +12,8 @@ export function Header() {
   const prefetchPosts = usePostsPrefetch()
 
   return (
-    <header className="glass-surface header-sticky top-0 z-50 w-full">
-      <div className="w-full px-5 md:px-6">
+    <header className="glass-surface header-sticky top-0 z-50">
+      <div className="px-2.5 md:px-3">
         <div className="flex min-h-14 items-center justify-center py-2 sm:py-0">
           <nav
             aria-label="주요 이동"

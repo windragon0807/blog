@@ -20,6 +20,7 @@ interface RetryableImageProps extends Omit<ImageProps, 'onLoad' | 'onError'> {
   skeletonClassName?: string
   notionRefresh?: NotionMediaRefreshConfig
   onImageResolved?: (dimensions: { naturalWidth: number; naturalHeight: number }) => void
+  onSourceResolved?: (src: string) => void
 }
 
 const DEFAULT_SKELETON_CLASS =
@@ -34,6 +35,7 @@ export function RetryableImage({
   skeletonClassName = DEFAULT_SKELETON_CLASS,
   notionRefresh,
   onImageResolved,
+  onSourceResolved,
   className = '',
   src,
   alt,
@@ -170,6 +172,7 @@ export function RetryableImage({
                 naturalHeight: imageElement.naturalHeight,
               })
             }
+            onSourceResolved?.(currentSourceKey)
 
             if (mountedRef.current) {
               setLoaded(true)

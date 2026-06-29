@@ -219,14 +219,6 @@ function ComponentSidebarContent({
   )
 }
 
-function getCurrentComponentTitle(pathname: string) {
-  const slug = pathname.startsWith('/components/')
-    ? pathname.replace('/components/', '')
-    : ''
-
-  return componentSamples.find((sample) => sample.slug === slug)?.title
-}
-
 export function ComponentSidebar() {
   return (
     <aside
@@ -242,34 +234,31 @@ export function ComponentSidebar() {
 }
 
 export function ComponentMobileSidebarTrigger() {
-  const pathname = usePathname()
   const [open, setOpen] = useState(false)
-  const currentTitle = getCurrentComponentTitle(pathname) ?? 'Components'
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <div className="mb-5 lg:hidden">
+      <div className="mb-4 flex justify-end lg:hidden">
         <DialogTrigger asChild>
           <button
             type="button"
-            className="flex w-full items-center justify-between rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-left text-sm font-semibold text-zinc-900 shadow-[0_18px_34px_-28px_rgba(24,24,27,0.45)] transition-colors hover:bg-zinc-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-950 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:hover:bg-zinc-900 dark:focus-visible:outline-zinc-50"
+            data-component-mobile-menu-trigger=""
+            className="inline-grid h-11 w-11 place-items-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-[0_16px_32px_-24px_rgba(24,24,27,0.5)] transition-colors hover:bg-zinc-50 hover:text-zinc-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-950 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900 dark:hover:text-zinc-50 dark:focus-visible:outline-zinc-50"
             aria-label="컴포넌트 메뉴 열기"
           >
-            <span className="min-w-0">
-              <span className="block text-xs font-medium uppercase tracking-[0.14em] text-zinc-400">
-                Browse
-              </span>
-              <span className="mt-0.5 block truncate">{currentTitle}</span>
-            </span>
-            <Menu className="h-5 w-5 shrink-0 text-zinc-500" aria-hidden="true" />
+            <Menu className="h-5 w-5" aria-hidden="true" />
           </button>
         </DialogTrigger>
       </div>
       <DialogPortal>
         <DialogOverlay className="z-[70] bg-black/45 backdrop-blur-[2px]" />
-        <DialogRawContent className="component-mobile-nav-panel fixed left-0 top-0 z-[71] h-svh w-[min(22rem,86vw)] border-r border-zinc-200 bg-white p-0 shadow-2xl outline-none dark:border-zinc-800 dark:bg-zinc-950">
+        <DialogRawContent className="component-mobile-bottom-sheet fixed inset-x-0 bottom-0 z-[71] h-[min(82svh,40rem)] overflow-hidden rounded-t-[28px] border border-b-0 border-zinc-200 bg-white p-0 shadow-2xl outline-none dark:border-zinc-800 dark:bg-zinc-950">
           <DialogTitle className="sr-only">컴포넌트 메뉴</DialogTitle>
-          <div className="flex h-full min-h-0 flex-col px-4 pb-4 pt-[max(1rem,env(safe-area-inset-top))]">
+          <div className="flex h-full min-h-0 min-w-0 flex-col px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">
+            <div
+              aria-hidden="true"
+              className="mx-auto mb-3 h-1.5 w-10 rounded-full bg-zinc-200 dark:bg-zinc-800"
+            />
             <div className="mb-3 flex items-center justify-between gap-3 px-1">
               <p className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
                 Components
