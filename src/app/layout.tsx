@@ -158,9 +158,12 @@ export const metadata: Metadata = {
     images: [ogImageUrl(SITE_NAME, ['Frontend', 'React', 'Next.js'])],
   },
   icons: {
-    icon: [{ url: '/icon.png', type: 'image/png' }],
-    shortcut: [{ url: '/icon.png', type: 'image/png' }],
-    apple: [{ url: '/apple-icon.png', type: 'image/png' }],
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.png', type: 'image/png', sizes: '1024x1024' },
+    ],
+    shortcut: [{ url: '/favicon.ico', sizes: 'any' }],
+    apple: [{ url: '/apple-icon.png', type: 'image/png', sizes: '180x180' }],
   },
 }
 
