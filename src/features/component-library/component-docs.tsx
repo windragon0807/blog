@@ -2,7 +2,7 @@ import { componentCategories, type ComponentSample } from './component-data'
 import { CodeBlock } from './component-code-block'
 import { ComponentExampleTabs } from './component-example-tabs'
 import { ComponentPreviewContent } from './component-previews'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { DataTable, type DataTableColumn } from '@/components/data-table'
 import {
   InstallCommandTabs,
   type InstallCommandPanel,
@@ -21,9 +21,9 @@ export function PreviewFrame({
   return (
     <div
       aria-hidden={mode === 'thumbnail' ? true : undefined}
-      className="rounded-2xl border border-zinc-200 bg-[radial-gradient(circle_at_top_left,rgba(99,102,241,0.08),transparent_34%),linear-gradient(180deg,#fafafa,#f4f4f5)] p-6 dark:border-zinc-800 dark:bg-[radial-gradient(circle_at_top_left,rgba(129,140,248,0.14),transparent_34%),linear-gradient(180deg,#111113,#09090b)]"
+      className="rounded-2xl border border-zinc-200 bg-[radial-gradient(circle_at_top_left,rgba(99,102,241,0.08),transparent_34%),linear-gradient(180deg,#fafafa,#f4f4f5)] p-6 dark:border-zinc-700/70 dark:bg-[radial-gradient(circle_at_top_left,rgba(129,140,248,0.14),transparent_34%),linear-gradient(180deg,rgba(39,39,42,0.74),rgba(24,24,27,0.46))]"
     >
-      <div className="flex min-h-60 items-center justify-center rounded-xl border border-zinc-200/80 bg-white/72 p-6 shadow-inner dark:border-zinc-800 dark:bg-zinc-950/58">
+      <div className="flex min-h-60 items-center justify-center rounded-xl border border-zinc-200/80 bg-white/72 p-6 shadow-inner dark:border-zinc-700/65 dark:bg-zinc-900/48">
         <ComponentPreviewContent sample={sample} mode={mode} />
       </div>
     </div>
@@ -70,52 +70,53 @@ function getPackageManagerCommand(manager: PackageManager, target: string) {
   }
 }
 
+type PropsTableRow = {
+  prop: string
+  type: string
+  defaultValue: string
+  description: string
+}
+
+const propsTableColumns: readonly DataTableColumn<PropsTableRow>[] = [
+  { key: 'prop', header: 'Prop', width: 'minmax(9rem, 0.9fr)' },
+  { key: 'type', header: 'Type', width: 'minmax(18rem, 1.3fr)' },
+  { key: 'defaultValue', header: 'Default', width: 'minmax(8rem, 0.65fr)' },
+  {
+    key: 'description',
+    header: 'Description',
+    width: 'minmax(20rem, 1.65fr)',
+  },
+]
+
+const propsTableClassName = [
+  'component-props-table rounded-[28px] bg-transparent p-0 text-sm dark:bg-transparent',
+  '[&_table]:min-w-[880px]',
+  '[&_table]:!bg-zinc-100/95 dark:[&_table]:border-zinc-800/90 dark:[&_table]:!bg-zinc-950/88',
+  '[&_tbody]:!bg-white/86 dark:[&_tbody]:!bg-zinc-900/68',
+  '[&_tbody_tr]:!bg-white/72 [&_tbody_tr:hover]:!bg-zinc-100/90',
+  'dark:[&_tbody_tr]:!bg-white/[0.035] dark:[&_tbody_tr:hover]:!bg-white/[0.085]',
+  '[&_tbody_td:nth-child(-n+3)]:whitespace-nowrap',
+  '[&_tbody_td:nth-child(-n+3)]:font-mono',
+  '[&_tbody_td:nth-child(-n+3)]:text-sm',
+  '[&_tbody_td]:align-top',
+  '[&_tbody_td]:leading-6',
+  '[&_tbody_td:first-child]:text-base',
+].join(' ')
+
 function PropsTable({ sample }: { sample: ComponentSample }) {
+  const rows = sample.props.map((prop) => ({
+    prop: prop.name,
+    type: prop.type,
+    defaultValue: prop.defaultValue,
+    description: prop.description,
+  }))
+
   return (
-    <ScrollArea
-      orientation="horizontal"
-      className="custom-scrollbar rounded-xl border border-zinc-200 dark:border-zinc-800"
-    >
-      <table className="min-w-full border-collapse text-sm">
-        <thead>
-          <tr className="border-b border-zinc-200 bg-zinc-50 text-left dark:border-zinc-800 dark:bg-zinc-900/70">
-            <th className="px-3 py-2 font-semibold text-zinc-900 dark:text-zinc-100">
-              Prop
-            </th>
-            <th className="px-3 py-2 font-semibold text-zinc-900 dark:text-zinc-100">
-              Type
-            </th>
-            <th className="px-3 py-2 font-semibold text-zinc-900 dark:text-zinc-100">
-              Default
-            </th>
-            <th className="px-3 py-2 font-semibold text-zinc-900 dark:text-zinc-100">
-              Description
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {sample.props.map((prop) => (
-            <tr
-              key={prop.name}
-              className="border-b border-zinc-200 last:border-0 dark:border-zinc-800"
-            >
-              <td className="px-3 py-2 font-mono text-xs text-zinc-900 dark:text-zinc-100">
-                {prop.name}
-              </td>
-              <td className="px-3 py-2 font-mono text-xs text-zinc-600 dark:text-zinc-300">
-                {prop.type}
-              </td>
-              <td className="px-3 py-2 font-mono text-xs text-zinc-500">
-                {prop.defaultValue}
-              </td>
-              <td className="px-3 py-2 text-zinc-600 dark:text-zinc-400">
-                {prop.description}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </ScrollArea>
+    <DataTable
+      columns={propsTableColumns}
+      rows={rows}
+      className={propsTableClassName}
+    />
   )
 }
 
@@ -170,7 +171,7 @@ export function ComponentSection({ sample }: { sample: ComponentSample }) {
         >
           Code
         </h2>
-        <div className="code-section-block-shell mt-4 overflow-hidden rounded-2xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
+        <div className="code-section-block-shell mt-4 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_18px_46px_-36px_rgba(24,24,27,0.42)] dark:border-zinc-700/70 dark:bg-zinc-900/60 dark:shadow-[0_22px_54px_-38px_rgba(2,6,23,0.9)]">
           {codeSectionBlock}
         </div>
       </section>

@@ -1,9 +1,77 @@
 'use client'
 
 import { useTheme } from 'next-themes'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { MoonIcon, SunIcon } from '@/components/icons'
 import { IconControlButton } from './IconControlButton'
+
+type ViewTransition = {
+  ready: Promise<void>
+  finished: Promise<void>
+}
+
+type ViewTransitionDocument = Document & {
+  startViewTransition?: (callback: () => void) => ViewTransition
+}
+
+const themeModeAnimationType = 'fade-in-out'
+const themeModeTransitionDuration = 400
+
+function createViewTransitionResetStyle() {
+  const styleElement = document.createElement('style')
+  styleElement.textContent = `
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+      mix-blend-mode: normal;
+    }
+  `
+  document.head.appendChild(styleElement)
+  return styleElement
+}
+
+async function runThemeModeTransition(commitTheme: () => void) {
+  const startViewTransition = (document as ViewTransitionDocument)
+    .startViewTransition?.bind(document)
+  const prefersReducedMotion = window.matchMedia(
+    '(prefers-reduced-motion: reduce)'
+  ).matches
+
+  if (!startViewTransition || prefersReducedMotion) {
+    commitTheme()
+    return
+  }
+
+  const transitionStyle = createViewTransitionResetStyle()
+  const transition = startViewTransition(() => {
+    flushSync(commitTheme)
+  })
+
+  try {
+    await transition.ready
+  } catch {
+    transitionStyle.remove()
+    return
+  }
+
+  if (themeModeAnimationType === 'fade-in-out') {
+    document.documentElement.animate(
+      {
+        opacity: [0, 1],
+      },
+      {
+        duration: themeModeTransitionDuration * 0.5,
+        easing: 'ease-in-out',
+        pseudoElement: '::view-transition-new(root)',
+      }
+    )
+  }
+
+  void transition.finished.finally(() => {
+    transitionStyle.remove()
+  })
+}
 
 export function ThemeModeButton() {
   const { resolvedTheme, setTheme } = useTheme()
@@ -15,6 +83,18 @@ export function ThemeModeButton() {
   }, [])
 
   const isDark = mounted && resolvedTheme === 'dark'
+  const handleToggleTheme = useCallback(() => {
+    if (!mounted) return
+
+    const nextIsDark = !isDark
+    const nextTheme = nextIsDark ? 'dark' : 'light'
+
+    void runThemeModeTransition(() => {
+      document.documentElement.classList.toggle('dark', nextIsDark)
+      window.localStorage.setItem('theme', nextTheme)
+      setTheme(nextTheme)
+    })
+  }, [isDark, mounted, setTheme])
 
   return (
     <IconControlButton
@@ -22,10 +102,7 @@ export function ThemeModeButton() {
         mounted ? (isDark ? '라이트 모드로 전환' : '다크 모드로 전환') : '테마 전환'
       }
       aria-pressed={mounted ? isDark : undefined}
-      onClick={() => {
-        if (!mounted) return
-        setTheme(isDark ? 'light' : 'dark')
-      }}
+      onClick={handleToggleTheme}
       className="relative overflow-hidden"
     >
       <span
@@ -38,20 +115,16 @@ export function ThemeModeButton() {
       />
       <span
         aria-hidden="true"
-        className={`absolute inset-0 grid place-items-center transition-[opacity,translate,scale] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[opacity,translate,scale] ${
-          isDark
-            ? '-translate-x-7 scale-95 opacity-0'
-            : 'translate-x-0 scale-100 opacity-100'
+        className={`absolute inset-0 grid place-items-center transition-[opacity,rotate,scale] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[opacity,rotate,scale] ${
+          isDark ? 'rotate-45 scale-90 opacity-0' : 'rotate-0 scale-100 opacity-100'
         }`}
       >
         <SunIcon className="h-[18px] w-[18px]" />
       </span>
       <span
         aria-hidden="true"
-        className={`absolute inset-0 grid place-items-center transition-[opacity,translate,scale] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[opacity,translate,scale] ${
-          isDark
-            ? 'translate-x-0 scale-100 opacity-100'
-            : 'translate-x-7 scale-95 opacity-0'
+        className={`absolute inset-0 grid place-items-center transition-[opacity,rotate,scale] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[opacity,rotate,scale] ${
+          isDark ? 'rotate-0 scale-100 opacity-100' : '-rotate-45 scale-90 opacity-0'
         }`}
       >
         <MoonIcon className="h-[18px] w-[18px]" />

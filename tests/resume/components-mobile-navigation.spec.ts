@@ -152,6 +152,80 @@ test('desktop component sidebar top fog does not crowd the introduction link', a
   expect(metrics.introTopOffset).toBeLessThanOrEqual(metrics.fogHeight + 16)
 })
 
+test('component dark mode keeps search and installation surfaces integrated', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem('theme', 'dark')
+  })
+  await page.emulateMedia({ colorScheme: 'dark' })
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/components')
+
+  await expect(page.locator('html')).toHaveClass(/dark/)
+  await expect(
+    page.getByRole('searchbox', { name: '컴포넌트 메뉴 검색' })
+  ).toBeVisible()
+
+  const metrics = await page.evaluate(() => {
+    function isSolidNearBlack(color: string) {
+      const oklabMatch = color.match(/oklab\(([0-9.]+)/)
+      if (oklabMatch) {
+        return Number(oklabMatch[1]) <= 0.12
+      }
+
+      const labMatch = color.match(/lab\(([0-9.]+)/)
+      if (labMatch) {
+        return Number(labMatch[1]) <= 6
+      }
+
+      const match = color.match(
+        /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([0-9.]+))?\)/
+      )
+      if (!match) return false
+
+      const [, red, green, blue, alpha = '1'] = match
+      return (
+        Number(alpha) > 0.94 &&
+        Number(red) <= 18 &&
+        Number(green) <= 18 &&
+        Number(blue) <= 18
+      )
+    }
+
+    const searchInput = document.querySelector<HTMLElement>(
+      '#component-search-input'
+    )
+    const searchWrapper = searchInput?.parentElement as HTMLElement | null
+    const installShell = document
+      .querySelector<HTMLElement>('#installation [role="tablist"]')
+      ?.closest<HTMLElement>('div.overflow-hidden')
+
+    const searchWrapperColor = searchWrapper
+      ? getComputedStyle(searchWrapper).backgroundColor
+      : ''
+    const searchInputColor = searchInput
+      ? getComputedStyle(searchInput).backgroundColor
+      : ''
+    const installShellColor = installShell
+      ? getComputedStyle(installShell).backgroundColor
+      : ''
+
+    return {
+      searchWrapperColor,
+      searchInputColor,
+      installShellColor,
+      searchWrapperNearBlack: isSolidNearBlack(searchWrapperColor),
+      searchInputNearBlack: isSolidNearBlack(searchInputColor),
+      installShellNearBlack: isSolidNearBlack(installShellColor),
+    }
+  })
+
+  expect(metrics.searchWrapperNearBlack, metrics.searchWrapperColor).toBe(false)
+  expect(metrics.searchInputNearBlack, metrics.searchInputColor).toBe(false)
+  expect(metrics.installShellNearBlack, metrics.installShellColor).toBe(false)
+})
+
 test('scroll shortcut stays fixed at the bottom center on mobile', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/components/shiny-button')

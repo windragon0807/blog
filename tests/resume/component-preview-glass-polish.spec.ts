@@ -132,6 +132,183 @@ test.describe('component preview glass polish', () => {
     await assertNoErrors()
   })
 
+  test('component props table reuses the data table row system', async ({ page }) => {
+    const assertNoErrors = await expectNoConsoleErrors(page)
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto('/components/placeholders-and-vanish-input')
+
+    const propsSection = page.locator('#props')
+    await expect(propsSection.getByRole('heading', { name: 'Props' })).toBeVisible()
+
+    const table = propsSection.locator('table').first()
+    await expect(table).toBeVisible()
+
+    const metrics = await table.evaluate((element) => {
+      const rows = Array.from(element.querySelectorAll<HTMLTableRowElement>('tbody tr'))
+      const firstRowCells = rows[0]
+        ? Array.from(rows[0].querySelectorAll<HTMLTableCellElement>('td'))
+        : []
+      const firstRowRects = firstRowCells.map((cell) => cell.getBoundingClientRect())
+      const firstRowStyle = rows[0] ? getComputedStyle(rows[0]) : null
+      const body = element.querySelector('tbody')
+      const bodyStyle = body ? getComputedStyle(body) : null
+      const headerRect = element.querySelector('thead')!.getBoundingClientRect()
+      const bodyRect = body!.getBoundingClientRect()
+      const tableRect = element.getBoundingClientRect()
+
+      return {
+        rowDisplay: firstRowStyle?.display ?? '',
+        bodyBorderRadius: bodyStyle?.borderRadius ?? '',
+        shellBackground: getComputedStyle(element).backgroundColor,
+        shellWidth: tableRect.width,
+        headerWidth: headerRect.width,
+        bodyWidth: bodyRect.width,
+        bodyLeftInset: bodyRect.left - tableRect.left,
+        bodyRightInset: tableRect.right - bodyRect.right,
+        rowCount: rows.length,
+        maxCellGap: firstRowRects.slice(1).reduce((maxGap, rect, index) => {
+          const previous = firstRowRects[index]
+          return Math.max(maxGap, Math.abs(rect.left - previous.right))
+        }, 0),
+      }
+    })
+
+    expect(metrics.rowDisplay).toBe('grid')
+    expect(metrics.bodyBorderRadius).not.toBe('0px')
+    expect(metrics.shellBackground).toContain('/ 0.')
+    expect(metrics.headerWidth).toBeGreaterThanOrEqual(metrics.bodyWidth - 2)
+    expect(metrics.bodyWidth).toBeLessThan(metrics.shellWidth)
+    expect(metrics.bodyLeftInset).toBeGreaterThan(4)
+    expect(metrics.bodyRightInset).toBeGreaterThan(4)
+    expect(metrics.rowCount).toBeGreaterThanOrEqual(4)
+    expect(metrics.maxCellGap).toBeLessThanOrEqual(1)
+    await assertNoErrors()
+  })
+
+  test('component props table keeps code-heavy type values readable', async ({
+    page,
+  }) => {
+    const assertNoErrors = await expectNoConsoleErrors(page)
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto('/components/data-table')
+
+    const propsTable = page.locator('#props table').first()
+    await expect(propsTable).toBeVisible()
+
+    const metrics = await propsTable.evaluate((element) => {
+      const rows = Array.from(element.querySelectorAll<HTMLTableRowElement>('tbody tr'))
+      const columnsRow = rows.find((row) => {
+        const propCell = row.querySelector<HTMLTableCellElement>('td')
+        return propCell?.textContent?.trim() === 'columns'
+      })
+
+      if (!columnsRow) {
+        return {
+          foundColumnsRow: false,
+          typeText: '',
+          typeLineCount: 0,
+          typeCellWidth: 0,
+        }
+      }
+
+      const typeCell = columnsRow.querySelectorAll<HTMLTableCellElement>('td')[1]
+      const range = document.createRange()
+      range.selectNodeContents(typeCell)
+      const typeLineCount = Array.from(range.getClientRects()).filter(
+        (rect) => rect.width > 1 && rect.height > 1
+      ).length
+
+      return {
+        foundColumnsRow: true,
+        typeText: typeCell.textContent?.trim() ?? '',
+        typeLineCount,
+        typeCellWidth: typeCell.getBoundingClientRect().width,
+      }
+    })
+
+    expect(metrics.foundColumnsRow).toBe(true)
+    expect(metrics.typeText).toBe('DataTableColumn<T>[]')
+    expect(metrics.typeLineCount).toBe(1)
+    expect(metrics.typeCellWidth).toBeGreaterThan(280)
+    await assertNoErrors()
+  })
+
+  test('component props table uses the table border as the outer edge', async ({
+    page,
+  }) => {
+    const assertNoErrors = await expectNoConsoleErrors(page)
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto('/components/shiny-button')
+
+    const propsTableShell = page.locator('#props .component-props-table')
+    const propsTable = propsTableShell.locator('table').first()
+    await expect(propsTableShell).toBeVisible()
+    await expect(propsTable).toBeVisible()
+
+    const metrics = await propsTableShell.evaluate((shell) => {
+      const table = shell.querySelector('table')!
+      const shellStyle = getComputedStyle(shell)
+      const shellRect = shell.getBoundingClientRect()
+      const tableRect = table.getBoundingClientRect()
+
+      return {
+        paddingTop: Number.parseFloat(shellStyle.paddingTop),
+        paddingRight: Number.parseFloat(shellStyle.paddingRight),
+        paddingBottom: Number.parseFloat(shellStyle.paddingBottom),
+        paddingLeft: Number.parseFloat(shellStyle.paddingLeft),
+        leftInset: tableRect.left - shellRect.left,
+        rightInset: shellRect.right - tableRect.right,
+        topInset: tableRect.top - shellRect.top,
+        bottomInset: shellRect.bottom - tableRect.bottom,
+      }
+    })
+
+    expect(metrics.paddingTop).toBe(0)
+    expect(metrics.paddingRight).toBe(0)
+    expect(metrics.paddingBottom).toBe(0)
+    expect(metrics.paddingLeft).toBe(0)
+    expect(metrics.leftInset).toBeLessThanOrEqual(1)
+    expect(metrics.rightInset).toBeLessThanOrEqual(1)
+    expect(metrics.topInset).toBeLessThanOrEqual(1)
+    expect(metrics.bottomInset).toBeLessThanOrEqual(1)
+    await assertNoErrors()
+  })
+
+  test('component props table has themed outer surfaces and light hover', async ({
+    page,
+  }) => {
+    const assertNoErrors = await expectNoConsoleErrors(page)
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto('/components/placeholders-and-vanish-input')
+
+    const propsTable = page.locator('#props .component-props-table table').first()
+    const firstRow = propsTable.locator('tbody tr').first()
+    await expect(propsTable).toBeVisible()
+    await expect(firstRow).toBeVisible()
+
+    const propsTableShellClassName =
+      (await page.locator('#props .component-props-table').getAttribute('class')) ?? ''
+    await page.evaluate(() => document.documentElement.classList.remove('dark'))
+    const lightRowBackground = await firstRow.evaluate(
+      (element) => getComputedStyle(element).backgroundColor
+    )
+
+    await firstRow.hover()
+    const lightRowHoverBackground = await firstRow.evaluate(
+      (element) => getComputedStyle(element).backgroundColor
+    )
+
+    expect(propsTableShellClassName).toContain('[&_table]:!bg-zinc-100/95')
+    expect(propsTableShellClassName).toContain('dark:[&_table]:!bg-zinc-950/88')
+    expect(propsTableShellClassName).toContain('[&_tbody]:!bg-white/86')
+    expect(propsTableShellClassName).toContain('dark:[&_tbody]:!bg-zinc-900/68')
+    expect(propsTableShellClassName).toContain(
+      '[&_tbody_tr:hover]:!bg-zinc-100/90'
+    )
+    expect(lightRowHoverBackground).not.toBe(lightRowBackground)
+    await assertNoErrors()
+  })
+
   test('physics picker renders as a transparent installable interactive component', async ({
     page,
   }) => {

@@ -175,6 +175,7 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <head>
+        <meta name="color-scheme" content="light dark" />
         <style id="code-theme-style-map">{CODE_THEME_STYLE_TEXT}</style>
       </head>
       <body

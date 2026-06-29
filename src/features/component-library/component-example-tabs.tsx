@@ -19,7 +19,7 @@ export function ComponentExampleTabs({
         Preview
       </h2>
 
-      <div className="mt-4 overflow-hidden rounded-2xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
+      <div className="mt-4 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_18px_46px_-36px_rgba(24,24,27,0.42)] dark:border-zinc-700/70 dark:bg-zinc-900/58 dark:shadow-[0_22px_54px_-38px_rgba(2,6,23,0.9)]">
         <div className="min-h-[28rem] rounded-[inherit]">
           <div className="flex min-h-[28rem] items-center justify-center overflow-hidden rounded-[inherit]">
             <ComponentPreviewContent sample={sample} mode="interactive" />

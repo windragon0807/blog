@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 export interface DataTableColumn<T> {
   key: keyof T
   header: string
+  width?: string
 }
 
 interface DataTableProps<T extends Record<string, string | number>> {
@@ -22,11 +23,10 @@ export function DataTable<T extends Record<string, string | number>>({
 }: DataTableProps<T>) {
   const isDark = variant === 'dark'
   const gridTemplateColumns = columns
-    .map((_, index) => {
-      if (columns.length <= 2) return 'minmax(0, 1fr)'
-      if (index === 0 || index === columns.length - 1) return 'minmax(0, 1.35fr)'
-      return 'minmax(0, 0.78fr)'
-    })
+    .map(
+      (column, index) =>
+        column.width ?? getDataTableColumnTrack(columns.length, index)
+    )
     .join(' ')
 
   if (isDark) {
@@ -47,7 +47,7 @@ export function DataTable<T extends Record<string, string | number>>({
                 {columns.map((column, index) => (
                   <th
                     key={String(column.key)}
-                    className="relative px-5 py-4 text-left text-sm font-semibold"
+                    className="relative min-w-0 px-5 py-4 text-left text-sm font-semibold"
                   >
                     {index > 0 ? (
                       <span className="absolute left-0 top-1/2 h-5 w-px -translate-y-1/2 bg-white/10" />
@@ -67,7 +67,7 @@ export function DataTable<T extends Record<string, string | number>>({
                   {columns.map((column) => (
                     <td
                       key={String(column.key)}
-                      className="px-5 py-5 text-white/82 first:text-lg"
+                      className="min-w-0 px-5 py-5 text-white/82 first:text-lg"
                     >
                       {row[column.key]}
                     </td>
@@ -85,49 +85,41 @@ export function DataTable<T extends Record<string, string | number>>({
     <div
       className={cn(
         'w-full overflow-hidden rounded-[28px] text-left',
-        'bg-zinc-100 p-2 dark:bg-zinc-900',
+        'bg-zinc-100 p-2 dark:bg-zinc-900/60',
         className
       )}
     >
       <div className="custom-scrollbar overflow-x-auto">
-        <table className="w-full min-w-[640px] border-collapse overflow-hidden rounded-[28px] text-base">
-          <thead className="text-zinc-500 dark:text-zinc-400">
-            <tr>
+        <table className="block min-w-[640px] rounded-[28px] border border-zinc-200/80 bg-white/80 p-2 pt-0 text-base shadow-[0_18px_54px_-42px_rgba(24,24,27,0.42)] dark:border-zinc-700/70 dark:bg-zinc-900/58 dark:shadow-[0_22px_64px_-46px_rgba(2,6,23,0.9)]">
+          <thead className="block text-zinc-500 dark:text-zinc-400">
+            <tr
+              className="grid px-1"
+              style={{ gridTemplateColumns }}
+            >
               {columns.map((column, index) => (
                 <th
                   key={String(column.key)}
-                  className="relative px-6 py-4 text-left text-sm font-semibold"
+                  className="relative min-w-0 px-5 py-4 text-left text-sm font-semibold"
                 >
                   {index > 0 ? (
-                    <span className="absolute left-0 top-1/2 h-5 w-px -translate-y-1/2 bg-zinc-200 dark:bg-zinc-800" />
+                    <span className="absolute left-0 top-1/2 h-5 w-px -translate-y-1/2 bg-zinc-200 dark:bg-zinc-700/70" />
                   ) : null}
                   {column.header}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="bg-white dark:bg-zinc-950">
+          <tbody className="block overflow-hidden rounded-[22px] border border-zinc-200/80 bg-white/88 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] dark:border-zinc-700/70 dark:bg-zinc-950/32 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
             {rows.map((row, rowIndex) => (
               <tr
                 key={rowIndex}
-                className="group transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900"
+                className="grid border-t border-zinc-200/75 bg-white/44 transition-colors first:border-t-0 hover:bg-white dark:border-zinc-800/75 dark:bg-white/[0.025] dark:hover:bg-white/[0.065]"
+                style={{ gridTemplateColumns }}
               >
-                {columns.map((column, columnIndex) => (
+                {columns.map((column) => (
                   <td
                     key={String(column.key)}
-                    className={cn(
-                      'border-t border-zinc-200 px-6 py-5 text-zinc-900 transition-colors first:text-lg dark:border-zinc-800 dark:text-zinc-100',
-                      rowIndex === 0 && columnIndex === 0 && 'rounded-tl-3xl',
-                      rowIndex === 0 &&
-                        columnIndex === columns.length - 1 &&
-                        'rounded-tr-3xl',
-                      rowIndex === rows.length - 1 &&
-                        columnIndex === 0 &&
-                        'rounded-bl-3xl',
-                      rowIndex === rows.length - 1 &&
-                        columnIndex === columns.length - 1 &&
-                        'rounded-br-3xl'
-                    )}
+                    className="min-w-0 px-5 py-5 text-zinc-700 transition-colors first:text-lg first:text-zinc-950 dark:text-zinc-200/82 dark:first:text-zinc-50"
                   >
                     {row[column.key]}
                   </td>
@@ -139,4 +131,10 @@ export function DataTable<T extends Record<string, string | number>>({
       </div>
     </div>
   )
+}
+
+function getDataTableColumnTrack(columnCount: number, index: number) {
+  if (columnCount <= 2) return 'minmax(0, 1fr)'
+  if (index === 0 || index === columnCount - 1) return 'minmax(0, 1.35fr)'
+  return 'minmax(0, 0.78fr)'
 }

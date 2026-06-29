@@ -24,7 +24,7 @@ function getLinkClass(isActive: boolean) {
     return `${baseLinkClass} text-zinc-950 dark:text-zinc-50`
   }
 
-  return `${baseLinkClass} text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900`
+  return `${baseLinkClass} text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800/60`
 }
 
 const stableStickyStyle = {
@@ -61,7 +61,7 @@ function SidebarLink({
             layoutId={`component-sidebar-active-indicator-${layoutScope}`}
             layoutDependency={layoutDependency}
             aria-hidden="true"
-            className="component-sidebar-active-indicator pointer-events-none absolute inset-0 z-[1] rounded-lg border border-zinc-200 bg-zinc-100 shadow-[0_10px_24px_-18px_rgba(24,24,27,0.42)] dark:border-zinc-800 dark:bg-zinc-900"
+            className="component-sidebar-active-indicator pointer-events-none absolute inset-0 z-[1] rounded-lg border border-zinc-200 bg-zinc-100 shadow-[0_10px_24px_-18px_rgba(24,24,27,0.42)] dark:border-zinc-700/70 dark:bg-zinc-800/70 dark:shadow-[0_14px_28px_-22px_rgba(2,6,23,0.86)]"
             style={stableStickyStyle}
             transition={{ type: 'spring', stiffness: 520, damping: 42, mass: 0.7 }}
           />
@@ -89,7 +89,7 @@ function ComponentSearchInput({
 }) {
   return (
     <div
-      className="relative z-30 bg-white px-1 pb-3 pt-1 dark:bg-zinc-950"
+      className="relative z-30 bg-background/95 px-1 pb-3 pt-1 backdrop-blur-md"
       style={stableStickyStyle}
     >
       <label className="sr-only" htmlFor={inputId}>
@@ -102,7 +102,7 @@ function ComponentSearchInput({
         onChange={(event) => onChange(event.target.value)}
         aria-label="컴포넌트 메뉴 검색"
         placeholder="컴포넌트 검색"
-        className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:border-zinc-600"
+        className="w-full rounded-xl border border-zinc-200/85 bg-white/90 px-3 py-2 text-sm text-zinc-900 shadow-sm outline-none transition-[background-color,border-color,box-shadow,color] placeholder:text-zinc-400 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-950/10 dark:border-zinc-700/70 dark:bg-zinc-900/70 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-500 dark:focus:bg-zinc-900/80 dark:focus:ring-zinc-50/10"
       />
     </div>
   )
@@ -208,7 +208,7 @@ function ComponentSidebarContent({
               )
             })}
             {normalizedSearchQuery && filteredSamples.length === 0 ? (
-              <p className="rounded-lg border border-zinc-200 px-3 py-4 text-sm text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
+              <p className="rounded-lg border border-zinc-200 px-3 py-4 text-sm text-zinc-500 dark:border-zinc-700/70 dark:bg-zinc-900/45 dark:text-zinc-400">
                 검색 결과가 없습니다.
               </p>
             ) : null}

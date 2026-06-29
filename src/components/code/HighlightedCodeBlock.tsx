@@ -33,10 +33,19 @@ export async function HighlightedCodeBlock({
   })
   const decoratedHtml = decorateCodeHtml(html, blockId, highlightLines)
   const framed = variant === 'post'
+  const shellClassName = framed
+    ? 'relative overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-600'
+    : 'overflow-hidden'
+  const headerClassName = framed
+    ? 'flex items-center justify-between border-b border-zinc-200 bg-zinc-100 px-4 py-2 dark:border-zinc-700 dark:bg-zinc-800'
+    : 'flex items-center justify-between border-b border-zinc-200/75 bg-zinc-50/80 px-4 py-2 dark:border-zinc-700/60 dark:bg-zinc-900/55'
+  const scrollAreaClassName = framed
+    ? 'custom-scrollbar bg-white dark:bg-zinc-800'
+    : 'custom-scrollbar bg-white/92 dark:bg-zinc-900/42'
 
   const block = (
-    <div className={framed ? 'relative overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-600' : 'overflow-hidden'}>
-      <div className="flex items-center justify-between border-b border-zinc-200 bg-zinc-100 px-4 py-2 dark:border-zinc-700 dark:bg-zinc-800">
+    <div className={shellClassName}>
+      <div className={headerClassName}>
         <div className="flex items-center gap-2">
           <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center overflow-hidden rounded-[5px]">
             <Image
@@ -65,7 +74,7 @@ export async function HighlightedCodeBlock({
       </div>
       <ScrollArea
         orientation="horizontal"
-        className="custom-scrollbar bg-white dark:bg-zinc-800"
+        className={scrollAreaClassName}
       >
         <div
           className="[&>pre]:min-w-max [&>pre]:!bg-transparent [&>pre]:px-0 [&>pre]:py-3 [&>pre]:text-sm [&>pre]:leading-relaxed"

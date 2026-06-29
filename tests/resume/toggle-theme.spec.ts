@@ -64,6 +64,80 @@ test('toggle theme keeps the Lightswind View Transition implementation shape', a
   }
 })
 
+test('header theme button uses the fade-in-out View Transition shape', async () => {
+  const componentSource = readFileSync(
+    join(process.cwd(), 'src/components/ThemeModeButton.tsx'),
+    'utf8'
+  )
+
+  expect(componentSource).toContain('startViewTransition')
+  expect(componentSource).toContain('flushSync')
+  expect(componentSource).toContain('fade-in-out')
+  expect(componentSource).toContain('opacity: [0, 1]')
+  expect(componentSource).toContain("pseudoElement: '::view-transition-new(root)'")
+})
+
+test('header theme button runs the fade transition when clicked', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const originalAnimate = Element.prototype.animate
+
+    window.__toggleThemeAnimateCalls = []
+    window.localStorage.setItem('theme', 'light')
+
+    Element.prototype.animate = function (keyframes, options) {
+      if (this === document.documentElement) {
+        const animationOptions =
+          options && typeof options === 'object'
+            ? (options as KeyframeAnimationOptions)
+            : undefined
+
+        window.__toggleThemeAnimateCalls.push({
+          keyframes,
+          options: animationOptions
+            ? {
+                duration: animationOptions.duration,
+                easing: animationOptions.easing,
+                pseudoElement: animationOptions.pseudoElement ?? undefined,
+              }
+            : typeof options === 'number'
+              ? options
+              : undefined,
+        })
+      }
+
+      return originalAnimate.call(this, keyframes, options)
+    }
+  })
+
+  await page.emulateMedia({ colorScheme: 'light' })
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/components')
+
+  await expect(page.locator('html')).not.toHaveClass(/dark/)
+  await page.getByRole('button', { name: '다크 모드로 전환' }).click()
+
+  await expect
+    .poll(() =>
+      page.evaluate(() => document.documentElement.classList.contains('dark'))
+    )
+    .toBe(true)
+
+  const animateCalls = await page.evaluate(() => window.__toggleThemeAnimateCalls)
+
+  expect(
+    animateCalls.some(
+      (call) =>
+        JSON.stringify(call.keyframes).includes('opacity') &&
+        typeof call.options === 'object' &&
+        call.options?.duration === 200 &&
+        call.options?.easing === 'ease-in-out' &&
+        call.options?.pseudoElement === '::view-transition-new(root)'
+    )
+  ).toBe(true)
+})
+
 test('toggle theme switches every Lightswind mode and runs view-transition animations', async ({
   page,
 }) => {

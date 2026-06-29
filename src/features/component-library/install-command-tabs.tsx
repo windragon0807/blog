@@ -83,16 +83,16 @@ export function InstallCommandTabs({
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-      <div className="border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
+    <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_18px_46px_-36px_rgba(24,24,27,0.42)] dark:border-zinc-700/70 dark:bg-zinc-900/60 dark:shadow-[0_22px_54px_-38px_rgba(2,6,23,0.9)]">
+      <div className="border-b border-zinc-200 bg-zinc-50/70 px-4 py-3 dark:border-zinc-700/60 dark:bg-zinc-900/45">
         <div
           role="tablist"
           aria-label="Install command package manager"
-          className="relative inline-flex gap-1 rounded-xl bg-zinc-100 p-1 dark:bg-zinc-900"
+          className="relative inline-flex gap-1 rounded-xl bg-zinc-100 p-1 dark:bg-white/[0.05]"
         >
           <span
             aria-hidden="true"
-            className="absolute inset-y-1 rounded-lg bg-white shadow-sm transition-[left,width] duration-200 ease-out dark:bg-zinc-800"
+            className="absolute inset-y-1 rounded-lg bg-white shadow-sm transition-[left,width] duration-200 ease-out dark:bg-zinc-700/75 dark:shadow-[0_8px_20px_-14px_rgba(0,0,0,0.9)]"
             style={{
               left: indicatorStyle.left,
               width: indicatorStyle.width,

@@ -294,11 +294,16 @@ html:not(.dark) {
 }
 
 html {
+  color-scheme: light;
   /* `overflow-y: scroll` 로 html 을 명시적 scroll container 로 만들어 두 가지를 동시에 해결:
      1) body 의 overflow 가 viewport 로 propagate 되지 않게 막아 dropdown 이 열려도 스크롤바 시각이
         유지됨 (gutter 자리에 빈 영역이 안 생김)
      2) 페이지 길이와 무관하게 스크롤바 영역을 항상 reserve → 라우트 변경 시 가로 layout shift 차단 */
   overflow-y: scroll;
+}
+
+html.dark {
+  color-scheme: dark;
 }
 
 @media (min-width: 1024px) {
@@ -402,6 +407,42 @@ html {
   to {
     opacity: 0;
     transform: translateY(100%);
+  }
+}
+
+@keyframes emoticon-action-panel-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes emoticon-bottom-sheet-enter {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes emoticon-bottom-sheet-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(28px) scale(0.98);
   }
 }
 
