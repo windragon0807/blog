@@ -81,6 +81,22 @@ test('header renders centered icon controls with GitHub link', async ({ page }) 
   )
   await expect(page.getByRole('navigation', { name: '주요 이동' })).toBeVisible()
 
+  const homeLink = page.getByRole('link', { name: '홈으로 이동' })
+  const componentsLink = page.getByRole('link', {
+    name: '컴포넌트 라이브러리로 이동',
+  })
+  const emoticonsLink = page.getByRole('link', {
+    name: '이모티콘 스토리지로 이동',
+  })
+
+  await expect(componentsLink).toHaveAttribute('aria-current', 'page')
+  await expect(componentsLink).toHaveAttribute('data-active-route', 'true')
+  await expect(componentsLink).toHaveClass(/header-active-aurora/)
+  await expect(componentsLink).toHaveClass(/border-transparent/)
+  await expect(componentsLink).toHaveClass(/focus:ring-0/)
+  await expect(homeLink).not.toHaveAttribute('aria-current', 'page')
+  await expect(emoticonsLink).not.toHaveAttribute('aria-current', 'page')
+
   const desktopHeaderBox = await page.locator('header.header-sticky').boundingBox()
   expect(desktopHeaderBox?.width).toBeLessThan(380)
   expect(1440 - ((desktopHeaderBox?.x ?? 0) + (desktopHeaderBox?.width ?? 0))).toBeLessThan(48)
@@ -182,7 +198,7 @@ test('desktop component sidebar top fog does not crowd the introduction link', a
   expect(metrics.introTopOffset).toBeLessThanOrEqual(metrics.fogHeight + 16)
 })
 
-test('component dark mode keeps search and installation surfaces integrated', async ({
+test('component introduction dark mode keeps search integrated without installation', async ({
   page,
 }) => {
   await page.addInitScript(() => {
@@ -196,6 +212,8 @@ test('component dark mode keeps search and installation surfaces integrated', as
   await expect(
     page.getByRole('searchbox', { name: '컴포넌트 메뉴 검색' })
   ).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Installation' })).toHaveCount(0)
+  await expect(page.locator('#installation')).toHaveCount(0)
 
   const metrics = await page.evaluate(() => {
     function isSolidNearBlack(color: string) {
@@ -227,9 +245,6 @@ test('component dark mode keeps search and installation surfaces integrated', as
       '#component-search-input'
     )
     const searchWrapper = searchInput?.parentElement as HTMLElement | null
-    const installShell = document
-      .querySelector<HTMLElement>('#installation [role="tablist"]')
-      ?.closest<HTMLElement>('div.overflow-hidden')
 
     const searchWrapperColor = searchWrapper
       ? getComputedStyle(searchWrapper).backgroundColor
@@ -237,23 +252,17 @@ test('component dark mode keeps search and installation surfaces integrated', as
     const searchInputColor = searchInput
       ? getComputedStyle(searchInput).backgroundColor
       : ''
-    const installShellColor = installShell
-      ? getComputedStyle(installShell).backgroundColor
-      : ''
 
     return {
       searchWrapperColor,
       searchInputColor,
-      installShellColor,
       searchWrapperNearBlack: isSolidNearBlack(searchWrapperColor),
       searchInputNearBlack: isSolidNearBlack(searchInputColor),
-      installShellNearBlack: isSolidNearBlack(installShellColor),
     }
   })
 
   expect(metrics.searchWrapperNearBlack, metrics.searchWrapperColor).toBe(false)
   expect(metrics.searchInputNearBlack, metrics.searchInputColor).toBe(false)
-  expect(metrics.installShellNearBlack, metrics.installShellColor).toBe(false)
 })
 
 test('scroll shortcut is removed on mobile', async ({ page }) => {

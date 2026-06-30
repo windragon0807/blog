@@ -282,6 +282,18 @@ html:not(.dark) {
     }
   }
 
+  @keyframes header-aurora-flow {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
   @keyframes rippling {
     0% {
       opacity: 1;
@@ -457,6 +469,89 @@ html,
 .custom-scrollbar {
   scrollbar-color: var(--scrollbar-thumb) transparent;
   scrollbar-width: thin;
+}
+
+.header-active-aurora {
+  color: rgb(24 24 27);
+  isolation: isolate;
+}
+
+.dark .header-active-aurora {
+  color: rgb(250 250 250);
+}
+
+.header-active-aurora::before,
+.header-active-aurora::after {
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+  position: absolute;
+}
+
+.header-active-aurora::before {
+  animation: header-aurora-flow 6.5s ease-in-out infinite;
+  background:
+    linear-gradient(135deg, #f9a8d4, #c4b5fd, #93c5fd, #a7f3d0, #f9a8d4);
+  background-size: 260% 260%;
+  inset: -1px;
+  opacity: 0.9;
+  z-index: 0;
+}
+
+.header-active-aurora::after {
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
+  inset: 1px;
+  z-index: 1;
+}
+
+.dark .header-active-aurora::after {
+  background: rgba(24, 24, 27, 0.78);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.header-active-aurora > svg {
+  position: relative;
+  z-index: 10;
+}
+
+.emoticon-collection-label {
+  display: inline-block;
+  text-box: trim-both cap alphabetic;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header-active-aurora::before {
+    animation: none;
+    background-position: 50% 50%;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .emoticon-action-button:hover {
+    transform: translateY(-1px);
+  }
+
+  .emoticon-action-button[data-tone="default"]:hover {
+    background: rgba(255, 255, 255, 0.82);
+    border-color: rgba(255, 255, 255, 0.96);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.94),
+      0 18px 38px -28px rgba(15, 23, 42, 0.56);
+  }
+
+  .dark .emoticon-action-button[data-tone="default"]:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      0 20px 42px -30px rgba(2, 6, 23, 0.92);
+  }
+
+  .emoticon-action-button[data-tone="success"]:hover,
+  .emoticon-action-button[data-tone="error"]:hover {
+    filter: brightness(1.04);
+  }
 }
 
 @media (prefers-contrast: more) {

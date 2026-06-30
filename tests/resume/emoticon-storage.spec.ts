@@ -10,6 +10,11 @@ test('emoticon storage virtualizes the icon grid instead of rendering every item
     page.getByRole('heading', { name: 'Emoticon Storage' })
   ).toHaveCount(0)
   await expect(page.getByRole('navigation', { name: '주요 이동' })).toBeVisible()
+  const emoticonsHeaderLink = page.getByRole('link', {
+    name: '이모티콘 스토리지로 이동',
+  })
+  await expect(emoticonsHeaderLink).toHaveAttribute('aria-current', 'page')
+  await expect(emoticonsHeaderLink).toHaveClass(/header-active-aurora/)
 
   const tablist = page.getByRole('tablist', { name: '이모티콘 종류' })
   await expect(tablist).toBeVisible()
@@ -306,6 +311,54 @@ test('emoticon storage keeps mobile category navigation compact', async ({
     (tossfaceBox?.x ?? 0) -
       ((materialBox?.x ?? 0) + (materialBox?.width ?? 0))
   ).toBeLessThanOrEqual(36)
+  const materialLogoState = await materialTab
+    .locator('[data-emoticon-collection-logo]')
+    .evaluate((element) => {
+      const style = getComputedStyle(element)
+      const buttonStyle = getComputedStyle(element.closest('button')!)
+      const label = element
+        .closest('button')
+        ?.querySelector<HTMLElement>('.emoticon-collection-label')
+      const logoRect = element.getBoundingClientRect()
+      const labelRect = label?.getBoundingClientRect()
+
+      return {
+        active: element.getAttribute('data-active'),
+        filter: style.filter,
+        labelCenterDelta: labelRect
+          ? Math.abs(
+              logoRect.top +
+                logoRect.height / 2 -
+                (labelRect.top + labelRect.height / 2)
+            )
+          : -1,
+        opacity: style.opacity,
+        transitionDuration: style.transitionDuration,
+        parentTransitionDuration: buttonStyle.transitionDuration,
+      }
+    })
+  const tossfaceLogoState = await tossfaceTab
+    .locator('[data-emoticon-collection-logo]')
+    .evaluate((element) => {
+      const style = getComputedStyle(element)
+
+      return {
+        active: element.getAttribute('data-active'),
+        filter: style.filter,
+        opacity: style.opacity,
+      }
+    })
+
+  expect(materialLogoState.active).toBe('true')
+  expect(tossfaceLogoState.active).toBe('false')
+  expect(materialLogoState.transitionDuration).toContain('0.5s')
+  expect(materialLogoState.parentTransitionDuration).toContain('0.5s')
+  expect(materialLogoState.labelCenterDelta).toBeGreaterThanOrEqual(0)
+  expect(materialLogoState.labelCenterDelta).toBeLessThanOrEqual(2)
+  expect(Number(tossfaceLogoState.opacity)).toBeLessThan(
+    Number(materialLogoState.opacity)
+  )
+  expect(tossfaceLogoState.filter).toContain('grayscale')
 
   await expect
     .poll(() =>
@@ -819,8 +872,34 @@ test('emoticon actions open in a bottom sheet with button-level feedback', async
   expect(sheetSurface.backgroundColor).toMatch(/(rgba\(|\/ 0\.)/)
   expect(sheetSurface.borderColor).not.toBe('rgb(228, 228, 231)')
 
-  const previewImageBox = await bottomSheet.locator('img').first().boundingBox()
-  const titleBox = await bottomSheet.getByRole('heading').boundingBox()
+  const selectedIdentity = bottomSheet.locator('[data-emoticon-selected-identity]')
+  const selectedIdentitySurface = await selectedIdentity.evaluate((element) => {
+    const style = getComputedStyle(element)
+    const preview = element.querySelector<HTMLElement>(
+      '[data-emoticon-selected-preview]'
+    )
+    const previewParentStyle = preview?.parentElement
+      ? getComputedStyle(preview.parentElement)
+      : null
+
+    return {
+      backgroundColor: style.backgroundColor,
+      borderWidth: style.borderWidth,
+      previewParentBackgroundColor: previewParentStyle?.backgroundColor ?? '',
+      previewParentBorderWidth: previewParentStyle?.borderWidth ?? '',
+    }
+  })
+  expect(selectedIdentitySurface.backgroundColor).toBe('rgba(0, 0, 0, 0)')
+  expect(selectedIdentitySurface.borderWidth).toBe('0px')
+  expect(selectedIdentitySurface.previewParentBackgroundColor).toBe(
+    'rgba(0, 0, 0, 0)'
+  )
+  expect(selectedIdentitySurface.previewParentBorderWidth).toBe('0px')
+
+  const previewImageBox = await bottomSheet
+    .locator('[data-emoticon-selected-preview]')
+    .boundingBox()
+  const titleBox = await selectedIdentity.locator('figcaption').boundingBox()
   const downloadSvgBox = await bottomSheet
     .getByRole('button', { name: 'Download SVG', exact: true })
     .boundingBox()
@@ -848,12 +927,42 @@ test('emoticon actions open in a bottom sheet with button-level feedback', async
     (previewImageBox?.y ?? 0) + (previewImageBox?.height ?? 0)
   )
   expect(Math.abs(previewImageCenterX - titleCenterX)).toBeLessThan(16)
+  expect(previewImageBox?.y ?? 0).toBeLessThan((downloadSvgBox?.y ?? 0) - 12)
+  expect(titleBox?.y ?? 0).toBeLessThan(copySvgBox?.y ?? 0)
   expect(downloadSvgBox?.x ?? 0).toBeGreaterThan(previewImageBox?.x ?? 0)
   expect(Math.abs((downloadSvgBox?.y ?? 0) - (downloadPngBox?.y ?? 0))).toBeLessThan(
     4
   )
   expect(copySvgBox?.y ?? 0).toBeGreaterThan(downloadSvgBox?.y ?? 0)
   expect(Math.abs((copySvgBox?.y ?? 0) - (copyPngBox?.y ?? 0))).toBeLessThan(4)
+
+  const downloadSvgButton = bottomSheet.getByRole('button', {
+    name: 'Download SVG',
+    exact: true,
+  })
+  const buttonBeforeHover = await downloadSvgButton.evaluate((element) => {
+    const style = getComputedStyle(element)
+
+    return {
+      boxShadow: style.boxShadow,
+      transform: style.transform,
+    }
+  })
+  await downloadSvgButton.hover()
+  await expect
+    .poll(() =>
+      downloadSvgButton.evaluate((element) => getComputedStyle(element).transform)
+    )
+    .not.toBe(buttonBeforeHover.transform)
+  const buttonAfterHover = await downloadSvgButton.evaluate((element) => {
+    const style = getComputedStyle(element)
+
+    return {
+      boxShadow: style.boxShadow,
+      transform: style.transform,
+    }
+  })
+  expect(buttonAfterHover.boxShadow).not.toBe(buttonBeforeHover.boxShadow)
 
   const panelBox = await bottomSheet.boundingBox()
   const gridBox = await page.locator('[data-emoticon-grid-shell]').boundingBox()

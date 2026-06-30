@@ -471,11 +471,15 @@ assert(
     !headerSource.includes('useHeaderBrandScope') &&
     !headerSource.includes('brandLabel') &&
     !headerSource.includes('shouldShowHomeButton') &&
-    headerSource.includes('aria-label="홈으로 이동"') &&
+    headerSource.includes('usePathname') &&
+    headerSource.includes('aria-label={label}') &&
+    headerSource.includes('aria-current={isActive ? \'page\' : undefined}') &&
+    headerSource.includes('label="홈으로 이동"') &&
+    headerSource.includes('header-active-aurora') &&
     headerSource.includes('GitHubIcon') &&
     headerSource.includes('https://github.com/windragon0807') &&
     headerSource.includes('justify-center'),
-  'Header should remove the brand logo, center icon controls, and include the GitHub profile button'
+  'Header should remove the brand logo, center icon controls, mark the active route, and include the GitHub profile button'
 )
 
 assert(

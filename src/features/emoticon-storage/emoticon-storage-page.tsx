@@ -767,14 +767,21 @@ function getFocusableElements(container: HTMLElement) {
   })
 }
 
-function MaterialLogo() {
+function MaterialLogo({ isActive }: { isActive: boolean }) {
   return (
     <Image
       src="/emoticons/logos/material-icon-theme.png"
       alt=""
       width={28}
       height={28}
-      className="h-5 w-5 rounded-md sm:h-6 sm:w-6 md:h-7 md:w-7"
+      data-emoticon-collection-logo=""
+      data-active={isActive ? 'true' : 'false'}
+      className={cn(
+        'h-[0.9em] w-[0.9em] shrink-0 rounded-[0.22em] object-contain transition-[filter,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
+        isActive
+          ? 'opacity-100'
+          : 'opacity-35 grayscale saturate-0 contrast-75 group-hover:opacity-65 group-hover:grayscale-[0.45] group-hover:saturate-[0.65]'
+      )}
     />
   )
 }
@@ -806,24 +813,37 @@ function TossfaceCategoryIcon({ name }: { name: string }) {
   )
 }
 
-function TossfaceLogo() {
+function TossfaceLogo({ isActive }: { isActive: boolean }) {
   return (
     <Image
       src="/emoticons/logos/toss-symbol.png"
       alt=""
       width={28}
       height={28}
-      className="h-5 w-5 rounded-md sm:h-6 sm:w-6 md:h-7 md:w-7"
+      data-emoticon-collection-logo=""
+      data-active={isActive ? 'true' : 'false'}
+      className={cn(
+        'h-[0.9em] w-[0.9em] shrink-0 rounded-[0.22em] object-contain transition-[filter,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
+        isActive
+          ? 'opacity-100'
+          : 'opacity-35 grayscale saturate-0 contrast-75 group-hover:opacity-65 group-hover:grayscale-[0.45] group-hover:saturate-[0.65]'
+      )}
     />
   )
 }
 
-function CollectionLogo({ id }: { id: EmoticonCollectionId }) {
+function CollectionLogo({
+  id,
+  isActive,
+}: {
+  id: EmoticonCollectionId
+  isActive: boolean
+}) {
   if (id === 'tossface') {
-    return <TossfaceLogo />
+    return <TossfaceLogo isActive={isActive} />
   }
 
-  return <MaterialLogo />
+  return <MaterialLogo isActive={isActive} />
 }
 
 function getSubcategories(collectionId: EmoticonCollectionId) {
@@ -1174,15 +1194,17 @@ function ActionButton({
   return (
     <button
       type="button"
+      data-emoticon-action-button=""
+      data-tone={tone}
       onClick={onClick}
       className={cn(
-        'inline-flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-xl px-2 text-xs font-bold transition focus:outline-none focus-visible:ring-2 sm:gap-2 sm:px-3 sm:text-sm',
+        'emoticon-action-button inline-flex h-11 min-w-0 translate-y-0 items-center justify-center gap-1.5 rounded-xl px-2 text-xs font-bold transition-[background-color,border-color,box-shadow,transform,color,filter] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] focus:outline-none focus-visible:ring-2 sm:gap-2 sm:px-3 sm:text-sm',
         tone === 'default' &&
-          'border border-white/65 bg-white/58 text-zinc-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.88),0_12px_34px_-28px_rgba(15,23,42,0.42)] backdrop-blur-xl hover:bg-white/78 focus-visible:ring-zinc-400/35 dark:border-white/10 dark:bg-white/10 dark:text-zinc-200 dark:hover:bg-white/14',
+          'border border-white/65 bg-white/58 text-zinc-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.88),0_12px_34px_-28px_rgba(15,23,42,0.42)] backdrop-blur-xl focus-visible:ring-zinc-400/35 dark:border-white/10 dark:bg-white/10 dark:text-zinc-200',
         tone === 'success' &&
-          'bg-emerald-500 text-white shadow-[0_12px_30px_-16px_rgba(16,185,129,0.9)] hover:bg-emerald-500 focus-visible:ring-emerald-400/45 dark:bg-emerald-500 dark:text-white dark:hover:bg-emerald-500',
+          'bg-emerald-500 text-white shadow-[0_12px_30px_-16px_rgba(16,185,129,0.9)] focus-visible:ring-emerald-400/45 dark:bg-emerald-500 dark:text-white',
         tone === 'error' &&
-          'bg-rose-500 text-white shadow-[0_12px_30px_-16px_rgba(244,63,94,0.85)] hover:bg-rose-500 focus-visible:ring-rose-400/45 dark:bg-rose-500 dark:text-white dark:hover:bg-rose-500'
+          'bg-rose-500 text-white shadow-[0_12px_30px_-16px_rgba(244,63,94,0.85)] focus-visible:ring-rose-400/45 dark:bg-rose-500 dark:text-white'
       )}
     >
       <span className="grid h-4 w-4 shrink-0 place-items-center">{icon}</span>
@@ -1913,22 +1935,24 @@ function BottomActionSheet({
         </button>
 
         <div className="grid min-w-0 grid-cols-[92px_minmax(0,1fr)] gap-2.5 sm:grid-cols-[128px_minmax(0,1fr)] sm:gap-4">
-          <div className="flex min-w-0 flex-col items-center justify-center rounded-2xl border border-white/56 bg-white/38 px-2 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.74)] backdrop-blur-xl dark:border-white/10 dark:bg-white/[0.055] sm:px-3 sm:py-4">
-            <div className="grid h-20 w-20 shrink-0 place-items-center rounded-2xl border border-white/65 bg-white/58 shadow-[0_16px_38px_-30px_rgba(15,23,42,0.58),inset_0_1px_0_rgba(255,255,255,0.9)] backdrop-blur-xl dark:border-white/10 dark:bg-white/10 sm:h-24 sm:w-24">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={item.src}
-                alt=""
-                className="h-14 w-14 object-contain sm:h-16 sm:w-16"
-              />
-            </div>
-            <h2
+          <figure
+            data-emoticon-selected-identity=""
+            className="flex min-w-0 flex-col items-center justify-start px-1 pb-1 pt-3 sm:px-2 sm:pb-0 sm:pt-1"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              data-emoticon-selected-preview=""
+              src={item.src}
+              alt=""
+              className="h-16 w-16 shrink-0 object-contain drop-shadow-[0_16px_24px_rgba(15,23,42,0.12)] dark:drop-shadow-[0_18px_26px_rgba(2,6,23,0.48)] sm:h-20 sm:w-20"
+            />
+            <figcaption
               id={titleId}
-              className="mt-2 w-full truncate text-center text-xs font-bold text-zinc-950 dark:text-zinc-50 sm:text-sm"
+              className="mt-2 w-full truncate text-center text-xs font-semibold leading-5 text-zinc-700 dark:text-zinc-300 sm:text-sm"
             >
               {item.name}
-            </h2>
-          </div>
+            </figcaption>
+          </figure>
 
           <div className="flex min-w-0 flex-col justify-end pt-11">
             <div className="grid grid-cols-2 gap-2">
@@ -2314,14 +2338,16 @@ export function EmoticonStoragePage() {
                       clearSelectedItemImmediately()
                     }}
                     className={cn(
-                      'inline-flex min-h-8 items-center gap-1.5 whitespace-nowrap rounded-xl text-[1.375rem] font-black leading-none tracking-tight transition focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/35 sm:text-2xl md:gap-2 md:text-3xl',
+                      'group inline-flex min-h-8 items-center gap-1.5 whitespace-nowrap rounded-xl text-[1.375rem] font-black leading-none tracking-tight transition-[color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/35 sm:text-2xl md:gap-2 md:text-3xl',
                       isActive
                         ? 'text-zinc-950 dark:text-zinc-50'
                         : 'text-zinc-300 hover:text-zinc-500 dark:text-zinc-700 dark:hover:text-zinc-500'
                     )}
                   >
-                    <CollectionLogo id={collection.id} />
-                    <span>{getCollectionLabel(collection.id)}</span>
+                    <CollectionLogo id={collection.id} isActive={isActive} />
+                    <span className="emoticon-collection-label">
+                      {getCollectionLabel(collection.id)}
+                    </span>
                   </button>
                 )
               })}
