@@ -301,7 +301,11 @@ test('emoticon storage keeps mobile category navigation compact', async ({
   expect(
     (tossfaceBox?.x ?? 0) -
       ((materialBox?.x ?? 0) + (materialBox?.width ?? 0))
-  ).toBeLessThanOrEqual(16)
+  ).toBeGreaterThanOrEqual(20)
+  expect(
+    (tossfaceBox?.x ?? 0) -
+      ((materialBox?.x ?? 0) + (materialBox?.width ?? 0))
+  ).toBeLessThanOrEqual(36)
 
   await expect
     .poll(() =>
@@ -348,16 +352,22 @@ test('emoticon page shell fills the mobile browser viewport', async ({
   const shellMetrics = await page.locator('[data-emoticon-page-shell]').evaluate(
     (shell) => {
       const rect = shell.getBoundingClientRect()
+      const style = getComputedStyle(shell)
 
       return {
         top: rect.top,
         bottom: rect.bottom,
         height: rect.height,
         viewportHeight: window.innerHeight,
+        className: shell.getAttribute('class') ?? '',
+        minHeight: style.minHeight,
+        viewportContract: shell.getAttribute('data-emoticon-viewport-contract'),
       }
     }
   )
 
+  expect(shellMetrics.viewportContract).toBe('dynamic-safe-area')
+  expect(shellMetrics.className).toContain('min-h-[100svh]')
   expect(shellMetrics.top).toBeLessThanOrEqual(1)
   expect(shellMetrics.bottom).toBeGreaterThanOrEqual(
     shellMetrics.viewportHeight - 1
@@ -409,6 +419,27 @@ test('tossface food category follows Tossface-style order and shows hover toolti
   await expect(page.locator('[data-emoticon-floating-tooltip]')).toContainText(
     '초록 사과'
   )
+})
+
+test.describe('emoticon storage touch input', () => {
+  test.use({ hasTouch: true, isMobile: true })
+
+  test('does not show hover tooltips on touch based devices', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/emoticons')
+    await page.getByRole('tab', { name: /Tossface/ }).click()
+    await page.getByRole('button', { name: '음식', exact: true }).click()
+
+    const firstCard = page.locator('[data-emoticon-card]').first()
+    await expect(firstCard).toBeVisible()
+    await expect(page.locator('[data-emoticon-card][data-touch-input="true"]').first()).toBeVisible()
+
+    await firstCard.hover()
+    await expect(page.getByRole('tooltip')).toHaveCount(0)
+
+    await firstCard.focus()
+    await expect(page.getByRole('tooltip')).toHaveCount(0)
+  })
 })
 
 test('emoticon grid prefetches nearby offscreen images while scrolling', async ({

@@ -23,7 +23,7 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { cn } from '@/lib/utils'
+import { cn, subscribeToTouchInputDeviceChange } from '@/lib/utils'
 import type {
   EmoticonCollection,
   EmoticonCollectionId,
@@ -47,7 +47,7 @@ const PREFETCH_CHUNK_SIZE = 8
 const BACKGROUND_PREFETCH_CHUNK_SIZE = 8
 const EAGER_ROW_BUFFER = 1
 const EMOTICON_PAGE_SHELL_CLASS_NAME =
-  'fixed inset-0 flex h-[100dvh] flex-col overflow-hidden pb-3 pt-[6.5rem] sm:pb-4 sm:pt-20'
+  'fixed inset-0 flex h-[100dvh] min-h-[100svh] flex-col overflow-hidden pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[calc(6.5rem+env(safe-area-inset-top))] sm:pb-4 sm:pt-20 [min-height:-webkit-fill-available]'
 const EMOTICON_CONTENT_CLASS_NAME =
   'mx-auto w-[min(1180px,calc(100vw-3rem))] sm:w-[min(1180px,calc(100vw-2rem))]'
 const FOCUSABLE_SELECTOR = [
@@ -1093,10 +1093,11 @@ function EmoticonStorageSkeleton() {
   return (
     <section
       data-emoticon-skeleton=""
+      data-emoticon-viewport-contract="dynamic-safe-area"
       className={EMOTICON_PAGE_SHELL_CLASS_NAME}
     >
       <div className={cn('shrink-0', EMOTICON_CONTENT_CLASS_NAME)}>
-        <div className="mb-3 flex flex-wrap items-end gap-x-2 gap-y-1.5 sm:mb-4 sm:gap-x-3 sm:gap-y-2 md:mb-6 md:gap-x-5">
+        <div className="mb-3 flex flex-wrap items-end gap-x-5 gap-y-1.5 sm:mb-4 sm:gap-x-6 sm:gap-y-2 md:mb-6 md:gap-x-7">
           {tabWidths.map((width, index) => (
             <div
               key={width}
@@ -1411,6 +1412,7 @@ const EmoticonCard = memo(function EmoticonCard({
   isSelected,
   collectionId,
   imageLoading,
+  isTouchInput,
   onSelect,
   onTooltipHide,
   onTooltipShow,
@@ -1419,6 +1421,7 @@ const EmoticonCard = memo(function EmoticonCard({
   isSelected: boolean
   collectionId: EmoticonCollectionId
   imageLoading: 'eager' | 'lazy'
+  isTouchInput: boolean
   onSelect: (item: EmoticonItem, trigger: HTMLButtonElement) => void
   onTooltipHide: (itemId: string) => void
   onTooltipShow: (item: EmoticonItem, trigger: HTMLButtonElement) => void
@@ -1436,12 +1439,21 @@ const EmoticonCard = memo(function EmoticonCard({
       type="button"
       data-emoticon-card=""
       data-collection={collectionId}
+      data-touch-input={isTouchInput ? 'true' : undefined}
       aria-label={`${item.name} 선택`}
-      onBlur={() => onTooltipHide(item.id)}
+      onBlur={() => {
+        if (!isTouchInput) onTooltipHide(item.id)
+      }}
       onClick={(event) => onSelect(item, event.currentTarget)}
-      onFocus={(event) => onTooltipShow(item, event.currentTarget)}
-      onMouseEnter={(event) => onTooltipShow(item, event.currentTarget)}
-      onMouseLeave={() => onTooltipHide(item.id)}
+      onFocus={(event) => {
+        if (!isTouchInput) onTooltipShow(item, event.currentTarget)
+      }}
+      onMouseEnter={(event) => {
+        if (!isTouchInput) onTooltipShow(item, event.currentTarget)
+      }}
+      onMouseLeave={() => {
+        if (!isTouchInput) onTooltipHide(item.id)
+      }}
       className={cn(
         'group grid h-14 place-items-center rounded-xl transition focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/35',
         isSelected
@@ -1495,6 +1507,7 @@ function VirtualizedEmoticonGrid({
   const contentRef = useRef<HTMLDivElement | null>(null)
   const [columnCount, setColumnCount] = useState(1)
   const [isCompactGrid, setIsCompactGrid] = useState(false)
+  const [isTouchInput, setIsTouchInput] = useState(false)
   const [tooltip, setTooltip] = useState<FloatingTooltipState>(null)
   const rows = useMemo<EmoticonGridRow[]>(() => {
     const nextRows: EmoticonGridRow[] = []
@@ -1545,6 +1558,16 @@ function VirtualizedEmoticonGrid({
     }
   }, [])
 
+  useEffect(() => {
+    return subscribeToTouchInputDeviceChange((nextIsTouchInput) => {
+      setIsTouchInput(nextIsTouchInput)
+
+      if (nextIsTouchInput) {
+        setTooltip(null)
+      }
+    })
+  }, [])
+
   const sectionHeadingHeight = isCompactGrid
     ? MOBILE_GRID_SECTION_HEADING_HEIGHT
     : DESKTOP_GRID_SECTION_HEADING_HEIGHT
@@ -1579,6 +1602,11 @@ function VirtualizedEmoticonGrid({
 
   const handleTooltipShow = useCallback(
     (item: EmoticonItem, trigger: HTMLButtonElement) => {
+      if (isTouchInput) {
+        setTooltip(null)
+        return
+      }
+
       const rect = trigger.getBoundingClientRect()
 
       setTooltip({
@@ -1588,7 +1616,7 @@ function VirtualizedEmoticonGrid({
         y: Math.max(12, rect.top - 10),
       })
     },
-    []
+    [isTouchInput]
   )
 
   const handleTooltipHide = useCallback((itemId: string) => {
@@ -1711,6 +1739,7 @@ function VirtualizedEmoticonGrid({
                     item={item}
                     collectionId={collectionId}
                     imageLoading={isNearViewport ? 'eager' : 'lazy'}
+                    isTouchInput={isTouchInput}
                     isSelected={selectedItemId === item.id}
                     onSelect={onSelect}
                     onTooltipHide={handleTooltipHide}
@@ -2257,6 +2286,7 @@ export function EmoticonStoragePage() {
       <section
         ref={pageShellRef}
         data-emoticon-page-shell=""
+        data-emoticon-viewport-contract="dynamic-safe-area"
         className={EMOTICON_PAGE_SHELL_CLASS_NAME}
       >
         <div
@@ -2267,7 +2297,7 @@ export function EmoticonStoragePage() {
             <div
               role="tablist"
               aria-label="이모티콘 종류"
-              className="mb-3 flex flex-wrap items-end gap-x-2 gap-y-1.5 sm:mb-4 sm:gap-x-3 sm:gap-y-2 md:mb-6 md:gap-x-5"
+              className="mb-3 flex flex-wrap items-end gap-x-5 gap-y-1.5 sm:mb-4 sm:gap-x-6 sm:gap-y-2 md:mb-6 md:gap-x-7"
             >
               {manifest?.collections.map((collection) => {
                 const isActive = collection.id === activeCollectionId

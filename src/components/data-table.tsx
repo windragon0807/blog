@@ -33,7 +33,7 @@ export function DataTable<T extends Record<string, string | number>>({
     return (
       <div
         className={cn(
-          'w-full overflow-hidden rounded-[34px] text-left text-white',
+          'w-full overflow-visible rounded-[34px] text-left text-white sm:overflow-hidden',
           className
         )}
       >
@@ -85,7 +85,7 @@ export function DataTable<T extends Record<string, string | number>>({
   return (
     <div
       className={cn(
-        'w-full overflow-hidden rounded-[28px] text-left',
+        'w-full overflow-visible rounded-[28px] text-left sm:overflow-hidden',
         'bg-zinc-100 p-2 dark:bg-zinc-900/60',
         className
       )}
@@ -151,7 +151,7 @@ function DataTableMobileCards<T extends Record<string, string | number>>({
   return (
     <div
       data-data-table-mobile-list=""
-      className="space-y-2 sm:hidden"
+      className="space-y-3 px-px py-px sm:hidden"
     >
       {rows.map((row, rowIndex) => (
         <article

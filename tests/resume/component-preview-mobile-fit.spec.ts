@@ -79,6 +79,28 @@ test.describe('component preview mobile fit', () => {
     await expect(page.locator('#props [data-data-table-mobile-list]').first()).toBeVisible()
     await expect(page.locator('#props table').first()).toBeHidden()
     await expectNoHorizontalPageOverflow(page)
+
+    const propsTableMetrics = await page.locator('#props .component-props-table').evaluate(
+      (tableShell) => {
+        const shellRect = tableShell.getBoundingClientRect()
+        const firstCard = tableShell.querySelector<HTMLElement>(
+          '[data-data-table-mobile-list] article'
+        )
+        const firstCardRect = firstCard?.getBoundingClientRect()
+
+        return {
+          cardLeftInset: firstCardRect ? firstCardRect.left - shellRect.left : 0,
+          cardRightInset: firstCardRect
+            ? shellRect.right - firstCardRect.right
+            : 0,
+          overflow: getComputedStyle(tableShell).overflow,
+        }
+      }
+    )
+
+    expect(propsTableMetrics.overflow).toBe('visible')
+    expect(propsTableMetrics.cardLeftInset).toBeGreaterThanOrEqual(1)
+    expect(propsTableMetrics.cardRightInset).toBeGreaterThanOrEqual(1)
   })
 
   test('rotating word flip stays on one line on mobile', async ({ page }) => {
