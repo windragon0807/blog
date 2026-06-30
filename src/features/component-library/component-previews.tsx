@@ -20,7 +20,6 @@ import { ThreeDImageCarousel } from '@/components/3d-image-carousel'
 import { ThreeDMarquee } from '@/components/3d-marquee'
 import { AnimatedCircularProgressBar } from '@/components/animated-circular-progress-bar'
 import { AuroraText } from '@/components/aurora-text'
-import { AvatarGroup } from '@/components/avatar-group'
 import { BackgroundBoxes } from '@/components/background-boxes'
 import { BubbleCursor } from '@/components/bubble-cursor'
 import { CanvasCursor } from '@/components/canvas-cursor'
@@ -67,7 +66,7 @@ import { ToggleTheme } from '@/components/toggle-theme'
 import { TypingAnimation } from '@/components/typing-animation'
 import { VideoText } from '@/components/video-text'
 import { cn } from '@/lib/utils'
-import type { ComponentSample } from './component-data'
+import type { ComponentPreviewKind, ComponentSample } from './component-data'
 
 type PreviewMode = 'interactive' | 'thumbnail'
 
@@ -251,38 +250,6 @@ const previewImages = [
     alt: 'Desk',
   },
 ]
-const avatarItems = [
-  {
-    src: 'https://pbs.twimg.com/profile_images/1948770261848756224/oPwqXMD6_400x400.jpg',
-    name: 'Skyleen',
-    fallback: 'SK',
-  },
-  {
-    src: 'https://pbs.twimg.com/profile_images/1593304942210478080/TUYae5z7_400x400.jpg',
-    name: 'Shadcn',
-    fallback: 'CN',
-  },
-  {
-    src: 'https://pbs.twimg.com/profile_images/1677042510839857154/Kq4tpySA_400x400.jpg',
-    name: 'Adam Wathan',
-    fallback: 'AW',
-  },
-  {
-    src: 'https://pbs.twimg.com/profile_images/1783856060249595904/8TfcCN0r_400x400.jpg',
-    name: 'Guillermo Rauch',
-    fallback: 'GR',
-  },
-  {
-    src: 'https://pbs.twimg.com/profile_images/1534700564810018816/anAuSfkp_400x400.jpg',
-    name: 'Jhey',
-    fallback: 'JH',
-  },
-  {
-    src: 'https://pbs.twimg.com/profile_images/1927474594102784000/Al0g-I6o_400x400.jpg',
-    name: 'David Haz',
-    fallback: 'DH',
-  },
-]
 const actionItems = [
   { label: 'Edit', icon: <PenLine className="h-4 w-4" /> },
   { label: 'Copy', icon: <Copy className="h-4 w-4" /> },
@@ -385,37 +352,126 @@ function useUserFontFamily() {
   return userFontFamily
 }
 
-function BackgroundBoxesPreview() {
+function useDesktopPreviewAvailable() {
+  const [isAvailable, setIsAvailable] = useState(false)
+
+  useEffect(() => {
+    const query = window.matchMedia(
+      '(min-width: 768px) and (hover: hover) and (pointer: fine)'
+    )
+    const sync = () => setIsAvailable(query.matches)
+
+    sync()
+    query.addEventListener('change', sync)
+
+    return () => query.removeEventListener('change', sync)
+  }, [])
+
+  return isAvailable
+}
+
+function MobileUnavailablePreview({
+  slug,
+  title,
+  subtitle = 'desktop pointer preview',
+  accentClassName = 'bg-[radial-gradient(circle_at_center,rgba(148,163,184,0.22),transparent_58%)]',
+}: {
+  slug: ComponentPreviewKind
+  title: string
+  subtitle?: string
+  accentClassName?: string
+}) {
   return (
     <PreviewDemoSurface
-      label="ambient background"
+      label="desktop only"
+      title={title}
+      subtitle={subtitle}
+      accentClassName={accentClassName}
+    >
+      <div
+        data-mobile-preview-unavailable={slug}
+        className="rounded-full border border-white/12 bg-white/[0.07] px-4 py-2 text-xs font-medium text-white/62 shadow-[0_18px_60px_-38px_rgba(255,255,255,0.32)] backdrop-blur-md sm:text-sm"
+      >
+        Desktop preview
+      </div>
+    </PreviewDemoSurface>
+  )
+}
+
+function DesktopOnlyPreview({
+  slug,
+  title,
+  subtitle,
+  accentClassName,
+  children,
+}: {
+  slug: ComponentPreviewKind
+  title: string
+  subtitle?: string
+  accentClassName?: string
+  children: ReactNode
+}) {
+  const isDesktopPreviewAvailable = useDesktopPreviewAvailable()
+
+  if (!isDesktopPreviewAvailable) {
+    return (
+      <MobileUnavailablePreview
+        slug={slug}
+        title={title}
+        subtitle={subtitle}
+        accentClassName={accentClassName}
+      />
+    )
+  }
+
+  return children
+}
+
+function BackgroundBoxesPreview() {
+  return (
+    <DesktopOnlyPreview
+      slug="background-boxes"
       title="Hover Grid Background"
-      subtitle="move across the grid"
+      subtitle="desktop hover preview"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.24),transparent_58%)]"
-      overlay={
-        <>
-          <BackgroundBoxes />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,rgba(10,10,15,0.92)_76%)]" />
-        </>
-      }
-    />
+    >
+      <PreviewDemoSurface
+        label="ambient background"
+        title="Hover Grid Background"
+        subtitle="move across the grid"
+        accentClassName="bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.24),transparent_58%)]"
+        overlay={
+          <>
+            <BackgroundBoxes />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,rgba(10,10,15,0.92)_76%)]" />
+          </>
+        }
+      />
+    </DesktopOnlyPreview>
   )
 }
 
 function KeyboardPreview() {
   return (
-    <PreviewDemoSurface
-      label="action control"
+    <DesktopOnlyPreview
+      slug="keyboard"
       title="Interactive Keyboard"
-      subtitle="press keys or click keycaps"
+      subtitle="desktop keyboard preview"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.24),transparent_55%)]"
-      className="min-h-[44rem]"
-      headingClassName="-translate-y-10 md:-translate-y-12"
-      contentGapClassName="mt-3"
-      contentClassName="max-w-5xl"
     >
-      <Keyboard showPreview className="scale-[1.35] md:scale-[1.55]" />
-    </PreviewDemoSurface>
+      <PreviewDemoSurface
+        label="action control"
+        title="Interactive Keyboard"
+        subtitle="press keys or click keycaps"
+        accentClassName="bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.24),transparent_55%)]"
+        className="min-h-[44rem]"
+        headingClassName="-translate-y-10 md:-translate-y-12"
+        contentGapClassName="mt-3"
+        contentClassName="max-w-5xl"
+      >
+        <Keyboard showPreview className="scale-[1.35] md:scale-[1.55]" />
+      </PreviewDemoSurface>
+    </DesktopOnlyPreview>
   )
 }
 
@@ -447,33 +503,19 @@ function ThreeDMarqueePreview() {
       title="Perspective Image Marquee"
       subtitle="perspective image strips"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.22),transparent_58%)]"
-      className="min-h-[38rem]"
+      className="min-h-[30rem] sm:min-h-[34rem] md:min-h-[38rem]"
       overlay={
         <>
           <div className="absolute inset-0 opacity-55">
             <ThreeDMarquee
               images={marqueeImages}
-              className="h-full rounded-[inherit]"
+              className="h-full max-sm:h-full rounded-[inherit]"
             />
           </div>
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(10,10,15,0.34),rgba(10,10,15,0.92)_78%)]" />
         </>
       }
     />
-  )
-}
-
-function AvatarGroupPreview() {
-  return (
-    <PreviewDemoSurface
-      label="content display"
-      title="Hover Avatar Group"
-      subtitle="compact people stack"
-      accentClassName="bg-[radial-gradient(circle_at_center,rgba(244,114,182,0.24),transparent_55%)]"
-      contentGapClassName="mt-16"
-    >
-      <AvatarGroup items={avatarItems} className="translate-y-7" />
-    </PreviewDemoSurface>
   )
 }
 
@@ -515,8 +557,8 @@ function TextFlipPreview() {
           prefix="Coding is"
           words={['fantastic', 'love', 'fire', 'awesome']}
           wordColors={textFlipColors}
-          className="mx-auto gap-2 justify-center text-center [&>span:first-child]:!text-white"
-          wordClassName="w-[9ch] justify-items-start text-left"
+          className="mx-auto justify-center text-center [&>span:first-child]:!text-white"
+          wordClassName="w-[8.5ch] justify-items-start text-left sm:w-[9ch]"
         />
       }
       subtitle="flip through short words"
@@ -587,16 +629,23 @@ function ThreeDImageCarouselPreview() {
 
 function SparkleCursorPreview() {
   return (
-    <OuterEffectSurface className="p-0">
-      <SparkleCursor className="block w-full">
-        <PreviewDemoSurface
-          label="cursor effect"
-          title="Sparkle Cursor Trail"
-          subtitle="move to scatter sparkles"
-          accentClassName="bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.28),transparent_55%)]"
-        />
-      </SparkleCursor>
-    </OuterEffectSurface>
+    <DesktopOnlyPreview
+      slug="sparkle-cursor"
+      title="Sparkle Cursor Trail"
+      subtitle="desktop pointer preview"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.28),transparent_55%)]"
+    >
+      <OuterEffectSurface className="p-0">
+        <SparkleCursor className="block w-full">
+          <PreviewDemoSurface
+            label="cursor effect"
+            title="Sparkle Cursor Trail"
+            subtitle="move to scatter sparkles"
+            accentClassName="bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.28),transparent_55%)]"
+          />
+        </SparkleCursor>
+      </OuterEffectSurface>
+    </DesktopOnlyPreview>
   )
 }
 
@@ -727,42 +776,56 @@ function PreviewDemoSurface({
 
 function MouseInvertCursorPreview({ mode }: { mode: PreviewMode }) {
   return (
-    <OuterEffectSurface className="p-0">
-      <MouseInvertCursor
-        size={50}
-        smoothness={0.08}
-        disabled={mode === 'thumbnail'}
-      >
-        <PreviewDemoSurface
-          label="cursor effect"
-          title="Invert"
-          subtitle="move to invert the surface"
-          accentClassName="bg-[radial-gradient(circle_at_center,rgba(244,63,94,0.34),transparent_55%)]"
-        />
-      </MouseInvertCursor>
-    </OuterEffectSurface>
+    <DesktopOnlyPreview
+      slug="mouse-invert-cursor"
+      title="Invert Cursor"
+      subtitle="desktop pointer preview"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(244,63,94,0.34),transparent_55%)]"
+    >
+      <OuterEffectSurface className="p-0">
+        <MouseInvertCursor
+          size={50}
+          smoothness={0.08}
+          disabled={mode === 'thumbnail'}
+        >
+          <PreviewDemoSurface
+            label="cursor effect"
+            title="Invert"
+            subtitle="move to invert the surface"
+            accentClassName="bg-[radial-gradient(circle_at_center,rgba(244,63,94,0.34),transparent_55%)]"
+          />
+        </MouseInvertCursor>
+      </OuterEffectSurface>
+    </DesktopOnlyPreview>
   )
 }
 
 function MouseTrailCursorPreview({ mode }: { mode: PreviewMode }) {
   return (
-    <OuterEffectSurface className="p-0">
-      <MouseTrailCursor
-        color="#c084fc"
-        size={5}
-        length={20}
-        decay={0.05}
-        blur={0}
-        disabled={mode === 'thumbnail'}
-      >
-        <PreviewDemoSurface
-          label="cursor effect"
-          title="Trail"
-          subtitle="fading dots follow your cursor"
-          accentClassName="bg-[radial-gradient(circle_at_center,rgba(192,132,252,0.32),transparent_55%)]"
-        />
-      </MouseTrailCursor>
-    </OuterEffectSurface>
+    <DesktopOnlyPreview
+      slug="mouse-trail-cursor"
+      title="Dot Cursor Trail"
+      subtitle="desktop pointer preview"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(192,132,252,0.32),transparent_55%)]"
+    >
+      <OuterEffectSurface className="p-0">
+        <MouseTrailCursor
+          color="#c084fc"
+          size={5}
+          length={20}
+          decay={0.05}
+          blur={0}
+          disabled={mode === 'thumbnail'}
+        >
+          <PreviewDemoSurface
+            label="cursor effect"
+            title="Trail"
+            subtitle="fading dots follow your cursor"
+            accentClassName="bg-[radial-gradient(circle_at_center,rgba(192,132,252,0.32),transparent_55%)]"
+          />
+        </MouseTrailCursor>
+      </OuterEffectSurface>
+    </DesktopOnlyPreview>
   )
 }
 
@@ -788,83 +851,118 @@ function MouseRippleCursorPreview({ mode }: { mode: PreviewMode }) {
 
 function MouseCustomCursorPreview({ mode }: { mode: PreviewMode }) {
   return (
-    <OuterEffectSurface className="p-0">
-      <MouseCustomCursor
-        innerSize={6}
-        outerSize={36}
-        innerColor="#34d399"
-        outerColor="rgba(52,211,153,0.3)"
-        smoothness={0.15}
-        disabled={mode === 'thumbnail'}
-      >
-        <PreviewDemoSurface
-          label="cursor effect"
-          title="Custom Cursor"
-          subtitle="dot + ring following your cursor"
-          accentClassName="bg-[radial-gradient(circle_at_center,rgba(52,211,153,0.3),transparent_55%)]"
-        />
-      </MouseCustomCursor>
-    </OuterEffectSurface>
+    <DesktopOnlyPreview
+      slug="mouse-custom-cursor"
+      title="Ring Cursor"
+      subtitle="desktop pointer preview"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(52,211,153,0.3),transparent_55%)]"
+    >
+      <OuterEffectSurface className="p-0">
+        <MouseCustomCursor
+          innerSize={6}
+          outerSize={36}
+          innerColor="#34d399"
+          outerColor="rgba(52,211,153,0.3)"
+          smoothness={0.15}
+          disabled={mode === 'thumbnail'}
+        >
+          <PreviewDemoSurface
+            label="cursor effect"
+            title="Custom Cursor"
+            subtitle="dot + ring following your cursor"
+            accentClassName="bg-[radial-gradient(circle_at_center,rgba(52,211,153,0.3),transparent_55%)]"
+          />
+        </MouseCustomCursor>
+      </OuterEffectSurface>
+    </DesktopOnlyPreview>
   )
 }
 
 function FairyDustCursorPreview({ mode }: { mode: PreviewMode }) {
   return (
-    <OuterEffectSurface className="p-0">
-      <FairyDustCursor disabled={mode === 'thumbnail'}>
-        <PreviewDemoSurface
-          label="cursor effect"
-          title="Fairy Dust"
-          subtitle="stardust follows your cursor"
-          accentClassName="bg-[radial-gradient(circle_at_center,rgba(231,216,75,0.28),transparent_55%)]"
-        />
-      </FairyDustCursor>
-    </OuterEffectSurface>
+    <DesktopOnlyPreview
+      slug="fairy-dust-cursor"
+      title="Star Particle Cursor"
+      subtitle="desktop pointer preview"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(231,216,75,0.28),transparent_55%)]"
+    >
+      <OuterEffectSurface className="p-0">
+        <FairyDustCursor disabled={mode === 'thumbnail'}>
+          <PreviewDemoSurface
+            label="cursor effect"
+            title="Fairy Dust"
+            subtitle="stardust follows your cursor"
+            accentClassName="bg-[radial-gradient(circle_at_center,rgba(231,216,75,0.28),transparent_55%)]"
+          />
+        </FairyDustCursor>
+      </OuterEffectSurface>
+    </DesktopOnlyPreview>
   )
 }
 
 function BubbleCursorPreview({ mode }: { mode: PreviewMode }) {
   return (
-    <OuterEffectSurface className="p-0">
-      <BubbleCursor disabled={mode === 'thumbnail'}>
-        <PreviewDemoSurface
-          label="cursor effect"
-          title="Bubbles"
-          subtitle="move to float bubbles"
-          accentClassName="bg-[radial-gradient(circle_at_center,rgba(58,146,197,0.32),transparent_55%)]"
-        />
-      </BubbleCursor>
-    </OuterEffectSurface>
+    <DesktopOnlyPreview
+      slug="bubble-cursor"
+      title="Bubble Cursor Trail"
+      subtitle="desktop pointer preview"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(58,146,197,0.32),transparent_55%)]"
+    >
+      <OuterEffectSurface className="p-0">
+        <BubbleCursor disabled={mode === 'thumbnail'}>
+          <PreviewDemoSurface
+            label="cursor effect"
+            title="Bubbles"
+            subtitle="move to float bubbles"
+            accentClassName="bg-[radial-gradient(circle_at_center,rgba(58,146,197,0.32),transparent_55%)]"
+          />
+        </BubbleCursor>
+      </OuterEffectSurface>
+    </DesktopOnlyPreview>
   )
 }
 
 function CharacterCursorPreview({ mode }: { mode: PreviewMode }) {
   return (
-    <OuterEffectSurface className="p-0">
-      <CharacterCursor disabled={mode === 'thumbnail'}>
-        <PreviewDemoSurface
-          label="cursor effect"
-          title="Characters"
-          subtitle="characters under your control"
-          accentClassName="bg-[radial-gradient(circle_at_center,rgba(167,85,194,0.3),transparent_55%)]"
-        />
-      </CharacterCursor>
-    </OuterEffectSurface>
+    <DesktopOnlyPreview
+      slug="character-cursor"
+      title="Character Particle Cursor"
+      subtitle="desktop pointer preview"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(167,85,194,0.3),transparent_55%)]"
+    >
+      <OuterEffectSurface className="p-0">
+        <CharacterCursor disabled={mode === 'thumbnail'}>
+          <PreviewDemoSurface
+            label="cursor effect"
+            title="Characters"
+            subtitle="characters under your control"
+            accentClassName="bg-[radial-gradient(circle_at_center,rgba(167,85,194,0.3),transparent_55%)]"
+          />
+        </CharacterCursor>
+      </OuterEffectSurface>
+    </DesktopOnlyPreview>
   )
 }
 
 function CanvasCursorPreview({ mode }: { mode: PreviewMode }) {
   return (
-    <OuterEffectSurface className="p-0">
-      <CanvasCursor disabled={mode === 'thumbnail'}>
-        <PreviewDemoSurface
-          label="cursor effect"
-          title="Spring Line Cursor"
-          subtitle="spring lines follow your cursor"
-          accentClassName="bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.28),transparent_55%)]"
-        />
-      </CanvasCursor>
-    </OuterEffectSurface>
+    <DesktopOnlyPreview
+      slug="canvas-cursor"
+      title="Spring Line Cursor"
+      subtitle="desktop pointer preview"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.28),transparent_55%)]"
+    >
+      <OuterEffectSurface className="p-0">
+        <CanvasCursor disabled={mode === 'thumbnail'}>
+          <PreviewDemoSurface
+            label="cursor effect"
+            title="Spring Line Cursor"
+            subtitle="spring lines follow your cursor"
+            accentClassName="bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.28),transparent_55%)]"
+          />
+        </CanvasCursor>
+      </OuterEffectSurface>
+    </DesktopOnlyPreview>
   )
 }
 
@@ -1037,22 +1135,29 @@ function ClickSparkPreview() {
 
 function MagnetPreview() {
   return (
-    <OuterEffectSurface className="p-0">
-      <PreviewDemoSurface
-        label="interaction effect"
-        title="Magnetic Hover"
-        subtitle="move near the chip"
-        accentClassName="bg-[radial-gradient(circle_at_center,rgba(52,211,153,0.28),transparent_55%)]"
-      >
-        <Magnet padding={90} magnetStrength={3}>
-          <div
-            className="rounded-full border border-white/10 bg-white/[0.08] px-7 py-4 text-sm font-semibold text-white shadow-[0_24px_90px_-52px_rgba(255,255,255,0.34)] backdrop-blur transition-colors hover:bg-white/[0.12]"
-          >
-            Magnet
-          </div>
-        </Magnet>
-      </PreviewDemoSurface>
-    </OuterEffectSurface>
+    <DesktopOnlyPreview
+      slug="magnet"
+      title="Magnetic Hover"
+      subtitle="desktop pointer preview"
+      accentClassName="bg-[radial-gradient(circle_at_center,rgba(52,211,153,0.28),transparent_55%)]"
+    >
+      <OuterEffectSurface className="p-0">
+        <PreviewDemoSurface
+          label="interaction effect"
+          title="Magnetic Hover"
+          subtitle="move near the chip"
+          accentClassName="bg-[radial-gradient(circle_at_center,rgba(52,211,153,0.28),transparent_55%)]"
+        >
+          <Magnet padding={90} magnetStrength={3}>
+            <div
+              className="rounded-full border border-white/10 bg-white/[0.08] px-7 py-4 text-sm font-semibold text-white shadow-[0_24px_90px_-52px_rgba(255,255,255,0.34)] backdrop-blur transition-colors hover:bg-white/[0.12]"
+            >
+              Magnet
+            </div>
+          </Magnet>
+        </PreviewDemoSurface>
+      </OuterEffectSurface>
+    </DesktopOnlyPreview>
   )
 }
 
@@ -1276,43 +1381,50 @@ function PointerTile({
 
 function PointerPreview() {
   return (
-    <PreviewDemoSurface
-      label="cursor effect"
+    <DesktopOnlyPreview
+      slug="pointer"
       title="Hover Pointer"
-      subtitle="custom pointer shapes"
+      subtitle="desktop pointer preview"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(244,114,182,0.24),transparent_55%)]"
-      contentClassName="max-w-3xl"
     >
-      <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
-        <PointerTile title="Animated Pointer" description="Animated pointer">
-          <Pointer>
-            <HeartPointer />
-          </Pointer>
-        </PointerTile>
-        <PointerTile title="Colored Pointer" description="Custom color">
-          <Pointer className="fill-blue-500" />
-        </PointerTile>
-        <PointerTile title="Custom Shape" description="Custom SVG shape">
-          <Pointer>
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle cx="12" cy="12" r="10" className="fill-purple-500" />
-              <circle cx="12" cy="12" r="5" className="fill-background" />
-            </svg>
-          </Pointer>
-        </PointerTile>
-        <PointerTile title="Text Pointer" description="Custom text">
-          <Pointer>
-            <div className="text-lg font-semibold text-rose-500">Click</div>
-          </Pointer>
-        </PointerTile>
-      </div>
-    </PreviewDemoSurface>
+      <PreviewDemoSurface
+        label="cursor effect"
+        title="Hover Pointer"
+        subtitle="custom pointer shapes"
+        accentClassName="bg-[radial-gradient(circle_at_center,rgba(244,114,182,0.24),transparent_55%)]"
+        contentClassName="max-w-3xl"
+      >
+        <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
+          <PointerTile title="Animated Pointer" description="Animated pointer">
+            <Pointer>
+              <HeartPointer />
+            </Pointer>
+          </PointerTile>
+          <PointerTile title="Colored Pointer" description="Custom color">
+            <Pointer className="fill-blue-500" />
+          </PointerTile>
+          <PointerTile title="Custom Shape" description="Custom SVG shape">
+            <Pointer>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle cx="12" cy="12" r="10" className="fill-purple-500" />
+                <circle cx="12" cy="12" r="5" className="fill-background" />
+              </svg>
+            </Pointer>
+          </PointerTile>
+          <PointerTile title="Text Pointer" description="Custom text">
+            <Pointer>
+              <div className="text-lg font-semibold text-rose-500">Click</div>
+            </Pointer>
+          </PointerTile>
+        </div>
+      </PreviewDemoSurface>
+    </DesktopOnlyPreview>
   )
 }
 
@@ -1593,8 +1705,6 @@ function BasePreviewContent({
       return <PlaceholdersAndVanishInputPreview />
     case '3d-marquee':
       return <ThreeDMarqueePreview />
-    case 'avatar-group':
-      return <AvatarGroupPreview />
     case 'playful-todolist':
       return <PlayfulTodoListPreview />
     case 'flower-menu':

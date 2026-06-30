@@ -14,7 +14,11 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { componentCategories, componentSamples } from './component-data'
+import {
+  componentCategories,
+  componentSamples,
+  isComponentHiddenOnMobile,
+} from './component-data'
 
 const baseLinkClass =
   'relative isolate block rounded-lg border border-transparent px-3 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-950 dark:focus-visible:outline-zinc-50'
@@ -121,10 +125,19 @@ function ComponentSidebarContent({
   const isIntroActive = pathname === '/components'
   const [componentSearchQuery, setComponentSearchQuery] = useState('')
   const normalizedSearchQuery = normalizeSearchValue(componentSearchQuery)
+  const visibleSamples = useMemo(
+    () =>
+      layoutScope === 'mobile'
+        ? componentSamples.filter(
+            (sample) => !isComponentHiddenOnMobile(sample.slug)
+          )
+        : componentSamples,
+    [layoutScope]
+  )
   const filteredSamples = useMemo(() => {
-    if (!normalizedSearchQuery) return componentSamples
+    if (!normalizedSearchQuery) return visibleSamples
 
-    return componentSamples.filter((sample) => {
+    return visibleSamples.filter((sample) => {
       const categoryName =
         componentCategories.find((category) => category.id === sample.categoryId)
           ?.name ?? ''
@@ -139,7 +152,7 @@ function ComponentSidebarContent({
 
       return searchableText.includes(normalizedSearchQuery)
     })
-  }, [normalizedSearchQuery])
+  }, [normalizedSearchQuery, visibleSamples])
   const showIntroLink =
     !normalizedSearchQuery ||
     'introduction 소개 인트로'.includes(normalizedSearchQuery)
@@ -240,12 +253,12 @@ export function ComponentMobileSidebarTrigger() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <div className="mb-4 flex justify-end lg:hidden">
+      <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-[60] lg:hidden">
         <DialogTrigger asChild>
           <button
             type="button"
             data-component-mobile-menu-trigger=""
-            className="inline-grid h-11 w-11 place-items-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-[0_16px_32px_-24px_rgba(24,24,27,0.5)] transition-colors hover:bg-zinc-50 hover:text-zinc-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-950 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900 dark:hover:text-zinc-50 dark:focus-visible:outline-zinc-50"
+            className="inline-grid h-12 w-12 place-items-center rounded-full border border-zinc-200 bg-white/94 text-zinc-600 shadow-[0_18px_44px_-24px_rgba(24,24,27,0.62)] backdrop-blur-xl transition-colors hover:bg-white hover:text-zinc-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-950 dark:border-zinc-800/90 dark:bg-zinc-950/92 dark:text-zinc-300 dark:hover:bg-zinc-900 dark:hover:text-zinc-50 dark:focus-visible:outline-zinc-50"
             aria-label="컴포넌트 메뉴 열기"
           >
             <Menu className="h-5 w-5" aria-hidden="true" />

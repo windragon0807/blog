@@ -15,13 +15,12 @@ test('component page opens an animated bottom sheet navigation on mobile', async
 
   const trigger = page.getByRole('button', { name: '컴포넌트 메뉴 열기' })
   const triggerBox = await trigger.boundingBox()
-  const headerBox = await page.locator('header.header-sticky').boundingBox()
-  const componentMenuGap =
-    (triggerBox?.y ?? 0) - ((headerBox?.y ?? 0) + (headerBox?.height ?? 0))
 
   expect(triggerBox?.width).toBeLessThanOrEqual(64)
-  expect(componentMenuGap).toBeGreaterThanOrEqual(16)
-  expect(componentMenuGap).toBeLessThanOrEqual(32)
+  expect(390 - ((triggerBox?.x ?? 0) + (triggerBox?.width ?? 0))).toBeGreaterThanOrEqual(12)
+  expect(390 - ((triggerBox?.x ?? 0) + (triggerBox?.width ?? 0))).toBeLessThanOrEqual(28)
+  expect(844 - ((triggerBox?.y ?? 0) + (triggerBox?.height ?? 0))).toBeGreaterThanOrEqual(12)
+  expect(844 - ((triggerBox?.y ?? 0) + (triggerBox?.height ?? 0))).toBeLessThanOrEqual(32)
 
   await trigger.click()
 
@@ -92,6 +91,37 @@ test('header renders centered icon controls with GitHub link', async ({ page }) 
   expect(
     Math.abs(((mobileHeaderBox?.x ?? 0) + (mobileHeaderBox?.width ?? 0) / 2) - 195)
   ).toBeLessThan(4)
+})
+
+test('mobile header app and settings panels open centered below the header', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/components')
+
+  const headerBox = await page.locator('header.header-sticky').boundingBox()
+  expect(headerBox).not.toBeNull()
+  const headerBottom = (headerBox?.y ?? 0) + (headerBox?.height ?? 0)
+
+  async function expectPanelBelowHeader(panel: ReturnType<typeof page.getByLabel>) {
+    await expect(panel).toBeVisible()
+    const panelBox = await panel.boundingBox()
+    expect(panelBox).not.toBeNull()
+    expect(
+      Math.abs(((panelBox?.x ?? 0) + (panelBox?.width ?? 0) / 2) - 195)
+    ).toBeLessThanOrEqual(4)
+    expect(panelBox?.y ?? 0).toBeGreaterThanOrEqual(headerBottom + 6)
+    expect(panelBox?.y ?? 0).toBeLessThanOrEqual(headerBottom + 48)
+  }
+
+  await page.getByRole('button', { name: '애플리케이션 메뉴 열기' }).click()
+  const appPanel = page.getByLabel('애플리케이션 패널')
+  await expectPanelBelowHeader(appPanel)
+
+  await page.keyboard.press('Escape')
+  await page.getByRole('button', { name: '환경설정 열기' }).click()
+  const settingsPanel = page.getByLabel('환경설정 패널')
+  await expectPanelBelowHeader(settingsPanel)
 })
 
 test('desktop component sidebar keeps active text above the moving indicator', async ({ page }) => {
@@ -226,29 +256,11 @@ test('component dark mode keeps search and installation surfaces integrated', as
   expect(metrics.installShellNearBlack, metrics.installShellColor).toBe(false)
 })
 
-test('scroll shortcut stays fixed at the bottom center on mobile', async ({ page }) => {
+test('scroll shortcut is removed on mobile', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/components/shiny-button')
 
-  const shortcut = page.getByRole('button', { name: '맨 위로 이동' })
-  await expect(shortcut).toBeVisible()
-
-  const initialBox = await shortcut.boundingBox()
-  expect(initialBox).not.toBeNull()
-  expect(
-    Math.abs(((initialBox?.x ?? 0) + (initialBox?.width ?? 0) / 2) - 195)
-  ).toBeLessThanOrEqual(3)
-  expect(844 - ((initialBox?.y ?? 0) + (initialBox?.height ?? 0))).toBeGreaterThanOrEqual(16)
-  expect(844 - ((initialBox?.y ?? 0) + (initialBox?.height ?? 0))).toBeLessThanOrEqual(40)
-
-  await page.mouse.wheel(0, 900)
-
-  const scrolledBox = await shortcut.boundingBox()
-  expect(scrolledBox).not.toBeNull()
-  expect(
-    Math.abs(((scrolledBox?.x ?? 0) + (scrolledBox?.width ?? 0) / 2) - 195)
-  ).toBeLessThanOrEqual(3)
-  expect(Math.abs((scrolledBox?.y ?? 0) - (initialBox?.y ?? 0))).toBeLessThanOrEqual(2)
+  await expect(page.getByRole('button', { name: '맨 위로 이동' })).toHaveCount(0)
 })
 
 test('scroll shortcut is hidden on desktop', async ({ page }) => {

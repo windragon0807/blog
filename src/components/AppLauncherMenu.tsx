@@ -44,6 +44,7 @@ export function AppLauncherMenu() {
         align="end"
         sideOffset={9}
         aria-label="애플리케이션 패널"
+        data-mobile-center-popover=""
         className="settings-popover w-[min(92vw,20rem)] rounded-2xl border-zinc-200/90 bg-white/95 p-3 shadow-[0_24px_60px_-30px_rgba(20,20,30,0.55)] backdrop-blur-xl dark:border-zinc-700/80 dark:bg-zinc-900/95"
       >
         <p className="px-1 text-[11px] font-semibold tracking-[0.1em] text-zinc-500 dark:text-zinc-400">

@@ -47,7 +47,7 @@ const PREFETCH_CHUNK_SIZE = 8
 const BACKGROUND_PREFETCH_CHUNK_SIZE = 8
 const EAGER_ROW_BUFFER = 1
 const EMOTICON_PAGE_SHELL_CLASS_NAME =
-  'fixed inset-x-0 bottom-0 top-[6.5rem] flex flex-col overflow-hidden pb-3 sm:top-20 sm:pb-4'
+  'fixed inset-0 flex h-[100dvh] flex-col overflow-hidden pb-3 pt-[6.5rem] sm:pb-4 sm:pt-20'
 const EMOTICON_CONTENT_CLASS_NAME =
   'mx-auto w-[min(1180px,calc(100vw-3rem))] sm:w-[min(1180px,calc(100vw-2rem))]'
 const FOCUSABLE_SELECTOR = [
@@ -2254,112 +2254,115 @@ export function EmoticonStoragePage() {
 
   return (
     <>
-      <section ref={pageShellRef} className={EMOTICON_PAGE_SHELL_CLASS_NAME}>
-      <div
-        data-emoticon-sticky-header=""
-        className="z-20 shrink-0 bg-background pb-1 dark:bg-background"
+      <section
+        ref={pageShellRef}
+        data-emoticon-page-shell=""
+        className={EMOTICON_PAGE_SHELL_CLASS_NAME}
       >
-        <div className={EMOTICON_CONTENT_CLASS_NAME}>
         <div
-          role="tablist"
-          aria-label="이모티콘 종류"
-          className="mb-3 flex flex-wrap items-end gap-x-2 gap-y-1.5 sm:mb-4 sm:gap-x-3 sm:gap-y-2 md:mb-6 md:gap-x-5"
+          data-emoticon-sticky-header=""
+          className="z-20 shrink-0 bg-background pb-1 dark:bg-background"
         >
-          {manifest?.collections.map((collection) => {
-            const isActive = collection.id === activeCollectionId
-
-            return (
-              <button
-                key={collection.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                onClick={() => {
-                  setActiveCollectionId(collection.id)
-                  setActiveSubcategoryId(getDefaultSubcategory(collection.id))
-                  clearSelectedItemImmediately()
-                }}
-                className={cn(
-                  'inline-flex min-h-8 items-center gap-1.5 whitespace-nowrap rounded-xl text-[1.375rem] font-black leading-none tracking-tight transition focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/35 sm:text-2xl md:gap-2 md:text-3xl',
-                  isActive
-                    ? 'text-zinc-950 dark:text-zinc-50'
-                    : 'text-zinc-300 hover:text-zinc-500 dark:text-zinc-700 dark:hover:text-zinc-500'
-                )}
-              >
-                <CollectionLogo id={collection.id} />
-                <span>{getCollectionLabel(collection.id)}</span>
-              </button>
-            )
-          })}
-        </div>
-
-        <nav
-          aria-label="이모티콘 세부 카테고리"
-          className="-mx-1 mb-3 bg-background px-1 py-1 dark:bg-background sm:-mx-2 sm:mb-4 sm:px-2 sm:py-2"
-        >
-          <ScrollArea
-            orientation="horizontal"
-            data-emoticon-subcategory-scroll=""
-            className="w-full"
-          >
+          <div className={EMOTICON_CONTENT_CLASS_NAME}>
             <div
-              data-emoticon-subcategory-list=""
-              className="flex w-max gap-1.5 pr-1 sm:gap-2 sm:pr-2"
+              role="tablist"
+              aria-label="이모티콘 종류"
+              className="mb-3 flex flex-wrap items-end gap-x-2 gap-y-1.5 sm:mb-4 sm:gap-x-3 sm:gap-y-2 md:mb-6 md:gap-x-5"
             >
-              {subcategories.map((subcategory) => {
-                const isActive = subcategory.id === activeSubcategoryId
+              {manifest?.collections.map((collection) => {
+                const isActive = collection.id === activeCollectionId
 
                 return (
                   <button
-                    key={subcategory.id}
+                    key={collection.id}
                     type="button"
-                    aria-pressed={isActive}
+                    role="tab"
+                    aria-selected={isActive}
                     onClick={() => {
-                      setActiveSubcategoryId(subcategory.id)
+                      setActiveCollectionId(collection.id)
+                      setActiveSubcategoryId(getDefaultSubcategory(collection.id))
                       clearSelectedItemImmediately()
                     }}
                     className={cn(
-                      'inline-flex h-10 shrink-0 items-center gap-1.5 rounded-2xl px-3 text-sm font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/35 sm:h-12 sm:gap-2 sm:px-5 sm:text-base',
+                      'inline-flex min-h-8 items-center gap-1.5 whitespace-nowrap rounded-xl text-[1.375rem] font-black leading-none tracking-tight transition focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/35 sm:text-2xl md:gap-2 md:text-3xl',
                       isActive
-                        ? 'bg-zinc-100 text-zinc-950 dark:bg-zinc-900 dark:text-zinc-50'
-                        : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900/70 dark:hover:text-zinc-100'
+                        ? 'text-zinc-950 dark:text-zinc-50'
+                        : 'text-zinc-300 hover:text-zinc-500 dark:text-zinc-700 dark:hover:text-zinc-500'
                     )}
                   >
-                    {subcategory.icon ? (
-                      <span className="grid place-items-center">
-                        {subcategory.icon}
-                      </span>
-                    ) : null}
-                    <span>{subcategory.label}</span>
+                    <CollectionLogo id={collection.id} />
+                    <span>{getCollectionLabel(collection.id)}</span>
                   </button>
                 )
               })}
             </div>
-          </ScrollArea>
-        </nav>
 
-        </div>
-      </div>
+            <nav
+              aria-label="이모티콘 세부 카테고리"
+              className="-mx-1 mb-3 bg-background px-1 py-1 dark:bg-background sm:-mx-2 sm:mb-4 sm:px-2 sm:py-2"
+            >
+              <ScrollArea
+                orientation="horizontal"
+                data-emoticon-subcategory-scroll=""
+                className="w-full"
+              >
+                <div
+                  data-emoticon-subcategory-list=""
+                  className="flex w-max gap-1.5 pr-1 sm:gap-2 sm:pr-2"
+                >
+                  {subcategories.map((subcategory) => {
+                    const isActive = subcategory.id === activeSubcategoryId
 
-      <div
-        data-emoticon-grid-shell=""
-        className="relative min-h-0 flex-1 overflow-hidden"
-      >
-        {visibleItemCount > 0 && activeCollection ? (
-          <VirtualizedEmoticonGrid
-            key={`${activeCollection.id}-${activeSubcategoryId}`}
-            collectionId={activeCollection.id}
-            sections={visibleSections}
-            showSectionHeadings={showSectionHeadings}
-            selectedItemId={selectedItemId}
-            onSelect={handleSelectItem}
-          />
-        ) : (
-          <div className="grid h-full min-h-64 place-items-center rounded-2xl border border-dashed border-zinc-200 bg-white/55 text-sm font-semibold text-zinc-400 dark:border-zinc-800 dark:bg-zinc-950/45">
-            {loadError || '검색 결과가 없습니다.'}
+                    return (
+                      <button
+                        key={subcategory.id}
+                        type="button"
+                        aria-pressed={isActive}
+                        onClick={() => {
+                          setActiveSubcategoryId(subcategory.id)
+                          clearSelectedItemImmediately()
+                        }}
+                        className={cn(
+                          'inline-flex h-10 shrink-0 items-center gap-1.5 rounded-2xl px-3 text-sm font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/35 sm:h-12 sm:gap-2 sm:px-5 sm:text-base',
+                          isActive
+                            ? 'bg-zinc-100 text-zinc-950 dark:bg-zinc-900 dark:text-zinc-50'
+                            : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900/70 dark:hover:text-zinc-100'
+                        )}
+                      >
+                        {subcategory.icon ? (
+                          <span className="grid place-items-center">
+                            {subcategory.icon}
+                          </span>
+                        ) : null}
+                        <span>{subcategory.label}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </ScrollArea>
+            </nav>
           </div>
-        )}
-      </div>
+        </div>
+
+        <div
+          data-emoticon-grid-shell=""
+          className="relative min-h-0 flex-1 overflow-hidden"
+        >
+          {visibleItemCount > 0 && activeCollection ? (
+            <VirtualizedEmoticonGrid
+              key={`${activeCollection.id}-${activeSubcategoryId}`}
+              collectionId={activeCollection.id}
+              sections={visibleSections}
+              showSectionHeadings={showSectionHeadings}
+              selectedItemId={selectedItemId}
+              onSelect={handleSelectItem}
+            />
+          ) : (
+            <div className="grid h-full min-h-64 place-items-center rounded-2xl border border-dashed border-zinc-200 bg-white/55 text-sm font-semibold text-zinc-400 dark:border-zinc-800 dark:bg-zinc-950/45">
+              {loadError || '검색 결과가 없습니다.'}
+            </div>
+          )}
+        </div>
 
       {portalContainer && selectedItem
         ? createPortal(

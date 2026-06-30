@@ -128,6 +128,28 @@ function useCanAnimate(disabled = false) {
   return canAnimate
 }
 
+function useCanRunClickEffect(disabled = false) {
+  const [canRunClickEffect, setCanRunClickEffect] = useState(false)
+
+  useEffect(() => {
+    const reducedMotionQuery = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    )
+    const sync = () => {
+      setCanRunClickEffect(!disabled && !reducedMotionQuery.matches)
+    }
+
+    sync()
+    reducedMotionQuery.addEventListener('change', sync)
+
+    return () => {
+      reducedMotionQuery.removeEventListener('change', sync)
+    }
+  }, [disabled])
+
+  return canRunClickEffect
+}
+
 function useRenderActive(
   rootRef: React.RefObject<HTMLElement | null>,
   active: boolean
@@ -525,7 +547,7 @@ export function MouseRippleCursor({
   duration = 600,
   maxSize = 150,
 }: MouseRippleCursorProps) {
-  const canAnimate = useCanAnimate(disabled)
+  const canAnimate = useCanRunClickEffect(disabled)
   const rootRef = useRef<HTMLDivElement>(null)
 
   const handleClick = (event: MouseEvent<HTMLDivElement>) => {

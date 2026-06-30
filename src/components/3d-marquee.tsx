@@ -25,14 +25,14 @@ export function ThreeDMarquee({ images, items, className }: ThreeDMarqueeProps) 
   return (
     <div
       className={cn(
-        'mx-auto block h-[600px] overflow-hidden rounded-2xl bg-white max-sm:h-[25rem] dark:bg-zinc-950',
+        'mx-auto block h-[600px] overflow-hidden rounded-2xl bg-white max-sm:h-full dark:bg-zinc-950',
         className
       )}
     >
       <div className="flex size-full items-center justify-center">
-        <div className="size-[1720px] shrink-0 scale-50 sm:scale-75 lg:scale-100">
+        <div className="size-[1480px] shrink-0 scale-[0.44] sm:size-[1720px] sm:scale-75 lg:scale-100">
           <div
-            className="relative right-[50%] top-96 grid size-full origin-top-left grid-cols-4 gap-8 [transform-style:preserve-3d]"
+            className="relative right-[50%] top-80 grid size-full origin-top-left grid-cols-4 gap-5 [transform-style:preserve-3d] sm:top-96 sm:gap-8"
             style={{ transform: 'rotateX(55deg) rotateY(0deg) rotateZ(-45deg)' }}
           >
             {imageChunks.map((chunk, columnIndex) => (

@@ -35,8 +35,9 @@ export function TextFlip({
 
   return (
     <span
+      data-text-flip=""
       className={cn(
-        'box-content inline-flex items-center gap-4 text-5xl font-semibold leading-none',
+        'box-content inline-flex max-w-full flex-nowrap items-center gap-2 whitespace-nowrap text-2xl font-semibold leading-none sm:gap-4 sm:text-4xl md:text-5xl',
         className
       )}
     >

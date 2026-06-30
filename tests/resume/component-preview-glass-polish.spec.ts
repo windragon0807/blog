@@ -563,6 +563,50 @@ test.describe('component preview glass polish', () => {
     await assertNoErrors()
   })
 
+  test('component preview frame follows compact mobile preview height', async ({
+    page,
+  }) => {
+    const assertNoErrors = await expectNoConsoleErrors(page)
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/components/placeholders-and-vanish-input')
+
+    const frame = page.locator('[data-component-preview-frame]').first()
+    const surface = page.locator('[data-preview-demo-surface]').first()
+    await expect(frame).toBeVisible()
+    await expect(surface).toBeVisible()
+
+    const frameMetrics = await frame.evaluate((element) => {
+      const inner = element.querySelector<HTMLElement>(
+        '[data-component-preview-frame-inner]'
+      )
+      const surface = element.querySelector<HTMLElement>(
+        '[data-preview-demo-surface]'
+      )
+      const frameRect = element.getBoundingClientRect()
+      const surfaceRect = surface?.getBoundingClientRect()
+      const frameStyle = getComputedStyle(element)
+      const innerStyle = inner ? getComputedStyle(inner) : null
+      const surfaceStyle = surface ? getComputedStyle(surface) : null
+
+      return {
+        frameHeight: frameRect.height,
+        frameMinHeight: Number.parseFloat(frameStyle.minHeight),
+        innerMinHeight: Number.parseFloat(innerStyle?.minHeight ?? '0'),
+        surfaceHeight: surfaceRect?.height ?? 0,
+        surfaceMinHeight: Number.parseFloat(surfaceStyle?.minHeight ?? '0'),
+      }
+    })
+
+    expect(frameMetrics.frameMinHeight).toBe(352)
+    expect(frameMetrics.innerMinHeight).toBe(352)
+    expect(frameMetrics.surfaceMinHeight).toBe(352)
+    expect(frameMetrics.frameHeight).toBeLessThan(448)
+    expect(
+      Math.abs(frameMetrics.frameHeight - frameMetrics.surfaceHeight)
+    ).toBeLessThanOrEqual(2)
+    await assertNoErrors()
+  })
+
   test('shiny button keeps its visible preview surface', async ({ page }) => {
     const assertNoErrors = await expectNoConsoleErrors(page)
     await page.setViewportSize({ width: 1440, height: 900 })

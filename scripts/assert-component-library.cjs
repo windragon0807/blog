@@ -38,7 +38,6 @@ const requiredNames = [
   'keyboard',
   'placeholders-and-vanish-input',
   '3d-marquee',
-  'avatar-group',
   'playful-todolist',
   'flower-menu',
   'text-flip',
@@ -160,7 +159,6 @@ const motionNames = [
   'keyboard',
   'placeholders-and-vanish-input',
   '3d-marquee',
-  'avatar-group',
   'playful-todolist',
   'text-flip',
 ]
@@ -232,7 +230,6 @@ const playfulTodoListPath = path.join(
   root,
   'src/components/playful-todolist.tsx'
 )
-const avatarGroupPath = path.join(root, 'src/components/avatar-group.tsx')
 const dataTablePath = path.join(root, 'src/components/data-table.tsx')
 const physicsNumberPickerPath = path.join(
   root,
@@ -271,7 +268,6 @@ const videoTextSource = fs.readFileSync(videoTextPath, 'utf8')
 const diaTextRevealSource = fs.readFileSync(diaTextRevealPath, 'utf8')
 const toggleThemeSource = fs.readFileSync(toggleThemePath, 'utf8')
 const playfulTodoListSource = fs.readFileSync(playfulTodoListPath, 'utf8')
-const avatarGroupSource = fs.readFileSync(avatarGroupPath, 'utf8')
 const dataTableSource = fs.readFileSync(dataTablePath, 'utf8')
 const physicsNumberPickerSource = fs.readFileSync(physicsNumberPickerPath, 'utf8')
 const fileTreeSource = fs.readFileSync(fileTreePath, 'utf8')
@@ -334,7 +330,6 @@ const expectedComponentTitles = [
   ['keyboard', 'Interactive Keyboard'],
   ['placeholders-and-vanish-input', 'Rotating Search Input'],
   ['3d-marquee', 'Perspective Image Marquee'],
-  ['avatar-group', 'Hover Avatar Group'],
   ['playful-todolist', 'Animated Task List'],
   ['flower-menu', 'Radial Action Menu'],
   ['text-flip', 'Rotating Word Flip'],
@@ -441,6 +436,14 @@ assert(
     !sidebarSource.includes('w-[min(22rem,86vw)]') &&
     sidebarSource.includes('bottom-0'),
   'Mobile component navigation should be an icon-only trigger with a bottom sheet, not a labeled side drawer'
+)
+
+assert(
+  dataSource.includes('mobileHiddenComponentSlugs') &&
+    dataSource.includes('isComponentHiddenOnMobile') &&
+    sidebarSource.includes('layoutScope === \'mobile\'') &&
+    sidebarSource.includes('isComponentHiddenOnMobile(sample.slug)'),
+  'Mobile component navigation should hide desktop-only pointer and keyboard demos'
 )
 
 assert(
@@ -1099,10 +1102,14 @@ assert(
 )
 assert(
   !exampleTabsSource.includes('fullBleedPreviewKinds') &&
-    exampleTabsSource.includes('min-h-[28rem] rounded-[inherit]') &&
-    exampleTabsSource.includes('flex min-h-[28rem] items-center justify-center overflow-hidden rounded-[inherit]') &&
+    exampleTabsSource.includes(
+      'min-h-[22rem] rounded-[inherit] sm:min-h-[24rem] md:min-h-[28rem]'
+    ) &&
+    exampleTabsSource.includes(
+      'flex min-h-[22rem] items-center justify-center overflow-hidden rounded-[inherit] sm:min-h-[24rem] md:min-h-[28rem]'
+    ) &&
     !exampleTabsSource.includes('p-6'),
-  'All component previews should render full-bleed with a 448px minimum height'
+  'Component previews should render full-bleed with responsive minimum heights'
 )
 assert(
   !previewsSource.includes('bg-background p-8') &&
@@ -1235,7 +1242,6 @@ for (const requiredDemoSurfacePreview of [
   'KeyboardPreview',
   'PlaceholdersAndVanishInputPreview',
   'ThreeDMarqueePreview',
-  'AvatarGroupPreview',
   'PlayfulTodoListPreview',
   'FlowerMenuPreview',
   'TextFlipPreview',
@@ -1294,10 +1300,13 @@ for (const removedPreviewPart of [
   'SlideArrowButtonPreview',
   "case 'slide-arrow-button'",
   "import { SlideArrowButton }",
+  'AvatarGroupPreview',
+  "case 'avatar-group'",
+  "import { AvatarGroup }",
 ]) {
   assert(
     !previewsSource.includes(removedPreviewPart),
-    `Slide Arrow Button should be removed from previews: ${removedPreviewPart}`
+    `Removed component should be removed from previews: ${removedPreviewPart}`
   )
 }
 assert(
@@ -1328,6 +1337,12 @@ for (const removedGeneratorName of ['fluid-cursor', 'shine-border']) {
     `${removedGeneratorName} should be removed from registry generation`
   )
 }
+assert(
+  !generatorSource.includes("name: 'avatar-group'") &&
+    !dataSource.includes("slug: 'avatar-group'") &&
+    !fs.existsSync(path.join(root, 'public/r/avatar-group.json')),
+  'Avatar Group should be removed from component data and registry generation'
+)
 const previewFunctionSource = (functionName) => {
   const functionIndex = previewsSource.indexOf(`function ${functionName}`)
   assert(functionIndex >= 0, `Missing preview function: ${functionName}`)
@@ -1367,8 +1382,13 @@ assert(
 )
 assert(
   previewFunctionSource('TextFlipPreview').includes('wordColors={textFlipColors}') &&
-    previewFunctionSource('TextFlipPreview').includes('gap-2') &&
-    previewFunctionSource('TextFlipPreview').includes('wordClassName="w-[9ch] justify-items-start text-left"') &&
+    previewFunctionSource('TextFlipPreview').includes(
+      'wordClassName="w-[8.5ch] justify-items-start text-left sm:w-[9ch]"'
+    ) &&
+    textFlipSource.includes('flex-nowrap') &&
+    textFlipSource.includes('whitespace-nowrap') &&
+    textFlipSource.includes('text-2xl') &&
+    textFlipSource.includes('sm:text-4xl') &&
     textFlipSource.includes('wordColors?: readonly string[]') &&
     textFlipSource.includes('style={{ color: wordColors?.[index % wordColors.length] }}') &&
     !textFlipSource.includes('text-[var(--theme-accent-current)]'),
@@ -1397,18 +1417,17 @@ assert(
 )
 const keyboardPreviewSource = previewFunctionSource('KeyboardPreview')
 assert(
-  keyboardPreviewSource.includes('headingClassName="-translate-y-10 md:-translate-y-12"') &&
+  previewsSource.includes('function DesktopOnlyPreview') &&
+    previewsSource.includes('data-mobile-preview-unavailable') &&
+    keyboardPreviewSource.includes('DesktopOnlyPreview') &&
+    keyboardPreviewSource.includes('headingClassName="-translate-y-10 md:-translate-y-12"') &&
     keyboardPreviewSource.includes('contentGapClassName="mt-3"'),
   'Keyboard preview heading should sit higher without leaving excessive space above the keystroke preview'
 )
 assert(
-  previewFunctionSource('AvatarGroupPreview').includes('contentGapClassName="mt-16"') &&
-    avatarGroupSource.includes('bottom-[calc(100%+26px)]') &&
-    avatarGroupSource.includes('bg-[#3c3540]/95') &&
-    avatarGroupSource.includes('top-[calc(100%-1px)]') &&
-    avatarGroupSource.includes('backdrop-blur-md') &&
-    avatarGroupSource.includes('text-white'),
-  'Avatar Group preview should sit lower and use a raised seamless tooltip on the dark surface'
+  dataTableSource.includes('data-data-table-mobile-list') &&
+    dataTableSource.includes('hidden overflow-x-auto sm:block'),
+  'Data Table should render compact mobile cards and keep desktop table layout above small screens'
 )
 assert(
   playfulTodoListSource.includes('space-y-4') &&
@@ -1592,8 +1611,8 @@ assert(
   sidebarSource.includes('AnimatePresence') &&
     sidebarSource.includes('component-sidebar-active-indicator-${layoutScope}') &&
     sidebarSource.includes('layoutDependency={pathname}') &&
-    sidebarSource.includes('bg-white px-1 pb-3 pt-1') &&
-    sidebarSource.includes('dark:bg-zinc-950') &&
+    sidebarSource.includes('bg-background/95 px-1 pb-3 pt-1') &&
+    sidebarSource.includes('backdrop-blur-md') &&
     sidebarSource.includes('willChange:') &&
     sidebarSource.includes('contain:') &&
     sidebarSource.includes('translateZ(0)'),

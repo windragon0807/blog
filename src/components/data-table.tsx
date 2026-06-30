@@ -37,7 +37,8 @@ export function DataTable<T extends Record<string, string | number>>({
           className
         )}
       >
-        <div className="custom-scrollbar overflow-x-auto">
+        <DataTableMobileCards columns={columns} rows={rows} variant="dark" />
+        <div className="custom-scrollbar hidden overflow-x-auto sm:block">
           <table className="block min-w-[680px] rounded-[34px] border border-white/10 bg-white/[0.085] p-2 pt-0 text-base shadow-[0_28px_100px_-56px_rgba(255,255,255,0.35)] backdrop-blur-md">
             <thead className="block">
               <tr
@@ -89,7 +90,8 @@ export function DataTable<T extends Record<string, string | number>>({
         className
       )}
     >
-      <div className="custom-scrollbar overflow-x-auto">
+      <DataTableMobileCards columns={columns} rows={rows} variant="light" />
+      <div className="custom-scrollbar hidden overflow-x-auto sm:block">
         <table className="block min-w-[640px] rounded-[28px] border border-zinc-200/80 bg-white/80 p-2 pt-0 text-base shadow-[0_18px_54px_-42px_rgba(24,24,27,0.42)] dark:border-zinc-700/70 dark:bg-zinc-900/58 dark:shadow-[0_22px_64px_-46px_rgba(2,6,23,0.9)]">
           <thead className="block text-zinc-500 dark:text-zinc-400">
             <tr
@@ -129,6 +131,72 @@ export function DataTable<T extends Record<string, string | number>>({
           </tbody>
         </table>
       </div>
+    </div>
+  )
+}
+
+function DataTableMobileCards<T extends Record<string, string | number>>({
+  columns,
+  rows,
+  variant,
+}: {
+  columns: readonly DataTableColumn<T>[]
+  rows: readonly T[]
+  variant: 'light' | 'dark'
+}) {
+  const isDark = variant === 'dark'
+  const titleColumn = columns[0]
+  const detailColumns = columns.slice(1)
+
+  return (
+    <div
+      data-data-table-mobile-list=""
+      className="space-y-2 sm:hidden"
+    >
+      {rows.map((row, rowIndex) => (
+        <article
+          key={rowIndex}
+          className={cn(
+            'rounded-[22px] border p-4 shadow-[0_16px_44px_-36px_rgba(24,24,27,0.5)]',
+            isDark
+              ? 'border-white/10 bg-white/[0.07] text-white'
+              : 'border-zinc-200/80 bg-white/84 text-zinc-900 dark:border-zinc-700/70 dark:bg-zinc-950/34 dark:text-zinc-50'
+          )}
+        >
+          {titleColumn ? (
+            <h3 className="truncate text-base font-semibold tracking-normal">
+              {row[titleColumn.key]}
+            </h3>
+          ) : null}
+          {detailColumns.length > 0 ? (
+            <dl className="mt-3 grid gap-2">
+              {detailColumns.map((column) => (
+                <div
+                  key={String(column.key)}
+                  className="grid grid-cols-[minmax(4.5rem,0.42fr)_minmax(0,1fr)] gap-3 text-sm"
+                >
+                  <dt
+                    className={cn(
+                      'truncate font-medium',
+                      isDark ? 'text-white/48' : 'text-zinc-500 dark:text-zinc-400'
+                    )}
+                  >
+                    {column.header}
+                  </dt>
+                  <dd
+                    className={cn(
+                      'min-w-0 overflow-hidden text-ellipsis whitespace-nowrap',
+                      isDark ? 'text-white/82' : 'text-zinc-700 dark:text-zinc-200/82'
+                    )}
+                  >
+                    {row[column.key]}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          ) : null}
+        </article>
+      ))}
     </div>
   )
 }

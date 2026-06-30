@@ -1,13 +1,38 @@
 "use client"
 
-import { useCallback, useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 import { cn } from "@/lib/utils"
 
 const morphTime = 1.5
 const cooldownTime = 0.5
 
-const useMorphingText = (texts: string[]) => {
+const useMobileSafeMorphingMode = () => {
+  const [useStaticMode, setUseStaticMode] = useState(true)
+
+  useEffect(() => {
+    const queries = [
+      window.matchMedia('(max-width: 767px)'),
+      window.matchMedia('(hover: none)'),
+      window.matchMedia('(pointer: coarse)'),
+      window.matchMedia('(prefers-reduced-motion: reduce)'),
+    ]
+    const sync = () => {
+      setUseStaticMode(queries.some((query) => query.matches))
+    }
+
+    sync()
+    queries.forEach((query) => query.addEventListener('change', sync))
+
+    return () => {
+      queries.forEach((query) => query.removeEventListener('change', sync))
+    }
+  }, [])
+
+  return useStaticMode
+}
+
+const useMorphingText = (texts: string[], enabled: boolean) => {
   const textIndexRef = useRef(0)
   const morphRef = useRef(0)
   const cooldownRef = useRef(0)
@@ -67,6 +92,8 @@ const useMorphingText = (texts: string[]) => {
   }, [])
 
   useEffect(() => {
+    if (!enabled) return
+
     let animationFrameId: number
 
     const animate = () => {
@@ -86,7 +113,7 @@ const useMorphingText = (texts: string[]) => {
     return () => {
       cancelAnimationFrame(animationFrameId)
     }
-  }, [doMorph, doCooldown])
+  }, [doMorph, doCooldown, enabled])
 
   return { text1Ref, text2Ref }
 }
@@ -96,8 +123,20 @@ interface MorphingTextProps {
   texts: string[]
 }
 
-const Texts: React.FC<Pick<MorphingTextProps, "texts">> = ({ texts }) => {
-  const { text1Ref, text2Ref } = useMorphingText(texts)
+const Texts: React.FC<Pick<MorphingTextProps, "texts"> & { staticMode: boolean }> = ({
+  texts,
+  staticMode,
+}) => {
+  const { text1Ref, text2Ref } = useMorphingText(texts, !staticMode)
+
+  if (staticMode) {
+    return (
+      <span className="inline-block w-full">
+        {texts[0] ?? ''}
+      </span>
+    )
+  }
+
   return (
     <>
       <span
@@ -136,14 +175,21 @@ const SvgFilters: React.FC = () => (
 export const MorphingText: React.FC<MorphingTextProps> = ({
   texts,
   className,
-}) => (
-  <div
-    className={cn(
-      "relative mx-auto h-16 w-full max-w-3xl text-center font-sans text-[40pt] leading-none font-bold filter-[url(#threshold)_blur(0.6px)] md:h-24 lg:text-[6rem]",
-      className
-    )}
-  >
-    <Texts texts={texts} />
-    <SvgFilters />
-  </div>
-)
+}) => {
+  const staticMode = useMobileSafeMorphingMode()
+
+  return (
+    <div
+      data-morphing-text=""
+      data-morphing-text-mode={staticMode ? 'static' : 'animated'}
+      className={cn(
+        'relative mx-auto h-16 w-full max-w-3xl text-center font-sans text-[clamp(2rem,13vw,3.25rem)] leading-none font-bold md:h-24 lg:text-[6rem]',
+        !staticMode && 'filter-[url(#threshold)_blur(0.6px)]',
+        className
+      )}
+    >
+      <Texts texts={texts} staticMode={staticMode} />
+      {staticMode ? null : <SvgFilters />}
+    </div>
+  )
+}

@@ -401,13 +401,6 @@ const items = [
     dependencies: ['motion'],
   },
   {
-    name: 'avatar-group',
-    title: 'Hover Avatar Group',
-    description: 'A stacked avatar group with overflow count.',
-    dependencies: ['motion'],
-  },
-
-  {
     name: 'playful-todolist',
     title: 'Animated Task List',
     description: 'A small animated todo list interaction.',

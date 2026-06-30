@@ -41,6 +41,7 @@ export function ThemeSettingsMenu() {
         sideOffset={9}
         aria-label="환경설정 패널"
         data-settings-menu-portal=""
+        data-mobile-center-popover=""
         onInteractOutside={handleSettingsMenuInteractOutside}
         className="settings-popover w-[min(92vw,22rem)] rounded-2xl border-zinc-200/90 bg-white/95 p-3 shadow-[0_24px_60px_-30px_rgba(20,20,30,0.55)] backdrop-blur-xl dark:border-zinc-700/80 dark:bg-zinc-900/95"
       >

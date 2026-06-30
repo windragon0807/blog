@@ -337,6 +337,36 @@ test('emoticon storage keeps mobile category navigation compact', async ({
   ).toBeLessThanOrEqual(48)
 })
 
+test('emoticon page shell fills the mobile browser viewport', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/emoticons')
+
+  await expect(page.locator('[data-emoticon-grid-shell]')).toBeVisible()
+
+  const shellMetrics = await page.locator('[data-emoticon-page-shell]').evaluate(
+    (shell) => {
+      const rect = shell.getBoundingClientRect()
+
+      return {
+        top: rect.top,
+        bottom: rect.bottom,
+        height: rect.height,
+        viewportHeight: window.innerHeight,
+      }
+    }
+  )
+
+  expect(shellMetrics.top).toBeLessThanOrEqual(1)
+  expect(shellMetrics.bottom).toBeGreaterThanOrEqual(
+    shellMetrics.viewportHeight - 1
+  )
+  expect(shellMetrics.height).toBeGreaterThanOrEqual(
+    shellMetrics.viewportHeight - 1
+  )
+})
+
 test('tossface food category follows Tossface-style order and shows hover tooltip', async ({
   page,
 }) => {

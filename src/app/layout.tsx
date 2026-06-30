@@ -8,7 +8,6 @@ import { BodyScrollbars } from '@/components/BodyScrollbars'
 import { Header } from '@/components/Header'
 import { QueryProvider } from '@/components/providers/QueryProvider'
 import { SmoothScrollProvider } from '@/components/SmoothScrollProvider'
-import { ScrollToTopButton } from '@/components/ScrollToTopButton'
 import {
   BLOG_THEME_PALETTES,
   BLOG_THEME_VALUES,
@@ -197,7 +196,6 @@ export default function RootLayout({
             <SmoothScrollProvider />
             <Header />
             <main className="max-w-3xl mx-auto px-4 pt-8 pb-16">{children}</main>
-            <ScrollToTopButton />
           </QueryProvider>
         </ThemeProvider>
         <Analytics />

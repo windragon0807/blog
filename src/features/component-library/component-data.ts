@@ -38,7 +38,6 @@ export type ComponentPreviewKind =
   | 'keyboard'
   | 'placeholders-and-vanish-input'
   | '3d-marquee'
-  | 'avatar-group'
   | 'playful-todolist'
   | 'flower-menu'
   | 'text-flip'
@@ -55,6 +54,25 @@ export type ComponentPreviewKind =
   | 'canvas-cursor'
   | 'data-table'
   | 'physics-number-picker'
+
+export const mobileHiddenComponentSlugs = new Set<ComponentPreviewKind>([
+  'pointer',
+  'magnet',
+  'background-boxes',
+  'keyboard',
+  'sparkle-cursor',
+  'mouse-invert-cursor',
+  'mouse-trail-cursor',
+  'mouse-custom-cursor',
+  'fairy-dust-cursor',
+  'bubble-cursor',
+  'character-cursor',
+  'canvas-cursor',
+])
+
+export function isComponentHiddenOnMobile(slug: ComponentPreviewKind) {
+  return mobileHiddenComponentSlugs.has(slug)
+}
 
 export interface ComponentCategory {
   id: ComponentCategoryId
@@ -340,32 +358,6 @@ export default function Example() {
       prop('items', 'React.ReactNode[]', '-', 'Legacy custom item fallback.'),
     ],
   }),
-  createSample({
-    slug: 'avatar-group',
-    categoryId: 'content-display',
-    title: 'Hover Avatar Group',
-    description: '겹쳐진 아바타가 호버 시 떠오르고 안내 말풍선을 보여주는 아바타 그룹입니다.',
-    dependencies: ['motion'],
-    reference: {
-      label: 'Animate UI Avatar Group',
-      url: 'https://animate-ui.com/docs/components/animate/avatar-group',
-    },
-    usage: `import { AvatarGroup } from "@/components/avatar-group"
-
-export default function Example() {
-  return <AvatarGroup items={users} />
-}`,
-    props: [
-      classNameProp,
-      prop('items', 'AvatarGroupItem[]', '-', 'Avatar data.'),
-      prop('max', 'number', '6', 'Maximum visible avatars.'),
-      prop('invertOverlap', 'boolean', 'true', 'Whether the earlier avatars should visually sit above later avatars.'),
-      prop('translate', 'string | number', '"-30%"', 'Hover translation applied to the active avatar.'),
-      prop('transition', 'Transition', 'spring 300/17', 'Avatar hover transition.'),
-      prop('tooltipTransition', 'Transition', 'spring 300/35', 'Tooltip enter and exit transition.'),
-    ],
-  }),
-
   createSample({
     slug: 'playful-todolist',
     categoryId: 'menus-actions',
