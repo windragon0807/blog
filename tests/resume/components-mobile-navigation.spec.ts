@@ -92,8 +92,36 @@ test('header renders centered icon controls with GitHub link', async ({ page }) 
   await expect(componentsLink).toHaveAttribute('aria-current', 'page')
   await expect(componentsLink).toHaveAttribute('data-active-route', 'true')
   await expect(componentsLink).toHaveClass(/header-active-aurora/)
+  await expect(componentsLink).toHaveClass(/overflow-visible/)
   await expect(componentsLink).toHaveClass(/border-transparent/)
   await expect(componentsLink).toHaveClass(/focus:ring-0/)
+  await expect(componentsLink).toHaveCSS('overflow', 'visible')
+  const activeAuroraMetrics = await componentsLink.evaluate((element) => {
+    const elementStyle = getComputedStyle(element)
+    const beforeStyle = getComputedStyle(element, '::before')
+    const afterStyle = getComputedStyle(element, '::after')
+
+    return {
+      afterBottom: afterStyle.bottom,
+      afterLeft: afterStyle.left,
+      afterRadius: afterStyle.borderTopLeftRadius,
+      afterRight: afterStyle.right,
+      afterTop: afterStyle.top,
+      beforeRadius: beforeStyle.borderTopLeftRadius,
+      beforeTop: beforeStyle.top,
+      radius: elementStyle.borderTopLeftRadius,
+    }
+  })
+  const activeRadius = Number.parseFloat(activeAuroraMetrics.radius)
+  const activeInnerRadius = Number.parseFloat(activeAuroraMetrics.afterRadius)
+
+  expect(activeAuroraMetrics.beforeTop).toBe('0px')
+  expect(activeAuroraMetrics.beforeRadius).toBe(activeAuroraMetrics.radius)
+  expect(activeAuroraMetrics.afterTop).toBe('2px')
+  expect(activeAuroraMetrics.afterRight).toBe('2px')
+  expect(activeAuroraMetrics.afterBottom).toBe('2px')
+  expect(activeAuroraMetrics.afterLeft).toBe('2px')
+  expect(activeInnerRadius).toBeCloseTo(activeRadius - 2, 1)
   await expect(homeLink).not.toHaveAttribute('aria-current', 'page')
   await expect(emoticonsLink).not.toHaveAttribute('aria-current', 'page')
 

@@ -472,6 +472,9 @@ html,
 }
 
 .header-active-aurora {
+  --header-active-radius: var(--radius-xl);
+  --header-active-ring-width: 2px;
+  border-radius: var(--header-active-radius);
   color: rgb(24 24 27);
   isolation: isolate;
 }
@@ -493,15 +496,16 @@ html,
   background:
     linear-gradient(135deg, #f9a8d4, #c4b5fd, #93c5fd, #a7f3d0, #f9a8d4);
   background-size: 260% 260%;
-  inset: -1px;
+  inset: 0;
   opacity: 0.9;
   z-index: 0;
 }
 
 .header-active-aurora::after {
   background: rgba(255, 255, 255, 0.76);
+  border-radius: calc(var(--header-active-radius) - var(--header-active-ring-width));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
-  inset: 1px;
+  inset: var(--header-active-ring-width);
   z-index: 1;
 }
 

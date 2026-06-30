@@ -42,7 +42,7 @@ function HeaderNavLink({
       className={cn(
         ICON_CONTROL_BUTTON_CLASS_NAME,
         isActive &&
-          'header-active-aurora border-transparent focus:ring-0 focus-visible:ring-0 dark:border-transparent'
+          'header-active-aurora overflow-visible border-transparent focus:ring-0 focus-visible:ring-0 dark:border-transparent'
       )}
       onFocus={onFocus}
       onMouseEnter={onMouseEnter}
