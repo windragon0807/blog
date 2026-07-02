@@ -97,6 +97,33 @@ test('emoticon storage virtualizes the icon grid instead of rendering every item
     'data-emoticon-prefetch-mode',
     'while-scrolling'
   )
+  const gridEdgeBleed = await page.locator('[data-emoticon-card]').evaluateAll(
+    (cards) => {
+      const content = document.querySelector('[data-emoticon-grid-content]')
+
+      if (!content || cards.length === 0) {
+        return { left: 0, right: 0 }
+      }
+
+      const contentRect = content.getBoundingClientRect()
+      const firstRowTop = Math.min(
+        ...cards.map((card) => card.getBoundingClientRect().top)
+      )
+      const firstRowCards = cards
+        .map((card) => card.getBoundingClientRect())
+        .filter((rect) => Math.abs(rect.top - firstRowTop) < 2)
+        .sort((a, b) => a.left - b.left)
+      const firstCard = firstRowCards[0]
+      const lastCard = firstRowCards[firstRowCards.length - 1]
+
+      return {
+        left: firstCard.left - contentRect.left,
+        right: contentRect.right - lastCard.right,
+      }
+    }
+  )
+  expect(gridEdgeBleed.left).toBeGreaterThanOrEqual(8)
+  expect(gridEdgeBleed.right).toBeGreaterThanOrEqual(8)
   const allFirstCardBox = await page.locator('[data-emoticon-card]').first().boundingBox()
   expect(allFirstCardBox).not.toBeNull()
 
@@ -392,6 +419,100 @@ test('emoticon storage keeps mobile category navigation compact', async ({
     (firstSectionHeadingBox?.y ?? 0) -
       ((subcategoryNavBox?.y ?? 0) + (subcategoryNavBox?.height ?? 0))
   ).toBeLessThanOrEqual(48)
+})
+
+test('emoticon storage shows the Ryong collection with local Noticon assets', async ({
+  page,
+  request,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await page.goto('/emoticons')
+
+  const tossfaceTab = page.getByRole('tab', { name: /Tossface/ })
+  const ryongTab = page.getByRole('tab', { name: /Ryong/ })
+
+  await expect(tossfaceTab).toBeVisible()
+  await expect(ryongTab).toBeVisible()
+
+  const tossfaceBox = await tossfaceTab.boundingBox()
+  const ryongBox = await ryongTab.boundingBox()
+  expect(tossfaceBox).not.toBeNull()
+  expect(ryongBox).not.toBeNull()
+  expect(ryongBox?.x ?? 0).toBeGreaterThan(
+    (tossfaceBox?.x ?? 0) + (tossfaceBox?.width ?? 0)
+  )
+
+  const ryongLogoSrc = await ryongTab
+    .locator('[data-emoticon-collection-logo]')
+    .getAttribute('src')
+  expect(ryongLogoSrc).toContain('icon.png')
+
+  await ryongTab.click()
+  await expect(page.getByRole('button', { name: /아끼는 이미지/ })).toBeVisible()
+  await expect(
+    page.locator(
+      '[data-emoticon-card] img[src="/emoticons/ryong/noticon-teg1ooxzhglorh6rk9hs.svg"]'
+    )
+  ).toBeVisible()
+  await expect(
+    page.locator(
+      '[data-emoticon-card] img[src="/emoticons/ryong/noticon-yucvpr6jzidhqlja5zxq.svg"]'
+    )
+  ).toBeVisible()
+
+  const visibleIconSources = await page
+    .locator('[data-emoticon-card] img')
+    .evaluateAll((images) =>
+      images.map((image) => image.getAttribute('src') ?? '')
+    )
+  expect(visibleIconSources.some((src) => src.includes('noticon-static'))).toBe(
+    false
+  )
+
+  const manifest = await page.evaluate(async () => {
+    const response = await fetch('/emoticons/manifest.json')
+    return response.json()
+  })
+  const ryongCollection = manifest.collections.find(
+    (collection: { id: string }) => collection.id === 'ryong'
+  )
+  expect(ryongCollection).toEqual(
+    expect.objectContaining({
+      id: 'ryong',
+      name: 'Ryong',
+      sourceLabel: 'Ryong',
+      count: 2,
+    })
+  )
+  expect(ryongCollection.items).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        filename: 'noticon-teg1ooxzhglorh6rk9hs.svg',
+        src: '/emoticons/ryong/noticon-teg1ooxzhglorh6rk9hs.svg',
+        pngSrc: '/emoticons/ryong/noticon-teg1ooxzhglorh6rk9hs.png',
+        category: 'favorites',
+      }),
+      expect.objectContaining({
+        filename: 'noticon-yucvpr6jzidhqlja5zxq.svg',
+        src: '/emoticons/ryong/noticon-yucvpr6jzidhqlja5zxq.svg',
+        pngSrc: '/emoticons/ryong/noticon-yucvpr6jzidhqlja5zxq.png',
+        category: 'favorites',
+      }),
+    ])
+  )
+
+  for (const assetName of [
+    'noticon-teg1ooxzhglorh6rk9hs',
+    'noticon-yucvpr6jzidhqlja5zxq',
+  ]) {
+    const pngResponse = await request.get(`/emoticons/ryong/${assetName}.png`)
+    expect(pngResponse.ok()).toBe(true)
+    expect(pngResponse.headers()['content-type']).toContain('image/png')
+
+    const svgResponse = await request.get(`/emoticons/ryong/${assetName}.svg`)
+    expect(svgResponse.ok()).toBe(true)
+    await expect(svgResponse.text()).resolves.toContain('data:image/png;base64,')
+  }
 })
 
 test('emoticon page shell fills the mobile browser viewport', async ({
@@ -860,6 +981,34 @@ test('emoticon actions open in a bottom sheet with button-level feedback', async
     )
   )
   expect(new Set(actionButtonBackgrounds).size).toBe(1)
+  const actionButtonLabels = await Promise.all(
+    actionButtonNames.map((name) =>
+      bottomSheet
+        .getByRole('button', { name, exact: true })
+        .evaluate((element) => element.textContent?.trim() ?? '')
+    )
+  )
+  expect(actionButtonLabels).toEqual(['SVG', 'PNG', 'SVG', 'PNG'])
+  await expect(
+    bottomSheet
+      .getByRole('button', { name: 'Download SVG', exact: true })
+      .locator('svg path[d="M12 15V3"]')
+  ).toHaveCount(1)
+  await expect(
+    bottomSheet
+      .getByRole('button', { name: 'Download PNG', exact: true })
+      .locator('svg path[d="m7 10 5 5 5-5"]')
+  ).toHaveCount(1)
+  await expect(
+    bottomSheet
+      .getByRole('button', { name: 'Copy SVG', exact: true })
+      .locator('svg rect[x="8"][y="8"][width="14"][height="14"]')
+  ).toHaveCount(1)
+  await expect(
+    bottomSheet
+      .getByRole('button', { name: 'Copy PNG', exact: true })
+      .locator('svg path[d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"]')
+  ).toHaveCount(1)
   const sheetSurface = await bottomSheet.evaluate((element) => {
     const style = getComputedStyle(element)
     return {
@@ -900,6 +1049,7 @@ test('emoticon actions open in a bottom sheet with button-level feedback', async
     .locator('[data-emoticon-selected-preview]')
     .boundingBox()
   const titleBox = await selectedIdentity.locator('figcaption').boundingBox()
+  const selectedIdentityBox = await selectedIdentity.boundingBox()
   const downloadSvgBox = await bottomSheet
     .getByRole('button', { name: 'Download SVG', exact: true })
     .boundingBox()
@@ -915,6 +1065,7 @@ test('emoticon actions open in a bottom sheet with button-level feedback', async
 
   expect(previewImageBox).not.toBeNull()
   expect(titleBox).not.toBeNull()
+  expect(selectedIdentityBox).not.toBeNull()
   expect(downloadSvgBox).not.toBeNull()
   expect(downloadPngBox).not.toBeNull()
   expect(copySvgBox).not.toBeNull()
@@ -923,12 +1074,21 @@ test('emoticon actions open in a bottom sheet with button-level feedback', async
   const previewImageCenterX =
     (previewImageBox?.x ?? 0) + (previewImageBox?.width ?? 0) / 2
   const titleCenterX = (titleBox?.x ?? 0) + (titleBox?.width ?? 0) / 2
+  const selectedIdentityCenterY =
+    (selectedIdentityBox?.y ?? 0) + (selectedIdentityBox?.height ?? 0) / 2
+  const selectedContentCenterY =
+    ((previewImageBox?.y ?? 0) +
+      ((titleBox?.y ?? 0) + (titleBox?.height ?? 0))) /
+    2
   expect(titleBox?.y ?? 0).toBeGreaterThan(
     (previewImageBox?.y ?? 0) + (previewImageBox?.height ?? 0)
   )
   expect(Math.abs(previewImageCenterX - titleCenterX)).toBeLessThan(16)
+  expect(Math.abs(selectedContentCenterY - selectedIdentityCenterY)).toBeLessThan(8)
   expect(previewImageBox?.y ?? 0).toBeLessThan((downloadSvgBox?.y ?? 0) - 12)
-  expect(titleBox?.y ?? 0).toBeLessThan(copySvgBox?.y ?? 0)
+  expect((titleBox?.y ?? 0) + (titleBox?.height ?? 0)).toBeLessThanOrEqual(
+    (selectedIdentityBox?.y ?? 0) + (selectedIdentityBox?.height ?? 0)
+  )
   expect(downloadSvgBox?.x ?? 0).toBeGreaterThan(previewImageBox?.x ?? 0)
   expect(Math.abs((downloadSvgBox?.y ?? 0) - (downloadPngBox?.y ?? 0))).toBeLessThan(
     4
@@ -948,6 +1108,7 @@ test('emoticon actions open in a bottom sheet with button-level feedback', async
       transform: style.transform,
     }
   })
+  expect(buttonBeforeHover.boxShadow).toContain('0px 18px')
   await downloadSvgButton.hover()
   await expect
     .poll(() =>
@@ -963,12 +1124,15 @@ test('emoticon actions open in a bottom sheet with button-level feedback', async
     }
   })
   expect(buttonAfterHover.boxShadow).not.toBe(buttonBeforeHover.boxShadow)
+  expect(buttonAfterHover.boxShadow).toContain('0px 22px')
+  expect(buttonAfterHover.boxShadow).toContain('0px 8px')
 
   const panelBox = await bottomSheet.boundingBox()
   const gridBox = await page.locator('[data-emoticon-grid-shell]').boundingBox()
   const viewportHeight = page.viewportSize()?.height ?? 900
   expect(panelBox).not.toBeNull()
   expect(gridBox).not.toBeNull()
+  expect(panelBox?.width ?? 0).toBeLessThanOrEqual(560)
   const panelCenterX = (panelBox?.x ?? 0) + (panelBox?.width ?? 0) / 2
   const gridCenterX = (gridBox?.x ?? 0) + (gridBox?.width ?? 0) / 2
   expect(Math.abs(panelCenterX - gridCenterX)).toBeLessThan(6)
@@ -979,9 +1143,13 @@ test('emoticon actions open in a bottom sheet with button-level feedback', async
   await expect(firstCard).not.toHaveClass(/sky/)
 
   await bottomSheet.getByRole('button', { name: 'Copy SVG' }).click()
-  const copiedButton = bottomSheet.getByRole('button', { name: 'Copied!' })
+  const copiedButton = bottomSheet.getByRole('button', { name: 'Copied SVG' })
   await expect(copiedButton).toBeVisible()
   await expect(copiedButton).toHaveClass(/bg-emerald-500/)
+  await expect(copiedButton).toHaveText('SVG')
+  await expect(copiedButton.locator('svg circle[cx="12"][cy="12"][r="10"]')).toHaveCount(
+    1
+  )
   await expect(
     bottomSheet.getByRole('button', { name: 'Copy SVG', exact: true })
   ).toBeVisible({ timeout: 2500 })
@@ -1086,7 +1254,7 @@ test('emoticon actions report failed when svg assets cannot be fetched', async (
 
   await bottomSheet.getByRole('button', { name: 'Copy SVG' }).click()
   await expect(
-    bottomSheet.getByRole('button', { name: 'Failed' })
+    bottomSheet.getByRole('button', { name: 'Copy SVG failed' })
   ).toBeVisible()
 })
 

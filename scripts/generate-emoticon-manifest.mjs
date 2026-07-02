@@ -11,6 +11,12 @@ const TOSSFACE_METADATA_PATH = path.join(
   'data',
   'tossface-metadata.json'
 )
+const RYONG_METADATA_PATH = path.join(
+  ROOT,
+  'scripts',
+  'data',
+  'ryong-metadata.json'
+)
 
 const COLLECTIONS = [
   {
@@ -26,6 +32,13 @@ const COLLECTIONS = [
     sourceDir: path.join(PUBLIC_DIR, 'emoticons', 'tossface'),
     publicBase: '/emoticons/tossface',
     sourceLabel: 'Tossface',
+  },
+  {
+    id: 'ryong',
+    name: 'Ryong',
+    sourceDir: path.join(PUBLIC_DIR, 'emoticons', 'ryong'),
+    publicBase: '/emoticons/ryong',
+    sourceLabel: 'Ryong',
   },
 ]
 
@@ -68,7 +81,27 @@ function readTossfaceMetadata() {
   )
 }
 
+function readRyongMetadata() {
+  if (!fs.existsSync(RYONG_METADATA_PATH)) {
+    return new Map()
+  }
+
+  const metadata = JSON.parse(fs.readFileSync(RYONG_METADATA_PATH, 'utf8'))
+
+  return new Map(
+    metadata.map((item) => [
+      item.filename,
+      {
+        name: item.name,
+        category: item.category,
+        order: item.order,
+      },
+    ])
+  )
+}
+
 const tossfaceMetadataByName = readTossfaceMetadata()
+const ryongMetadataByFilename = readRyongMetadata()
 
 function readCollection(collection) {
   if (!fs.existsSync(collection.sourceDir)) {
@@ -82,13 +115,24 @@ function readCollection(collection) {
     .map((filename) => {
       const name = toTitle(filename)
       const metadata =
-        collection.id === 'tossface' ? tossfaceMetadataByName.get(name) : null
+        collection.id === 'tossface'
+          ? tossfaceMetadataByName.get(name)
+          : collection.id === 'ryong'
+            ? ryongMetadataByFilename.get(filename)
+            : null
+      const pngFilename = filename.replace(/\.svg$/i, '.png')
+      const pngPath = path.join(collection.sourceDir, pngFilename)
 
       return {
         id: toId(collection.id, filename),
-        name,
+        name: metadata?.name ?? name,
         filename,
         src: toPublicPath(collection.publicBase, filename),
+        ...(fs.existsSync(pngPath)
+          ? {
+              pngSrc: toPublicPath(collection.publicBase, pngFilename),
+            }
+          : {}),
         ...(metadata
           ? {
               category: metadata.category,

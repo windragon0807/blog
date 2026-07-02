@@ -2,14 +2,7 @@
 
 import Image from 'next/image'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import {
-  CheckIcon,
-  ClipboardCopyIcon,
-  DownloadIcon,
-  FileCode2Icon,
-  ImageDownIcon,
-  XIcon,
-} from 'lucide-react'
+import { XIcon } from 'lucide-react'
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react'
 import {
   useCallback,
@@ -22,6 +15,7 @@ import {
   useState,
 } from 'react'
 import { createPortal } from 'react-dom'
+import { CircleCheckIcon, CopyIcon, DownloadIcon } from '@/components/icons'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn, subscribeToTouchInputDeviceChange } from '@/lib/utils'
 import type {
@@ -33,6 +27,7 @@ import type {
 
 const PNG_EXPORT_SIZE = 512
 const GRID_GAP = 10
+const GRID_EDGE_BLEED = 8
 const GRID_ROW_HEIGHT = 62
 const MOBILE_GRID_SECTION_HEADING_HEIGHT = 42
 const DESKTOP_GRID_SECTION_HEADING_HEIGHT = 74
@@ -40,6 +35,7 @@ const MOBILE_CARD_MIN_WIDTH = 54
 const DESKTOP_CARD_MIN_WIDTH = 56
 const SHEET_EXIT_DURATION_MS = 180
 const ACTION_FEEDBACK_DURATION_MS = 1200
+const ACTION_SHEET_MAX_WIDTH = 540
 const GRID_OVERSCAN = 4
 const PREFETCH_ROW_LOOKAHEAD = 12
 const PREFETCH_ROW_LOOKBEHIND = 6
@@ -197,6 +193,15 @@ const TOSSFACE_SUBCATEGORIES: readonly Subcategory[] = [
     id: 'flags',
     label: '깃발',
     icon: <TossfaceCategoryIcon name="펄럭이는 흰색 깃발" />,
+  },
+]
+
+const RYONG_SUBCATEGORIES: readonly Subcategory[] = [
+  ALL_SUBCATEGORY,
+  {
+    id: 'favorites',
+    label: '아끼는 이미지',
+    icon: <RyongCategoryIcon filename="noticon-teg1ooxzhglorh6rk9hs.svg" />,
   },
 ]
 
@@ -706,6 +711,20 @@ async function fetchSvgBlob(item: EmoticonItem) {
   return response.blob()
 }
 
+async function fetchPngBlob(item: EmoticonItem) {
+  if (!item.pngSrc) {
+    return svgToPngBlob(item)
+  }
+
+  const response = await fetch(item.pngSrc)
+
+  if (!response.ok) {
+    throw new Error('PNG 파일을 불러오지 못했습니다.')
+  }
+
+  return response.blob()
+}
+
 async function svgToPngBlob(item: EmoticonItem, size = PNG_EXPORT_SIZE) {
   const svg = await fetchSvgText(item)
 
@@ -832,6 +851,38 @@ function TossfaceLogo({ isActive }: { isActive: boolean }) {
   )
 }
 
+function RyongCategoryIcon({ filename }: { filename: string }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={`/emoticons/ryong/${filename}`}
+      alt=""
+      loading="lazy"
+      decoding="async"
+      className="h-4 w-4 object-contain"
+    />
+  )
+}
+
+function RyongLogo({ isActive }: { isActive: boolean }) {
+  return (
+    <Image
+      src="/icon.png"
+      alt=""
+      width={28}
+      height={28}
+      data-emoticon-collection-logo=""
+      data-active={isActive ? 'true' : 'false'}
+      className={cn(
+        'h-[0.9em] w-[0.9em] shrink-0 rounded-[0.22em] object-contain transition-[filter,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
+        isActive
+          ? 'opacity-100'
+          : 'opacity-35 grayscale saturate-0 contrast-75 group-hover:opacity-65 group-hover:grayscale-[0.45] group-hover:saturate-[0.65]'
+      )}
+    />
+  )
+}
+
 function CollectionLogo({
   id,
   isActive,
@@ -843,13 +894,23 @@ function CollectionLogo({
     return <TossfaceLogo isActive={isActive} />
   }
 
+  if (id === 'ryong') {
+    return <RyongLogo isActive={isActive} />
+  }
+
   return <MaterialLogo isActive={isActive} />
 }
 
 function getSubcategories(collectionId: EmoticonCollectionId) {
-  return collectionId === 'tossface'
-    ? TOSSFACE_SUBCATEGORIES
-    : MATERIAL_SUBCATEGORIES
+  if (collectionId === 'tossface') {
+    return TOSSFACE_SUBCATEGORIES
+  }
+
+  if (collectionId === 'ryong') {
+    return RYONG_SUBCATEGORIES
+  }
+
+  return MATERIAL_SUBCATEGORIES
 }
 
 function getDefaultSubcategory(collectionId: EmoticonCollectionId) {
@@ -857,7 +918,15 @@ function getDefaultSubcategory(collectionId: EmoticonCollectionId) {
 }
 
 function getCollectionLabel(collectionId: EmoticonCollectionId) {
-  return collectionId === 'tossface' ? 'Tossface' : 'Material'
+  if (collectionId === 'tossface') {
+    return 'Tossface'
+  }
+
+  if (collectionId === 'ryong') {
+    return 'Ryong'
+  }
+
+  return 'Material'
 }
 
 function matchesAnyKeyword(name: string, keywords: readonly string[]) {
@@ -878,6 +947,10 @@ function getItemSubcategory(
 ) {
   if (collectionId === 'material') {
     return item.filename.startsWith('folder-') ? 'folders' : 'files'
+  }
+
+  if (collectionId === 'ryong') {
+    return item.category ?? 'favorites'
   }
 
   if (item.category) {
@@ -1066,7 +1139,7 @@ function prepareEmoticonCollection(
 
 function getClampedSheetCenterX(element: HTMLElement) {
   const rect = element.getBoundingClientRect()
-  const sheetWidth = Math.min(640, window.innerWidth - 24)
+  const sheetWidth = Math.min(ACTION_SHEET_MAX_WIDTH, window.innerWidth - 24)
   const minCenterX = 12 + sheetWidth / 2
   const maxCenterX = window.innerWidth - 12 - sheetWidth / 2
   const elementCenterX = rect.left + rect.width / 2
@@ -1077,37 +1150,48 @@ function getClampedSheetCenterX(element: HTMLElement) {
 function getActionButtonState({
   actionKey,
   feedback,
-  defaultLabel,
-  successLabel,
+  visibleLabel,
+  defaultAriaLabel,
+  successAriaLabel,
+  errorAriaLabel,
   defaultIcon,
 }: {
   actionKey: ActionKey
   feedback: ActionFeedback
-  defaultLabel: string
-  successLabel: string
+  visibleLabel: string
+  defaultAriaLabel: string
+  successAriaLabel: string
+  errorAriaLabel: string
   defaultIcon: ReactNode
 }) {
   if (feedback?.key !== actionKey) {
-    return { label: defaultLabel, icon: defaultIcon, tone: 'default' as const }
+    return {
+      ariaLabel: defaultAriaLabel,
+      icon: defaultIcon,
+      label: visibleLabel,
+      tone: 'default' as const,
+    }
   }
 
   if (feedback.status === 'success') {
     return {
-      label: successLabel,
-      icon: <CheckIcon className="h-4 w-4" />,
+      ariaLabel: successAriaLabel,
+      icon: <CircleCheckIcon className="h-4 w-4" />,
+      label: visibleLabel,
       tone: 'success' as const,
     }
   }
 
   return {
-    label: 'Failed',
+    ariaLabel: errorAriaLabel,
     icon: <XIcon className="h-4 w-4" />,
+    label: visibleLabel,
     tone: 'error' as const,
   }
 }
 
 function EmoticonStorageSkeleton() {
-  const tabWidths = ['w-32', 'w-36']
+  const tabWidths = ['w-32', 'w-36', 'w-28']
   const categoryWidths = ['w-24', 'w-32', 'w-32', 'w-24', 'w-24', 'w-24']
 
   return (
@@ -1163,7 +1247,7 @@ function EmoticonStorageSkeleton() {
             >
               <div className="h-5 w-24 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-900 sm:h-8 sm:w-32" />
             </div>
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(54px,1fr))] content-start gap-2">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(54px,1fr))] content-start gap-2 px-2">
               {Array.from({ length: 144 }, (_, index) => (
                 <div
                   key={index}
@@ -1181,11 +1265,13 @@ function EmoticonStorageSkeleton() {
 }
 
 function ActionButton({
+  ariaLabel,
   icon,
   label,
   tone,
   onClick,
 }: {
+  ariaLabel: string
   icon: ReactNode
   label: string
   tone: 'default' | 'success' | 'error'
@@ -1196,11 +1282,12 @@ function ActionButton({
       type="button"
       data-emoticon-action-button=""
       data-tone={tone}
+      aria-label={ariaLabel}
       onClick={onClick}
       className={cn(
         'emoticon-action-button inline-flex h-11 min-w-0 translate-y-0 items-center justify-center gap-1.5 rounded-xl px-2 text-xs font-bold transition-[background-color,border-color,box-shadow,transform,color,filter] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] focus:outline-none focus-visible:ring-2 sm:gap-2 sm:px-3 sm:text-sm',
         tone === 'default' &&
-          'border border-white/65 bg-white/58 text-zinc-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.88),0_12px_34px_-28px_rgba(15,23,42,0.42)] backdrop-blur-xl focus-visible:ring-zinc-400/35 dark:border-white/10 dark:bg-white/10 dark:text-zinc-200',
+          'border border-white/65 bg-white/58 text-zinc-700 shadow-[0_18px_36px_-20px_rgba(15,23,42,0.32),0_4px_14px_-10px_rgba(15,23,42,0.20),inset_0_1px_0_rgba(255,255,255,0.94)] backdrop-blur-xl focus-visible:ring-zinc-400/35 dark:border-white/10 dark:bg-white/10 dark:text-zinc-200 dark:shadow-[0_18px_38px_-20px_rgba(2,6,23,0.78),0_4px_16px_-10px_rgba(2,6,23,0.60),inset_0_1px_0_rgba(255,255,255,0.12)]',
         tone === 'success' &&
           'bg-emerald-500 text-white shadow-[0_12px_30px_-16px_rgba(16,185,129,0.9)] focus-visible:ring-emerald-400/45 dark:bg-emerald-500 dark:text-white',
         tone === 'error' &&
@@ -1214,10 +1301,14 @@ function ActionButton({
 }
 
 function getColumnCount(width: number) {
+  const innerWidth = Math.max(0, width - GRID_EDGE_BLEED * 2)
   const minCardWidth =
-    width >= 640 ? DESKTOP_CARD_MIN_WIDTH : MOBILE_CARD_MIN_WIDTH
+    innerWidth >= 640 ? DESKTOP_CARD_MIN_WIDTH : MOBILE_CARD_MIN_WIDTH
 
-  return Math.max(1, Math.floor((width + GRID_GAP) / (minCardWidth + GRID_GAP)))
+  return Math.max(
+    1,
+    Math.floor((innerWidth + GRID_GAP) / (minCardWidth + GRID_GAP))
+  )
 }
 
 function prefetchEmoticonImage(src: string) {
@@ -1721,9 +1812,11 @@ function VirtualizedEmoticonGrid({
             return (
               <div
                 key={virtualRow.key}
-                className="absolute left-0 top-0 flex w-full items-end pb-2 sm:pb-4"
+                className="absolute top-0 flex items-end pb-2 sm:pb-4"
                 style={{
                   height: `${sectionHeadingHeight}px`,
+                  left: `${GRID_EDGE_BLEED}px`,
+                  right: `${GRID_EDGE_BLEED}px`,
                   transform,
                 }}
               >
@@ -1739,10 +1832,12 @@ function VirtualizedEmoticonGrid({
           return (
             <div
               key={virtualRow.key}
-              className="absolute left-0 top-0 grid w-full gap-2"
+              className="absolute top-0 grid gap-2"
               style={{
                 gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`,
                 height: `${GRID_ROW_HEIGHT - GRID_GAP}px`,
+                left: `${GRID_EDGE_BLEED}px`,
+                right: `${GRID_EDGE_BLEED}px`,
                 transform,
               }}
             >
@@ -1826,30 +1921,38 @@ function BottomActionSheet({
   const svgDownloadState = getActionButtonState({
     actionKey: 'download-svg',
     feedback,
-    defaultLabel: 'Download SVG',
-    successLabel: 'Downloaded!',
-    defaultIcon: <FileCode2Icon className="h-4 w-4" />,
+    visibleLabel: 'SVG',
+    defaultAriaLabel: 'Download SVG',
+    successAriaLabel: 'Downloaded SVG',
+    errorAriaLabel: 'Download SVG failed',
+    defaultIcon: <DownloadIcon className="h-4 w-4" />,
   })
   const pngDownloadState = getActionButtonState({
     actionKey: 'download-png',
     feedback,
-    defaultLabel: 'Download PNG',
-    successLabel: 'Downloaded!',
-    defaultIcon: <ImageDownIcon className="h-4 w-4" />,
+    visibleLabel: 'PNG',
+    defaultAriaLabel: 'Download PNG',
+    successAriaLabel: 'Downloaded PNG',
+    errorAriaLabel: 'Download PNG failed',
+    defaultIcon: <DownloadIcon className="h-4 w-4" />,
   })
   const svgCopyState = getActionButtonState({
     actionKey: 'copy-svg',
     feedback,
-    defaultLabel: 'Copy SVG',
-    successLabel: 'Copied!',
-    defaultIcon: <ClipboardCopyIcon className="h-4 w-4" />,
+    visibleLabel: 'SVG',
+    defaultAriaLabel: 'Copy SVG',
+    successAriaLabel: 'Copied SVG',
+    errorAriaLabel: 'Copy SVG failed',
+    defaultIcon: <CopyIcon className="h-4 w-4" />,
   })
   const pngCopyState = getActionButtonState({
     actionKey: 'copy-png',
     feedback,
-    defaultLabel: 'Copy PNG',
-    successLabel: 'Copied!',
-    defaultIcon: <DownloadIcon className="h-4 w-4 rotate-180" />,
+    visibleLabel: 'PNG',
+    defaultAriaLabel: 'Copy PNG',
+    successAriaLabel: 'Copied PNG',
+    errorAriaLabel: 'Copy PNG failed',
+    defaultIcon: <CopyIcon className="h-4 w-4" />,
   })
 
   useEffect(() => {
@@ -1906,7 +2009,7 @@ function BottomActionSheet({
 
   return (
     <div
-      className="pointer-events-none fixed bottom-[max(16px,env(safe-area-inset-bottom))] z-[70] w-[min(640px,calc(100vw-1.5rem))] -translate-x-1/2"
+      className="pointer-events-none fixed bottom-[max(16px,env(safe-area-inset-bottom))] z-[70] w-[min(540px,calc(100vw-1.5rem))] -translate-x-1/2"
       style={{ left: centerX === null ? '50%' : `${centerX}px` }}
     >
       <div
@@ -1937,7 +2040,7 @@ function BottomActionSheet({
         <div className="grid min-w-0 grid-cols-[92px_minmax(0,1fr)] gap-2.5 sm:grid-cols-[128px_minmax(0,1fr)] sm:gap-4">
           <figure
             data-emoticon-selected-identity=""
-            className="flex min-w-0 flex-col items-center justify-start px-1 pb-1 pt-3 sm:px-2 sm:pb-0 sm:pt-1"
+            className="flex min-w-0 flex-col items-center justify-center px-1 py-1 sm:px-2 sm:py-1"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -1957,24 +2060,28 @@ function BottomActionSheet({
           <div className="flex min-w-0 flex-col justify-end pt-11">
             <div className="grid grid-cols-2 gap-2">
               <ActionButton
+                ariaLabel={svgDownloadState.ariaLabel}
                 icon={svgDownloadState.icon}
                 label={svgDownloadState.label}
                 tone={svgDownloadState.tone}
                 onClick={onDownloadSvg}
               />
               <ActionButton
+                ariaLabel={pngDownloadState.ariaLabel}
                 icon={pngDownloadState.icon}
                 label={pngDownloadState.label}
                 tone={pngDownloadState.tone}
                 onClick={onDownloadPng}
               />
               <ActionButton
+                ariaLabel={svgCopyState.ariaLabel}
                 icon={svgCopyState.icon}
                 label={svgCopyState.label}
                 tone={svgCopyState.tone}
                 onClick={onCopySvg}
               />
               <ActionButton
+                ariaLabel={pngCopyState.ariaLabel}
                 icon={pngCopyState.icon}
                 label={pngCopyState.label}
                 tone={pngCopyState.tone}
@@ -2279,7 +2386,7 @@ export function EmoticonStoragePage() {
     }
 
     try {
-      const blob = await svgToPngBlob(selectedItem)
+      const blob = await fetchPngBlob(selectedItem)
       downloadBlob(blob, selectedItem.filename.replace(/\.svg$/i, '.png'))
       setSuccess('download-png')
     } catch {
@@ -2293,7 +2400,7 @@ export function EmoticonStoragePage() {
     }
 
     try {
-      const blob = await svgToPngBlob(selectedItem)
+      const blob = await fetchPngBlob(selectedItem)
       await copyPngToClipboard(blob)
       setSuccess('copy-png')
     } catch {

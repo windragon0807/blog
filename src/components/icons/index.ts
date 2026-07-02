@@ -1,3 +1,5 @@
+export { CircleCheckIcon, CopyIcon, DownloadIcon } from './action-icons'
+
 export {
   GitHubIcon,
   HouseIcon,

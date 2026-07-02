@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-29T10:00:45.949Z",
+  "generatedAt": "2026-07-02T01:25:56.980Z",
   "collections": [
     {
       "id": "material",
@@ -36722,6 +36722,32 @@
           "src": "/emoticons/tossface/DNA.svg",
           "category": "objects",
           "order": 60
+        }
+      ]
+    },
+    {
+      "id": "ryong",
+      "name": "Ryong",
+      "sourceLabel": "Ryong",
+      "count": 2,
+      "items": [
+        {
+          "id": "ryong-noticon-teg1ooxzhglorh6rk9hs",
+          "name": "체크",
+          "filename": "noticon-teg1ooxzhglorh6rk9hs.svg",
+          "src": "/emoticons/ryong/noticon-teg1ooxzhglorh6rk9hs.svg",
+          "pngSrc": "/emoticons/ryong/noticon-teg1ooxzhglorh6rk9hs.png",
+          "category": "favorites",
+          "order": 0
+        },
+        {
+          "id": "ryong-noticon-yucvpr6jzidhqlja5zxq",
+          "name": "엑스",
+          "filename": "noticon-yucvpr6jzidhqlja5zxq.svg",
+          "src": "/emoticons/ryong/noticon-yucvpr6jzidhqlja5zxq.svg",
+          "pngSrc": "/emoticons/ryong/noticon-yucvpr6jzidhqlja5zxq.png",
+          "category": "favorites",
+          "order": 1
         }
       ]
     }
