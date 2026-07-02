@@ -84,7 +84,7 @@ function BackgroundBoxesCore({
   )
 }
 
-export const Boxes = memo(BackgroundBoxesCore)
+const Boxes = memo(BackgroundBoxesCore)
 
 export function BackgroundBoxes(props: BackgroundBoxesProps) {
   return <Boxes {...props} />

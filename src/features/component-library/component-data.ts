@@ -55,7 +55,7 @@ export type ComponentPreviewKind =
   | 'data-table'
   | 'physics-number-picker'
 
-export const mobileHiddenComponentSlugs = new Set<ComponentPreviewKind>([
+const mobileHiddenComponentSlugs = new Set<ComponentPreviewKind>([
   'pointer',
   'magnet',
   'background-boxes',
@@ -894,7 +894,7 @@ export default function Example() {
     categoryId: 'data-status',
     title: 'Collapsible File Tree',
     description: '파일과 폴더를 선택하고 접을 수 있는 중첩 파일 트리입니다.',
-    dependencies: ['@radix-ui/react-accordion', '@radix-ui/react-scroll-area', 'lucide-react'],
+    dependencies: ['@radix-ui/react-accordion', 'lucide-react'],
     usage: `import { Tree, type TreeViewElement } from "@/components/file-tree"
 
 const elements: TreeViewElement[] = [

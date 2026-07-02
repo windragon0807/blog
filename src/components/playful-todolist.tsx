@@ -144,5 +144,3 @@ export function PlayfulTodoList({
     </div>
   )
 }
-
-export { PlayfulTodoList as PlayfulTodolist }

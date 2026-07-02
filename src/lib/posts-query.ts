@@ -19,7 +19,7 @@ interface FetchPostsOptions {
   priority?: FetchPriority
 }
 
-export async function fetchPosts({
+async function fetchPosts({
   signal,
   priority = 'auto',
 }: FetchPostsOptions = {}): Promise<Post[]> {

@@ -100,7 +100,7 @@ export async function HighlightedCodeBlock({
   )
 }
 
-export function normalizeCodeLanguage(lang: string, code: string): string {
+function normalizeCodeLanguage(lang: string, code: string): string {
   const map: Record<string, string> = {
     'plain text': 'text',
     plain_text: 'text',

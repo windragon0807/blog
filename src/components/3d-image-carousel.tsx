@@ -411,5 +411,3 @@ export function ThreeDImageCarousel({
     </div>
   )
 }
-
-export default ThreeDImageCarousel

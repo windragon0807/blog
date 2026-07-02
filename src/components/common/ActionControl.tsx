@@ -1,28 +1,11 @@
 import Link from 'next/link'
 import type { ComponentProps } from 'react'
-import { Button, buttonVariants } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 type ActionVariant = 'default' | 'subtle' | 'glass' | 'outline' | 'secondary'
-type ActionButtonProps = Omit<ComponentProps<typeof Button>, 'variant'> & {
-  variant?: ActionVariant
-}
 type ActionLinkProps = ComponentProps<typeof Link> & {
   variant?: ActionVariant
-}
-
-export function ActionButton({
-  className,
-  variant = 'default',
-  ...props
-}: ActionButtonProps) {
-  return (
-    <Button
-      variant={variant}
-      className={cn('gap-2', className)}
-      {...props}
-    />
-  )
 }
 
 export function ActionLink({
@@ -40,5 +23,3 @@ export function ActionLink({
     </Button>
   )
 }
-
-export { buttonVariants }

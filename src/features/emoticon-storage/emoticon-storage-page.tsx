@@ -17,7 +17,8 @@ import {
 import { createPortal } from 'react-dom'
 import { CircleCheckIcon, CopyIcon, DownloadIcon } from '@/components/icons'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { cn, subscribeToTouchInputDeviceChange } from '@/lib/utils'
+import { subscribeToTouchInputDeviceChange } from '@/lib/touch-input'
+import { cn } from '@/lib/utils'
 import type {
   EmoticonCollection,
   EmoticonCollectionId,

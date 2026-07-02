@@ -1,7 +1,6 @@
 import { componentCategories, type ComponentSample } from './component-data'
 import { CodeBlock } from './component-code-block'
 import { ComponentExampleTabs } from './component-example-tabs'
-import { ComponentPreviewContent } from './component-previews'
 import { DataTable, type DataTableColumn } from '@/components/data-table'
 import {
   InstallCommandTabs,
@@ -9,28 +8,7 @@ import {
   type PackageManager,
 } from './install-command-tabs'
 
-type PreviewMode = 'interactive' | 'thumbnail'
-
-export function PreviewFrame({
-  sample,
-  mode = 'interactive',
-}: {
-  sample: ComponentSample
-  mode?: PreviewMode
-}) {
-  return (
-    <div
-      aria-hidden={mode === 'thumbnail' ? true : undefined}
-      className="rounded-2xl border border-zinc-200 bg-[radial-gradient(circle_at_top_left,rgba(99,102,241,0.08),transparent_34%),linear-gradient(180deg,#fafafa,#f4f4f5)] p-6 dark:border-zinc-700/70 dark:bg-[radial-gradient(circle_at_top_left,rgba(129,140,248,0.14),transparent_34%),linear-gradient(180deg,rgba(39,39,42,0.74),rgba(24,24,27,0.46))]"
-    >
-      <div className="flex min-h-60 items-center justify-center rounded-xl border border-zinc-200/80 bg-white/72 p-6 shadow-inner dark:border-zinc-700/65 dark:bg-zinc-900/48">
-        <ComponentPreviewContent sample={sample} mode={mode} />
-      </div>
-    </div>
-  )
-}
-
-export function InstallCommand({ command }: { command: string }) {
+function InstallCommand({ command }: { command: string }) {
   const target = getInstallTarget(command)
   const panels: InstallCommandPanel[] = packageManagers.map((manager) => {
     const installCommand = getPackageManagerCommand(manager, target)
