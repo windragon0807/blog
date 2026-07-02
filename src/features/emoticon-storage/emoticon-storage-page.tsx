@@ -786,21 +786,36 @@ function getFocusableElements(container: HTMLElement) {
   })
 }
 
-function MaterialLogo({ isActive }: { isActive: boolean }) {
+function CollectionLogoImage({
+  src,
+  isActive,
+}: {
+  src: string
+  isActive: boolean
+}) {
   return (
     <Image
-      src="/emoticons/logos/material-icon-theme.png"
+      src={src}
       alt=""
       width={28}
       height={28}
       data-emoticon-collection-logo=""
       data-active={isActive ? 'true' : 'false'}
       className={cn(
-        'h-[0.9em] w-[0.9em] shrink-0 rounded-[0.22em] object-contain transition-[filter,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
+        'h-[0.9em] w-[0.9em] shrink-0 rounded-[0.22em] object-contain',
         isActive
           ? 'opacity-100'
           : 'opacity-35 grayscale saturate-0 contrast-75 group-hover:opacity-65 group-hover:grayscale-[0.45] group-hover:saturate-[0.65]'
       )}
+    />
+  )
+}
+
+function MaterialLogo({ isActive }: { isActive: boolean }) {
+  return (
+    <CollectionLogoImage
+      src="/emoticons/logos/material-icon-theme.png"
+      isActive={isActive}
     />
   )
 }
@@ -834,19 +849,9 @@ function TossfaceCategoryIcon({ name }: { name: string }) {
 
 function TossfaceLogo({ isActive }: { isActive: boolean }) {
   return (
-    <Image
+    <CollectionLogoImage
       src="/emoticons/logos/toss-symbol.png"
-      alt=""
-      width={28}
-      height={28}
-      data-emoticon-collection-logo=""
-      data-active={isActive ? 'true' : 'false'}
-      className={cn(
-        'h-[0.9em] w-[0.9em] shrink-0 rounded-[0.22em] object-contain transition-[filter,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
-        isActive
-          ? 'opacity-100'
-          : 'opacity-35 grayscale saturate-0 contrast-75 group-hover:opacity-65 group-hover:grayscale-[0.45] group-hover:saturate-[0.65]'
-      )}
+      isActive={isActive}
     />
   )
 }
@@ -865,22 +870,7 @@ function RyongCategoryIcon({ filename }: { filename: string }) {
 }
 
 function RyongLogo({ isActive }: { isActive: boolean }) {
-  return (
-    <Image
-      src="/icon.png"
-      alt=""
-      width={28}
-      height={28}
-      data-emoticon-collection-logo=""
-      data-active={isActive ? 'true' : 'false'}
-      className={cn(
-        'h-[0.9em] w-[0.9em] shrink-0 rounded-[0.22em] object-contain transition-[filter,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
-        isActive
-          ? 'opacity-100'
-          : 'opacity-35 grayscale saturate-0 contrast-75 group-hover:opacity-65 group-hover:grayscale-[0.45] group-hover:saturate-[0.65]'
-      )}
-    />
-  )
+  return <CollectionLogoImage src="/icon.png" isActive={isActive} />
 }
 
 function CollectionLogo({
@@ -2445,7 +2435,7 @@ export function EmoticonStoragePage() {
                       clearSelectedItemImmediately()
                     }}
                     className={cn(
-                      'group inline-flex min-h-8 items-center gap-1.5 whitespace-nowrap rounded-xl text-[1.375rem] font-black leading-none tracking-tight transition-[color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/35 sm:text-2xl md:gap-2 md:text-3xl',
+                      'group inline-flex min-h-8 items-center gap-1.5 whitespace-nowrap rounded-xl text-[1.375rem] font-black leading-none tracking-tight focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/35 sm:text-2xl md:gap-2 md:text-3xl',
                       isActive
                         ? 'text-zinc-950 dark:text-zinc-50'
                         : 'text-zinc-300 hover:text-zinc-500 dark:text-zinc-700 dark:hover:text-zinc-500'
