@@ -1112,26 +1112,45 @@ html.dark:not([data-code-theme]) .notion-code pre.shiki span {
 }
 
 .settings-popover {
-  transform-origin: top right;
-  transition:
-    opacity 200ms ease,
-    transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
-    filter 240ms ease;
+  --settings-popover-enter-y: -4px;
+  --settings-popover-exit-y: -2px;
+  --settings-popover-scale: 0.985;
+  transform-origin: var(--radix-popover-content-transform-origin, top right);
+  will-change: opacity, transform;
 }
 
-.settings-popover[data-state='entering'],
-.settings-popover[data-state='exiting'],
 .settings-popover[data-state='closed'] {
-  opacity: 0;
-  transform: translateY(-6px) scale(0.96);
-  filter: blur(2px);
+  animation: settings-popover-out 140ms ease both;
 }
 
-.settings-popover[data-state='entered'],
 .settings-popover[data-state='open'] {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  filter: blur(0);
+  animation: settings-popover-in 210ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes settings-popover-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--settings-popover-enter-y))
+      scale(var(--settings-popover-scale));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes settings-popover-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(var(--settings-popover-exit-y))
+      scale(var(--settings-popover-scale));
+  }
 }
 
 @media (max-width: 767px) {
@@ -1154,28 +1173,20 @@ html.dark:not([data-code-theme]) .notion-code pre.shiki span {
   }
 
   .settings-popover[data-mobile-center-popover] {
+    --settings-popover-enter-y: -0.25rem;
+    --settings-popover-exit-y: -0.125rem;
     position: static !important;
-    transform-origin: center;
+    transform-origin: top center;
     pointer-events: auto;
-  }
-
-  .settings-popover[data-mobile-center-popover][data-state='entering'],
-  .settings-popover[data-mobile-center-popover][data-state='exiting'],
-  .settings-popover[data-mobile-center-popover][data-state='closed'] {
-    transform: translateY(0.375rem) scale(0.96) !important;
-  }
-
-  .settings-popover[data-mobile-center-popover][data-state='entered'],
-  .settings-popover[data-mobile-center-popover][data-state='open'] {
-    transform: translateY(0) scale(1) !important;
   }
 }
 
 .settings-item {
-  opacity: 0;
-  transform: translateY(8px);
-  animation: hero-fade-up 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: var(--settings-item-delay, 0ms);
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease;
 }
 
 .lightbox-overlay {
@@ -1283,8 +1294,7 @@ html.dark:not([data-code-theme]) .notion-code pre.shiki span {
   .post-hero-icon,
   .post-hero-meta,
   .post-hero-title,
-  .post-hero-description,
-  .settings-item {
+  .post-hero-description {
     animation: none !important;
   }
 
@@ -1294,13 +1304,36 @@ html.dark:not([data-code-theme]) .notion-code pre.shiki span {
 
   .toc-active-rail,
   .component-mobile-bottom-sheet,
-  .settings-popover,
   .lightbox-overlay,
   .lightbox-panel,
   .lightbox-controls,
   .code-copy-toast {
     animation: none !important;
     transition: none !important;
+  }
+
+  .settings-popover {
+    --settings-popover-enter-y: 0;
+    --settings-popover-exit-y: 0;
+    --settings-popover-scale: 1;
+  }
+
+  .settings-popover[data-state='closed'] {
+    animation: settings-popover-out 90ms ease both !important;
+  }
+
+  .settings-popover[data-state='open'] {
+    animation: settings-popover-in 90ms ease both !important;
+  }
+
+  .settings-item,
+  .header-action-control {
+    transition-duration: 90ms !important;
+  }
+
+  .header-action-control:hover {
+    transform: none !important;
+    translate: 0 0 !important;
   }
 
 }

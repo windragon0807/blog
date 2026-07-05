@@ -32,32 +32,32 @@ export function ThemeSettingsMenu() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <IconControlButton srLabel="환경설정 열기">
+        <IconControlButton srLabel="보기 설정 열기">
           <SettingsIcon className="block h-[18px] w-[18px]" />
         </IconControlButton>
       </PopoverTrigger>
       <PopoverContent
         align="end"
         sideOffset={9}
-        aria-label="환경설정 패널"
+        aria-label="보기 설정 패널"
         data-settings-menu-portal=""
         data-mobile-center-popover=""
         onInteractOutside={handleSettingsMenuInteractOutside}
-        className="settings-popover w-[min(92vw,22rem)] rounded-2xl border-zinc-200/90 bg-white/95 p-3 shadow-[0_24px_60px_-30px_rgba(20,20,30,0.55)] backdrop-blur-xl dark:border-zinc-700/80 dark:bg-zinc-900/95"
+        className="settings-popover w-[min(92vw,21rem)] rounded-xl border border-border/80 bg-popover p-2.5 text-popover-foreground shadow-[0_18px_42px_-32px_rgba(15,23,42,0.42)] backdrop-blur-md dark:border-zinc-700/70 dark:shadow-[0_24px_54px_-36px_rgba(2,6,23,0.82)]"
       >
-        <p className="px-1 text-[11px] font-semibold tracking-[0.1em] text-zinc-500 dark:text-zinc-400">
-          SETTINGS
+        <p className="px-1 text-xs font-semibold leading-none text-muted-foreground">
+          보기 설정
         </p>
 
-        <div className="mt-2 grid gap-2.5">
-          <SettingsSection label="Font" delayMs={60}>
+        <div className="mt-2 grid gap-2">
+          <SettingsSection label="색상">
+            <BlogThemeSelect className="h-10 w-full text-sm" />
+          </SettingsSection>
+          <SettingsSection label="글꼴">
             <FontThemeSelect className="h-10 w-full text-sm" />
           </SettingsSection>
-          <SettingsSection label="Code" delayMs={120}>
+          <SettingsSection label="코드">
             <CodeThemeSelect className="h-10 w-full text-sm" />
-          </SettingsSection>
-          <SettingsSection label="Theme" delayMs={180}>
-            <BlogThemeSelect className="h-10 w-full text-sm" />
           </SettingsSection>
         </div>
       </PopoverContent>

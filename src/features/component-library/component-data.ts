@@ -128,6 +128,8 @@ interface ComponentSampleInput {
   props: readonly ComponentProp[]
 }
 
+export const componentRegistryBaseUrl = 'https://ryong-blog.vercel.app/r'
+
 const prop = (
   name: string,
   type: string,
@@ -204,7 +206,7 @@ function createSample({
     title,
     description,
     status: 'Ready',
-    installCommand: `pnpm dlx shadcn@latest add https://ryong.dev/r/${slug}.json`,
+    installCommand: `pnpm dlx shadcn@latest add ${componentRegistryBaseUrl}/${slug}.json`,
     filePath: `src/components/${slug}.tsx`,
     preview: {
       kind: slug,
