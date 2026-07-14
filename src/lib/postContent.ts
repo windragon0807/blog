@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { cache } from 'react'
 import type { Block, KnownBlock, Post, RichText } from '@/types/notion'
 import { getAllContentPosts, getPageBlocks } from './notion'

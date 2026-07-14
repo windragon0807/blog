@@ -1,0 +1,49 @@
+@media (prefers-reduced-motion: reduce) {
+  .post-card-motion,
+  .post-hero-cover,
+  .post-hero-icon,
+  .post-hero-meta,
+  .post-hero-title,
+  .post-hero-description {
+    animation: none !important;
+  }
+
+  .post-card-surface {
+    transition: none !important;
+  }
+
+  .toc-active-rail,
+  .component-mobile-bottom-sheet,
+  .lightbox-overlay,
+  .lightbox-panel,
+  .lightbox-controls,
+  .code-copy-toast {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .settings-popover {
+    --settings-popover-enter-y: 0;
+    --settings-popover-exit-y: 0;
+    --settings-popover-scale: 1;
+  }
+
+  .settings-popover[data-state='closed'] {
+    animation: settings-popover-out 90ms ease both !important;
+  }
+
+  .settings-popover[data-state='open'] {
+    animation: settings-popover-in 90ms ease both !important;
+  }
+
+  .settings-item,
+  .header-action-control {
+    transition-duration: 90ms !important;
+  }
+
+  .header-action-control:hover {
+    transform: none !important;
+    translate: 0 0 !important;
+  }
+
+}

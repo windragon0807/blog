@@ -1,0 +1,211 @@
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-user) !important;
+  overflow-x: clip;
+}
+
+html,
+.custom-scrollbar {
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+  scrollbar-width: thin;
+}
+
+.header-active-aurora {
+  --header-active-aurora-blue: #93c5fd;
+  --header-active-aurora-mint: #a7f3d0;
+  --header-active-aurora-rose: #f9a8d4;
+  --header-active-aurora-violet: #c4b5fd;
+  --header-active-border-offset: 1px;
+  --header-active-icon-fallback: var(--header-active-aurora-violet);
+  --header-active-icon-glow: rgba(147, 197, 253, 0.28);
+  --header-active-radius: var(--radius-xl);
+  --header-active-ring-width: 2px;
+  border-radius: var(--header-active-radius);
+  color: var(--header-active-icon-fallback);
+  isolation: isolate;
+}
+
+.dark .header-active-aurora {
+  --header-active-icon-glow: rgba(196, 181, 253, 0.3);
+}
+
+.header-active-aurora:hover,
+.dark .header-active-aurora:hover {
+  border-color: transparent !important;
+}
+
+.header-active-aurora::before,
+.header-active-aurora::after {
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+  position: absolute;
+}
+
+.header-active-aurora::before {
+  animation: header-aurora-flow 6.5s ease-in-out infinite;
+  background:
+    linear-gradient(
+      135deg,
+      var(--header-active-aurora-rose),
+      var(--header-active-aurora-violet),
+      var(--header-active-aurora-blue),
+      var(--header-active-aurora-mint),
+      var(--header-active-aurora-rose)
+    );
+  background-size: 260% 260%;
+  inset: calc(var(--header-active-border-offset) * -1);
+  opacity: 0.9;
+  z-index: 0;
+}
+
+.header-active-aurora::after {
+  background: rgba(255, 255, 255, 0.76);
+  border-radius: calc(var(--header-active-radius) - var(--header-active-ring-width));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
+  inset: calc(var(--header-active-ring-width) - var(--header-active-border-offset));
+  z-index: 1;
+}
+
+.dark .header-active-aurora::after {
+  background: rgba(24, 24, 27, 0.78);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.header-active-aurora > svg:not(.header-aurora-icon-defs) {
+  color: var(--header-active-icon-fallback);
+  filter: drop-shadow(0 1px 4px var(--header-active-icon-glow));
+  position: relative;
+  stroke: url("#header-active-aurora-icon-gradient") currentColor;
+  z-index: 10;
+}
+
+.header-active-aurora > svg:not(.header-aurora-icon-defs)[fill="currentColor"],
+.header-active-aurora > svg:not(.header-aurora-icon-defs) [fill="currentColor"] {
+  fill: url("#header-active-aurora-icon-gradient") currentColor;
+}
+
+.emoticon-collection-label {
+  display: inline-block;
+  text-box: trim-both cap alphabetic;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header-active-aurora::before {
+    animation: none;
+    background-position: 50% 50%;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .emoticon-action-button:hover {
+    transform: translateY(-1px);
+  }
+
+  .emoticon-action-button[data-tone="default"]:hover {
+    background: rgba(255, 255, 255, 0.86);
+    border-color: rgba(255, 255, 255, 0.98);
+    box-shadow:
+      0 22px 42px -22px rgba(15, 23, 42, 0.38),
+      0 8px 18px -12px rgba(15, 23, 42, 0.28),
+      inset 0 1px 0 rgba(255, 255, 255, 0.96),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.48);
+  }
+
+  .dark .emoticon-action-button[data-tone="default"]:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.22);
+    box-shadow:
+      0 24px 44px -22px rgba(2, 6, 23, 0.92),
+      0 8px 20px -12px rgba(2, 6, 23, 0.78),
+      inset 0 1px 0 rgba(255, 255, 255, 0.14),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .emoticon-action-button[data-tone="success"]:hover,
+  .emoticon-action-button[data-tone="error"]:hover {
+    filter: brightness(1.04);
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --scrollbar-thumb: #000000;
+    --scrollbar-thumb-hover: #000000;
+    --scrollbar-thumb-active: #000000;
+    --scrollbar-track: #ffffff;
+    --scrollbar-track-hover: #ffffff;
+  }
+
+  html.dark {
+    --scrollbar-thumb: #ffffff;
+    --scrollbar-thumb-hover: #ffffff;
+    --scrollbar-thumb-active: #ffffff;
+    --scrollbar-track: #000000;
+    --scrollbar-track-hover: #000000;
+  }
+}
+
+.os-theme-ryonglog {
+  --os-size: 11px;
+  --os-padding-perpendicular: 2px;
+  --os-padding-axis: 3px;
+  --os-track-border-radius: 999px;
+  --os-track-bg: transparent;
+  --os-track-bg-hover: var(--scrollbar-track-hover);
+  --os-track-bg-active: var(--scrollbar-track-hover);
+  --os-handle-border-radius: 999px;
+  --os-handle-bg: var(--scrollbar-thumb);
+  --os-handle-bg-hover: var(--scrollbar-thumb-hover);
+  --os-handle-bg-active: var(--scrollbar-thumb-active);
+  --os-handle-min-size: 42px;
+  --os-handle-perpendicular-size: 6px;
+  --os-handle-perpendicular-size-hover: 8px;
+  --os-handle-perpendicular-size-active: 8px;
+  --os-handle-interactive-area-offset: 4px;
+}
+
+.os-scrollbar.os-theme-ryonglog {
+  transition:
+    opacity 420ms ease,
+    visibility 420ms ease,
+    top 160ms ease,
+    right 160ms ease,
+    bottom 160ms ease,
+    left 160ms ease;
+}
+
+.os-theme-ryonglog.os-scrollbar-horizontal {
+  --os-size: 12px;
+}
+
+/* Radix Select(react-remove-scroll-bar) 의 scroll-lock 보정 차단.
+   라이브러리는 mount 시 <head> 끝에 `body[data-scroll-locked] { margin-right/padding-right ... !important }`
+   를 동적 주입한다. 빌드된 내 CSS 는 더 일찍 들어가서 같은 specificity 일 때 source-order 로 밀린다.
+   `html body[data-scroll-locked][data-scroll-locked]` 로 specificity 를 한 단계 올려 무조건 덮어쓰기. */
+html body[data-scroll-locked][data-scroll-locked] {
+  margin-right: 0 !important;
+  padding-right: 0 !important;
+  /* position: relative 가 sticky 헤더의 containing block 을 바꿔 미세 reposition 일으키는 케이스 차단 */
+  position: static !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  button:not(:disabled):not([aria-disabled='true']),
+  [role='button']:not([aria-disabled='true']),
+  input:is([type='button'], [type='submit'], [type='reset']):not(:disabled),
+  a[href],
+  summary {
+    cursor: pointer;
+  }
+}
+
+::selection {
+  background: var(--theme-selection-bg);
+}
+
+::-moz-selection {
+  background: var(--theme-selection-bg);
+}
+

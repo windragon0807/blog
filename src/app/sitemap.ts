@@ -5,11 +5,12 @@ import {
   getAllSeries,
   getPortfolioPosts,
 } from '@/lib/notion'
+import { getPublicSiteUrl } from '@/lib/server/env'
 
 export const revalidate = 3600
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+  const siteUrl = getPublicSiteUrl() ?? 'http://localhost:3000'
   const [posts, portfolioPosts, tags, seriesList] = await Promise.all([
     getAllContentPosts(),
     getPortfolioPosts(),

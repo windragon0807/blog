@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
+import { getPublicSiteUrl } from '@/lib/server/env'
 
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ryong.dev'
+export const SITE_URL = getPublicSiteUrl() ?? 'https://ryong.dev'
 export const SITE_NAME = 'ryong.log'
 export const SITE_AUTHOR = '정승룡'
 export const SITE_DESCRIPTION =

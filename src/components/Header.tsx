@@ -9,6 +9,7 @@ import {
   PuzzleIcon,
   SmileStorageIcon,
 } from '@/components/icons'
+import { useEmoticonManifestPrefetch } from '@/hooks/use-emoticon-manifest-prefetch'
 import { usePostsPrefetch } from '@/hooks/usePostsPrefetch'
 import { cn } from '@/lib/utils'
 import { AppLauncherMenu } from './AppLauncherMenu'
@@ -85,6 +86,7 @@ function HeaderNavLink({
 
 export function Header() {
   const prefetchPosts = usePostsPrefetch()
+  const prefetchEmoticons = useEmoticonManifestPrefetch()
   const pathname = usePathname()
   const isHomeActive = pathname === '/'
   const isComponentsActive = pathname === '/components' || pathname.startsWith('/components/')
@@ -124,6 +126,9 @@ export function Header() {
                 href="/emoticons"
                 label="이모티콘 스토리지로 이동"
                 isActive={isEmoticonsActive}
+                onFocus={prefetchEmoticons}
+                onMouseEnter={prefetchEmoticons}
+                onTouchStart={prefetchEmoticons}
               >
                 <SmileStorageIcon className="h-[18px] w-[18px]" />
               </HeaderNavLink>

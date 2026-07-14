@@ -2,6 +2,7 @@ import { createHmac, timingSafeEqual } from 'node:crypto'
 import { NextRequest } from 'next/server'
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { getPostByPageId, NOTION_CACHE_TAGS } from '@/lib/notion'
+import { getNotionWebhookVerificationToken } from '@/lib/server/env'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -119,7 +120,7 @@ export async function POST(request: NextRequest) {
     })
   }
 
-  const configuredToken = process.env.NOTION_WEBHOOK_VERIFICATION_TOKEN?.trim()
+  const configuredToken = getNotionWebhookVerificationToken()?.trim()
   if (!configuredToken) {
     return Response.json(
       {

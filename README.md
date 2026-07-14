@@ -5,6 +5,7 @@ Notion Database를 CMS로 사용하는 Next.js 기반 개인 기술 블로그입
 ## 프로젝트 문서
 
 - 기능/라우트/운영 지도: [`docs/PROJECT_FEATURES.md`](docs/PROJECT_FEATURES.md)
+- 코드 컨벤션/런타임 경계: [`docs/CODE_CONVENTIONS.md`](docs/CODE_CONVENTIONS.md)
 
 ## 주요 기능
 
@@ -74,12 +75,11 @@ public
 
 ### 0) Node 버전 맞추기
 
-이 프로젝트는 `Node 26.4.0` 기준으로 동작합니다.
+이 프로젝트의 런타임 기준은 `Node 24.x`입니다.
 
-- `nvm`/`fnm`/`asdf`/`mise` 같은 버전 매니저를 쓴다면 프로젝트 루트에서 `26.4.0` 버전을 사용하세요.
-- `.nvmrc`, `.node-version` 파일이 포함되어 있어서 지원하는 도구는 자동으로 인식할 수 있습니다.
+- `nvm`/`fnm`/`asdf`/`mise` 같은 버전 매니저는 프로젝트 루트의 `.nvmrc` 또는 `.node-version`을 사용하세요.
+- 런타임 기준은 `.nvmrc`, `.node-version`, `package.json`의 `engines.node`가 함께 정의하며, 세 값은 모두 `24.x`로 유지합니다.
 - 패키지 매니저는 `pnpm@11.9.0` 기준입니다. `npm install`, `yarn install`은 프로젝트 가드에서 차단됩니다.
-- `pnpm` 스크립트는 `package.json`의 `devEngines.runtime` 기준으로 Node 26.4.0 런타임을 사용합니다.
 
 ### 1) 설치
 
@@ -94,6 +94,8 @@ pnpm install
 ```bash
 NOTION_API_KEY=secret_xxx
 NOTION_DATABASE_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# 선택: 비워두면 앱의 기존 포트폴리오 DB fallback을 사용합니다.
+NOTION_PORTFOLIO_DATABASE_ID=
 NOTION_WEBHOOK_VERIFICATION_TOKEN=
 NEXT_PUBLIC_SITE_URL=http://localhost:3200
 ```
@@ -176,6 +178,7 @@ pnpm lint
 - 배포 환경에 아래 환경변수 설정
   - `NOTION_API_KEY`
   - `NOTION_DATABASE_ID`
+  - `NOTION_PORTFOLIO_DATABASE_ID` (선택, 미설정 시 기존 fallback 사용)
   - `NOTION_WEBHOOK_VERIFICATION_TOKEN` (Webhook 연결 시)
   - `NEXT_PUBLIC_SITE_URL` (실제 도메인)
 - Notion Integration이 DB에 초대되어 있는지 확인

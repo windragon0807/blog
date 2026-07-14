@@ -1,6 +1,14 @@
+import 'server-only'
+
 import { Client } from '@notionhq/client'
 import { unstable_cache } from 'next/cache'
 import { cache } from 'react'
+import {
+  getNodeEnv,
+  getNotionApiKey,
+  getNotionDatabaseId,
+  getNotionPortfolioDatabaseId,
+} from '@/lib/server/env'
 import type { Post, PostSource, Block, RichText } from '@/types/notion'
 import type {
   PageObjectResponse,
@@ -10,12 +18,12 @@ import type {
 } from '@notionhq/client/build/src/api-endpoints'
 
 const notion = new Client({
-  auth: process.env.NOTION_API_KEY,
+  auth: getNotionApiKey(),
 })
 
-const BLOG_DATABASE_ID = process.env.NOTION_DATABASE_ID!
+const BLOG_DATABASE_ID = getNotionDatabaseId()!
 const PORTFOLIO_DATABASE_ID =
-  process.env.NOTION_PORTFOLIO_DATABASE_ID?.trim() || '31d3d4af55eb80989dddeb5baa502d11'
+  getNotionPortfolioDatabaseId()?.trim() || '31d3d4af55eb80989dddeb5baa502d11'
 
 const POST_DETAIL_DATABASE_IDS = Array.from(
   new Set([BLOG_DATABASE_ID, PORTFOLIO_DATABASE_ID].filter(Boolean))
@@ -23,7 +31,7 @@ const POST_DETAIL_DATABASE_IDS = Array.from(
 
 // 전체 콘텐츠 DB (webhook 검증 / getPostByPageId 등 generic lookup용)
 const CONTENT_DATABASE_IDS = POST_DETAIL_DATABASE_IDS
-const CACHE_TTL_SECONDS = process.env.NODE_ENV === 'development' ? 120 : 3600
+const CACHE_TTL_SECONDS = getNodeEnv() === 'development' ? 120 : 3600
 
 export const NOTION_CACHE_TAGS = {
   schema: 'notion:schema',
