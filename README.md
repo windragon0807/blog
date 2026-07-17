@@ -65,7 +65,6 @@ src
 └─ features/resume/*            # 이력서 데이터/렌더러/PDF 다운로드
 
 public
-├─ brand/ryonglog-icon.svg
 ├─ resume/*                     # 이력서 프로필/로고/프로젝트 이미지
 ├─ fonts/maplestory/*.otf
 └─ vscode-icons/*               # 코드 언어 아이콘 리소스
