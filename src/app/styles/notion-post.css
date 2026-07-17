@@ -1,3 +1,37 @@
+.notion-content {
+  font-size: var(--reading-font-size, 1rem);
+  font-weight: var(--reading-font-weight, 400);
+}
+
+.notion-content :where(p, li, summary) {
+  line-height: var(--reading-line-height, 1.75);
+}
+
+[data-reading-surface='post-card-title'] {
+  font-weight: var(--reading-font-weight, 400);
+  line-height: 1.375;
+}
+
+html[data-reading-line-height='compact'] [data-reading-surface='post-card-title'] {
+  line-height: 1.25;
+}
+
+html[data-reading-line-height='spacious'] [data-reading-surface='post-card-title'] {
+  line-height: 1.5;
+}
+
+[data-reading-card-size='compact'] {
+  font-size: var(--reading-font-size, 1rem);
+}
+
+[data-reading-card-size='grid'] {
+  font-size: calc(var(--reading-font-size, 1rem) + 0.125rem);
+}
+
+[data-reading-card-size='list'] {
+  font-size: calc(var(--reading-font-size, 1rem) + 0.72rem);
+}
+
 .notion-content strong,
 .notion-content b {
   color: var(--theme-accent-current);
@@ -330,4 +364,3 @@ html.dark:not([data-code-theme]) .notion-code pre.shiki span {
 .dark .notion-code pre.shiki .code-line:target {
   animation: code-line-target-flash-dark 540ms ease-out both;
 }
-

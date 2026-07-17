@@ -26,6 +26,103 @@
 }
 
 @font-face {
+  font-family: 'Chosun Myeongjo';
+  src: url('/fonts/chosun-myeongjo/ChosunNm.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Moneygraphy Rounded';
+  src: url('https://static.toss.im/assets/homepage/moneygraphy-font/font/Moneygraphy-Rounded-1.1.woff2')
+    format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Chosun Gulim';
+  src: url('/fonts/chosun-gulim/ChosunGu.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('/fonts/paperlogy/Paperlogy-Thin.woff2') format('woff2');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('/fonts/paperlogy/Paperlogy-ExtraLight.woff2') format('woff2');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('/fonts/paperlogy/Paperlogy-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('/fonts/paperlogy/Paperlogy-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('/fonts/paperlogy/Paperlogy-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('/fonts/paperlogy/Paperlogy-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('/fonts/paperlogy/Paperlogy-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('/fonts/paperlogy/Paperlogy-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('/fonts/paperlogy/Paperlogy-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'Hancom MalangMalang';
   src: url('/fonts/hancom-malangmalang/HancomMalangMalang-Bold.otf')
     format('opentype');
@@ -69,6 +166,9 @@
   --sidebar-border: rgba(228, 228, 231, 0.9);
   --sidebar-ring: #a1a1aa;
   --font-user: Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif;
+  --reading-font-size: 1rem;
+  --reading-line-height: 1.75;
+  --reading-font-weight: 400;
   --theme-accent: #171717;
   --theme-accent-dark: #f3f4f6;
   --theme-accent-current: var(--theme-accent);
@@ -104,6 +204,29 @@ html[data-font-theme='maplestory'] {
 
 html[data-font-theme='hancom-malangmalang'] {
   --font-user: 'Hancom MalangMalang', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif;
+}
+
+html[data-font-theme='chosun-myeongjo'] {
+  --font-user: 'Chosun Myeongjo', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif;
+}
+
+html[data-font-theme='moneygraphy'] {
+  --font-user: 'Moneygraphy Rounded', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif;
+}
+
+html[data-font-theme='chosun-gulim'] {
+  --font-user: 'Chosun Gulim', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif;
+}
+
+html[data-font-theme='paperlogy'] {
+  --font-user: 'Paperlogy', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif;
+}
+
+@media (forced-colors: active) {
+  [data-font-theme-option][data-selected='true'] {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
 }
 
 html.dark {
@@ -312,4 +435,3 @@ html {
 html.dark {
   color-scheme: dark;
 }
-

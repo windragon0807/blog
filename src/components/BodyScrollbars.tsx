@@ -1,21 +1,8 @@
 'use client'
 
 import { useEffect } from 'react'
-import { OverlayScrollbars, type PartialOptions } from 'overlayscrollbars'
-
-const BODY_SCROLLBAR_OPTIONS = {
-  overflow: {
-    x: 'hidden',
-    y: 'scroll',
-  },
-  scrollbars: {
-    autoHide: 'scroll',
-    autoHideDelay: 640,
-    clickScroll: true,
-    dragScroll: true,
-    theme: 'os-theme-ryonglog',
-  },
-} satisfies PartialOptions
+import { OverlayScrollbars } from 'overlayscrollbars'
+import { BODY_SCROLLBAR_OPTIONS } from '@/lib/scrollbars'
 
 export function BodyScrollbars() {
   useEffect(() => {

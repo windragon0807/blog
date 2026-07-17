@@ -1,3 +1,82 @@
+html[data-reduced-motion='true'] .post-card-motion,
+html[data-reduced-motion='true'] .post-hero-cover,
+html[data-reduced-motion='true'] .post-hero-icon,
+html[data-reduced-motion='true'] .post-hero-meta,
+html[data-reduced-motion='true'] .post-hero-title,
+html[data-reduced-motion='true'] .post-hero-description {
+  animation: none !important;
+}
+
+html[data-reduced-motion='true'] .post-card-surface,
+html[data-reduced-motion='true'] .toc-active-rail,
+html[data-reduced-motion='true'] .component-mobile-bottom-sheet,
+html[data-reduced-motion='true'] .lightbox-overlay,
+html[data-reduced-motion='true'] .lightbox-panel,
+html[data-reduced-motion='true'] .lightbox-controls,
+html[data-reduced-motion='true'] .code-copy-toast,
+html[data-reduced-motion='true'] .notion-toggle::details-content {
+  animation: none !important;
+  transition: none !important;
+}
+
+html[data-reduced-motion='true'] .settings-drawer-overlay[data-state='open'],
+html[data-reduced-motion='true'] .settings-drawer-panel[data-state='open'] {
+  animation: settings-drawer-reduced-in 90ms ease both !important;
+}
+
+html[data-reduced-motion='true'] .settings-drawer-overlay[data-state='closed'],
+html[data-reduced-motion='true'] .settings-drawer-panel[data-state='closed'] {
+  animation: settings-drawer-reduced-out 90ms ease both !important;
+}
+
+html[data-reduced-motion='true'] .settings-popover {
+  --settings-popover-enter-y: 0;
+  --settings-popover-exit-y: 0;
+  --settings-popover-scale: 1;
+}
+
+html[data-reduced-motion='true'] .settings-popover[data-state='open'] {
+  animation: settings-popover-in 90ms ease both !important;
+}
+
+html[data-reduced-motion='true'] .settings-popover[data-state='closed'] {
+  animation: settings-popover-out 90ms ease both !important;
+}
+
+html[data-reduced-motion='true'] .settings-item,
+html[data-reduced-motion='true'] .header-action-control {
+  transition-duration: 90ms !important;
+}
+
+html[data-reduced-motion='true'] .settings-segmented-indicator {
+  transition: none !important;
+}
+
+html[data-reduced-motion='true'] .header-action-control:hover {
+  transform: none !important;
+  translate: 0 0 !important;
+}
+
+@keyframes settings-drawer-reduced-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes settings-drawer-reduced-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .post-card-motion,
   .post-hero-cover,
@@ -8,18 +87,26 @@
     animation: none !important;
   }
 
-  .post-card-surface {
-    transition: none !important;
-  }
-
+  .post-card-surface,
   .toc-active-rail,
   .component-mobile-bottom-sheet,
   .lightbox-overlay,
   .lightbox-panel,
   .lightbox-controls,
-  .code-copy-toast {
+  .code-copy-toast,
+  .notion-toggle::details-content {
     animation: none !important;
     transition: none !important;
+  }
+
+  .settings-drawer-overlay[data-state='open'],
+  .settings-drawer-panel[data-state='open'] {
+    animation: settings-drawer-reduced-in 90ms ease both !important;
+  }
+
+  .settings-drawer-overlay[data-state='closed'],
+  .settings-drawer-panel[data-state='closed'] {
+    animation: settings-drawer-reduced-out 90ms ease both !important;
   }
 
   .settings-popover {
@@ -28,12 +115,12 @@
     --settings-popover-scale: 1;
   }
 
-  .settings-popover[data-state='closed'] {
-    animation: settings-popover-out 90ms ease both !important;
-  }
-
   .settings-popover[data-state='open'] {
     animation: settings-popover-in 90ms ease both !important;
+  }
+
+  .settings-popover[data-state='closed'] {
+    animation: settings-popover-out 90ms ease both !important;
   }
 
   .settings-item,
@@ -41,9 +128,12 @@
     transition-duration: 90ms !important;
   }
 
+  .settings-segmented-indicator {
+    transition: none !important;
+  }
+
   .header-action-control:hover {
     transform: none !important;
     translate: 0 0 !important;
   }
-
 }

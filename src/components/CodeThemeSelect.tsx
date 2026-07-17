@@ -3,6 +3,9 @@
 import { useEffect, useState } from 'react'
 import {
   CODE_THEME_OPTIONS,
+  CODE_THEME_PREVIEW_LINES,
+  CODE_THEME_PREVIEW_PALETTES,
+  CODE_THEME_STORAGE_KEY,
   DEFAULT_DARK_CODE_THEME,
   DEFAULT_LIGHT_CODE_THEME,
   type CodeThemeName,
@@ -17,8 +20,6 @@ import {
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 
-const STORAGE_KEY = 'code-theme'
-
 type CodeThemeSelectProps = {
   className?: string
 }
@@ -26,25 +27,64 @@ type CodeThemeSelectProps = {
 export function CodeThemeSelect({ className = '' }: CodeThemeSelectProps) {
   const [selectedTheme, setSelectedTheme] = useState<CodeThemeName>(readInitialTheme)
 
-  const handleChange = (nextTheme: CodeThemeName) => {
-    setSelectedTheme(nextTheme)
-  }
-
   useEffect(() => {
     applyCodeTheme(selectedTheme)
     try {
-      localStorage.setItem(STORAGE_KEY, selectedTheme)
+      localStorage.setItem(CODE_THEME_STORAGE_KEY, selectedTheme)
     } catch {
       // Ignore storage failures in private mode.
     }
   }, [selectedTheme])
 
+  const previewPalette = CODE_THEME_PREVIEW_PALETTES[selectedTheme]
+
   return (
-    <label className="block">
-      <span className="sr-only">코드 테마</span>
+    <div className="grid gap-3">
+      <div
+        aria-label="코드 테마 미리보기"
+        className="overflow-hidden rounded-xl border border-black/10 shadow-[0_1px_2px_rgba(0,0,0,0.08)]"
+        style={{
+          backgroundColor: previewPalette.background,
+          color: previewPalette.foreground,
+        }}
+      >
+        <div className="flex items-center justify-between border-b border-white/10 px-3 py-2 font-mono text-[10px] opacity-65">
+          <span>theme.ts</span>
+          <span>TypeScript</span>
+        </div>
+        <pre
+          tabIndex={0}
+          aria-label="테마 코드 예시"
+          className="overflow-x-auto px-3 py-3 font-mono text-[10px] leading-[1.15rem] outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-white focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-black"
+        >
+          <code>
+            {CODE_THEME_PREVIEW_LINES.map((line, lineIndex) => (
+              <span key={lineIndex}>
+                {line.map((segment) => (
+                  <span
+                    key={segment.id}
+                    data-code-preview-token={segment.index}
+                    data-code-preview-segment={segment.id}
+                    style={{
+                      color:
+                        previewPalette.colors[
+                          previewPalette.tokenColorIndexes[segment.index]
+                        ],
+                    }}
+                  >
+                    {segment.content}
+                  </span>
+                ))}
+                {lineIndex < CODE_THEME_PREVIEW_LINES.length - 1 ? '\n' : null}
+              </span>
+            ))}
+          </code>
+        </pre>
+      </div>
+
       <Select
         value={selectedTheme}
-        onValueChange={(value) => handleChange(value as CodeThemeName)}
+        onValueChange={(value) => setSelectedTheme(value as CodeThemeName)}
       >
         <SelectTrigger
           aria-label="코드 테마 선택"
@@ -60,7 +100,7 @@ export function CodeThemeSelect({ className = '' }: CodeThemeSelectProps) {
           ))}
         </SelectContent>
       </Select>
-    </label>
+    </div>
   )
 }
 
@@ -79,12 +119,20 @@ function readInitialTheme(): CodeThemeName {
   }
 
   try {
-    const storedTheme = localStorage.getItem(STORAGE_KEY)
+    const storedTheme = localStorage.getItem(CODE_THEME_STORAGE_KEY)
     if (isCodeThemeName(storedTheme)) {
       return storedTheme
     }
   } catch {
     // Storage can be unavailable in private mode.
+  }
+
+  return getDefaultCodeTheme()
+}
+
+function getDefaultCodeTheme(): CodeThemeName {
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return DEFAULT_LIGHT_CODE_THEME
   }
 
   const prefersDark =

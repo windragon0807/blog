@@ -1,21 +1,24 @@
 'use client'
 
 import { useState } from 'react'
+import { XIcon } from 'lucide-react'
 import { SettingsSection } from '@/components/common/SettingsSection'
 import { SettingsIcon } from '@/components/icons'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer'
 import { BlogThemeSelect } from './BlogThemeSelect'
-import { CodeThemeSelect } from './CodeThemeSelect'
-import { FontThemeSelect } from './FontThemeSelect'
 import { IconControlButton } from './IconControlButton'
+import { ReadingPreferencesControls } from './ReadingPreferencesControls'
 
 const SETTINGS_MENU_PORTAL_SELECTOR = '[data-settings-menu-portal]'
 
-function handleSettingsMenuInteractOutside(event: Event) {
+function handleSettingsDrawerInteractOutside(event: Event) {
   const target = event.target
 
   if (
@@ -30,37 +33,50 @@ export function ThemeSettingsMenu() {
   const [open, setOpen] = useState(false)
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <IconControlButton srLabel="보기 설정 열기">
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>
+        <IconControlButton srLabel="설정 열기">
           <SettingsIcon className="block h-[18px] w-[18px]" />
         </IconControlButton>
-      </PopoverTrigger>
-      <PopoverContent
-        align="end"
-        sideOffset={9}
-        aria-label="보기 설정 패널"
-        data-settings-menu-portal=""
-        data-mobile-center-popover=""
-        onInteractOutside={handleSettingsMenuInteractOutside}
-        className="settings-popover w-[min(92vw,21rem)] rounded-xl border border-border/80 bg-popover p-2.5 text-popover-foreground shadow-[0_18px_42px_-32px_rgba(15,23,42,0.42)] backdrop-blur-md dark:border-zinc-700/70 dark:shadow-[0_24px_54px_-36px_rgba(2,6,23,0.82)]"
-      >
-        <p className="px-1 text-xs font-semibold leading-none text-muted-foreground">
-          보기 설정
-        </p>
+      </DrawerTrigger>
 
-        <div className="mt-2 grid gap-2">
-          <SettingsSection label="색상">
-            <BlogThemeSelect className="h-10 w-full text-sm" />
-          </SettingsSection>
-          <SettingsSection label="글꼴">
-            <FontThemeSelect className="h-10 w-full text-sm" />
-          </SettingsSection>
-          <SettingsSection label="코드">
-            <CodeThemeSelect className="h-10 w-full text-sm" />
-          </SettingsSection>
-        </div>
-      </PopoverContent>
-    </Popover>
+      <DrawerContent
+        aria-describedby={undefined}
+        onInteractOutside={handleSettingsDrawerInteractOutside}
+      >
+        <header className="shrink-0 px-5 pb-3 pt-3 sm:px-6 sm:pb-4 sm:pt-[max(1.25rem,env(safe-area-inset-top))]">
+          <div className="flex items-center justify-between gap-4">
+            <DrawerTitle>설정</DrawerTitle>
+            <DrawerClose asChild>
+              <button
+                type="button"
+                aria-label="설정 닫기"
+                className="relative flex size-9 shrink-0 items-center justify-center rounded-lg border border-border/70 bg-background text-muted-foreground outline-none transition-[background-color,color,transform] after:absolute after:-inset-1 after:content-[''] hover:bg-muted hover:text-foreground active:translate-y-px focus-visible:ring-2 focus-visible:ring-ring/45"
+              >
+                <XIcon aria-hidden="true" className="size-[18px]" />
+              </button>
+            </DrawerClose>
+          </div>
+        </header>
+
+        <ScrollArea
+          data-lenis-prevent=""
+          className="settings-drawer-scroll min-h-0 flex-1"
+        >
+          <div className="px-4 pb-4 pt-1 sm:px-5 sm:pb-5 sm:pt-1">
+            <div className="grid gap-3">
+              <SettingsSection
+                label="색상"
+                description="강조 색상과 코드 표시 색상에 함께 반영됩니다."
+              >
+                <BlogThemeSelect />
+              </SettingsSection>
+
+              <ReadingPreferencesControls />
+            </div>
+          </div>
+        </ScrollArea>
+      </DrawerContent>
+    </Drawer>
   )
 }

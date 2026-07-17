@@ -13,7 +13,7 @@ export const BLOG_THEME_VALUES = [
 
 export type BlogThemeName = (typeof BLOG_THEME_VALUES)[number]
 
-type BlogThemePalette = {
+export type BlogThemePalette = {
   accent: string
   accentDark: string
   selection: string
@@ -244,6 +244,14 @@ export const BLOG_THEME_OPTIONS: ReadonlyArray<{
 ]
 
 export const DEFAULT_BLOG_THEME: BlogThemeName = 'ink'
+export const DEFAULT_CUSTOM_BLOG_THEME_COLOR = '#2F67DA'
+export const BLOG_THEME_STORAGE_KEY = 'blog-theme'
+export const BLOG_THEME_USER_SET_STORAGE_KEY = 'blog-theme-user-set'
+export const BLOG_THEME_CUSTOM_COLOR_STORAGE_KEY =
+  'blog-theme-custom-color'
+export const MINIMUM_TEXT_CONTRAST = 4.5
+export const CUSTOM_THEME_LIGHT_SURFACE = '#FFFFFF'
+export const CUSTOM_THEME_DARK_SURFACE = '#171A23'
 
 const BLOG_THEME_SET = new Set<string>(BLOG_THEME_VALUES)
 
@@ -255,4 +263,131 @@ export function isBlogThemeName(
 
 export function getBlogThemePalette(theme: BlogThemeName): BlogThemePalette {
   return BLOG_THEME_PALETTES[theme]
+}
+
+export function isHexColor(value: string | null | undefined): value is string {
+  return Boolean(value && /^#[0-9a-f]{6}$/i.test(value))
+}
+
+export function normalizeHexColor(value: string): string {
+  const withHash = value.startsWith('#') ? value : `#${value}`
+  return withHash.toUpperCase()
+}
+
+export function createCustomBlogThemePalette(
+  color: string
+): BlogThemePalette {
+  const accent = normalizeHexColor(color)
+  const lightText = ensureContrast(accent, CUSTOM_THEME_LIGHT_SURFACE)
+  const darkText = ensureContrast(accent, CUSTOM_THEME_DARK_SURFACE)
+  const lightInlineText = ensureContrast(
+    accent,
+    mixHexColors(CUSTOM_THEME_LIGHT_SURFACE, accent, 0.1)
+  )
+  const darkInlineText = ensureContrast(
+    accent,
+    mixHexColors(CUSTOM_THEME_DARK_SURFACE, accent, 0.22)
+  )
+
+  return {
+    accent: lightText,
+    accentDark: darkText,
+    selection: `color-mix(in srgb, ${accent} 24%, transparent)`,
+    progressStart: `color-mix(in srgb, ${accent} 76%, #111827)`,
+    progressMid: accent,
+    progressEnd: `color-mix(in srgb, ${accent} 45%, #ffffff)`,
+    progressGlow: `color-mix(in srgb, ${accent} 34%, transparent)`,
+    progressDarkStart: `color-mix(in srgb, ${accent} 78%, #ffffff)`,
+    progressDarkMid: `color-mix(in srgb, ${accent} 88%, #ffffff)`,
+    progressDarkEnd: `color-mix(in srgb, ${accent} 42%, #ffffff)`,
+    progressDarkGlow: `color-mix(in srgb, ${accent} 28%, transparent)`,
+    inlineCodeBg: `color-mix(in srgb, ${accent} 10%, transparent)`,
+    inlineCodeBorder: `color-mix(in srgb, ${accent} 28%, transparent)`,
+    inlineCodeText: lightInlineText,
+    inlineCodeDarkBg: `color-mix(in srgb, ${accent} 22%, transparent)`,
+    inlineCodeDarkBorder: `color-mix(in srgb, ${accent} 44%, transparent)`,
+    inlineCodeDarkText: darkInlineText,
+  }
+}
+
+function ensureContrast(
+  color: string,
+  background: string,
+  minimumContrast = MINIMUM_TEXT_CONTRAST
+): string {
+  if (getContrastRatio(color, background) >= minimumContrast) return color
+
+  const target =
+    getContrastRatio('#000000', background) >=
+    getContrastRatio('#FFFFFF', background)
+      ? '#000000'
+      : '#FFFFFF'
+  let lowerBound = 0
+  let upperBound = 1
+  let bestColor = target
+
+  for (let index = 0; index < 24; index += 1) {
+    const ratio = (lowerBound + upperBound) / 2
+    const candidate = mixHexColors(color, target, ratio)
+
+    if (getContrastRatio(candidate, background) >= minimumContrast) {
+      bestColor = candidate
+      upperBound = ratio
+    } else {
+      lowerBound = ratio
+    }
+  }
+
+  return bestColor
+}
+
+function mixHexColors(
+  background: string,
+  foreground: string,
+  foregroundRatio: number
+): string {
+  const backgroundChannels = parseHexColor(background)
+  const foregroundChannels = parseHexColor(foreground)
+  return formatHexColor(
+    backgroundChannels.map((channel, index) =>
+      Math.round(
+        channel * (1 - foregroundRatio) +
+          foregroundChannels[index] * foregroundRatio
+      )
+    )
+  )
+}
+
+function getContrastRatio(foreground: string, background: string): number {
+  const foregroundLuminance = getRelativeLuminance(foreground)
+  const backgroundLuminance = getRelativeLuminance(background)
+  return (
+    (Math.max(foregroundLuminance, backgroundLuminance) + 0.05) /
+    (Math.min(foregroundLuminance, backgroundLuminance) + 0.05)
+  )
+}
+
+function getRelativeLuminance(color: string): number {
+  const [red, green, blue] = parseHexColor(color).map((channel) => {
+    const normalized = channel / 255
+    return normalized <= 0.04045
+      ? normalized / 12.92
+      : ((normalized + 0.055) / 1.055) ** 2.4
+  })
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue
+}
+
+function parseHexColor(color: string): number[] {
+  const normalized = normalizeHexColor(color)
+  return [
+    Number.parseInt(normalized.slice(1, 3), 16),
+    Number.parseInt(normalized.slice(3, 5), 16),
+    Number.parseInt(normalized.slice(5, 7), 16),
+  ]
+}
+
+function formatHexColor(channels: number[]): string {
+  return `#${channels
+    .map((channel) => channel.toString(16).padStart(2, '0'))
+    .join('')}`.toUpperCase()
 }

@@ -41,8 +41,8 @@ const exactCustomVariant =
 const exactThemeHash =
   'ba96305a64dcd6f9789f4cc04e4f10a0605d8d47d37681e32bbedb1a3f8167bb'
 const monolith = {
-  bytes: 33_475,
-  sha256: '223a7733aa1a1d1db85dba5c10bbdc83322ec564f5133e46f27a274bb99523f7',
+  bytes: 44_389,
+  sha256: '3d6ca1e489086dfffb26cf7b57ca4b341eeea337ac77c2b4542c257bab64239a',
 }
 
 function sha256(value) {

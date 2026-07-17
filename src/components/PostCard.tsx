@@ -136,6 +136,10 @@ export function PostCard({
               )}
               <div className="min-w-0 flex-1">
                 <h2
+                  data-reading-surface="post-card-title"
+                  data-reading-card-size={
+                    isList ? 'list' : isCompact ? 'compact' : 'grid'
+                  }
                   className={`line-clamp-2 leading-snug font-semibold text-zinc-900 transition-colors duration-300 ease-out group-hover:text-blue-600 dark:text-zinc-100 dark:group-hover:text-blue-400 ${
                     isList
                       ? 'text-[1.72rem]'

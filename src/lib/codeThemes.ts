@@ -77,6 +77,7 @@ export const CODE_THEME_OPTIONS: ReadonlyArray<{
 
 export const DEFAULT_LIGHT_CODE_THEME: CodeThemeName = 'one-light'
 export const DEFAULT_DARK_CODE_THEME: CodeThemeName = 'one-dark-pro'
+export const CODE_THEME_STORAGE_KEY = 'code-theme'
 
 export const SHIKI_THEME_RECORD = Object.fromEntries(
   CODE_THEME_VALUES.map((theme) => [theme, theme])
@@ -94,6 +95,19 @@ html[data-code-theme='${theme}'] .notion-code pre.shiki span {
 }
 `
 ).join('\n')
+
+import {
+  CODE_THEME_PREVIEW_LINES,
+  RAW_CODE_THEME_PREVIEW_PALETTES,
+  type CodeThemePreviewPalette,
+} from './codeThemePreviewPalettes'
+
+export const CODE_THEME_PREVIEW_PALETTES: Record<
+  CodeThemeName,
+  CodeThemePreviewPalette
+> = RAW_CODE_THEME_PREVIEW_PALETTES
+export { CODE_THEME_PREVIEW_LINES }
+export type { CodeThemePreviewPalette }
 
 const CODE_THEME_SET = new Set<string>(CODE_THEME_VALUES)
 

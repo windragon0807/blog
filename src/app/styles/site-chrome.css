@@ -78,6 +78,7 @@ html,
   filter: drop-shadow(0 1px 4px var(--header-active-icon-glow));
   position: relative;
   stroke: url("#header-active-aurora-icon-gradient") currentColor;
+  stroke-width: 2.35px;
   z-index: 10;
 }
 
@@ -208,4 +209,3 @@ html body[data-scroll-locked][data-scroll-locked] {
 ::-moz-selection {
   background: var(--theme-selection-bg);
 }
-

@@ -1,3 +1,205 @@
+.settings-drawer-overlay,
+.settings-drawer-panel {
+  will-change: opacity, transform;
+}
+
+.settings-drawer-panel {
+  overflow: hidden;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  background: color-mix(in srgb, var(--background) 88%, transparent);
+  box-shadow: 0 -24px 72px -42px rgb(15 23 42 / 52%);
+  backdrop-filter: blur(28px) saturate(1.12);
+  -webkit-backdrop-filter: blur(28px) saturate(1.12);
+}
+
+.settings-drawer-scroll {
+  min-height: 0;
+}
+
+.settings-drawer-scroll [data-overlayscrollbars-viewport] {
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+.color-picker-saturation {
+  background-image:
+    linear-gradient(to top, rgb(0 0 0), transparent),
+    linear-gradient(to right, rgb(255 255 255), transparent);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 24%);
+}
+
+.color-picker-saturation:focus-visible {
+  box-shadow: inset 0 0 0 2px
+    color-mix(in srgb, var(--ring) 72%, white);
+}
+
+.color-picker-hue::-webkit-slider-runnable-track {
+  height: 0.625rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    #ff0000,
+    #ffff00,
+    #00ff00,
+    #00ffff,
+    #0000ff,
+    #ff00ff,
+    #ff0000
+  );
+  box-shadow: inset 0 0 0 1px rgb(15 23 42 / 12%);
+}
+
+.color-picker-hue::-webkit-slider-thumb {
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-top: -0.25rem;
+  appearance: none;
+  border: 2px solid white;
+  border-radius: 999px;
+  background: var(--color-picker-hue-thumb, var(--theme-accent-current));
+  box-shadow:
+    0 0 0 1px rgb(15 23 42 / 45%),
+    0 3px 8px rgb(15 23 42 / 28%);
+}
+
+.color-picker-hue::-moz-range-track {
+  height: 0.625rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    #ff0000,
+    #ffff00,
+    #00ff00,
+    #00ffff,
+    #0000ff,
+    #ff00ff,
+    #ff0000
+  );
+  box-shadow: inset 0 0 0 1px rgb(15 23 42 / 12%);
+}
+
+.color-picker-hue::-moz-range-thumb {
+  width: 1.125rem;
+  height: 1.125rem;
+  border: 2px solid white;
+  border-radius: 999px;
+  background: var(--color-picker-hue-thumb, var(--theme-accent-current));
+  box-shadow:
+    0 0 0 1px rgb(15 23 42 / 45%),
+    0 3px 8px rgb(15 23 42 / 28%);
+}
+
+.settings-segmented-indicator {
+  width: calc((100% - 0.5rem) / var(--segment-count));
+  transform: translate3d(var(--segment-translate), 0, 0);
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.settings-drawer-overlay[data-state='open'] {
+  animation: settings-drawer-overlay-in 220ms ease-out both;
+}
+
+.settings-drawer-overlay[data-state='closed'] {
+  animation: settings-drawer-overlay-out 180ms ease-in both;
+}
+
+.settings-drawer-panel[data-state='open'] {
+  animation: settings-sheet-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.settings-drawer-panel[data-state='closed'] {
+  animation: settings-sheet-out 220ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+@keyframes settings-drawer-overlay-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes settings-drawer-overlay-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes settings-sheet-in {
+  from {
+    opacity: 0.92;
+    transform: translateY(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes settings-sheet-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0.92;
+    transform: translateY(100%);
+  }
+}
+
+@keyframes settings-drawer-in {
+  from {
+    opacity: 0.92;
+    transform: translateX(calc(100% + 1rem));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes settings-drawer-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0.92;
+    transform: translateX(calc(100% + 1rem));
+  }
+}
+
+@media (min-width: 640px) {
+  .settings-drawer-panel {
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    box-shadow: -24px 18px 72px -44px rgb(15 23 42 / 55%);
+  }
+
+  .settings-drawer-panel[data-state='open'] {
+    animation-name: settings-drawer-in;
+  }
+
+  .settings-drawer-panel[data-state='closed'] {
+    animation-name: settings-drawer-out;
+  }
+}
+
 .settings-popover {
   --settings-popover-enter-y: -4px;
   --settings-popover-exit-y: -2px;
@@ -75,4 +277,3 @@
     box-shadow 160ms ease,
     color 160ms ease;
 }
-

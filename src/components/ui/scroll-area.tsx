@@ -7,6 +7,7 @@ import {
   type OverlayScrollbarsComponentRef,
 } from 'overlayscrollbars-react'
 import { cn } from '@/lib/utils'
+import { APP_SCROLLBAR_OPTIONS } from '@/lib/scrollbars'
 
 type ScrollAreaOrientation = 'vertical' | 'horizontal' | 'both'
 
@@ -18,14 +19,6 @@ type ScrollAreaProps = Omit<React.ComponentPropsWithoutRef<'div'>, 'children'> &
   options?: PartialOptions | false | null
   orientation?: ScrollAreaOrientation
 }
-
-const DEFAULT_SCROLLBAR_OPTIONS = {
-  autoHide: 'scroll',
-  autoHideDelay: 640,
-  clickScroll: true,
-  dragScroll: true,
-  theme: 'os-theme-ryonglog',
-} satisfies NonNullable<PartialOptions['scrollbars']>
 
 function getOverflowOptions(orientation: ScrollAreaOrientation) {
   if (orientation === 'horizontal') {
@@ -52,7 +45,7 @@ function getScrollAreaOptions(
       ...options?.overflow,
     },
     scrollbars: {
-      ...DEFAULT_SCROLLBAR_OPTIONS,
+      ...APP_SCROLLBAR_OPTIONS.scrollbars,
       ...options?.scrollbars,
     },
   } satisfies PartialOptions
