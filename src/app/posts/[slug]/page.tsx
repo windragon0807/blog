@@ -138,13 +138,13 @@ export default async function PostPage({ params }: PageProps) {
             </div>
           )}
           <div className="post-hero-meta mb-3 flex items-center gap-3">
-            <time className="text-sm text-zinc-400 dark:text-zinc-400">
+            <time className="text-sm text-[var(--post-muted)] dark:text-zinc-400">
               {formattedDate}
             </time>
             <span className="text-zinc-300 dark:text-zinc-600">·</span>
             <Suspense
               fallback={
-                <span className="text-sm text-zinc-400 dark:text-zinc-400">읽는 시간 계산 중</span>
+                <span className="text-sm text-[var(--post-muted)] dark:text-zinc-400">읽는 시간 계산 중</span>
               }
             >
               <PostReadingTime postId={post.id} />
@@ -152,12 +152,12 @@ export default async function PostPage({ params }: PageProps) {
           </div>
           <h1
             id="post-title"
-            className="post-hero-title mb-3 scroll-mt-24 text-3xl font-bold leading-tight"
+            className="post-hero-title mb-3 scroll-mt-24 text-3xl font-bold leading-tight text-[var(--post-ink)] dark:text-zinc-100"
           >
             {post.title}
           </h1>
           {post.description && (
-            <p className="post-hero-description text-lg text-zinc-500 dark:text-zinc-300">
+            <p className="post-hero-description text-lg text-[var(--post-muted)] dark:text-zinc-300">
               {post.description}
             </p>
           )}

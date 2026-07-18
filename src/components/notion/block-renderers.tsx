@@ -30,7 +30,7 @@ function richTextToPlain(richText: RichText[]): string {
 
 const knownBlockRenderers = {
   paragraph: (block) => (
-    <p className="my-3 leading-relaxed text-zinc-700 dark:text-zinc-200">
+    <p className="my-3 leading-relaxed text-[var(--post-ink)] dark:text-zinc-200">
       <RichTextRenderer richText={block.paragraph.rich_text} />
     </p>
   ),
@@ -38,7 +38,7 @@ const knownBlockRenderers = {
   heading_1: (block) => (
     <h1
       id={getHeadingId(block.id)}
-      className="mt-10 mb-4 scroll-mt-24 text-3xl font-bold text-zinc-900 dark:text-zinc-100"
+      className="mt-10 mb-4 scroll-mt-24 text-3xl font-bold text-[var(--post-ink)] dark:text-zinc-100"
     >
       <RichTextRenderer richText={block.heading_1.rich_text} />
     </h1>
@@ -47,7 +47,7 @@ const knownBlockRenderers = {
   heading_2: (block) => (
     <h2
       id={getHeadingId(block.id)}
-      className="mt-8 mb-3 scroll-mt-24 border-b border-zinc-200 pb-2 text-2xl font-bold text-zinc-900 dark:border-zinc-600 dark:text-zinc-100"
+      className="mt-8 mb-3 scroll-mt-24 border-b border-zinc-200 pb-2 text-2xl font-bold text-[var(--post-ink)] dark:border-zinc-600 dark:text-zinc-100"
     >
       <RichTextRenderer richText={block.heading_2.rich_text} />
     </h2>
@@ -56,7 +56,7 @@ const knownBlockRenderers = {
   heading_3: (block) => (
     <h3
       id={getHeadingId(block.id)}
-      className="mt-6 mb-2 scroll-mt-24 text-xl font-semibold text-zinc-900 dark:text-zinc-100"
+      className="mt-6 mb-2 scroll-mt-24 text-xl font-semibold text-[var(--post-ink)] dark:text-zinc-100"
     >
       <RichTextRenderer richText={block.heading_3.rich_text} />
     </h3>
@@ -65,14 +65,14 @@ const knownBlockRenderers = {
   heading_4: (block) => (
     <h4
       id={getHeadingId(block.id)}
-      className="mt-5 mb-2 scroll-mt-24 text-lg font-semibold text-zinc-800 dark:text-zinc-200"
+      className="mt-5 mb-2 scroll-mt-24 text-lg font-semibold text-[var(--post-ink)] dark:text-zinc-200"
     >
       <RichTextRenderer richText={block.heading_4.rich_text} />
     </h4>
   ),
 
   bulleted_list_item: (block, context) => (
-    <li className="leading-relaxed text-zinc-700 dark:text-zinc-200">
+    <li className="leading-relaxed text-[var(--post-ink)] dark:text-zinc-200">
       <RichTextRenderer richText={block.bulleted_list_item.rich_text} />
       {block.children && block.children.length > 0 && (
         <ul className="mt-1 list-inside list-disc space-y-1 pl-4">
@@ -83,7 +83,7 @@ const knownBlockRenderers = {
   ),
 
   numbered_list_item: (block, context) => (
-    <li className="leading-relaxed text-zinc-700 dark:text-zinc-200">
+    <li className="leading-relaxed text-[var(--post-ink)] dark:text-zinc-200">
       <RichTextRenderer richText={block.numbered_list_item.rich_text} />
       {block.children && block.children.length > 0 && (
         <ol className="mt-1 list-inside list-decimal space-y-1 pl-4">
@@ -126,7 +126,7 @@ const knownBlockRenderers = {
           />
         </div>
         {caption.length > 0 && (
-          <figcaption className="mt-2 text-center text-sm text-zinc-500 dark:text-zinc-300">
+          <figcaption className="mt-2 text-center text-sm text-[var(--post-muted)] dark:text-zinc-300">
             <RichTextRenderer richText={caption} />
           </figcaption>
         )}
@@ -141,7 +141,7 @@ const knownBlockRenderers = {
         className="themed-quote-rail absolute top-0 left-0 h-full w-1.5 rounded-r-full"
       >
       </span>
-      <p className="relative text-[1.03rem] leading-8 text-zinc-700 dark:text-zinc-200">
+      <p className="relative text-[1.03rem] leading-8 text-[var(--post-ink)] dark:text-zinc-200">
         <RichTextRenderer richText={block.quote.rich_text} />
       </p>
     </Surface>
@@ -155,7 +155,7 @@ const knownBlockRenderers = {
     return (
       <StatusNotice tone="warning" className="my-4 flex gap-3 rounded-xl p-4">
         <span className="shrink-0 text-xl">{icon}</span>
-        <p className="leading-relaxed text-zinc-700 dark:text-zinc-200">
+        <p className="leading-relaxed text-[var(--post-ink)] dark:text-zinc-200">
           <RichTextRenderer richText={block.callout.rich_text} />
         </p>
       </StatusNotice>
@@ -166,8 +166,8 @@ const knownBlockRenderers = {
 
   toggle: (block, context) => (
     <details className="notion-toggle my-3">
-      <summary className="list-none flex cursor-pointer items-center gap-2 font-medium text-zinc-700 transition-colors hover:text-zinc-900 dark:text-zinc-200 dark:hover:text-zinc-100">
-        <span className="toggle-chevron text-zinc-400 transition-transform duration-200">
+      <summary className="list-none flex cursor-pointer items-center gap-2 font-medium text-[var(--post-ink)] transition-colors hover:text-zinc-900 dark:text-zinc-200 dark:hover:text-zinc-100">
+        <span className="toggle-chevron text-[var(--post-muted)] transition-transform duration-200">
           <ChevronRight className="h-3 w-3" aria-hidden="true" />
         </span>
         <RichTextRenderer richText={block.toggle.rich_text} />
@@ -222,11 +222,11 @@ const knownBlockRenderers = {
     }
 
     const headerCellClass =
-      'border-b-2 border-zinc-300 bg-zinc-50/80 px-3 py-2 text-left align-top text-sm font-semibold text-zinc-800 dark:border-zinc-600 dark:bg-zinc-800/40 dark:text-zinc-100'
+      'border-b-2 border-zinc-300 bg-zinc-50/80 px-3 py-2 text-left align-top text-sm font-semibold text-[var(--post-ink)] dark:border-zinc-600 dark:bg-zinc-800/40 dark:text-zinc-100'
     const cellClass =
-      'border-b border-zinc-200 px-3 py-2 align-top text-sm text-zinc-700 dark:border-zinc-700/70 dark:text-zinc-200'
+      'border-b border-zinc-200 px-3 py-2 align-top text-sm text-[var(--post-ink)] dark:border-zinc-700/70 dark:text-zinc-200'
     const rowHeaderClass =
-      'border-b border-zinc-200 px-3 py-2 align-top text-sm font-semibold text-zinc-800 dark:border-zinc-700/70 dark:text-zinc-100'
+      'border-b border-zinc-200 px-3 py-2 align-top text-sm font-semibold text-[var(--post-ink)] dark:border-zinc-700/70 dark:text-zinc-100'
 
     return (
       <ScrollArea
@@ -295,11 +295,11 @@ const knownBlockRenderers = {
         >
           <div className="flex min-h-28 items-stretch">
             <div className="min-w-0 flex-1 px-5 py-4">
-              <p className="truncate text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+              <p className="truncate text-xl font-semibold tracking-tight text-[var(--post-ink)] dark:text-zinc-100">
                 {title}
               </p>
               {description && (
-                <p className="mt-1 max-h-11 overflow-hidden text-sm leading-5 text-zinc-500 dark:text-zinc-400">
+                <p className="mt-1 max-h-11 overflow-hidden text-sm leading-5 text-[var(--post-muted)] dark:text-zinc-400">
                   {description}
                 </p>
               )}
@@ -318,10 +318,10 @@ const knownBlockRenderers = {
                     {hostInitial}
                   </Badge>
                 )}
-                <p className="truncate text-sm text-zinc-500 dark:text-zinc-400">
+                <p className="truncate text-sm text-[var(--post-muted)] dark:text-zinc-400">
                   {displayUrl}
                 </p>
-                <ExternalLink className="h-3.5 w-3.5 shrink-0 text-zinc-400 transition-transform group-hover:translate-x-0.5 group-hover:text-zinc-600 dark:group-hover:text-zinc-300" aria-hidden="true" />
+                <ExternalLink className="h-3.5 w-3.5 shrink-0 text-[var(--post-muted)] transition-transform group-hover:translate-x-0.5 group-hover:text-zinc-600 dark:group-hover:text-zinc-300" aria-hidden="true" />
               </div>
             </div>
             {thumbnail && (
@@ -338,7 +338,7 @@ const knownBlockRenderers = {
             )}
             {!thumbnail && (
               <div className="hidden w-44 shrink-0 border-l border-zinc-200/80 bg-gradient-to-br from-zinc-50 to-zinc-100 dark:border-zinc-700 dark:from-zinc-800/50 dark:to-zinc-900/60 sm:flex sm:items-center sm:justify-center">
-                <span className="text-sm text-zinc-400 dark:text-zinc-500">Bookmark</span>
+                <span className="text-sm text-[var(--post-muted)] dark:text-zinc-500">Bookmark</span>
               </div>
             )}
           </div>

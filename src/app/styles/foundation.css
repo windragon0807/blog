@@ -169,6 +169,8 @@
   --reading-font-size: 1rem;
   --reading-line-height: 1.75;
   --reading-font-weight: 400;
+  --post-ink: #333d4b;
+  --post-muted: #8b95a1;
   --theme-accent: #171717;
   --theme-accent-dark: #f3f4f6;
   --theme-accent-current: var(--theme-accent);
