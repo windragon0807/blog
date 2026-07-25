@@ -6,6 +6,12 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '30mb',
     },
     proxyClientMaxBodySize: 30 * 1024 * 1024,
+    // Reuse previously rendered page segments on client navigations for 5 minutes.
+    // Keeps home UI instant when returning from /posts/* without changing server ISR.
+    staleTimes: {
+      dynamic: 300,
+      static: 300,
+    },
   },
   images: {
     remotePatterns: [
