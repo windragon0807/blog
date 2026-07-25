@@ -24,6 +24,7 @@ import {
   EMOTICON_PAGE_SHELL_CLASS_NAME,
 } from './emoticon-layout-contract'
 import { getEmoticonManifestQueryOptions } from './emoticon-manifest-query'
+import { useEmoticonFavorites } from './hooks/useEmoticonFavorites'
 import {
   downloadBlob,
   fetchSvgText,
@@ -37,6 +38,11 @@ import {
   getDefaultSubcategory,
   getSubcategories,
 } from './model/collection-config'
+import { EmoticonSearchField } from './components/emoticon-search-field'
+import {
+  normalizeEmoticonSearchQuery,
+  filterEmoticonSections,
+} from './model/filter-items'
 import {
   prepareEmoticonCollection,
   type EmoticonGridSection,
@@ -45,6 +51,7 @@ import {
 import type {
   EmoticonCollectionId,
   EmoticonItem,
+  EmoticonSourceCollectionId,
 } from './types'
 
 const SHEET_EXIT_DURATION_MS = 180
@@ -73,6 +80,12 @@ export function EmoticonStoragePage() {
   const { data: manifest, error: manifestError } = useQuery(
     getEmoticonManifestQueryOptions()
   )
+  const {
+    items: favoriteItems,
+    isFavorite,
+    toggleFavorite,
+    getSourceCollectionId,
+  } = useEmoticonFavorites(manifest)
   const [activeCollectionId, setActiveCollectionId] =
     useState<EmoticonCollectionId>('material')
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null)
@@ -80,6 +93,19 @@ export function EmoticonStoragePage() {
   const [sheetCenterX, setSheetCenterX] = useState<number | null>(null)
   const [activeSubcategoryId, setActiveSubcategoryId] = useState('all')
   const [actionFeedback, setActionFeedback] = useState<ActionFeedback>(null)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const resetSearch = useCallback(() => {
+    setIsSearchOpen(false)
+    setSearchQuery('')
+  }, [])
+
+  const normalizedSearchQuery = useMemo(() => {
+    return normalizeEmoticonSearchQuery(searchQuery)
+  }, [searchQuery])
+
+  const isSearchFiltering = normalizedSearchQuery.length > 0
   const portalContainer =
     typeof document === 'undefined' ? null : document.body
   const loadError = manifestError
@@ -87,6 +113,21 @@ export function EmoticonStoragePage() {
       ? manifestError.message
       : '이모티콘 목록을 불러오지 못했습니다.'
     : ''
+
+  const collectionTabs = useMemo(() => {
+    const sourceCollections = manifest?.collections ?? []
+
+    return [
+      ...sourceCollections,
+      {
+        id: 'favorites' as const,
+        name: 'Favorites',
+        sourceLabel: 'Favorites',
+        count: favoriteItems.length,
+        items: favoriteItems,
+      },
+    ]
+  }, [favoriteItems, manifest?.collections])
 
   const preparedCollections = useMemo(() => {
     if (!manifest) {
@@ -107,38 +148,94 @@ export function EmoticonStoragePage() {
   }, [manifest])
 
   const activePreparedCollection = useMemo<PreparedEmoticonCollection | null>(() => {
+    if (activeCollectionId === 'favorites') {
+      return {
+        collection: {
+          id: 'favorites',
+          name: 'Favorites',
+          sourceLabel: 'Favorites',
+          count: favoriteItems.length,
+          items: favoriteItems,
+        },
+        sectionsBySubcategory: new Map([
+          [
+            'all',
+            {
+              id: 'all',
+              label: 'Favorites',
+              items: favoriteItems,
+            },
+          ],
+        ]),
+      }
+    }
+
     return preparedCollections.get(activeCollectionId) ?? null
-  }, [activeCollectionId, preparedCollections])
+  }, [activeCollectionId, favoriteItems, preparedCollections])
 
   const activeCollection = activePreparedCollection?.collection ?? null
 
   const subcategories = getSubcategories(activeCollectionId)
 
-  const visibleSections = useMemo<EmoticonGridSection[]>(() => {
+  const allSections = useMemo<EmoticonGridSection[]>(() => {
+    if (!activePreparedCollection) {
+      return []
+    }
+
+    if (activeCollectionId === 'favorites') {
+      const favoritesSection =
+        activePreparedCollection.sectionsBySubcategory.get('all')
+
+      return favoritesSection ? [favoritesSection] : []
+    }
+
+    return subcategories
+      .filter((subcategory) => subcategory.id !== 'all')
+      .map((subcategory) => {
+        return activePreparedCollection.sectionsBySubcategory.get(subcategory.id)
+      })
+      .filter((section): section is EmoticonGridSection => {
+        return Boolean(section && section.items.length > 0)
+      })
+  }, [activeCollectionId, activePreparedCollection, subcategories])
+
+  const baseSections = useMemo<EmoticonGridSection[]>(() => {
     if (!activePreparedCollection) {
       return []
     }
 
     if (activeSubcategoryId === 'all') {
-      return subcategories
-        .filter((subcategory) => subcategory.id !== 'all')
-        .map((subcategory) => {
-          return activePreparedCollection.sectionsBySubcategory.get(subcategory.id)
-        })
-        .filter((section): section is EmoticonGridSection => {
-          return Boolean(section && section.items.length > 0)
-        })
+      return allSections
     }
 
     const activeSection =
       activePreparedCollection.sectionsBySubcategory.get(activeSubcategoryId)
 
     return activeSection ? [activeSection] : []
-  }, [activePreparedCollection, activeSubcategoryId, subcategories])
+  }, [activePreparedCollection, activeSubcategoryId, allSections])
+
+  const visibleSections = useMemo(() => {
+    if (isSearchFiltering) {
+      return filterEmoticonSections(allSections, searchQuery)
+    }
+
+    return baseSections
+  }, [allSections, baseSections, isSearchFiltering, searchQuery])
+
   const visibleItemCount = visibleSections.reduce((count, section) => {
     return count + section.items.length
   }, 0)
-  const showSectionHeadings = activeSubcategoryId === 'all'
+  const showSectionHeadings =
+    activeCollectionId !== 'favorites' &&
+    (isSearchFiltering || activeSubcategoryId === 'all')
+
+  const emptyMessage = loadError
+    ? loadError
+    : isSearchFiltering
+      ? '검색 결과가 없습니다.'
+      : activeCollectionId === 'favorites'
+        ? '별 아이콘으로 이모지를 즐겨찾기에 추가하세요.'
+        : '표시할 이모티콘이 없습니다.'
 
   const selectedItem = useMemo(() => {
     if (!selectedItemId) {
@@ -147,6 +244,13 @@ export function EmoticonStoragePage() {
 
     return activeCollection?.items.find((item) => item.id === selectedItemId) ?? null
   }, [activeCollection, selectedItemId])
+
+  const sheetSourceCollectionId: EmoticonSourceCollectionId | null =
+    activeCollectionId === 'favorites'
+      ? selectedItem
+        ? getSourceCollectionId(selectedItem.id)
+        : null
+      : activeCollectionId
 
   const clearSheetCloseTimer = useCallback(() => {
     if (!sheetCloseTimeoutRef.current) {
@@ -204,6 +308,35 @@ export function EmoticonStoragePage() {
       })
     }, SHEET_EXIT_DURATION_MS)
   }, [clearSheetCloseTimer, isSheetClosing, resetActionFeedback, selectedItemId])
+
+  useEffect(() => {
+    if (
+      activeCollectionId !== 'favorites' ||
+      !selectedItemId ||
+      selectedItem
+    ) {
+      return
+    }
+
+    const trigger = selectedTriggerRef.current
+    const frame = requestAnimationFrame(() => {
+      clearSelectedItemImmediately()
+
+      if (trigger?.isConnected) {
+        trigger.focus({ preventScroll: true })
+        return
+      }
+
+      pageShellRef.current?.focus({ preventScroll: true })
+    })
+
+    return () => cancelAnimationFrame(frame)
+  }, [
+    activeCollectionId,
+    clearSelectedItemImmediately,
+    selectedItem,
+    selectedItemId,
+  ])
 
   const handleSelectItem = useCallback(
     (item: EmoticonItem, trigger: HTMLButtonElement) => {
@@ -359,6 +492,7 @@ export function EmoticonStoragePage() {
     <>
       <section
         ref={pageShellRef}
+        tabIndex={-1}
         data-emoticon-page-shell=""
         data-emoticon-viewport-contract="dynamic-safe-area"
         className={EMOTICON_PAGE_SHELL_CLASS_NAME}
@@ -368,85 +502,105 @@ export function EmoticonStoragePage() {
           className="z-20 shrink-0 bg-background pb-1 dark:bg-background"
         >
           <div className={EMOTICON_CONTENT_CLASS_NAME}>
-            <div
-              role="tablist"
-              aria-label="이모티콘 종류"
-              className="mb-3 flex flex-wrap items-end gap-x-5 gap-y-1.5 sm:mb-4 sm:gap-x-6 sm:gap-y-2 md:mb-6 md:gap-x-7"
-            >
-              {manifest?.collections.map((collection) => {
-                const isActive = collection.id === activeCollectionId
+            <div className="mb-3 flex flex-wrap items-end gap-x-5 gap-y-1.5 sm:mb-4 sm:gap-x-6 sm:gap-y-2 md:mb-6 md:gap-x-7">
+              <div
+                role="tablist"
+                aria-label="이모티콘 종류"
+                className="flex min-w-0 flex-wrap items-end gap-x-5 gap-y-1.5 sm:gap-x-6 md:gap-x-7"
+              >
+                {collectionTabs.map((collection) => {
+                  const isActive = collection.id === activeCollectionId
 
-                return (
-                  <button
-                    key={collection.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    onClick={() => {
-                      setActiveCollectionId(collection.id)
-                      setActiveSubcategoryId(getDefaultSubcategory(collection.id))
-                      clearSelectedItemImmediately()
-                    }}
-                    className={cn(
-                      'group inline-flex min-h-8 items-center gap-1.5 whitespace-nowrap rounded-xl text-[1.375rem] font-black leading-none tracking-tight focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/35 sm:text-2xl md:gap-2 md:text-3xl',
-                      isActive
-                        ? 'text-zinc-950 dark:text-zinc-50'
-                        : 'text-zinc-300 hover:text-zinc-500 dark:text-zinc-700 dark:hover:text-zinc-500'
-                    )}
-                  >
-                    <CollectionLogo id={collection.id} isActive={isActive} />
-                    <span className="emoticon-collection-label">
-                      {getCollectionLabel(collection.id)}
-                    </span>
-                  </button>
-                )
-              })}
+                  return (
+                    <button
+                      key={collection.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      onClick={() => {
+                        resetSearch()
+                        setActiveCollectionId(collection.id)
+                        setActiveSubcategoryId(getDefaultSubcategory(collection.id))
+                        clearSelectedItemImmediately()
+                      }}
+                      className={cn(
+                        'group inline-flex min-h-8 items-center gap-1.5 whitespace-nowrap rounded-xl text-[1.375rem] font-black leading-none tracking-tight focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/35 sm:text-2xl md:gap-2 md:text-3xl',
+                        isActive
+                          ? 'text-zinc-950 dark:text-zinc-50'
+                          : 'text-zinc-300 hover:text-zinc-500 dark:text-zinc-700 dark:hover:text-zinc-500'
+                      )}
+                    >
+                      <CollectionLogo id={collection.id} isActive={isActive} />
+                      <span className="emoticon-collection-label">
+                        {getCollectionLabel(collection.id)}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+              <EmoticonSearchField
+                isOpen={isSearchOpen}
+                query={searchQuery}
+                onOpenChange={(open) => {
+                  if (!open) {
+                    resetSearch()
+                    return
+                  }
+                  setIsSearchOpen(true)
+                }}
+                onQueryChange={setSearchQuery}
+              />
             </div>
 
-            <nav
-              aria-label="이모티콘 세부 카테고리"
-              className="-mx-1 mb-3 bg-background px-1 py-1 dark:bg-background sm:-mx-2 sm:mb-4 sm:px-2 sm:py-2"
-            >
-              <ScrollArea
-                orientation="horizontal"
-                data-emoticon-subcategory-scroll=""
-                className="w-full"
+            {activeCollectionId === 'favorites' ||
+            subcategories.length === 0 ? null : (
+              <nav
+                aria-label="이모티콘 세부 카테고리"
+                className="-mx-1 mb-3 bg-background px-1 py-1 dark:bg-background sm:-mx-2 sm:mb-4 sm:px-2 sm:py-2"
               >
-                <div
-                  data-emoticon-subcategory-list=""
-                  className="flex w-max gap-1.5 pr-1 sm:gap-2 sm:pr-2"
+                <ScrollArea
+                  orientation="horizontal"
+                  data-emoticon-subcategory-scroll=""
+                  className="w-full"
                 >
-                  {subcategories.map((subcategory) => {
-                    const isActive = subcategory.id === activeSubcategoryId
+                  <div
+                    data-emoticon-subcategory-list=""
+                    className="flex w-max gap-1.5 pr-1 sm:gap-2 sm:pr-2"
+                  >
+                    {subcategories.map((subcategory) => {
+                      const isActive = subcategory.id === activeSubcategoryId
 
-                    return (
-                      <button
-                        key={subcategory.id}
-                        type="button"
-                        aria-pressed={isActive}
-                        onClick={() => {
-                          setActiveSubcategoryId(subcategory.id)
-                          clearSelectedItemImmediately()
-                        }}
-                        className={cn(
-                          'inline-flex h-10 shrink-0 items-center gap-1.5 rounded-2xl px-3 text-sm font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/35 sm:h-12 sm:gap-2 sm:px-5 sm:text-base',
-                          isActive
-                            ? 'bg-zinc-100 text-zinc-950 dark:bg-zinc-900 dark:text-zinc-50'
-                            : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900/70 dark:hover:text-zinc-100'
-                        )}
-                      >
-                        {subcategory.icon ? (
-                          <span className="grid place-items-center">
-                            {subcategory.icon}
-                          </span>
-                        ) : null}
-                        <span>{subcategory.label}</span>
-                      </button>
-                    )
-                  })}
-                </div>
-              </ScrollArea>
-            </nav>
+                      return (
+                        <button
+                          key={subcategory.id}
+                          type="button"
+                          aria-pressed={isActive}
+                          onClick={() => {
+                            if (isSearchOpen) return
+                            setActiveSubcategoryId(subcategory.id)
+                            clearSelectedItemImmediately()
+                          }}
+                          className={cn(
+                            'inline-flex h-10 shrink-0 items-center gap-1.5 rounded-2xl px-3 text-sm font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/35 sm:h-12 sm:gap-2 sm:px-5 sm:text-base',
+                            isActive
+                              ? 'bg-zinc-100 text-zinc-950 dark:bg-zinc-900 dark:text-zinc-50'
+                              : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900/70 dark:hover:text-zinc-100',
+                            isSearchOpen && 'pointer-events-none opacity-40'
+                          )}
+                        >
+                          {subcategory.icon ? (
+                            <span className="grid place-items-center">
+                              {subcategory.icon}
+                            </span>
+                          ) : null}
+                          <span>{subcategory.label}</span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                </ScrollArea>
+              </nav>
+            )}
           </div>
         </div>
 
@@ -456,7 +610,7 @@ export function EmoticonStoragePage() {
         >
           {visibleItemCount > 0 && activeCollection ? (
             <VirtualizedEmoticonGrid
-              key={`${activeCollection.id}-${activeSubcategoryId}`}
+              key={`${activeCollection.id}-${activeSubcategoryId}-${normalizedSearchQuery}`}
               collectionId={activeCollection.id}
               sections={visibleSections}
               showSectionHeadings={showSectionHeadings}
@@ -465,20 +619,28 @@ export function EmoticonStoragePage() {
             />
           ) : (
             <div className="grid h-full min-h-64 place-items-center rounded-2xl border border-dashed border-zinc-200 bg-white/55 text-sm font-semibold text-zinc-400 dark:border-zinc-800 dark:bg-zinc-950/45">
-              {loadError || '검색 결과가 없습니다.'}
+              {emptyMessage}
             </div>
           )}
         </div>
 
-      {portalContainer && selectedItem
+      {portalContainer && selectedItem && sheetSourceCollectionId
         ? createPortal(
             <BottomActionSheet
               item={selectedItem}
+              sourceCollectionId={sheetSourceCollectionId}
+              isFavorite={isFavorite(
+                sheetSourceCollectionId,
+                selectedItem.id
+              )}
               feedback={actionFeedback}
               isClosing={isSheetClosing}
               centerX={sheetCenterX}
               onClose={() => {
                 closeSelectedItem()
+              }}
+              onToggleFavorite={() => {
+                toggleFavorite(sheetSourceCollectionId, selectedItem.id)
               }}
               onDownloadSvg={handleDownloadSvg}
               onDownloadPng={handleDownloadPng}

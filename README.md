@@ -93,13 +93,10 @@ pnpm install
 ```bash
 NOTION_API_KEY=secret_xxx
 NOTION_DATABASE_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-# 선택: 비워두면 앱의 기존 포트폴리오 DB fallback을 사용합니다.
-NOTION_PORTFOLIO_DATABASE_ID=
+NOTION_PORTFOLIO_DATABASE_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 NOTION_WEBHOOK_VERIFICATION_TOKEN=
 NEXT_PUBLIC_SITE_URL=http://localhost:3200
 ```
-
-`.env.example`도 함께 참고하세요.
 
 ### 3) 개발 서버 실행
 
@@ -122,7 +119,8 @@ pnpm exec next dev -p 3001
 
 - Integration을 생성하고 해당 DB 페이지에 연결(Invite)해야 합니다.
 - `NOTION_API_KEY`는 Integration Secret을 사용합니다.
-- `NOTION_DATABASE_ID`는 Database ID를 사용합니다.
+- `NOTION_DATABASE_ID`는 블로그 Database ID를 사용합니다.
+- `NOTION_PORTFOLIO_DATABASE_ID`는 포트폴리오 Database ID를 사용합니다.
 
 ### Database ID 찾기
 
@@ -177,7 +175,7 @@ pnpm lint
 - 배포 환경에 아래 환경변수 설정
   - `NOTION_API_KEY`
   - `NOTION_DATABASE_ID`
-  - `NOTION_PORTFOLIO_DATABASE_ID` (선택, 미설정 시 기존 fallback 사용)
+  - `NOTION_PORTFOLIO_DATABASE_ID`
   - `NOTION_WEBHOOK_VERIFICATION_TOKEN` (Webhook 연결 시)
   - `NEXT_PUBLIC_SITE_URL` (실제 도메인)
 - Notion Integration이 DB에 초대되어 있는지 확인

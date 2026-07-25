@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import type { ReactNode } from 'react'
+import { StarIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { EmoticonCollectionId } from '../types'
 
@@ -168,6 +169,22 @@ export function RyongLogo({ isActive }: { isActive: boolean }) {
   return <CollectionLogoImage src="/icon.png" isActive={isActive} />
 }
 
+export function FavoritesLogo({ isActive }: { isActive: boolean }) {
+  return (
+    <StarIcon
+      data-emoticon-collection-logo=""
+      data-active={isActive ? 'true' : 'false'}
+      aria-hidden="true"
+      className={cn(
+        'h-[0.9em] w-[0.9em] shrink-0',
+        isActive
+          ? 'fill-amber-400 text-amber-400 opacity-100'
+          : 'fill-none text-zinc-300 opacity-35 group-hover:opacity-65 dark:text-zinc-700'
+      )}
+    />
+  )
+}
+
 export function CollectionLogo({
   id,
   isActive,
@@ -183,10 +200,18 @@ export function CollectionLogo({
     return <RyongLogo isActive={isActive} />
   }
 
+  if (id === 'favorites') {
+    return <FavoritesLogo isActive={isActive} />
+  }
+
   return <MaterialLogo isActive={isActive} />
 }
 
 export function getSubcategories(collectionId: EmoticonCollectionId) {
+  if (collectionId === 'favorites') {
+    return []
+  }
+
   if (collectionId === 'tossface') {
     return TOSSFACE_SUBCATEGORIES
   }
@@ -203,6 +228,10 @@ export function getDefaultSubcategory(collectionId: EmoticonCollectionId) {
 }
 
 export function getCollectionLabel(collectionId: EmoticonCollectionId) {
+  if (collectionId === 'favorites') {
+    return 'Favorites'
+  }
+
   if (collectionId === 'tossface') {
     return 'Tossface'
   }

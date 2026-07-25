@@ -164,6 +164,57 @@ test.describe('core interaction contracts', () => {
     await expect(selectedCard).toBeFocused()
   })
 
+  test('emoticon favorite toggle persists in Favorites tab', async ({
+    page,
+  }) => {
+    await page.goto('/emoticons')
+    await page.evaluate(() => {
+      window.localStorage.removeItem('emoticon-favorites')
+    })
+    await page.reload()
+
+    const tablist = page.getByRole('tablist', { name: '이모티콘 종류' })
+    await expect(
+      tablist.getByRole('tab', { name: 'Favorites' })
+    ).toBeVisible()
+
+    const card = page.locator('[data-emoticon-card]:visible').first()
+    await expect(card).toBeVisible()
+    await card.click()
+
+    const favoriteButton = page.locator('[data-emoticon-favorite-button]')
+    await expect(favoriteButton).toBeVisible()
+    await expect(favoriteButton).toHaveAttribute('aria-pressed', 'false')
+    await favoriteButton.click()
+    await expect(favoriteButton).toHaveAttribute('aria-pressed', 'true')
+
+    const stored = await page.evaluate(() => {
+      return window.localStorage.getItem('emoticon-favorites')
+    })
+    expect(stored).toBeTruthy()
+    expect(stored).toContain('itemId')
+
+    await page.keyboard.press('Escape')
+
+    await tablist.getByRole('tab', { name: 'Favorites' }).click()
+    await expect(
+      page.locator('[data-emoticon-card]:visible').first()
+    ).toBeVisible()
+
+    await page.locator('[data-emoticon-card]:visible').first().click()
+    const favoriteButtonAgain = page.locator(
+      '[data-emoticon-favorite-button]'
+    )
+    await expect(favoriteButtonAgain).toHaveAttribute('aria-pressed', 'true')
+    await favoriteButtonAgain.click()
+
+    await expect(
+      page.getByText('별 아이콘으로 이모지를 즐겨찾기에 추가하세요.')
+    ).toBeVisible()
+    await expect(page.locator('[data-emoticon-bottom-sheet]')).toBeHidden()
+    await expect(page.locator('[data-emoticon-page-shell]')).toBeFocused()
+  })
+
   test('resume document and PDF control become available', async ({ page }) => {
     await page.goto('/resume')
 

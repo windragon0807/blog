@@ -1,4 +1,6 @@
-export type EmoticonCollectionId = 'material' | 'tossface' | 'ryong'
+export type EmoticonSourceCollectionId = 'material' | 'tossface' | 'ryong'
+
+export type EmoticonCollectionId = EmoticonSourceCollectionId | 'favorites'
 
 export type EmoticonItem = {
   id: string

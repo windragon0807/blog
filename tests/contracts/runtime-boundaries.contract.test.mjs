@@ -9,7 +9,7 @@ import ts from 'typescript'
 const root = dirname(dirname(dirname(fileURLToPath(import.meta.url))))
 const srcRoot = join(root, 'src')
 const libRoot = join(srcRoot, 'lib')
-const envExamplePath = join(root, '.env.example')
+const readmePath = join(root, 'README.md')
 const serverEnvPath = resolve(libRoot, 'server/env.ts')
 const sourceExtensions = new Set(['.ts', '.tsx'])
 const browserGlobalNames = new Set([
@@ -427,14 +427,20 @@ function findProcessEscapes(sourceFiles) {
   )
 }
 
-function parseEnvExample() {
+function parseReadmeEnvEntries() {
   const entries = new Map()
+  const readme = readFileSync(readmePath, 'utf8')
+  const blocks = [...readme.matchAll(/```(?:bash)?\n([\s\S]*?)```/g)].map(
+    (match) => match[1]
+  )
 
-  for (const line of readFileSync(envExamplePath, 'utf8').split(/\r?\n/)) {
-    const match = line.match(/^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/)
+  for (const block of blocks) {
+    for (const line of block.split(/\r?\n/)) {
+      const match = line.match(/^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/)
 
-    if (match) {
-      entries.set(match[1], match[2].trim())
+      if (match) {
+        entries.set(match[1], match[2].trim())
+      }
     }
   }
 
@@ -668,11 +674,11 @@ const rawEnvAccesses = findRawEnvAccesses(sourceFiles)
 const processEscapesOutsideEnvModule = findProcessEscapes(sourceFiles).filter(
   ({ filePath }) => toCanonicalPath(filePath) !== toCanonicalPath(serverEnvPath)
 )
-const envExample = parseEnvExample()
+const documentedEnvEntries = parseReadmeEnvEntries()
 const envKeys = new Set(rawEnvAccesses.flatMap(({ keys }) => keys.filter(Boolean)))
 const dynamicEnvAccesses = rawEnvAccesses.filter(({ keys }) => keys.includes(null))
 const undocumentedEnvKeys = [...envKeys]
-  .filter((key) => key !== 'NODE_ENV' && !envExample.has(key))
+  .filter((key) => key !== 'NODE_ENV' && !documentedEnvEntries.has(key))
   .sort()
 const rawEnvAccessesOutsideEnvModule = rawEnvAccesses.filter(
   ({ filePath }) => toCanonicalPath(filePath) !== toCanonicalPath(serverEnvPath)
@@ -886,7 +892,7 @@ test('runtime escape detectors are non-vacuous', () => {
   ])
 })
 
-test('static environment keys are documented in .env.example', () => {
+test('static environment keys are documented in README', () => {
   assert.ok(
     envKeys.size > 0,
     'Environment documentation contract must inspect at least one static key'
@@ -894,21 +900,21 @@ test('static environment keys are documented in .env.example', () => {
   assert.deepEqual(
     undocumentedEnvKeys,
     [],
-    `Environment keys missing from .env.example:\n${undocumentedEnvKeys
+    `Environment keys missing from README env docs:\n${undocumentedEnvKeys
       .map((key) => `- ${key}`)
       .join('\n')}`
   )
 })
 
-test('portfolio database configuration stays optional', () => {
+test('portfolio database configuration is documented like blog database', () => {
   assert.equal(
-    envExample.has('NOTION_PORTFOLIO_DATABASE_ID'),
+    documentedEnvEntries.has('NOTION_PORTFOLIO_DATABASE_ID'),
     true,
-    '.env.example must include optional NOTION_PORTFOLIO_DATABASE_ID='
+    'README must include NOTION_PORTFOLIO_DATABASE_ID'
   )
   assert.equal(
-    envExample.get('NOTION_PORTFOLIO_DATABASE_ID'),
-    '',
-    'NOTION_PORTFOLIO_DATABASE_ID must remain optional in .env.example'
+    documentedEnvEntries.get('NOTION_PORTFOLIO_DATABASE_ID'),
+    'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    'NOTION_PORTFOLIO_DATABASE_ID must use the same placeholder shape as NOTION_DATABASE_ID'
   )
 })

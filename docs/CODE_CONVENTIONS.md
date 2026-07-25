@@ -75,7 +75,7 @@ src/lib/
 
 - 제품 `src/**`의 raw `process.env` 접근은 `src/lib/server/env.ts`에서만 합니다.
 - getter는 값을 변환하지 않고 호출 시점마다 읽습니다. trim, fallback, 필수값 검증은 기존 consumer의 의미와 평가 시점을 유지합니다.
-- 새 환경변수는 같은 변경에서 `.env.example`에도 추가합니다.
+- 새 환경변수는 같은 변경에서 `README.md` 환경변수 문서에도 추가합니다.
 - secret에는 `NEXT_PUBLIC_` 접두사를 사용하지 않습니다.
 - `NEXT_PUBLIC_SITE_URL`처럼 surface별 fallback이 다른 값은 임의로 하나로 합치지 않습니다.
 

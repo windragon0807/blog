@@ -1,11 +1,11 @@
 'use client'
 
-import { XIcon } from 'lucide-react'
+import { StarIcon, XIcon } from 'lucide-react'
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react'
 import { useEffect, useId, useRef } from 'react'
 import { CircleCheckIcon, CopyIcon, DownloadIcon } from '@/components/icons'
 import { cn } from '@/lib/utils'
-import type { EmoticonItem } from '../types'
+import type { EmoticonItem, EmoticonSourceCollectionId } from '../types'
 
 const FOCUSABLE_SELECTOR = [
   'a[href]',
@@ -112,20 +112,25 @@ function ActionButton({
 
 export function BottomActionSheet({
   item,
+  isFavorite,
   feedback,
   isClosing,
   centerX,
   onClose,
+  onToggleFavorite,
   onDownloadSvg,
   onDownloadPng,
   onCopySvg,
   onCopyImage,
 }: {
   item: EmoticonItem
+  sourceCollectionId: EmoticonSourceCollectionId
+  isFavorite: boolean
   feedback: ActionFeedback
   isClosing: boolean
   centerX: number | null
   onClose: () => void
+  onToggleFavorite: () => void
   onDownloadSvg: () => void
   onDownloadPng: () => void
   onCopySvg: () => void
@@ -255,8 +260,27 @@ export function BottomActionSheet({
         <div className="grid min-w-0 grid-cols-[92px_minmax(0,1fr)] gap-2.5 sm:grid-cols-[128px_minmax(0,1fr)] sm:gap-4">
           <figure
             data-emoticon-selected-identity=""
-            className="flex min-w-0 flex-col items-center justify-center px-1 py-1 sm:px-2 sm:py-1"
+            className="relative flex min-w-0 flex-col items-center justify-center px-1 py-1 sm:px-2 sm:py-1"
           >
+            <button
+              type="button"
+              data-emoticon-favorite-button=""
+              aria-pressed={isFavorite}
+              aria-label={
+                isFavorite ? '즐겨찾기에서 제거' : '즐겨찾기에 추가'
+              }
+              onClick={onToggleFavorite}
+              className="absolute right-0 top-0 z-10 grid h-8 w-8 place-items-center rounded-lg text-zinc-400 transition hover:bg-white/70 hover:text-zinc-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/35 dark:hover:bg-white/10 dark:hover:text-zinc-100"
+            >
+              <StarIcon
+                className={cn(
+                  'h-5 w-5',
+                  isFavorite
+                    ? 'fill-amber-400 text-amber-400'
+                    : 'fill-none text-zinc-400'
+                )}
+              />
+            </button>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               data-emoticon-selected-preview=""

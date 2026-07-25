@@ -34,3 +34,18 @@
   }
 }
 
+/* Search overlay: opacity + translate only (no filter).
+   tw-animate-css `animate-in` always animates filter:blur even at 0px;
+   with fill-mode:none that demotes the layer at the end and hitch. */
+@keyframes emoticon-search-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(1rem, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+

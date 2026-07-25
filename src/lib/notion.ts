@@ -22,15 +22,12 @@ const notion = new Client({
 })
 
 const BLOG_DATABASE_ID = getNotionDatabaseId()!
-const PORTFOLIO_DATABASE_ID =
-  getNotionPortfolioDatabaseId()?.trim() || '31d3d4af55eb80989dddeb5baa502d11'
+const PORTFOLIO_DATABASE_ID = getNotionPortfolioDatabaseId()!
 
-const POST_DETAIL_DATABASE_IDS = Array.from(
-  new Set([BLOG_DATABASE_ID, PORTFOLIO_DATABASE_ID].filter(Boolean))
+// blog + portfolio (slug/detail lookup, webhook, getPostByPageId)
+const CONTENT_DATABASE_IDS = Array.from(
+  new Set([BLOG_DATABASE_ID, PORTFOLIO_DATABASE_ID])
 )
-
-// 전체 콘텐츠 DB (webhook 검증 / getPostByPageId 등 generic lookup용)
-const CONTENT_DATABASE_IDS = POST_DETAIL_DATABASE_IDS
 const CACHE_TTL_SECONDS = getNodeEnv() === 'development' ? 120 : 3600
 
 export const NOTION_CACHE_TAGS = {
@@ -319,7 +316,7 @@ async function getPostBySlugFromDatabase(
 }
 
 export const getPostBySlug = cache(async (slug: string): Promise<Post | null> => {
-  for (const databaseId of POST_DETAIL_DATABASE_IDS) {
+  for (const databaseId of CONTENT_DATABASE_IDS) {
     const post = await getPostBySlugFromDatabase(databaseId, slug)
     if (post) return post
   }
@@ -381,7 +378,7 @@ export const getPageBlocks = cache(async (blockId: string): Promise<Block[]> => 
 
 export async function getAllSlugs(): Promise<string[]> {
   const groups = await Promise.all(
-    POST_DETAIL_DATABASE_IDS.map((databaseId) => getPostsCached(databaseId))
+    CONTENT_DATABASE_IDS.map((databaseId) => getPostsCached(databaseId))
   )
   const slugs = groups.flat().map((post) => post.slug).filter(Boolean)
   return Array.from(new Set(slugs))
