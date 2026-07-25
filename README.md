@@ -76,8 +76,8 @@ public
 
 이 프로젝트의 런타임 기준은 `Node 24.x`입니다.
 
-- `nvm`/`fnm`/`asdf`/`mise` 같은 버전 매니저는 프로젝트 루트의 `.nvmrc` 또는 `.node-version`을 사용하세요.
-- 런타임 기준은 `.nvmrc`, `.node-version`, `package.json`의 `engines.node`가 함께 정의하며, 세 값은 모두 `24.x`로 유지합니다.
+- `nvm`/`fnm`/`asdf`/`mise` 같은 버전 매니저는 프로젝트 루트의 `.nvmrc`를 사용하세요.
+- 런타임 기준은 `.nvmrc`와 `package.json`의 `engines.node`가 함께 정의하며, 두 값은 모두 `24.x`로 유지합니다.
 - 패키지 매니저는 `pnpm@11.9.0` 기준입니다. `npm install`, `yarn install`은 프로젝트 가드에서 차단됩니다.
 
 ### 1) 설치
