@@ -430,17 +430,19 @@ function findProcessEscapes(sourceFiles) {
 function parseReadmeEnvEntries() {
   const entries = new Map()
   const readme = readFileSync(readmePath, 'utf8')
-  const blocks = [...readme.matchAll(/```(?:bash)?\n([\s\S]*?)```/g)].map(
-    (match) => match[1]
+  const setupBlock = readme.match(
+    /### 2\) 환경변수 설정[\s\S]*?```bash\r?\n([\s\S]*?)```/
   )
 
-  for (const block of blocks) {
-    for (const line of block.split(/\r?\n/)) {
-      const match = line.match(/^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/)
+  if (!setupBlock) {
+    return entries
+  }
 
-      if (match) {
-        entries.set(match[1], match[2].trim())
-      }
+  for (const line of setupBlock[1].split(/\r?\n/)) {
+    const match = line.match(/^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/)
+
+    if (match) {
+      entries.set(match[1], match[2].trim())
     }
   }
 
