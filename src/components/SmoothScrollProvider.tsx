@@ -13,7 +13,8 @@ export function SmoothScrollProvider() {
   const prefersReducedMotion = usePrefersReducedMotion()
 
   useEffect(() => {
-    if (pathname === '/emoticons') return
+    // Soft scroll lag (Lenis) is intentional only on post detail pages.
+    if (!pathname.startsWith('/posts/')) return
     if (prefersReducedMotion) return
     if (window.innerWidth < DESKTOP_BREAKPOINT) return
     if (window.matchMedia('(pointer: coarse)').matches) return
