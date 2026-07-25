@@ -89,8 +89,6 @@ function revalidateCommonPaths() {
   revalidatePath('/portfolio')
   revalidatePath('/sitemap.xml')
   revalidatePath('/posts/[slug]', 'page')
-  revalidatePath('/tags/[tag]', 'page')
-  revalidatePath('/series/[series]', 'page')
 }
 
 export async function POST(request: NextRequest) {
@@ -145,8 +143,6 @@ export async function POST(request: NextRequest) {
 
   const pageId = extractPageId(payload)
   let revalidatedSlug: string | null = null
-  const revalidatedTags: string[] = []
-  let revalidatedSeries: string | null = null
 
   if (pageId) {
     try {
@@ -154,16 +150,6 @@ export async function POST(request: NextRequest) {
       if (post?.slug) {
         revalidatedSlug = post.slug
         revalidatePath(`/posts/${encodeURIComponent(post.slug)}`)
-      }
-
-      post?.tags.forEach((tag) => {
-        revalidatedTags.push(tag)
-        revalidatePath(`/tags/${encodeURIComponent(tag)}`)
-      })
-
-      if (post?.series) {
-        revalidatedSeries = post.series
-        revalidatePath(`/series/${encodeURIComponent(post.series)}`)
       }
     } catch (error) {
       console.error('[notion-webhook] failed to resolve page metadata', {
@@ -179,8 +165,6 @@ export async function POST(request: NextRequest) {
     eventType: asString(payload.type),
     pageId,
     revalidatedSlug,
-    revalidatedTags,
-    revalidatedSeries,
     revalidatedAt: new Date().toISOString(),
   })
 }

@@ -13,9 +13,7 @@
 
 | 경로 | 설명 | 주요 파일 |
 |---|---|---|
-| `/` | 전체 포스트 목록, 태그/시리즈 필터 | `src/app/page.tsx` |
-| `/tags/[tag]` | 태그별 포스트 목록 | `src/app/tags/[tag]/page.tsx` |
-| `/series/[series]` | 시리즈별 포스트 목록 | `src/app/series/[series]/page.tsx` |
+| `/` | 전체 포스트 목록 | `src/app/(tabs)/page.tsx` |
 | `/posts/[slug]` | 포스트 상세, 본문/TOC/댓글/관련글 | `src/app/posts/[slug]/page.tsx` |
 | `/portfolio` | 포트폴리오 링크 허브 | `src/app/portfolio/page.tsx` |
 | `/resume` | 코드 기반 이력서 및 PDF 다운로드 | `src/app/resume/page.tsx` |
@@ -100,7 +98,7 @@
 
 1. `pnpm lint`
 2. `pnpm build`
-3. 홈/태그/시리즈/상세 렌더 확인
+3. 홈/상세 렌더 확인
 4. 헤더 검색 오버레이 동작 확인
 5. `/resume` 화면 렌더링과 PDF 다운로드 확인
 

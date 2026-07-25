@@ -4,7 +4,6 @@ import type { Post } from '@/types/notion'
 import { CardShell } from '@/components/common/Surface'
 import { PostPageIcon } from '@/components/notion/PostPageIcon'
 import { RetryableImage } from '@/components/RetryableImage'
-import { Badge } from '@/components/ui/badge'
 import { getCoverAccent } from '@/lib/coverAccent'
 
 interface Props {
@@ -166,24 +165,6 @@ export function PostCard({
                   >
                     {post.description}
                   </p>
-                )}
-
-                {!isCompact && (post.series || post.tags.length > 0) && (
-                  <div className="mt-4 flex flex-wrap gap-1.5">
-                    {post.series && (
-                      <Badge variant="series">
-                        Series · {post.series}
-                      </Badge>
-                    )}
-                    {post.tags.map((tag) => (
-                      <Badge
-                        key={tag}
-                        variant="tag"
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
                 )}
               </div>
             </div>

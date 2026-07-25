@@ -98,7 +98,7 @@ motion:
   reducedSettings: "90ms ease both"
 components:
   uiPrimitives: [Badge, Button, Dialog, Drawer, Popover, ScrollArea, Select, Separator, Skeleton, Tooltip]
-  commonComposites: [ActionLink, EmptyState, FilterChip, IconButton, SettingsSection, StatusNotice, Surface]
+  commonComposites: [ActionLink, EmptyState, IconButton, SettingsSection, StatusNotice, Surface]
   button:
     source: "src/components/ui/button.tsx"
     dataSlot: "button"
@@ -179,7 +179,7 @@ ColorPicker는 Radix Popover 기반의 불투명 6자리 HEX 전용 primitive다
 
 ColorPicker의 채도·명도 평면은 별도 바깥 border나 outer focus ring을 두지 않는다. 기본 edge와 keyboard focus는 모두 radius 안쪽 inset rim으로 표시해 색상 면의 모서리가 끊겨 보이지 않게 한다. 글꼴 굵기 Select는 이름과 숫자를 분리하고 숫자는 shared Badge primitive의 compact secondary treatment로 trigger와 option에 동일하게 표시한다.
 
-`src/components/common`의 7개 module이 노출하는 primary composite/adapter는 ActionLink, EmptyState, FilterChip, IconButton, SettingsSection, StatusNotice, Surface다. `ActionControl.tsx`가 ActionLink를 export하고, Surface 파일은 `Surface`와 semantic `<article>`인 `CardShell`을 함께 제공한다. IconButton은 label/optional tooltip을 조합하고, site-level `IconControlButton`과 HeaderControl styling이 이를 확장한다. FilterChip, StatusNotice, EmptyState는 목록 탐색과 feedback를 담당한다.
+`src/components/common`의 6개 module이 노출하는 primary composite/adapter는 ActionLink, EmptyState, IconButton, SettingsSection, StatusNotice, Surface다. `ActionControl.tsx`가 ActionLink를 export하고, Surface 파일은 `Surface`와 semantic `<article>`인 `CardShell`을 함께 제공한다. IconButton은 label/optional tooltip을 조합하고, site-level `IconControlButton`과 HeaderControl styling이 이를 확장한다. StatusNotice, EmptyState는 목록 탐색과 feedback를 담당한다.
 
 ### Site and feature ownership
 

@@ -1,12 +1,10 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 import { getPostBySlug, getAllSlugs } from '@/lib/notion'
 import { getRelatedPosts } from '@/lib/postContent'
 import { RelatedPosts } from '@/components/RelatedPosts'
 import { RetryableImage } from '@/components/RetryableImage'
-import { Badge } from '@/components/ui/badge'
 import { PostPageIcon } from '@/components/notion/PostPageIcon'
 import { PostReadingTime } from '@/components/notion/PostReadingTime'
 import { PostBodyFallback, PostBodyStream } from '@/components/notion/PostBodyStream'
@@ -160,23 +158,6 @@ export default async function PostPage({ params }: PageProps) {
             <p className="post-hero-description text-lg text-[var(--post-muted)] dark:text-zinc-300">
               {post.description}
             </p>
-          )}
-          {(post.series || post.tags.length > 0) && (
-            <div className="mt-4 flex flex-wrap gap-1.5">
-              {post.series && (
-                <Link
-                  href={`/series/${encodeURIComponent(post.series)}`}
-                  className="transition-colors hover:brightness-95 dark:hover:brightness-110"
-                >
-                  <Badge variant="series">Series · {post.series}</Badge>
-                </Link>
-              )}
-              {post.tags.map((tag) => (
-                <Badge key={tag} variant="tag">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
           )}
         </header>
 

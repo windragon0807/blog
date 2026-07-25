@@ -327,19 +327,6 @@ export const getPostBySlug = cache(async (slug: string): Promise<Post | null> =>
   return null
 })
 
-export const getPostsByTag = cache(async (tag: string): Promise<Post[]> => {
-  const posts = await getPosts()
-  return posts.filter((post) => post.tags.includes(tag))
-})
-
-/** 전체 태그 목록 집계 */
-export async function getAllTags(): Promise<string[]> {
-  const posts = await getPosts()
-  const tagSet = new Set<string>()
-  posts.forEach((post) => post.tags.forEach((tagName) => tagSet.add(tagName)))
-  return Array.from(tagSet).sort()
-}
-
 /** 페이지 블록 트리 재귀 조회 */
 async function getPageBlocksImpl(blockId: string): Promise<Block[]> {
   const blocks: Block[] = []
@@ -398,24 +385,6 @@ export async function getAllSlugs(): Promise<string[]> {
   )
   const slugs = groups.flat().map((post) => post.slug).filter(Boolean)
   return Array.from(new Set(slugs))
-}
-
-/** 특정 시리즈의 포스트 목록 */
-export async function getPostsBySeries(series: string): Promise<Post[]> {
-  const posts = await getPosts()
-  return posts.filter((post) => post.series === series)
-}
-
-/** 전체 시리즈 목록 집계 */
-export async function getAllSeries(): Promise<string[]> {
-  const posts = await getPosts()
-  const seriesSet = new Set<string>()
-  posts.forEach((post) => {
-    if (post.series) {
-      seriesSet.add(post.series)
-    }
-  })
-  return Array.from(seriesSet).sort()
 }
 
 export async function getPostMediaUrlsById(postId: string): Promise<PostMediaUrls | null> {

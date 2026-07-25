@@ -1,21 +1,14 @@
 import type { MetadataRoute } from 'next'
-import {
-  getAllContentPosts,
-  getAllTags,
-  getAllSeries,
-  getPortfolioPosts,
-} from '@/lib/notion'
+import { getAllContentPosts, getPortfolioPosts } from '@/lib/notion'
 import { getPublicSiteUrl } from '@/lib/server/env'
 
 export const revalidate = 3600
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getPublicSiteUrl() ?? 'http://localhost:3000'
-  const [posts, portfolioPosts, tags, seriesList] = await Promise.all([
+  const [posts, portfolioPosts] = await Promise.all([
     getAllContentPosts(),
     getPortfolioPosts(),
-    getAllTags(),
-    getAllSeries(),
   ])
 
   const postEntries: MetadataRoute.Sitemap = posts.map((post) => ({
@@ -23,20 +16,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: post.date ? new Date(post.date) : new Date(),
     changeFrequency: 'weekly',
     priority: 0.8,
-  }))
-
-  const tagEntries: MetadataRoute.Sitemap = tags.map((tag) => ({
-    url: `${siteUrl}/tags/${encodeURIComponent(tag)}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.6,
-  }))
-
-  const seriesEntries: MetadataRoute.Sitemap = seriesList.map((series) => ({
-    url: `${siteUrl}/series/${encodeURIComponent(series)}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.6,
   }))
 
   return [
@@ -68,7 +47,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     ...postEntries,
-    ...tagEntries,
-    ...seriesEntries,
   ]
 }
