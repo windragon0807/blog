@@ -1,4 +1,4 @@
-import type { EmoticonCollectionId, EmoticonItem } from '../types'
+import type { EmoticonCollectionId, EmoticonItem } from '../types';
 
 export const TOSSFACE_FOOD_ORDER = [
   '초록 사과',
@@ -109,7 +109,7 @@ export const TOSSFACE_FOOD_ORDER = [
   '그릇과 숟가락',
   '젓가락',
   '소금',
-] as const
+] as const;
 
 export const TOSSFACE_ACTIVITY_ORDER = [
   '축구공',
@@ -161,7 +161,7 @@ export const TOSSFACE_ACTIVITY_ORDER = [
   '공연 예술',
   '액자',
   '팔레트',
-] as const
+] as const;
 
 export const TOSSFACE_TRAVEL_PREFIXES = [
   '지구',
@@ -231,7 +231,7 @@ export const TOSSFACE_TRAVEL_PREFIXES = [
   '페리',
   '요트',
   '닻',
-] as const
+] as const;
 
 export const TOSSFACE_ANIMAL_NATURE_PREFIXES = [
   '강아지',
@@ -325,7 +325,7 @@ export const TOSSFACE_ANIMAL_NATURE_PREFIXES = [
   '단풍잎',
   '낙엽',
   '잎',
-] as const
+] as const;
 
 export const TOSSFACE_SYMBOL_PREFIXES = [
   '빨간색 하트',
@@ -373,7 +373,7 @@ export const TOSSFACE_SYMBOL_PREFIXES = [
   '원글자',
   '알파벳',
   '버튼',
-] as const
+] as const;
 
 export const TOSSFACE_OBJECT_PREFIXES = [
   '안경',
@@ -472,50 +472,45 @@ export const TOSSFACE_OBJECT_PREFIXES = [
   '욕조',
   '비누',
   '스펀지',
-] as const
+] as const;
 
 export function matchesAnyKeyword(name: string, keywords: readonly string[]) {
-  return keywords.some((keyword) => name.includes(keyword))
+  return keywords.some((keyword) => name.includes(keyword));
 }
 
 export function startsWithAny(name: string, prefixes: readonly string[]) {
-  return prefixes.some((prefix) => name.startsWith(prefix))
+  return prefixes.some((prefix) => name.startsWith(prefix));
 }
 
 export function getExactOrderIndex(name: string, order: readonly string[]) {
-  return order.findIndex((orderedName) => orderedName === name)
+  return order.findIndex((orderedName) => orderedName === name);
 }
 
-export function getItemSubcategory(
-  collectionId: EmoticonCollectionId,
-  item: EmoticonItem
-) {
+export function getItemSubcategory(collectionId: EmoticonCollectionId, item: EmoticonItem) {
   if (collectionId === 'material') {
-    return item.filename.startsWith('folder-') ? 'folders' : 'files'
+    return item.filename.startsWith('folder-') ? 'folders' : 'files';
   }
 
   if (collectionId === 'ryong') {
-    return item.category ?? 'favorites'
+    return item.category ?? 'favorites';
   }
 
   if (item.category) {
-    return item.category
+    return item.category;
   }
 
-  const name = item.name
+  const name = item.name;
 
   if (name.includes('깃발')) {
-    return 'flags'
+    return 'flags';
   }
 
   if (TOSSFACE_FOOD_ORDER.includes(name as (typeof TOSSFACE_FOOD_ORDER)[number])) {
-    return 'food-drink'
+    return 'food-drink';
   }
 
   if (
-    TOSSFACE_ACTIVITY_ORDER.includes(
-      name as (typeof TOSSFACE_ACTIVITY_ORDER)[number]
-    ) ||
+    TOSSFACE_ACTIVITY_ORDER.includes(name as (typeof TOSSFACE_ACTIVITY_ORDER)[number]) ||
     matchesAnyKeyword(name, [
       '골프치는',
       '수영하는',
@@ -537,56 +532,44 @@ export function getItemSubcategory(
       '트로피',
     ])
   ) {
-    return 'activity'
+    return 'activity';
   }
 
   if (startsWithAny(name, TOSSFACE_TRAVEL_PREFIXES)) {
-    return 'travel-places'
+    return 'travel-places';
   }
 
   if (startsWithAny(name, TOSSFACE_ANIMAL_NATURE_PREFIXES)) {
-    return 'animals-nature'
+    return 'animals-nature';
   }
 
   if (startsWithAny(name, TOSSFACE_SYMBOL_PREFIXES)) {
-    return 'symbols'
+    return 'symbols';
   }
 
   if (startsWithAny(name, TOSSFACE_OBJECT_PREFIXES)) {
-    return 'objects'
+    return 'objects';
   }
 
-  return 'smileys-people'
+  return 'smileys-people';
 }
 
-export function getTossfaceDisplayRank(
-  subcategoryId: string,
-  item: EmoticonItem
-) {
+export function getTossfaceDisplayRank(subcategoryId: string, item: EmoticonItem) {
   if (subcategoryId !== 'smileys-people') {
-    return 0
+    return 0;
   }
 
   if (item.name.includes('얼굴')) {
-    return 0
+    return 0;
   }
 
-  if (
-    matchesAnyKeyword(item.name, [
-      '손',
-      '엄지',
-      '손가락',
-      '손바닥',
-      '박수',
-      '주먹',
-    ])
-  ) {
-    return 1
+  if (matchesAnyKeyword(item.name, ['손', '엄지', '손가락', '손바닥', '박수', '주먹'])) {
+    return 1;
   }
 
   if (matchesAnyKeyword(item.name, ['눈', '입', '혀', '귀', '코', '치아'])) {
-    return 2
+    return 2;
   }
 
-  return 3
+  return 3;
 }

@@ -1,5 +1,6 @@
-import { IconCloud } from '@/components/icon-cloud'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+import { IconCloud } from '@/components/icon-cloud';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 const iconCloudSlugs = [
   'typescript',
@@ -21,11 +22,9 @@ const iconCloudSlugs = [
   'github',
   'visualstudiocode',
   'figma',
-]
+];
 
-const iconCloudImages = iconCloudSlugs.map(
-  (slug) => `https://cdn.simpleicons.org/${slug}/${slug}`
-)
+const iconCloudImages = iconCloudSlugs.map((slug) => `https://cdn.simpleicons.org/${slug}/${slug}`);
 
 export function IconCloudPreview() {
   return (
@@ -39,5 +38,5 @@ export function IconCloudPreview() {
         <IconCloud images={iconCloudImages} />
       </div>
     </PreviewDemoSurface>
-  )
+  );
 }

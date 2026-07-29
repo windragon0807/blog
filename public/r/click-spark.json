@@ -4,10 +4,7 @@
   "type": "registry:ui",
   "title": "Click Spark Burst",
   "description": "A canvas overlay that emits radial sparks from every click.",
-  "dependencies": [
-    "clsx",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/click-spark.tsx",

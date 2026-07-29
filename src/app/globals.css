@@ -1,7 +1,7 @@
 @import 'pretendard/dist/web/static/pretendard-dynamic-subset.css';
 @import 'overlayscrollbars/styles/overlayscrollbars.css';
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 @import './styles/foundation.css';
 @import './styles/component-library.css';
 @import './styles/emoticon-motion.css';

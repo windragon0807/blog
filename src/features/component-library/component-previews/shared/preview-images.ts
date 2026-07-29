@@ -15,4 +15,4 @@ export const previewImages = [
     src: 'https://images.unsplash.com/photo-1483058712412-4245e9b90334?auto=format&fit=crop&w=600&q=80',
     alt: 'Desk',
   },
-]
+];

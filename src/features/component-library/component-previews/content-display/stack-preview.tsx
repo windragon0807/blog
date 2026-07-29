@@ -1,6 +1,8 @@
-import type { ReactNode } from 'react'
-import { Stack } from '@/components/stack'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+import type { ReactNode } from 'react';
+
+import { Stack } from '@/components/stack';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 const stackCardImages = [
   {
@@ -19,12 +21,9 @@ const stackCardImages = [
     src: 'https://images.unsplash.com/photo-1572120360610-d971b9d7767c?q=80&w=500&auto=format',
     title: 'home',
   },
-]
+];
 const stackCards = stackCardImages.map((image) => (
-  <div
-    key={image.title}
-    className="h-full w-full overflow-hidden rounded-2xl bg-zinc-100"
-  >
+  <div key={image.title} className="h-full w-full overflow-hidden rounded-2xl bg-zinc-100">
     {/* eslint-disable-next-line @next/next/no-img-element */}
     <img
       src={image.src}
@@ -32,7 +31,7 @@ const stackCards = stackCardImages.map((image) => (
       className="pointer-events-none h-full w-full object-cover"
     />
   </div>
-)) satisfies ReactNode[]
+)) satisfies ReactNode[];
 
 export function StackPreview() {
   return (
@@ -43,11 +42,8 @@ export function StackPreview() {
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(129,140,248,0.24),transparent_55%)]"
     >
       <div className="relative h-64 w-64">
-        <Stack
-          cards={stackCards}
-          sendToBackOnClick
-        />
+        <Stack cards={stackCards} sendToBackOnClick />
       </div>
     </PreviewDemoSurface>
-  )
+  );
 }

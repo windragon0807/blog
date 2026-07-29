@@ -1,26 +1,26 @@
-export type EmoticonSourceCollectionId = 'material' | 'tossface' | 'ryong'
+export type EmoticonSourceCollectionId = 'material' | 'tossface' | 'ryong';
 
-export type EmoticonCollectionId = EmoticonSourceCollectionId | 'favorites'
+export type EmoticonCollectionId = EmoticonSourceCollectionId | 'favorites';
 
 export type EmoticonItem = {
-  id: string
-  name: string
-  filename: string
-  src: string
-  pngSrc?: string
-  category?: string
-  order?: number
-}
+  id: string;
+  name: string;
+  filename: string;
+  src: string;
+  pngSrc?: string;
+  category?: string;
+  order?: number;
+};
 
 export type EmoticonCollection = {
-  id: EmoticonCollectionId
-  name: string
-  sourceLabel: string
-  count: number
-  items: EmoticonItem[]
-}
+  id: EmoticonCollectionId;
+  name: string;
+  sourceLabel: string;
+  count: number;
+  items: EmoticonItem[];
+};
 
 export type EmoticonManifest = {
-  generatedAt: string
-  collections: EmoticonCollection[]
-}
+  generatedAt: string;
+  collections: EmoticonCollection[];
+};

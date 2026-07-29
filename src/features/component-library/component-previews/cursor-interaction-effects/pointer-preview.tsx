@@ -1,8 +1,10 @@
-import type { ReactNode } from 'react'
-import { motion } from 'motion/react'
-import { Pointer } from '@/components/pointer'
-import { DesktopOnlyPreview } from '../desktop-only-preview'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+import { motion } from 'motion/react';
+import type { ReactNode } from 'react';
+
+import { Pointer } from '@/components/pointer';
+
+import { DesktopOnlyPreview } from '../desktop-only-preview';
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 function HeartPointer() {
   return (
@@ -37,7 +39,7 @@ function HeartPointer() {
         />
       </svg>
     </motion.div>
-  )
+  );
 }
 
 function PointerTile({
@@ -45,23 +47,19 @@ function PointerTile({
   description,
   children,
 }: {
-  title: string
-  description: string
-  children: ReactNode
+  title: string;
+  description: string;
+  children: ReactNode;
 }) {
   return (
     <div className="relative flex h-36 flex-col items-center justify-center overflow-hidden rounded-md border border-white/15 bg-white/[0.04] px-6 py-4">
       <div className="pointer-events-none flex flex-col items-center justify-center">
-        <h3 className="text-lg font-semibold text-white">
-          {title}
-        </h3>
-        <p className="text-sm text-white/55">
-          {description}
-        </p>
+        <h3 className="text-lg font-semibold text-white">{title}</h3>
+        <p className="text-sm text-white/55">{description}</p>
       </div>
       {children}
     </div>
-  )
+  );
 }
 
 export function PointerPreview() {
@@ -110,5 +108,5 @@ export function PointerPreview() {
         </div>
       </PreviewDemoSurface>
     </DesktopOnlyPreview>
-  )
+  );
 }

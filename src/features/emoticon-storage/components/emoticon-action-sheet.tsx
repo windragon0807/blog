@@ -1,11 +1,13 @@
-'use client'
+'use client';
 
-import { StarIcon, XIcon } from 'lucide-react'
-import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react'
-import { useEffect, useId, useRef } from 'react'
-import { CircleCheckIcon, CopyIcon, DownloadIcon } from '@/components/icons'
-import { cn } from '@/lib/utils'
-import type { EmoticonItem, EmoticonSourceCollectionId } from '../types'
+import { StarIcon, XIcon } from 'lucide-react';
+import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react';
+import { useEffect, useId, useRef } from 'react';
+
+import { CircleCheckIcon, CopyIcon, DownloadIcon } from '@/components/icons';
+import { cn } from '@/lib/utils';
+
+import type { EmoticonItem, EmoticonSourceCollectionId } from '../types';
 
 const FOCUSABLE_SELECTOR = [
   'a[href]',
@@ -14,21 +16,21 @@ const FOCUSABLE_SELECTOR = [
   'select:not([disabled])',
   'textarea:not([disabled])',
   '[tabindex]:not([tabindex="-1"])',
-].join(',')
+].join(',');
 
-export type ActionKey = 'download-svg' | 'download-png' | 'copy-svg' | 'copy-png'
+export type ActionKey = 'download-svg' | 'download-png' | 'copy-svg' | 'copy-png';
 
 export type ActionFeedback = {
-  key: ActionKey
-  status: 'success' | 'error'
-} | null
+  key: ActionKey;
+  status: 'success' | 'error';
+} | null;
 
 function getFocusableElements(container: HTMLElement) {
-  return Array.from(
-    container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
-  ).filter((element) => {
-    return !element.hasAttribute('disabled') && !element.getAttribute('hidden')
-  })
+  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
+    (element) => {
+      return !element.hasAttribute('disabled') && !element.getAttribute('hidden');
+    },
+  );
 }
 
 function getActionButtonState({
@@ -40,13 +42,13 @@ function getActionButtonState({
   errorAriaLabel,
   defaultIcon,
 }: {
-  actionKey: ActionKey
-  feedback: ActionFeedback
-  visibleLabel: string
-  defaultAriaLabel: string
-  successAriaLabel: string
-  errorAriaLabel: string
-  defaultIcon: ReactNode
+  actionKey: ActionKey;
+  feedback: ActionFeedback;
+  visibleLabel: string;
+  defaultAriaLabel: string;
+  successAriaLabel: string;
+  errorAriaLabel: string;
+  defaultIcon: ReactNode;
 }) {
   if (feedback?.key !== actionKey) {
     return {
@@ -54,7 +56,7 @@ function getActionButtonState({
       icon: defaultIcon,
       label: visibleLabel,
       tone: 'default' as const,
-    }
+    };
   }
 
   if (feedback.status === 'success') {
@@ -63,7 +65,7 @@ function getActionButtonState({
       icon: <CircleCheckIcon className="h-4 w-4" />,
       label: visibleLabel,
       tone: 'success' as const,
-    }
+    };
   }
 
   return {
@@ -71,7 +73,7 @@ function getActionButtonState({
     icon: <XIcon className="h-4 w-4" />,
     label: visibleLabel,
     tone: 'error' as const,
-  }
+  };
 }
 
 function ActionButton({
@@ -81,11 +83,11 @@ function ActionButton({
   tone,
   onClick,
 }: {
-  ariaLabel: string
-  icon: ReactNode
-  label: string
-  tone: 'default' | 'success' | 'error'
-  onClick: () => void
+  ariaLabel: string;
+  icon: ReactNode;
+  label: string;
+  tone: 'default' | 'success' | 'error';
+  onClick: () => void;
 }) {
   return (
     <button
@@ -101,13 +103,13 @@ function ActionButton({
         tone === 'success' &&
           'bg-emerald-500 text-white shadow-[0_12px_30px_-16px_rgba(16,185,129,0.9)] focus-visible:ring-emerald-400/45 dark:bg-emerald-500 dark:text-white',
         tone === 'error' &&
-          'bg-rose-500 text-white shadow-[0_12px_30px_-16px_rgba(244,63,94,0.85)] focus-visible:ring-rose-400/45 dark:bg-rose-500 dark:text-white'
+          'bg-rose-500 text-white shadow-[0_12px_30px_-16px_rgba(244,63,94,0.85)] focus-visible:ring-rose-400/45 dark:bg-rose-500 dark:text-white',
       )}
     >
       <span className="grid h-4 w-4 shrink-0 place-items-center">{icon}</span>
       <span className="truncate">{label}</span>
     </button>
-  )
+  );
 }
 
 export function BottomActionSheet({
@@ -123,21 +125,21 @@ export function BottomActionSheet({
   onCopySvg,
   onCopyImage,
 }: {
-  item: EmoticonItem
-  sourceCollectionId: EmoticonSourceCollectionId
-  isFavorite: boolean
-  feedback: ActionFeedback
-  isClosing: boolean
-  centerX: number | null
-  onClose: () => void
-  onToggleFavorite: () => void
-  onDownloadSvg: () => void
-  onDownloadPng: () => void
-  onCopySvg: () => void
-  onCopyImage: () => void
+  item: EmoticonItem;
+  sourceCollectionId: EmoticonSourceCollectionId;
+  isFavorite: boolean;
+  feedback: ActionFeedback;
+  isClosing: boolean;
+  centerX: number | null;
+  onClose: () => void;
+  onToggleFavorite: () => void;
+  onDownloadSvg: () => void;
+  onDownloadPng: () => void;
+  onCopySvg: () => void;
+  onCopyImage: () => void;
 }) {
-  const titleId = useId()
-  const sheetRef = useRef<HTMLDivElement | null>(null)
+  const titleId = useId();
+  const sheetRef = useRef<HTMLDivElement | null>(null);
   const svgDownloadState = getActionButtonState({
     actionKey: 'download-svg',
     feedback,
@@ -146,7 +148,7 @@ export function BottomActionSheet({
     successAriaLabel: 'Downloaded SVG',
     errorAriaLabel: 'Download SVG failed',
     defaultIcon: <DownloadIcon className="h-4 w-4" />,
-  })
+  });
   const pngDownloadState = getActionButtonState({
     actionKey: 'download-png',
     feedback,
@@ -155,7 +157,7 @@ export function BottomActionSheet({
     successAriaLabel: 'Downloaded PNG',
     errorAriaLabel: 'Download PNG failed',
     defaultIcon: <DownloadIcon className="h-4 w-4" />,
-  })
+  });
   const svgCopyState = getActionButtonState({
     actionKey: 'copy-svg',
     feedback,
@@ -164,7 +166,7 @@ export function BottomActionSheet({
     successAriaLabel: 'Copied SVG',
     errorAriaLabel: 'Copy SVG failed',
     defaultIcon: <CopyIcon className="h-4 w-4" />,
-  })
+  });
   const pngCopyState = getActionButtonState({
     actionKey: 'copy-png',
     feedback,
@@ -173,59 +175,59 @@ export function BottomActionSheet({
     successAriaLabel: 'Copied PNG',
     errorAriaLabel: 'Copy PNG failed',
     defaultIcon: <CopyIcon className="h-4 w-4" />,
-  })
+  });
 
   useEffect(() => {
     if (isClosing) {
-      return
+      return;
     }
 
-    const sheet = sheetRef.current
+    const sheet = sheetRef.current;
 
     if (!sheet) {
-      return
+      return;
     }
 
-    const firstFocusable = getFocusableElements(sheet)[0]
+    const firstFocusable = getFocusableElements(sheet)[0];
 
     requestAnimationFrame(() => {
-      ;(firstFocusable ?? sheet).focus({ preventScroll: true })
-    })
-  }, [isClosing, item.id])
+      (firstFocusable ?? sheet).focus({ preventScroll: true });
+    });
+  }, [isClosing, item.id]);
 
   const handleKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
     if (event.key !== 'Tab') {
-      return
+      return;
     }
 
-    const sheet = sheetRef.current
+    const sheet = sheetRef.current;
 
     if (!sheet) {
-      return
+      return;
     }
 
-    const focusableElements = getFocusableElements(sheet)
+    const focusableElements = getFocusableElements(sheet);
 
     if (focusableElements.length === 0) {
-      event.preventDefault()
-      sheet.focus({ preventScroll: true })
-      return
+      event.preventDefault();
+      sheet.focus({ preventScroll: true });
+      return;
     }
 
-    const firstElement = focusableElements[0]
-    const lastElement = focusableElements[focusableElements.length - 1]
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
 
     if (event.shiftKey && document.activeElement === firstElement) {
-      event.preventDefault()
-      lastElement.focus({ preventScroll: true })
-      return
+      event.preventDefault();
+      lastElement.focus({ preventScroll: true });
+      return;
     }
 
     if (!event.shiftKey && document.activeElement === lastElement) {
-      event.preventDefault()
-      firstElement.focus({ preventScroll: true })
+      event.preventDefault();
+      firstElement.focus({ preventScroll: true });
     }
-  }
+  };
 
   return (
     <div
@@ -245,7 +247,7 @@ export function BottomActionSheet({
           'pointer-events-auto relative isolate w-full overflow-hidden rounded-[28px] border border-white/65 bg-white/70 p-3 shadow-[0_28px_90px_-34px_rgba(15,23,42,0.46),inset_0_1px_0_rgba(255,255,255,0.9)] ring-1 ring-zinc-950/5 backdrop-blur-2xl before:pointer-events-none before:absolute before:inset-x-5 before:top-0 before:h-px before:bg-white/90 after:pointer-events-none after:absolute after:-left-20 after:-top-24 after:h-48 after:w-48 after:rounded-full after:bg-sky-200/35 after:blur-3xl dark:border-white/10 dark:bg-zinc-950/72 dark:shadow-[0_30px_92px_-34px_rgba(2,6,23,0.88),inset_0_1px_0_rgba(255,255,255,0.08)] dark:ring-white/10 dark:after:bg-blue-400/12',
           isClosing
             ? 'motion-safe:animate-[emoticon-bottom-sheet-exit_180ms_cubic-bezier(0.4,0,1,1)_both]'
-            : 'motion-safe:animate-[emoticon-bottom-sheet-enter_220ms_cubic-bezier(0.22,1,0.36,1)_both]'
+            : 'motion-safe:animate-[emoticon-bottom-sheet-enter_220ms_cubic-bezier(0.22,1,0.36,1)_both]',
         )}
       >
         <button
@@ -266,18 +268,14 @@ export function BottomActionSheet({
               type="button"
               data-emoticon-favorite-button=""
               aria-pressed={isFavorite}
-              aria-label={
-                isFavorite ? '즐겨찾기에서 제거' : '즐겨찾기에 추가'
-              }
+              aria-label={isFavorite ? '즐겨찾기에서 제거' : '즐겨찾기에 추가'}
               onClick={onToggleFavorite}
               className="absolute right-0 top-0 z-10 grid h-8 w-8 place-items-center rounded-lg text-zinc-400 transition hover:bg-white/70 hover:text-zinc-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/35 dark:hover:bg-white/10 dark:hover:text-zinc-100"
             >
               <StarIcon
                 className={cn(
                   'h-5 w-5',
-                  isFavorite
-                    ? 'fill-amber-400 text-amber-400'
-                    : 'fill-none text-zinc-400'
+                  isFavorite ? 'fill-amber-400 text-amber-400' : 'fill-none text-zinc-400',
                 )}
               />
             </button>
@@ -331,5 +329,5 @@ export function BottomActionSheet({
         </div>
       </div>
     </div>
-  )
+  );
 }

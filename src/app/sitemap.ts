@@ -1,22 +1,20 @@
-import type { MetadataRoute } from 'next'
-import { getAllContentPosts, getPortfolioPosts } from '@/lib/notion'
-import { getPublicSiteUrl } from '@/lib/server/env'
+import type { MetadataRoute } from 'next';
 
-export const revalidate = 3600
+import { getAllContentPosts, getPortfolioPosts } from '@/lib/notion';
+import { getPublicSiteUrl } from '@/lib/server/env';
+
+export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = getPublicSiteUrl() ?? 'http://localhost:3000'
-  const [posts, portfolioPosts] = await Promise.all([
-    getAllContentPosts(),
-    getPortfolioPosts(),
-  ])
+  const siteUrl = getPublicSiteUrl() ?? 'http://localhost:3000';
+  const [posts, portfolioPosts] = await Promise.all([getAllContentPosts(), getPortfolioPosts()]);
 
   const postEntries: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${siteUrl}/posts/${post.slug}`,
     lastModified: post.date ? new Date(post.date) : new Date(),
     changeFrequency: 'weekly',
     priority: 0.8,
-  }))
+  }));
 
   return [
     {
@@ -31,10 +29,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         portfolioPosts.length > 0
           ? new Date(
               portfolioPosts.reduce((latest, post) =>
-                new Date(post.date).getTime() > new Date(latest.date).getTime()
-                  ? post
-                  : latest
-              ).date
+                new Date(post.date).getTime() > new Date(latest.date).getTime() ? post : latest,
+              ).date,
             )
           : new Date(),
       changeFrequency: 'weekly',
@@ -47,5 +43,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     ...postEntries,
-  ]
+  ];
 }

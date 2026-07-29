@@ -1,25 +1,26 @@
-'use client'
+'use client';
 
-import type { CSSProperties } from 'react'
-import { cn } from '@/lib/utils'
+import type { CSSProperties } from 'react';
+
+import { cn } from '@/lib/utils';
 
 type SegmentedOption<Value extends string> = {
-  label: string
-  value: Value
-}
+  label: string;
+  value: Value;
+};
 
 type SegmentedControlProps<Value extends string> = {
-  label: string
-  options: readonly SegmentedOption<Value>[]
-  value: Value
-  onValueChange: (value: Value) => void
-  className?: string
-}
+  label: string;
+  options: readonly SegmentedOption<Value>[];
+  value: Value;
+  onValueChange: (value: Value) => void;
+  className?: string;
+};
 
 type SegmentedStyle = CSSProperties & {
-  '--segment-count': number
-  '--segment-translate': string
-}
+  '--segment-count': number;
+  '--segment-translate': string;
+};
 
 export function SegmentedControl<Value extends string>({
   label,
@@ -30,13 +31,13 @@ export function SegmentedControl<Value extends string>({
 }: SegmentedControlProps<Value>) {
   const selectedIndex = Math.max(
     0,
-    options.findIndex((option) => option.value === value)
-  )
+    options.findIndex((option) => option.value === value),
+  );
   const style: SegmentedStyle = {
     '--segment-count': options.length,
     '--segment-translate': `${selectedIndex * 100}%`,
     gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))`,
-  }
+  };
 
   return (
     <div
@@ -44,7 +45,7 @@ export function SegmentedControl<Value extends string>({
       aria-label={label}
       className={cn(
         'settings-segmented-control relative grid rounded-xl bg-muted/70 p-1 dark:bg-white/[0.06]',
-        className
+        className,
       )}
       style={style}
     >
@@ -65,5 +66,5 @@ export function SegmentedControl<Value extends string>({
         </button>
       ))}
     </div>
-  )
+  );
 }

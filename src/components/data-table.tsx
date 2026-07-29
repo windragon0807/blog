@@ -1,18 +1,18 @@
-'use client'
+'use client';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 export interface DataTableColumn<T> {
-  key: keyof T
-  header: string
-  width?: string
+  key: keyof T;
+  header: string;
+  width?: string;
 }
 
 interface DataTableProps<T extends Record<string, string | number>> {
-  columns: readonly DataTableColumn<T>[]
-  rows: readonly T[]
-  variant?: 'light' | 'dark'
-  className?: string
+  columns: readonly DataTableColumn<T>[];
+  rows: readonly T[];
+  variant?: 'light' | 'dark';
+  className?: string;
 }
 
 export function DataTable<T extends Record<string, string | number>>({
@@ -21,30 +21,24 @@ export function DataTable<T extends Record<string, string | number>>({
   variant = 'light',
   className,
 }: DataTableProps<T>) {
-  const isDark = variant === 'dark'
+  const isDark = variant === 'dark';
   const gridTemplateColumns = columns
-    .map(
-      (column, index) =>
-        column.width ?? getDataTableColumnTrack(columns.length, index)
-    )
-    .join(' ')
+    .map((column, index) => column.width ?? getDataTableColumnTrack(columns.length, index))
+    .join(' ');
 
   if (isDark) {
     return (
       <div
         className={cn(
           'w-full overflow-visible rounded-[34px] text-left text-white sm:overflow-hidden',
-          className
+          className,
         )}
       >
         <DataTableMobileCards columns={columns} rows={rows} variant="dark" />
         <div className="custom-scrollbar hidden overflow-x-auto sm:block">
           <table className="block min-w-[680px] rounded-[34px] border border-white/10 bg-white/[0.085] p-2 pt-0 text-base shadow-[0_28px_100px_-56px_rgba(255,255,255,0.35)] backdrop-blur-md">
             <thead className="block">
-              <tr
-                className="grid px-1 text-white/58"
-                style={{ gridTemplateColumns }}
-              >
+              <tr className="grid px-1 text-white/58" style={{ gridTemplateColumns }}>
                 {columns.map((column, index) => (
                   <th
                     key={String(column.key)}
@@ -79,7 +73,7 @@ export function DataTable<T extends Record<string, string | number>>({
           </table>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -87,17 +81,14 @@ export function DataTable<T extends Record<string, string | number>>({
       className={cn(
         'w-full overflow-visible rounded-[28px] text-left sm:overflow-hidden',
         'bg-zinc-100 p-2 dark:bg-zinc-900/60',
-        className
+        className,
       )}
     >
       <DataTableMobileCards columns={columns} rows={rows} variant="light" />
       <div className="custom-scrollbar hidden overflow-x-auto sm:block">
         <table className="block min-w-[640px] rounded-[28px] border border-zinc-200/80 bg-white/80 p-2 pt-0 text-base shadow-[0_18px_54px_-42px_rgba(24,24,27,0.42)] dark:border-zinc-700/70 dark:bg-zinc-900/58 dark:shadow-[0_22px_64px_-46px_rgba(2,6,23,0.9)]">
           <thead className="block text-zinc-500 dark:text-zinc-400">
-            <tr
-              className="grid px-1"
-              style={{ gridTemplateColumns }}
-            >
+            <tr className="grid px-1" style={{ gridTemplateColumns }}>
               {columns.map((column, index) => (
                 <th
                   key={String(column.key)}
@@ -132,7 +123,7 @@ export function DataTable<T extends Record<string, string | number>>({
         </table>
       </div>
     </div>
-  )
+  );
 }
 
 function DataTableMobileCards<T extends Record<string, string | number>>({
@@ -140,19 +131,16 @@ function DataTableMobileCards<T extends Record<string, string | number>>({
   rows,
   variant,
 }: {
-  columns: readonly DataTableColumn<T>[]
-  rows: readonly T[]
-  variant: 'light' | 'dark'
+  columns: readonly DataTableColumn<T>[];
+  rows: readonly T[];
+  variant: 'light' | 'dark';
 }) {
-  const isDark = variant === 'dark'
-  const titleColumn = columns[0]
-  const detailColumns = columns.slice(1)
+  const isDark = variant === 'dark';
+  const titleColumn = columns[0];
+  const detailColumns = columns.slice(1);
 
   return (
-    <div
-      data-data-table-mobile-list=""
-      className="space-y-3 px-px py-px sm:hidden"
-    >
+    <div data-data-table-mobile-list="" className="space-y-3 px-px py-px sm:hidden">
       {rows.map((row, rowIndex) => (
         <article
           key={rowIndex}
@@ -160,7 +148,7 @@ function DataTableMobileCards<T extends Record<string, string | number>>({
             'rounded-[22px] border p-4 shadow-[0_16px_44px_-36px_rgba(24,24,27,0.5)]',
             isDark
               ? 'border-white/10 bg-white/[0.07] text-white'
-              : 'border-zinc-200/80 bg-white/84 text-zinc-900 dark:border-zinc-700/70 dark:bg-zinc-950/34 dark:text-zinc-50'
+              : 'border-zinc-200/80 bg-white/84 text-zinc-900 dark:border-zinc-700/70 dark:bg-zinc-950/34 dark:text-zinc-50',
           )}
         >
           {titleColumn ? (
@@ -178,7 +166,7 @@ function DataTableMobileCards<T extends Record<string, string | number>>({
                   <dt
                     className={cn(
                       'truncate font-medium',
-                      isDark ? 'text-white/48' : 'text-zinc-500 dark:text-zinc-400'
+                      isDark ? 'text-white/48' : 'text-zinc-500 dark:text-zinc-400',
                     )}
                   >
                     {column.header}
@@ -186,7 +174,7 @@ function DataTableMobileCards<T extends Record<string, string | number>>({
                   <dd
                     className={cn(
                       'min-w-0 overflow-hidden text-ellipsis whitespace-nowrap',
-                      isDark ? 'text-white/82' : 'text-zinc-700 dark:text-zinc-200/82'
+                      isDark ? 'text-white/82' : 'text-zinc-700 dark:text-zinc-200/82',
                     )}
                   >
                     {row[column.key]}
@@ -198,11 +186,11 @@ function DataTableMobileCards<T extends Record<string, string | number>>({
         </article>
       ))}
     </div>
-  )
+  );
 }
 
 function getDataTableColumnTrack(columnCount: number, index: number) {
-  if (columnCount <= 2) return 'minmax(0, 1fr)'
-  if (index === 0 || index === columnCount - 1) return 'minmax(0, 1.35fr)'
-  return 'minmax(0, 0.78fr)'
+  if (columnCount <= 2) return 'minmax(0, 1fr)';
+  if (index === 0 || index === columnCount - 1) return 'minmax(0, 1.35fr)';
+  return 'minmax(0, 0.78fr)';
 }

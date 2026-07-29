@@ -1,5 +1,6 @@
-import { ElasticSlider } from '@/components/elastic-slider'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+import { ElasticSlider } from '@/components/elastic-slider';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 export function ElasticSliderPreview() {
   return (
@@ -11,5 +12,5 @@ export function ElasticSliderPreview() {
     >
       <ElasticSlider defaultValue={62} isStepped stepSize={4} />
     </PreviewDemoSurface>
-  )
+  );
 }

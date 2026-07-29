@@ -4,11 +4,7 @@
   "type": "registry:ui",
   "title": "Animated Task List",
   "description": "A small animated todo list interaction.",
-  "dependencies": [
-    "clsx",
-    "motion",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "motion", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/playful-todolist.tsx",

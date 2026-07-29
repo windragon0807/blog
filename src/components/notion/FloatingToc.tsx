@@ -1,176 +1,172 @@
-'use client'
+'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { getLenisInstance } from '@/lib/lenis'
-import type { TocHeading } from '@/lib/toc'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { getLenisInstance } from '@/lib/lenis';
+import type { TocHeading } from '@/lib/toc';
 
 interface Props {
-  headings: TocHeading[]
+  headings: TocHeading[];
 }
 
 function getScrollViewport(element: HTMLElement | null) {
-  return (
-    element?.querySelector<HTMLElement>('[data-overlayscrollbars-viewport]') ??
-    element
-  )
+  return element?.querySelector<HTMLElement>('[data-overlayscrollbars-viewport]') ?? element;
 }
 
 export function FloatingToc({ headings }: Props) {
-  const [activeId, setActiveId] = useState<string>(headings[0]?.id ?? '')
-  const [indicatorTop, setIndicatorTop] = useState(0)
-  const [indicatorHeight, setIndicatorHeight] = useState(20)
-  const isManualScrollingRef = useRef(false)
-  const manualScrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const navRef = useRef<HTMLElement | null>(null)
-  const trackRef = useRef<HTMLDivElement | null>(null)
-  const itemRefs = useRef<Record<string, HTMLAnchorElement | null>>({})
+  const [activeId, setActiveId] = useState<string>(headings[0]?.id ?? '');
+  const [indicatorTop, setIndicatorTop] = useState(0);
+  const [indicatorHeight, setIndicatorHeight] = useState(20);
+  const isManualScrollingRef = useRef(false);
+  const manualScrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const navRef = useRef<HTMLElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const itemRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
 
   const updateIndicator = useCallback((targetId: string) => {
-    const trackElement = trackRef.current
-    const activeElement = itemRefs.current[targetId]
-    if (!trackElement || !activeElement) return
+    const trackElement = trackRef.current;
+    const activeElement = itemRefs.current[targetId];
+    if (!trackElement || !activeElement) return;
 
-    const trackHeight = Math.floor(trackElement.getBoundingClientRect().height)
-    const rawTop = activeElement.offsetTop
-    const remainingHeight = Math.max(16, trackHeight - rawTop)
-    const nextHeight = Math.max(16, Math.min(activeElement.offsetHeight, remainingHeight))
-    const nextTop = Math.min(rawTop, Math.max(0, trackHeight - nextHeight))
+    const trackHeight = Math.floor(trackElement.getBoundingClientRect().height);
+    const rawTop = activeElement.offsetTop;
+    const remainingHeight = Math.max(16, trackHeight - rawTop);
+    const nextHeight = Math.max(16, Math.min(activeElement.offsetHeight, remainingHeight));
+    const nextTop = Math.min(rawTop, Math.max(0, trackHeight - nextHeight));
 
-    setIndicatorTop(nextTop)
-    setIndicatorHeight(nextHeight)
-  }, [])
+    setIndicatorTop(nextTop);
+    setIndicatorHeight(nextHeight);
+  }, []);
 
   const scrollActiveItemIntoView = useCallback(
     (targetId: string, behavior: ScrollBehavior = 'auto') => {
-      const navElement = getScrollViewport(navRef.current)
-      const activeElement = itemRefs.current[targetId]
-      if (!navElement || !activeElement) return
+      const navElement = getScrollViewport(navRef.current);
+      const activeElement = itemRefs.current[targetId];
+      if (!navElement || !activeElement) return;
 
-      const padding = 16
-      const currentScrollTop = navElement.scrollTop
-      const activeTop = activeElement.offsetTop
-      const activeBottom = activeTop + activeElement.offsetHeight
-      const visibleTop = currentScrollTop + padding
-      const visibleBottom = currentScrollTop + navElement.clientHeight - padding
+      const padding = 16;
+      const currentScrollTop = navElement.scrollTop;
+      const activeTop = activeElement.offsetTop;
+      const activeBottom = activeTop + activeElement.offsetHeight;
+      const visibleTop = currentScrollTop + padding;
+      const visibleBottom = currentScrollTop + navElement.clientHeight - padding;
 
       if (activeTop >= visibleTop && activeBottom <= visibleBottom) {
-        return
+        return;
       }
 
       const centeredScrollTop =
-        activeTop - navElement.clientHeight / 2 + activeElement.offsetHeight / 2
-      const maxScrollTop = Math.max(0, navElement.scrollHeight - navElement.clientHeight)
-      const nextScrollTop = Math.min(Math.max(0, centeredScrollTop), maxScrollTop)
+        activeTop - navElement.clientHeight / 2 + activeElement.offsetHeight / 2;
+      const maxScrollTop = Math.max(0, navElement.scrollHeight - navElement.clientHeight);
+      const nextScrollTop = Math.min(Math.max(0, centeredScrollTop), maxScrollTop);
 
       navElement.scrollTo({
         top: nextScrollTop,
         behavior,
-      })
+      });
     },
-    []
-  )
+    [],
+  );
 
   const visibleHeadings = useMemo(
     () => headings.filter((heading) => heading.text.trim().length > 0),
-    [headings]
-  )
+    [headings],
+  );
   const minimumHeadingLevel = useMemo(
     () =>
-      visibleHeadings.length > 0
-        ? Math.min(...visibleHeadings.map((heading) => heading.level))
-        : 1,
-    [visibleHeadings]
-  )
+      visibleHeadings.length > 0 ? Math.min(...visibleHeadings.map((heading) => heading.level)) : 1,
+    [visibleHeadings],
+  );
   const currentActiveId = useMemo(() => {
     if (visibleHeadings.some((heading) => heading.id === activeId)) {
-      return activeId
+      return activeId;
     }
-    return visibleHeadings[0]?.id ?? ''
-  }, [activeId, visibleHeadings])
+    return visibleHeadings[0]?.id ?? '';
+  }, [activeId, visibleHeadings]);
 
   useEffect(() => {
-    updateIndicator(currentActiveId)
-  }, [currentActiveId, updateIndicator, visibleHeadings])
+    updateIndicator(currentActiveId);
+  }, [currentActiveId, updateIndicator, visibleHeadings]);
 
   useEffect(() => {
-    scrollActiveItemIntoView(currentActiveId)
-  }, [currentActiveId, scrollActiveItemIntoView])
+    scrollActiveItemIntoView(currentActiveId);
+  }, [currentActiveId, scrollActiveItemIntoView]);
 
   useEffect(() => {
     const handleResize = () => {
-      updateIndicator(currentActiveId)
-    }
+      updateIndicator(currentActiveId);
+    };
 
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [currentActiveId, updateIndicator])
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [currentActiveId, updateIndicator]);
 
   useEffect(() => {
-    if (visibleHeadings.length === 0) return
+    if (visibleHeadings.length === 0) return;
 
     const elements = visibleHeadings
       .map((heading) => document.getElementById(heading.id))
-      .filter((element): element is HTMLElement => element !== null)
+      .filter((element): element is HTMLElement => element !== null);
 
-    if (elements.length === 0) return
+    if (elements.length === 0) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (isManualScrollingRef.current) return
+        if (isManualScrollingRef.current) return;
 
         const intersecting = entries
           .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
 
         if (intersecting[0]?.target?.id) {
-          setActiveId(intersecting[0].target.id)
+          setActiveId(intersecting[0].target.id);
         }
       },
       {
         rootMargin: '-90px 0px -65% 0px',
         threshold: [0, 1],
-      }
-    )
+      },
+    );
 
-    elements.forEach((element) => observer.observe(element))
+    elements.forEach((element) => observer.observe(element));
     return () => {
-      observer.disconnect()
+      observer.disconnect();
       if (manualScrollTimerRef.current) {
-        clearTimeout(manualScrollTimerRef.current)
+        clearTimeout(manualScrollTimerRef.current);
       }
-    }
-  }, [visibleHeadings])
+    };
+  }, [visibleHeadings]);
 
-  if (visibleHeadings.length === 0) return null
+  if (visibleHeadings.length === 0) return null;
 
   const handleMove = (targetId: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault()
-    const target = document.getElementById(targetId)
-    if (!target) return
+    event.preventDefault();
+    const target = document.getElementById(targetId);
+    if (!target) return;
 
-    const distance = Math.abs(target.getBoundingClientRect().top)
-    const lockDuration = Math.min(1200, Math.max(350, Math.round(distance * 0.6)))
+    const distance = Math.abs(target.getBoundingClientRect().top);
+    const lockDuration = Math.min(1200, Math.max(350, Math.round(distance * 0.6)));
 
-    isManualScrollingRef.current = true
+    isManualScrollingRef.current = true;
     if (manualScrollTimerRef.current) {
-      clearTimeout(manualScrollTimerRef.current)
+      clearTimeout(manualScrollTimerRef.current);
     }
     manualScrollTimerRef.current = setTimeout(() => {
-      isManualScrollingRef.current = false
-    }, lockDuration)
+      isManualScrollingRef.current = false;
+    }, lockDuration);
 
-    const lenis = getLenisInstance()
+    const lenis = getLenisInstance();
     if (lenis) {
-      const duration = Math.min(0.76, Math.max(0.42, distance / 1800))
-      lenis.scrollTo(target, { offset: -84, duration })
+      const duration = Math.min(0.76, Math.max(0.42, distance / 1800));
+      lenis.scrollTo(target, { offset: -84, duration });
     } else {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-    history.replaceState(null, '', `#${targetId}`)
-    setActiveId(targetId)
-    scrollActiveItemIntoView(targetId, 'smooth')
-  }
+    history.replaceState(null, '', `#${targetId}`);
+    setActiveId(targetId);
+    scrollActiveItemIntoView(targetId, 'smooth');
+  };
 
   return (
     <aside className="fixed top-24 right-[max(1rem,calc((100vw-48rem)/2-17rem))] z-40 hidden w-60 xl:block">
@@ -194,8 +190,8 @@ export function FloatingToc({ headings }: Props) {
           />
           <ul className="space-y-0.5">
             {visibleHeadings.map((heading) => {
-              const isActive = currentActiveId === heading.id
-              const displayLevel = Math.max(1, heading.level - minimumHeadingLevel + 1)
+              const isActive = currentActiveId === heading.id;
+              const displayLevel = Math.max(1, heading.level - minimumHeadingLevel + 1);
               const indent =
                 displayLevel === 1
                   ? ''
@@ -203,13 +199,13 @@ export function FloatingToc({ headings }: Props) {
                     ? 'pl-4'
                     : displayLevel === 3
                       ? 'pl-8'
-                      : 'pl-12'
+                      : 'pl-12';
 
               return (
                 <li key={heading.id}>
                   <a
                     ref={(node) => {
-                      itemRefs.current[heading.id] = node
+                      itemRefs.current[heading.id] = node;
                     }}
                     href={`#${heading.id}`}
                     onClick={handleMove(heading.id)}
@@ -223,11 +219,11 @@ export function FloatingToc({ headings }: Props) {
                     {heading.text}
                   </a>
                 </li>
-              )
+              );
             })}
           </ul>
         </div>
       </ScrollArea>
     </aside>
-  )
+  );
 }

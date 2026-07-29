@@ -1,5 +1,6 @@
-import { PlaceholdersAndVanishInput } from '@/components/placeholders-and-vanish-input'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+import { PlaceholdersAndVanishInput } from '@/components/placeholders-and-vanish-input';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 export function PlaceholdersAndVanishInputPreview() {
   return (
@@ -15,5 +16,5 @@ export function PlaceholdersAndVanishInputPreview() {
         placeholders={['Search components', 'Ask about registry', 'Find animations']}
       />
     </PreviewDemoSurface>
-  )
+  );
 }

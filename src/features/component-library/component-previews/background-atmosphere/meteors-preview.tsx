@@ -1,6 +1,7 @@
-import { Meteors } from '@/components/meteors'
-import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface'
-import type { PreviewMode } from '../types'
+import { Meteors } from '@/components/meteors';
+
+import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface';
+import type { PreviewMode } from '../types';
 
 export function MeteorsPreview({ mode }: { mode: PreviewMode }) {
   return (
@@ -18,5 +19,5 @@ export function MeteorsPreview({ mode }: { mode: PreviewMode }) {
         }
       />
     </OuterEffectSurface>
-  )
+  );
 }

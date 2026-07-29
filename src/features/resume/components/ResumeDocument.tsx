@@ -1,57 +1,55 @@
 /* eslint-disable @next/next/no-img-element */
 
-import { forwardRef, useId } from 'react'
+import { forwardRef, useId } from 'react';
+
+import { RESUME_DOCUMENT_HEIGHT, RESUME_DOCUMENT_WIDTH } from '../constants';
 import {
   resumeBirthDate,
-  resumeLinks,
-  resumeProfile,
-  resumeSections,
-  resumeTechnologies,
   type ResumeEntry,
   type ResumeHighlight,
+  resumeLinks,
+  resumeProfile,
   type ResumeSection,
+  resumeSections,
+  resumeTechnologies,
   type ResumeText,
-} from '../resume-data'
-import {
-  RESUME_DOCUMENT_HEIGHT,
-  RESUME_DOCUMENT_WIDTH,
-} from '../constants'
-import styles from './ResumeDocument.module.css'
+} from '../resume-data';
+import styles from './ResumeDocument.module.css';
 
 function renderRichText(text: ResumeText) {
-  const emphasis = text.emphasis ?? []
+  const emphasis = text.emphasis ?? [];
 
   if (emphasis.length === 0) {
-    return text.text
+    return text.text;
   }
 
-  const parts: { value: string; strong: boolean }[] = []
-  let cursor = 0
+  const parts: { value: string; strong: boolean }[] = [];
+  let cursor = 0;
 
   while (cursor < text.text.length) {
-    let nextIndex = -1
-    let nextPhrase = ''
+    let nextIndex = -1;
+    let nextPhrase = '';
 
     for (const phrase of emphasis) {
-      const index = text.text.indexOf(phrase, cursor)
+      const index = text.text.indexOf(phrase, cursor);
 
       if (index !== -1 && (nextIndex === -1 || index < nextIndex)) {
-        nextIndex = index
-        nextPhrase = phrase
+        nextIndex = index;
+        nextPhrase = phrase;
       }
     }
 
     if (nextIndex === -1) {
-      parts.push({ value: text.text.slice(cursor), strong: false })
-      break
+      parts.push({ value: text.text.slice(cursor), strong: false });
+      break;
     }
 
     if (nextIndex > cursor) {
-      parts.push({ value: text.text.slice(cursor, nextIndex), strong: false })
+      parts.push({ value: text.text.slice(cursor, nextIndex), strong: false });
     }
 
-    parts.push({ value: nextPhrase, strong: true })
-    cursor = nextIndex + nextPhrase.length
+    parts.push({ value: nextPhrase, strong: true });
+    cursor = nextIndex + nextPhrase.length;
   }
 
   return parts.map((part, index) =>
@@ -59,26 +57,20 @@ function renderRichText(text: ResumeText) {
       <strong key={`${part.value}-${index}`}>{part.value}</strong>
     ) : (
       <span key={`${part.value}-${index}`}>{part.value}</span>
-    )
-  )
+    ),
+  );
 }
 
-function ResumeTextBlock({
-  text,
-  className,
-}: {
-  text: ResumeText
-  className?: string
-}) {
-  return <p className={className}>{renderRichText(text)}</p>
+function ResumeTextBlock({ text, className }: { text: ResumeText; className?: string }) {
+  return <p className={className}>{renderRichText(text)}</p>;
 }
 
 function TechnologyTag({ label }: { label: string }) {
-  return <span className={styles.entryTechnology}>{label}</span>
+  return <span className={styles.entryTechnology}>{label}</span>;
 }
 
 function ResumeValueLinkIcon() {
-  const gradientId = `resume-link-value-gradient-${useId().replaceAll(':', '')}`
+  const gradientId = `resume-link-value-gradient-${useId().replaceAll(':', '')}`;
 
   return (
     <svg
@@ -120,77 +112,70 @@ function ResumeValueLinkIcon() {
         <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
       </g>
     </svg>
-  )
+  );
 }
 
 function getKoreaYearMonth() {
-  const koreaNow = new Date(Date.now() + 9 * 60 * 60 * 1000)
+  const koreaNow = new Date(Date.now() + 9 * 60 * 60 * 1000);
 
   return {
     year: koreaNow.getUTCFullYear(),
     month: koreaNow.getUTCMonth() + 1,
-  }
+  };
 }
 
 function getKoreaDate() {
-  const koreaNow = new Date(Date.now() + 9 * 60 * 60 * 1000)
+  const koreaNow = new Date(Date.now() + 9 * 60 * 60 * 1000);
 
   return {
     year: koreaNow.getUTCFullYear(),
     month: koreaNow.getUTCMonth() + 1,
     day: koreaNow.getUTCDate(),
-  }
+  };
 }
 
-function formatKoreanAge(birthDate: {
-  year: number
-  month: number
-  day: number
-}) {
-  const today = getKoreaDate()
+function formatKoreanAge(birthDate: { year: number; month: number; day: number }) {
+  const today = getKoreaDate();
   const birthdayPassed =
     today.month > birthDate.month ||
-    (today.month === birthDate.month && today.day >= birthDate.day)
-  const age = today.year - birthDate.year - (birthdayPassed ? 0 : 1)
+    (today.month === birthDate.month && today.day >= birthDate.day);
+  const age = today.year - birthDate.year - (birthdayPassed ? 0 : 1);
 
-  return Math.max(0, age)
+  return Math.max(0, age);
 }
 
 function getProfileBasicValue(item: (typeof resumeProfile.basics)[number]) {
   if (item.label !== '나이') {
-    return item.value
+    return item.value;
   }
 
-  return `${resumeBirthDate.year}년 (만 ${formatKoreanAge(resumeBirthDate)}세)`
+  return `${resumeBirthDate.year}년 (만 ${formatKoreanAge(resumeBirthDate)}세)`;
 }
 
 function formatDurationFrom(start: { year: number; month: number }) {
-  const now = getKoreaYearMonth()
-  const totalMonths = Math.max(
-    0,
-    (now.year - start.year) * 12 + (now.month - start.month) + 1
-  )
-  const years = Math.floor(totalMonths / 12)
-  const months = totalMonths % 12
-  const parts: string[] = []
+  const now = getKoreaYearMonth();
+  const totalMonths = Math.max(0, (now.year - start.year) * 12 + (now.month - start.month) + 1);
+  const years = Math.floor(totalMonths / 12);
+  const months = totalMonths % 12;
+  const parts: string[] = [];
 
   if (years > 0) {
-    parts.push(`${years}년`)
+    parts.push(`${years}년`);
   }
 
   if (months > 0) {
-    parts.push(`${months}개월`)
+    parts.push(`${months}개월`);
   }
 
-  return parts.length > 0 ? parts.join(' ') : '0개월'
+  return parts.length > 0 ? parts.join(' ') : '0개월';
 }
 
 function getSectionSummary(section: ResumeSection) {
   if (section.durationStart) {
-    return `총 ${formatDurationFrom(section.durationStart)}`
+    return `총 ${formatDurationFrom(section.durationStart)}`;
   }
 
-  return section.summary
+  return section.summary;
 }
 
 function Highlight({ highlight }: { highlight: ResumeHighlight }) {
@@ -207,18 +192,11 @@ function Highlight({ highlight }: { highlight: ResumeHighlight }) {
               />
             </span>
           )}
-          <ResumeTextBlock
-            text={highlight.title}
-            className={styles.highlightTitle}
-          />
+          <ResumeTextBlock text={highlight.title} className={styles.highlightTitle} />
         </div>
       )}
       {highlight.paragraphs?.map((paragraph) => (
-        <ResumeTextBlock
-          key={paragraph.text}
-          text={paragraph}
-          className={styles.bodyParagraph}
-        />
+        <ResumeTextBlock key={paragraph.text} text={paragraph} className={styles.bodyParagraph} />
       ))}
       {highlight.bullets && (
         <ul className={styles.bulletList}>
@@ -230,7 +208,7 @@ function Highlight({ highlight }: { highlight: ResumeHighlight }) {
         </ul>
       )}
     </div>
-  )
+  );
 }
 
 function ScreenshotStrip({ screenshots, name }: { screenshots: readonly string[]; name: string }) {
@@ -245,18 +223,16 @@ function ScreenshotStrip({ screenshots, name }: { screenshots: readonly string[]
         />
       ))}
     </div>
-  )
+  );
 }
 
 function ResumeEntryBlock({ entry }: { entry: ResumeEntry }) {
   const logoClassName = `${styles.organizationLogo} ${
     entry.id === 'topia' ? styles.topiaOrganizationLogo : ''
-  }`.trim()
+  }`.trim();
 
   return (
-    <article
-      className={`${styles.entry} ${entry.compact ? styles.compactEntry : ''}`.trim()}
-    >
+    <article className={`${styles.entry} ${entry.compact ? styles.compactEntry : ''}`.trim()}>
       <span className={styles.entryDot} aria-hidden="true" />
       <div className={styles.entryMeta}>
         <p className={styles.period}>{entry.period}</p>
@@ -277,21 +253,15 @@ function ResumeEntryBlock({ entry }: { entry: ResumeEntry }) {
           </div>
         )}
         {entry.paragraphs?.map((paragraph) => (
-          <ResumeTextBlock
-            key={paragraph.text}
-            text={paragraph}
-            className={styles.bodyParagraph}
-          />
+          <ResumeTextBlock key={paragraph.text} text={paragraph} className={styles.bodyParagraph} />
         ))}
-        {entry.screenshots && (
-          <ScreenshotStrip screenshots={entry.screenshots} name={entry.name} />
-        )}
+        {entry.screenshots && <ScreenshotStrip screenshots={entry.screenshots} name={entry.name} />}
         {entry.highlights?.map((highlight, index) => (
           <Highlight key={`${entry.id}-${index}`} highlight={highlight} />
         ))}
       </div>
     </article>
-  )
+  );
 }
 
 const ResumeDocument = forwardRef<HTMLDivElement>(function ResumeDocument(_, ref) {
@@ -330,12 +300,7 @@ const ResumeDocument = forwardRef<HTMLDivElement>(function ResumeDocument(_, ref
           {resumeTechnologies.map((technology) => (
             <span key={technology.label} className={styles.skillPill}>
               {technology.icon && (
-                <img
-                  src={technology.icon}
-                  alt=""
-                  className={styles.skillIcon}
-                  aria-hidden="true"
-                />
+                <img src={technology.icon} alt="" className={styles.skillIcon} aria-hidden="true" />
               )}
               {technology.label}
             </span>
@@ -368,16 +333,14 @@ const ResumeDocument = forwardRef<HTMLDivElement>(function ResumeDocument(_, ref
 
       <div className={styles.sectionStack} data-resume-section-stack>
         {resumeSections.map((section) => {
-          const sectionSummary = getSectionSummary(section)
+          const sectionSummary = getSectionSummary(section);
 
           return (
             <section
               key={section.id}
               className={`${styles.section} ${
                 section.id === 'career' ? styles.careerSection : ''
-              } ${
-                section.id === 'project' ? styles.projectSection : ''
-              }`.trim()}
+              } ${section.id === 'project' ? styles.projectSection : ''}`.trim()}
             >
               <span className={styles.sectionDot} aria-hidden="true" />
               <div className={styles.sectionHeader}>
@@ -390,12 +353,12 @@ const ResumeDocument = forwardRef<HTMLDivElement>(function ResumeDocument(_, ref
                 ))}
               </div>
             </section>
-          )
+          );
         })}
       </div>
       <div className={styles.bottomFade} aria-hidden="true" />
     </div>
-  )
-})
+  );
+});
 
-export { ResumeDocument }
+export { ResumeDocument };

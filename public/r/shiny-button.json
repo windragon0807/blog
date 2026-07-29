@@ -4,11 +4,7 @@
   "type": "registry:ui",
   "title": "Shine Button",
   "description": "A button with a looping masked shine and spring tap feedback.",
-  "dependencies": [
-    "clsx",
-    "motion",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "motion", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/shiny-button.tsx",

@@ -1,43 +1,42 @@
-import type { EmoticonCollection, EmoticonCollectionId, EmoticonItem } from '../types'
+import type { EmoticonCollection, EmoticonCollectionId, EmoticonItem } from '../types';
 import {
-  TOSSFACE_ACTIVITY_ORDER,
-  TOSSFACE_FOOD_ORDER,
   getExactOrderIndex,
   getItemSubcategory,
   getTossfaceDisplayRank,
-} from './tossface-taxonomy'
+  TOSSFACE_ACTIVITY_ORDER,
+  TOSSFACE_FOOD_ORDER,
+} from './tossface-taxonomy';
 
 export type EmoticonGridSection = {
-  id: string
-  label: string
-  items: EmoticonItem[]
-}
+  id: string;
+  label: string;
+  items: EmoticonItem[];
+};
 
 export type PreparedEmoticonCollection = {
-  collection: EmoticonCollection
-  sectionsBySubcategory: Map<string, EmoticonGridSection>
-}
+  collection: EmoticonCollection;
+  sectionsBySubcategory: Map<string, EmoticonGridSection>;
+};
 
 export function sortDisplayItems({
   collectionId,
   subcategoryId,
   items,
 }: {
-  collectionId: EmoticonCollectionId
-  subcategoryId: string
-  items: EmoticonItem[]
+  collectionId: EmoticonCollectionId;
+  subcategoryId: string;
+  items: EmoticonItem[];
 }) {
   if (collectionId !== 'tossface') {
-    return items
+    return items;
   }
 
-  const orderedItems = items.every((item) => typeof item.order === 'number')
+  const orderedItems = items.every((item) => typeof item.order === 'number');
 
   if (orderedItems) {
     return [...items].sort((a, b) => {
-      return (a.order ?? Number.MAX_SAFE_INTEGER) -
-        (b.order ?? Number.MAX_SAFE_INTEGER)
-    })
+      return (a.order ?? Number.MAX_SAFE_INTEGER) - (b.order ?? Number.MAX_SAFE_INTEGER);
+    });
   }
 
   const order =
@@ -45,54 +44,53 @@ export function sortDisplayItems({
       ? TOSSFACE_FOOD_ORDER
       : subcategoryId === 'activity'
         ? TOSSFACE_ACTIVITY_ORDER
-        : null
+        : null;
 
   return [...items].sort((a, b) => {
     if (order) {
-      const aIndex = getExactOrderIndex(a.name, order)
-      const bIndex = getExactOrderIndex(b.name, order)
+      const aIndex = getExactOrderIndex(a.name, order);
+      const bIndex = getExactOrderIndex(b.name, order);
 
       if (aIndex !== -1 || bIndex !== -1) {
-        return (aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex) -
+        return (
+          (aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex) -
           (bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex)
+        );
       }
     }
 
     const rankDiff =
-      getTossfaceDisplayRank(subcategoryId, a) -
-      getTossfaceDisplayRank(subcategoryId, b)
+      getTossfaceDisplayRank(subcategoryId, a) - getTossfaceDisplayRank(subcategoryId, b);
 
     if (rankDiff !== 0) {
-      return rankDiff
+      return rankDiff;
     }
 
-    return a.name.localeCompare(b.name, 'ko')
-  })
+    return a.name.localeCompare(b.name, 'ko');
+  });
 }
 
 export function prepareEmoticonCollection(
   collection: EmoticonCollection,
-  subcategories: readonly { id: string; label: string }[]
+  subcategories: readonly { id: string; label: string }[],
 ): PreparedEmoticonCollection {
-  const sectionsBySubcategory = new Map<string, EmoticonGridSection>()
-  const visibleSubcategories = subcategories.filter(
-    (subcategory) => subcategory.id !== 'all'
-  )
+  const sectionsBySubcategory = new Map<string, EmoticonGridSection>();
+  const visibleSubcategories = subcategories.filter((subcategory) => subcategory.id !== 'all');
 
   for (const subcategory of visibleSubcategories) {
     sectionsBySubcategory.set(subcategory.id, {
       id: subcategory.id,
       label: subcategory.label,
       items: [],
-    })
+    });
   }
 
   for (const item of collection.items) {
-    const subcategoryId = getItemSubcategory(collection.id, item)
-    const section = sectionsBySubcategory.get(subcategoryId)
+    const subcategoryId = getItemSubcategory(collection.id, item);
+    const section = sectionsBySubcategory.get(subcategoryId);
 
     if (section) {
-      section.items.push(item)
+      section.items.push(item);
     }
   }
 
@@ -101,11 +99,11 @@ export function prepareEmoticonCollection(
       collectionId: collection.id,
       subcategoryId: section.id,
       items: section.items,
-    })
+    });
   }
 
   return {
     collection,
     sectionsBySubcategory,
-  }
+  };
 }

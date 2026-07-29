@@ -1,33 +1,34 @@
-import type { Metadata } from 'next'
-import { Suspense } from 'react'
-import { notFound } from 'next/navigation'
-import { getPostBySlug, getAllSlugs } from '@/lib/notion'
-import { getRelatedPosts } from '@/lib/postContent'
-import { RelatedPosts } from '@/components/RelatedPosts'
-import { RetryableImage } from '@/components/RetryableImage'
-import { PostPageIcon } from '@/components/notion/PostPageIcon'
-import { PostReadingTime } from '@/components/notion/PostReadingTime'
-import { PostBodyFallback, PostBodyStream } from '@/components/notion/PostBodyStream'
-import { SITE_AUTHOR, SITE_NAME, absoluteUrl, ogImageUrl } from '@/lib/seo'
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
-export const revalidate = 3600 // ISR: 1시간마다 재생성
+import { PostBodyFallback, PostBodyStream } from '@/components/notion/PostBodyStream';
+import { PostPageIcon } from '@/components/notion/PostPageIcon';
+import { PostReadingTime } from '@/components/notion/PostReadingTime';
+import { RelatedPosts } from '@/components/RelatedPosts';
+import { RetryableImage } from '@/components/RetryableImage';
+import { getAllSlugs, getPostBySlug } from '@/lib/notion';
+import { getRelatedPosts } from '@/lib/postContent';
+import { absoluteUrl, ogImageUrl, SITE_AUTHOR, SITE_NAME } from '@/lib/seo';
+
+export const revalidate = 3600; // ISR: 1시간마다 재생성
 
 interface PageProps {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
-  const slugs = await getAllSlugs()
-  return slugs.map((slug) => ({ slug }))
+  const slugs = await getAllSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params
-  const post = await getPostBySlug(slug)
-  if (!post) return { title: '글을 찾을 수 없습니다' }
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+  if (!post) return { title: '글을 찾을 수 없습니다' };
 
-  const canonicalUrl = absoluteUrl(`/posts/${post.slug}`)
-  const fallbackImage = ogImageUrl(post.title, post.tags)
+  const canonicalUrl = absoluteUrl(`/posts/${post.slug}`);
+  const fallbackImage = ogImageUrl(post.title, post.tags);
 
   return {
     title: post.title,
@@ -68,25 +69,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: 'summary_large_image',
       title: post.title,
       description: post.description,
-      images: post.cover
-        ? [post.cover]
-        : [fallbackImage],
+      images: post.cover ? [post.cover] : [fallbackImage],
     },
-  }
+  };
 }
 
 export default async function PostPage({ params }: PageProps) {
-  const { slug } = await params
-  const post = await getPostBySlug(slug)
-  if (!post) notFound()
-  const relatedPosts = await getRelatedPosts(post, 3)
-  const canonicalUrl = absoluteUrl(`/posts/${post.slug}`)
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+  if (!post) notFound();
+  const relatedPosts = await getRelatedPosts(post, 3);
+  const canonicalUrl = absoluteUrl(`/posts/${post.slug}`);
 
   const formattedDate = new Date(post.date).toLocaleDateString('ko-KR', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-  })
+  });
 
   const articleJsonLd = {
     '@context': 'https://schema.org',
@@ -102,7 +101,7 @@ export default async function PostPage({ params }: PageProps) {
     mainEntityOfPage: canonicalUrl,
     image: post.cover ? [post.cover] : [ogImageUrl(post.title, post.tags)],
     keywords: post.tags.join(', '),
-  }
+  };
 
   return (
     <>
@@ -142,7 +141,9 @@ export default async function PostPage({ params }: PageProps) {
             <span className="text-zinc-300 dark:text-zinc-600">·</span>
             <Suspense
               fallback={
-                <span className="text-sm text-[var(--post-muted)] dark:text-zinc-400">읽는 시간 계산 중</span>
+                <span className="text-sm text-[var(--post-muted)] dark:text-zinc-400">
+                  읽는 시간 계산 중
+                </span>
               }
             >
               <PostReadingTime postId={post.id} />
@@ -169,5 +170,5 @@ export default async function PostPage({ params }: PageProps) {
         <RelatedPosts posts={relatedPosts} />
       </article>
     </>
-  )
+  );
 }

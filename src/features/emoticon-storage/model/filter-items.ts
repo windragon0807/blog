@@ -1,25 +1,25 @@
-import type { EmoticonGridSection } from './prepare-collections'
+import type { EmoticonGridSection } from './prepare-collections';
 
 export function normalizeEmoticonSearchQuery(query: string): string {
-  return query.trim().replace(/\s+/g, '').toLowerCase()
+  return query.trim().replace(/\s+/g, '').toLowerCase();
 }
 
 export function filterEmoticonSections(
   sections: EmoticonGridSection[],
-  query: string
+  query: string,
 ): EmoticonGridSection[] {
-  const normalizedQuery = normalizeEmoticonSearchQuery(query)
+  const normalizedQuery = normalizeEmoticonSearchQuery(query);
 
   if (!normalizedQuery) {
-    return sections
+    return sections;
   }
 
   return sections
     .map((section) => ({
       ...section,
       items: section.items.filter((item) =>
-        normalizeEmoticonSearchQuery(item.name).includes(normalizedQuery)
+        normalizeEmoticonSearchQuery(item.name).includes(normalizedQuery),
       ),
     }))
-    .filter((section) => section.items.length > 0)
+    .filter((section) => section.items.length > 0);
 }

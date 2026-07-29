@@ -1,1 +1,1 @@
-export { subscribeToTouchInputDeviceChange } from '@/lib/client/touch-input'
+export { subscribeToTouchInputDeviceChange } from '@/lib/client/touch-input';

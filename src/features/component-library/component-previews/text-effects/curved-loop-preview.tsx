@@ -1,6 +1,7 @@
-import { CurvedLoop } from '@/components/curved-loop'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
-import { auroraSparkColors } from '../shared/preview-tokens'
+import { CurvedLoop } from '@/components/curved-loop';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
+import { auroraSparkColors } from '../shared/preview-tokens';
 
 export function CurvedLoopPreview() {
   return (
@@ -21,5 +22,5 @@ export function CurvedLoopPreview() {
         />
       </div>
     </PreviewDemoSurface>
-  )
+  );
 }

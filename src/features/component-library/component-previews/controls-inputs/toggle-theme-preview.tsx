@@ -1,5 +1,6 @@
-import { ToggleTheme } from '@/components/toggle-theme'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+import { ToggleTheme } from '@/components/toggle-theme';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 const toggleThemePreviewAnimations = [
   'circle-spread',
@@ -14,7 +15,7 @@ const toggleThemePreviewAnimations = [
   'swipe-right',
   'swipe-down',
   'wave-ripple',
-] as const
+] as const;
 
 export function ToggleThemePreview() {
   return (
@@ -37,5 +38,5 @@ export function ToggleThemePreview() {
         ))}
       </div>
     </PreviewDemoSurface>
-  )
+  );
 }

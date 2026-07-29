@@ -1,5 +1,6 @@
-import { MorphingText } from '@/components/morphing-text'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+import { MorphingText } from '@/components/morphing-text';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 export function MorphingTextPreview() {
   return (
@@ -17,5 +18,5 @@ export function MorphingTextPreview() {
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(236,72,153,0.26),transparent_55%)]"
       contentClassName="w-full max-w-4xl"
     />
-  )
+  );
 }

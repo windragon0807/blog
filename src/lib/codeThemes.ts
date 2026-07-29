@@ -63,25 +63,25 @@ export const CODE_THEME_VALUES = [
   'vitesse-black',
   'vitesse-dark',
   'vitesse-light',
-] as const
+] as const;
 
-export type CodeThemeName = (typeof CODE_THEME_VALUES)[number]
+export type CodeThemeName = (typeof CODE_THEME_VALUES)[number];
 
 export const CODE_THEME_OPTIONS: ReadonlyArray<{
-  value: CodeThemeName
-  label: string
+  value: CodeThemeName;
+  label: string;
 }> = CODE_THEME_VALUES.map((value) => ({
   value,
   label: toThemeLabel(value),
-}))
+}));
 
-export const DEFAULT_LIGHT_CODE_THEME: CodeThemeName = 'one-light'
-export const DEFAULT_DARK_CODE_THEME: CodeThemeName = 'one-dark-pro'
-export const CODE_THEME_STORAGE_KEY = 'code-theme'
+export const DEFAULT_LIGHT_CODE_THEME: CodeThemeName = 'one-light';
+export const DEFAULT_DARK_CODE_THEME: CodeThemeName = 'one-dark-pro';
+export const CODE_THEME_STORAGE_KEY = 'code-theme';
 
 export const SHIKI_THEME_RECORD = Object.fromEntries(
-  CODE_THEME_VALUES.map((theme) => [theme, theme])
-) as Record<CodeThemeName, CodeThemeName>
+  CODE_THEME_VALUES.map((theme) => [theme, theme]),
+) as Record<CodeThemeName, CodeThemeName>;
 
 export const CODE_THEME_STYLE_TEXT = CODE_THEME_VALUES.map(
   (theme) => `
@@ -93,33 +93,29 @@ html[data-code-theme='${theme}'] .notion-code pre.shiki {
 html[data-code-theme='${theme}'] .notion-code pre.shiki span {
   color: var(--shiki-${theme}) !important;
 }
-`
-).join('\n')
+`,
+).join('\n');
 
 import {
   CODE_THEME_PREVIEW_LINES,
-  RAW_CODE_THEME_PREVIEW_PALETTES,
   type CodeThemePreviewPalette,
-} from './codeThemePreviewPalettes'
+  RAW_CODE_THEME_PREVIEW_PALETTES,
+} from './codeThemePreviewPalettes';
 
-export const CODE_THEME_PREVIEW_PALETTES: Record<
-  CodeThemeName,
-  CodeThemePreviewPalette
-> = RAW_CODE_THEME_PREVIEW_PALETTES
-export { CODE_THEME_PREVIEW_LINES }
-export type { CodeThemePreviewPalette }
+export const CODE_THEME_PREVIEW_PALETTES: Record<CodeThemeName, CodeThemePreviewPalette> =
+  RAW_CODE_THEME_PREVIEW_PALETTES;
+export { CODE_THEME_PREVIEW_LINES };
+export type { CodeThemePreviewPalette };
 
-const CODE_THEME_SET = new Set<string>(CODE_THEME_VALUES)
+const CODE_THEME_SET = new Set<string>(CODE_THEME_VALUES);
 
-export function isCodeThemeName(
-  value: string | null | undefined
-): value is CodeThemeName {
-  return Boolean(value && CODE_THEME_SET.has(value))
+export function isCodeThemeName(value: string | null | undefined): value is CodeThemeName {
+  return Boolean(value && CODE_THEME_SET.has(value));
 }
 
 function toThemeLabel(theme: string): string {
   return theme
     .split('-')
     .map((word) => (word.length > 0 ? word[0].toUpperCase() + word.slice(1) : word))
-    .join(' ')
+    .join(' ');
 }

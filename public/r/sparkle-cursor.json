@@ -4,11 +4,7 @@
   "type": "registry:ui",
   "title": "Sparkle Cursor Trail",
   "description": "A local cursor sparkle effect for a bounded surface.",
-  "dependencies": [
-    "clsx",
-    "gsap",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "gsap", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/sparkle-cursor.tsx",

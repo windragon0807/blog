@@ -1,15 +1,15 @@
-import type { PostIcon } from '@/types/notion'
-import { RetryableImage } from '@/components/RetryableImage'
+import { RetryableImage } from '@/components/RetryableImage';
+import type { PostIcon } from '@/types/notion';
 
 interface Props {
-  icon: PostIcon | null
-  size?: number
-  postId?: string
-  className?: string
+  icon: PostIcon | null;
+  size?: number;
+  postId?: string;
+  className?: string;
 }
 
 export function PostPageIcon({ icon, size = 44, postId, className = '' }: Props) {
-  if (!icon) return null
+  if (!icon) return null;
 
   if (icon.type === 'emoji') {
     return (
@@ -20,7 +20,7 @@ export function PostPageIcon({ icon, size = 44, postId, className = '' }: Props)
       >
         {icon.emoji}
       </span>
-    )
+    );
   }
 
   return (
@@ -40,5 +40,5 @@ export function PostPageIcon({ icon, size = 44, postId, className = '' }: Props)
         skeletonClassName="absolute inset-0 animate-pulse rounded-xl bg-zinc-200/80 dark:bg-zinc-700/70"
       />
     </span>
-  )
+  );
 }

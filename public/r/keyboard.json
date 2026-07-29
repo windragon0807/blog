@@ -4,11 +4,7 @@
   "type": "registry:ui",
   "title": "Interactive Keyboard",
   "description": "A Mac-style keyboard with clickable and physical key states.",
-  "dependencies": [
-    "clsx",
-    "motion",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "motion", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/keyboard.tsx",

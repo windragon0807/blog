@@ -4,11 +4,7 @@
   "type": "registry:ui",
   "title": "Hover Pointer",
   "description": "A component that displays a pointer when hovering over an element.",
-  "dependencies": [
-    "clsx",
-    "motion",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "motion", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/pointer.tsx",

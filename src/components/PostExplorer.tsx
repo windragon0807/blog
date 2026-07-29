@@ -1,11 +1,12 @@
-import type { Post } from '@/types/notion'
-import { PostCard } from './PostCard'
-import { EmptyStatePanel } from './EmptyStatePanel'
+import type { Post } from '@/types/notion';
+
+import { EmptyStatePanel } from './EmptyStatePanel';
+import { PostCard } from './PostCard';
 
 interface Props {
-  posts: Post[]
-  emptyTitle?: string
-  emptyMessage?: string
+  posts: Post[];
+  emptyTitle?: string;
+  emptyMessage?: string;
 }
 
 export function PostExplorer({
@@ -14,10 +15,7 @@ export function PostExplorer({
   emptyMessage = '조건에 맞는 글이 없습니다.',
 }: Props) {
   return (
-    <section
-      aria-label="게시글 목록"
-      className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
-    >
+    <section aria-label="게시글 목록" className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
       {posts.length === 0 ? (
         <EmptyStatePanel
           className="col-span-full py-14"
@@ -26,10 +24,8 @@ export function PostExplorer({
           hints={['Notion에서 새 글 작성', '게시(Published) 체크', '잠시 후 자동 반영']}
         />
       ) : (
-        posts.map((post, index) => (
-          <PostCard key={post.id} post={post} motionIndex={index} />
-        ))
+        posts.map((post, index) => <PostCard key={post.id} post={post} motionIndex={index} />)
       )}
     </section>
-  )
+  );
 }

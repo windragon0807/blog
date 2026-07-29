@@ -4,9 +4,7 @@
   "type": "registry:ui",
   "title": "Spring Slider",
   "description": "A slider with elastic overflow and springy thumb movement.",
-  "dependencies": [
-    "motion"
-  ],
+  "dependencies": ["motion"],
   "files": [
     {
       "path": "src/components/elastic-slider.tsx",

@@ -1,57 +1,105 @@
 ---
-name: "Ryong Blog Design System"
+name: 'Ryong Blog Design System'
 version: alpha
-description: "Code-grounded Phase 05 project design layer for the existing Ryong blog UI; documentation only, with no visual normalization implied."
+description: 'Code-grounded Phase 05 project design layer for the existing Ryong blog UI; documentation only, with no visual normalization implied.'
 sources:
-  schema: "Phase 05 project schema"
-  globalsCss: "src/app/globals.css"
-  globalsCssSha256: "aa73b4b6a950bc5ab0957e52ae1edaf9c9b7f16f623215eeea5949f2d2c9bfae"
-  componentRoots: ["src/components/ui", "src/components/common", "src/components", "src/features"]
+  schema: 'Phase 05 project schema'
+  globalsCss: 'src/app/globals.css'
+  globalsCssSha256: 'aa73b4b6a950bc5ab0957e52ae1edaf9c9b7f16f623215eeea5949f2d2c9bfae'
+  componentRoots: ['src/components/ui', 'src/components/common', 'src/components', 'src/features']
 colors:
   semantic:
-    background: { cssVariable: "--background", light: "#ffffff", dark: "#171a23" }
-    foreground: { cssVariable: "--foreground", light: "#171717", dark: "#f1f4fb" }
-    card: { cssVariable: "--card", light: "rgba(255, 255, 255, 0.95)", dark: "rgba(24, 28, 38, 0.95)" }
-    card-foreground: { cssVariable: "--card-foreground", light: "#171717", dark: "#f4f4f5" }
-    popover: { cssVariable: "--popover", light: "rgba(255, 255, 255, 0.96)", dark: "rgba(24, 28, 38, 0.97)" }
-    popover-foreground: { cssVariable: "--popover-foreground", light: "#18181b", dark: "#f4f4f5" }
-    primary: { cssVariable: "--primary", light: "#18181b", dark: "#f4f4f5" }
-    primary-foreground: { cssVariable: "--primary-foreground", light: "#fafafa", dark: "#18181b" }
-    secondary: { cssVariable: "--secondary", light: "#f4f4f5", dark: "rgba(63, 63, 70, 0.75)" }
-    secondary-foreground: { cssVariable: "--secondary-foreground", light: "#27272a", dark: "#f4f4f5" }
-    muted: { cssVariable: "--muted", light: "#f4f4f5", dark: "rgba(63, 63, 70, 0.75)" }
-    muted-foreground: { cssVariable: "--muted-foreground", light: "#71717a", dark: "#a1a1aa" }
-    accent: { cssVariable: "--accent", light: "#f4f4f5", dark: "rgba(63, 63, 70, 0.78)" }
-    accent-foreground: { cssVariable: "--accent-foreground", light: "#18181b", dark: "#fafafa" }
-    destructive: { cssVariable: "--destructive", light: "#e11d48", dark: "#fb7185" }
-    destructive-foreground: { cssVariable: "--destructive-foreground", light: "#ffffff", dark: "#18181b" }
-    border: { cssVariable: "--border", light: "rgba(228, 228, 231, 0.9)", dark: "rgba(82, 82, 91, 0.78)" }
-    input: { cssVariable: "--input", light: "rgba(212, 212, 216, 0.92)", dark: "rgba(82, 82, 91, 0.82)" }
-    ring: { cssVariable: "--ring", light: "#a1a1aa", dark: "#71717a" }
-    chart-1: { cssVariable: "--chart-1", light: "#2563eb", dark: "#60a5fa" }
-    chart-2: { cssVariable: "--chart-2", light: "#10b981", dark: "#34d399" }
-    chart-3: { cssVariable: "--chart-3", light: "#f59e0b", dark: "#fbbf24" }
-    chart-4: { cssVariable: "--chart-4", light: "#e11d48", dark: "#fb7185" }
-    chart-5: { cssVariable: "--chart-5", light: "#8b5cf6", dark: "#a78bfa" }
-    sidebar: { cssVariable: "--sidebar", light: "#fafafa", dark: "#181c26" }
-    sidebar-foreground: { cssVariable: "--sidebar-foreground", light: "#18181b", dark: "#f4f4f5" }
-    sidebar-primary: { cssVariable: "--sidebar-primary", light: "#18181b", dark: "#f4f4f5" }
-    sidebar-primary-foreground: { cssVariable: "--sidebar-primary-foreground", light: "#fafafa", dark: "#18181b" }
-    sidebar-accent: { cssVariable: "--sidebar-accent", light: "#f4f4f5", dark: "rgba(63, 63, 70, 0.78)" }
-    sidebar-accent-foreground: { cssVariable: "--sidebar-accent-foreground", light: "#18181b", dark: "#fafafa" }
-    sidebar-border: { cssVariable: "--sidebar-border", light: "rgba(228, 228, 231, 0.9)", dark: "rgba(82, 82, 91, 0.78)" }
-    sidebar-ring: { cssVariable: "--sidebar-ring", light: "#a1a1aa", dark: "#71717a" }
+    background: { cssVariable: '--background', light: '#ffffff', dark: '#171a23' }
+    foreground: { cssVariable: '--foreground', light: '#171717', dark: '#f1f4fb' }
+    card:
+      { cssVariable: '--card', light: 'rgba(255, 255, 255, 0.95)', dark: 'rgba(24, 28, 38, 0.95)' }
+    card-foreground: { cssVariable: '--card-foreground', light: '#171717', dark: '#f4f4f5' }
+    popover:
+      {
+        cssVariable: '--popover',
+        light: 'rgba(255, 255, 255, 0.96)',
+        dark: 'rgba(24, 28, 38, 0.97)',
+      }
+    popover-foreground: { cssVariable: '--popover-foreground', light: '#18181b', dark: '#f4f4f5' }
+    primary: { cssVariable: '--primary', light: '#18181b', dark: '#f4f4f5' }
+    primary-foreground: { cssVariable: '--primary-foreground', light: '#fafafa', dark: '#18181b' }
+    secondary: { cssVariable: '--secondary', light: '#f4f4f5', dark: 'rgba(63, 63, 70, 0.75)' }
+    secondary-foreground:
+      { cssVariable: '--secondary-foreground', light: '#27272a', dark: '#f4f4f5' }
+    muted: { cssVariable: '--muted', light: '#f4f4f5', dark: 'rgba(63, 63, 70, 0.75)' }
+    muted-foreground: { cssVariable: '--muted-foreground', light: '#71717a', dark: '#a1a1aa' }
+    accent: { cssVariable: '--accent', light: '#f4f4f5', dark: 'rgba(63, 63, 70, 0.78)' }
+    accent-foreground: { cssVariable: '--accent-foreground', light: '#18181b', dark: '#fafafa' }
+    destructive: { cssVariable: '--destructive', light: '#e11d48', dark: '#fb7185' }
+    destructive-foreground:
+      { cssVariable: '--destructive-foreground', light: '#ffffff', dark: '#18181b' }
+    border:
+      { cssVariable: '--border', light: 'rgba(228, 228, 231, 0.9)', dark: 'rgba(82, 82, 91, 0.78)' }
+    input:
+      { cssVariable: '--input', light: 'rgba(212, 212, 216, 0.92)', dark: 'rgba(82, 82, 91, 0.82)' }
+    ring: { cssVariable: '--ring', light: '#a1a1aa', dark: '#71717a' }
+    chart-1: { cssVariable: '--chart-1', light: '#2563eb', dark: '#60a5fa' }
+    chart-2: { cssVariable: '--chart-2', light: '#10b981', dark: '#34d399' }
+    chart-3: { cssVariable: '--chart-3', light: '#f59e0b', dark: '#fbbf24' }
+    chart-4: { cssVariable: '--chart-4', light: '#e11d48', dark: '#fb7185' }
+    chart-5: { cssVariable: '--chart-5', light: '#8b5cf6', dark: '#a78bfa' }
+    sidebar: { cssVariable: '--sidebar', light: '#fafafa', dark: '#181c26' }
+    sidebar-foreground: { cssVariable: '--sidebar-foreground', light: '#18181b', dark: '#f4f4f5' }
+    sidebar-primary: { cssVariable: '--sidebar-primary', light: '#18181b', dark: '#f4f4f5' }
+    sidebar-primary-foreground:
+      { cssVariable: '--sidebar-primary-foreground', light: '#fafafa', dark: '#18181b' }
+    sidebar-accent:
+      { cssVariable: '--sidebar-accent', light: '#f4f4f5', dark: 'rgba(63, 63, 70, 0.78)' }
+    sidebar-accent-foreground:
+      { cssVariable: '--sidebar-accent-foreground', light: '#18181b', dark: '#fafafa' }
+    sidebar-border:
+      {
+        cssVariable: '--sidebar-border',
+        light: 'rgba(228, 228, 231, 0.9)',
+        dark: 'rgba(82, 82, 91, 0.78)',
+      }
+    sidebar-ring: { cssVariable: '--sidebar-ring', light: '#a1a1aa', dark: '#71717a' }
   scrollbar:
-    scrollbar-thumb: { cssVariable: "--scrollbar-thumb", light: "rgba(39, 39, 42, 0.34)", dark: "rgba(212, 212, 216, 0.36)" }
-    scrollbar-thumb-hover: { cssVariable: "--scrollbar-thumb-hover", light: "rgba(39, 39, 42, 0.52)", dark: "rgba(228, 228, 231, 0.58)" }
-    scrollbar-thumb-active: { cssVariable: "--scrollbar-thumb-active", light: "rgba(39, 39, 42, 0.66)", dark: "rgba(244, 244, 245, 0.72)" }
-    scrollbar-track: { cssVariable: "--scrollbar-track", light: "rgba(244, 244, 245, 0.72)", dark: "rgba(39, 39, 42, 0.44)" }
-    scrollbar-track-hover: { cssVariable: "--scrollbar-track-hover", light: "rgba(228, 228, 231, 0.88)", dark: "rgba(63, 63, 70, 0.68)" }
+    scrollbar-thumb:
+      {
+        cssVariable: '--scrollbar-thumb',
+        light: 'rgba(39, 39, 42, 0.34)',
+        dark: 'rgba(212, 212, 216, 0.36)',
+      }
+    scrollbar-thumb-hover:
+      {
+        cssVariable: '--scrollbar-thumb-hover',
+        light: 'rgba(39, 39, 42, 0.52)',
+        dark: 'rgba(228, 228, 231, 0.58)',
+      }
+    scrollbar-thumb-active:
+      {
+        cssVariable: '--scrollbar-thumb-active',
+        light: 'rgba(39, 39, 42, 0.66)',
+        dark: 'rgba(244, 244, 245, 0.72)',
+      }
+    scrollbar-track:
+      {
+        cssVariable: '--scrollbar-track',
+        light: 'rgba(244, 244, 245, 0.72)',
+        dark: 'rgba(39, 39, 42, 0.44)',
+      }
+    scrollbar-track-hover:
+      {
+        cssVariable: '--scrollbar-track-hover',
+        light: 'rgba(228, 228, 231, 0.88)',
+        dark: 'rgba(63, 63, 70, 0.68)',
+      }
   runtime:
-    themeAccentCurrent: { cssVariable: "--theme-accent-current", light: "var(--theme-accent)", dark: "var(--theme-accent-dark)" }
+    themeAccentCurrent:
+      {
+        cssVariable: '--theme-accent-current',
+        light: 'var(--theme-accent)',
+        dark: 'var(--theme-accent-dark)',
+      }
 typography:
-  userFontVariable: "--font-user"
-  defaultTheme: "pretendard"
+  userFontVariable: '--font-user'
+  defaultTheme: 'pretendard'
   fontStacks:
     pretendard: "Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif"
     maplestory: "'Maplestory OTF', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif"
@@ -60,56 +108,57 @@ typography:
     moneygraphy: "'Moneygraphy Rounded', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif"
     chosunGulim: "'Chosun Gulim', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif"
     paperlogy: "'Paperlogy', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif"
-    geistSans: "var(--font-geist-sans)"
-    geistMono: "var(--font-geist-mono)"
+    geistSans: 'var(--font-geist-sans)'
+    geistMono: 'var(--font-geist-mono)'
 spacing:
-  baseUnit: "4px"
+  baseUnit: '4px'
   cssVariables: false
-  source: "Tailwind CSS v4 numeric utility scale; literal feature geometry remains local"
+  source: 'Tailwind CSS v4 numeric utility scale; literal feature geometry remains local'
   implementedScale:
-    "0.5": "2px"
-    "1": "4px"
-    "1.5": "6px"
-    "2": "8px"
-    "2.5": "10px"
-    "3": "12px"
-    "4": "16px"
-    "5": "20px"
-    "6": "24px"
-    "8": "32px"
-    "10": "40px"
-    "12": "48px"
+    '0.5': '2px'
+    '1': '4px'
+    '1.5': '6px'
+    '2': '8px'
+    '2.5': '10px'
+    '3': '12px'
+    '4': '16px'
+    '5': '20px'
+    '6': '24px'
+    '8': '32px'
+    '10': '40px'
+    '12': '48px'
 rounded:
-  base: { cssVariable: "--radius", value: "0.625rem" }
-  sm: "calc(var(--radius) - 4px)"
-  md: "calc(var(--radius) - 2px)"
-  lg: "var(--radius)"
-  xl: "calc(var(--radius) + 4px)"
-  "2xl": "calc(var(--radius) + 10px)"
+  base: { cssVariable: '--radius', value: '0.625rem' }
+  sm: 'calc(var(--radius) - 4px)'
+  md: 'calc(var(--radius) - 2px)'
+  lg: 'var(--radius)'
+  xl: 'calc(var(--radius) + 4px)'
+  '2xl': 'calc(var(--radius) + 10px)'
 motion:
-  headerAurora: "6.5s ease-in-out infinite"
-  componentSheetOpen: "260ms cubic-bezier(0.22, 1, 0.36, 1) both"
-  notionToggleSize: "280ms cubic-bezier(0.22, 1, 0.36, 1)"
-  postCardEnter: "560ms cubic-bezier(0.22, 1, 0.36, 1) backwards"
-  settingsDrawerOpen: "280ms cubic-bezier(0.22, 1, 0.36, 1) both"
-  settingsDrawerClose: "220ms cubic-bezier(0.4, 0, 1, 1) both"
-  lightboxPanel: "320ms cubic-bezier(0.22, 1, 0.36, 1)"
-  copyFeedback: "220ms cubic-bezier(0.22, 1, 0.36, 1)"
-  reducedSettings: "90ms ease both"
+  headerAurora: '6.5s ease-in-out infinite'
+  componentSheetOpen: '260ms cubic-bezier(0.22, 1, 0.36, 1) both'
+  notionToggleSize: '280ms cubic-bezier(0.22, 1, 0.36, 1)'
+  postCardEnter: '560ms cubic-bezier(0.22, 1, 0.36, 1) backwards'
+  settingsDrawerOpen: '280ms cubic-bezier(0.22, 1, 0.36, 1) both'
+  settingsDrawerClose: '220ms cubic-bezier(0.4, 0, 1, 1) both'
+  lightboxPanel: '320ms cubic-bezier(0.22, 1, 0.36, 1)'
+  copyFeedback: '220ms cubic-bezier(0.22, 1, 0.36, 1)'
+  reducedSettings: '90ms ease both'
 components:
-  uiPrimitives: [Badge, Button, Dialog, Drawer, Popover, ScrollArea, Select, Separator, Skeleton, Tooltip]
+  uiPrimitives:
+    [Badge, Button, Dialog, Drawer, Popover, ScrollArea, Select, Separator, Skeleton, Tooltip]
   commonComposites: [ActionLink, EmptyState, IconButton, SettingsSection, StatusNotice, Surface]
   button:
-    source: "src/components/ui/button.tsx"
-    dataSlot: "button"
+    source: 'src/components/ui/button.tsx'
+    dataSlot: 'button'
     variants: [default, secondary, outline, ghost, glass, iconGlass, subtle, danger]
     sizes: [default, sm, lg, icon, iconSm, iconLg]
   badge:
-    source: "src/components/ui/badge.tsx"
-    dataSlot: "badge"
+    source: 'src/components/ui/badge.tsx'
+    dataSlot: 'badge'
     variants: [default, secondary, outline, tag, series, count]
   registry:
-    source: "src/features/component-library/component-manifest.mjs"
+    source: 'src/features/component-library/component-manifest.mjs'
     publicEntries: 46
 ---
 

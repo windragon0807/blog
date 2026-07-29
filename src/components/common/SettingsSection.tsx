@@ -1,16 +1,16 @@
-import { useId, type ReactNode } from 'react'
+import { type ReactNode, useId } from 'react';
 
 export function SettingsSection({
   label,
   description,
   children,
 }: {
-  label: string
-  description?: string
-  children: ReactNode
+  label: string;
+  description?: string;
+  children: ReactNode;
 }) {
-  const titleId = useId()
-  const descriptionId = useId()
+  const titleId = useId();
+  const descriptionId = useId();
 
   return (
     <section
@@ -33,5 +33,5 @@ export function SettingsSection({
       </div>
       <div>{children}</div>
     </section>
-  )
+  );
 }

@@ -1,1 +1,1 @@
-export { getLenisInstance } from '@/lib/client/lenis'
+export { getLenisInstance } from '@/lib/client/lenis';

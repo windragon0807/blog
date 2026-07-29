@@ -1,6 +1,7 @@
-import type { Metadata } from 'next'
-import { EmoticonStoragePage } from '@/features/emoticon-storage/emoticon-storage-page'
-import { createPageMetadata } from '@/lib/seo'
+import type { Metadata } from 'next';
+
+import { EmoticonStoragePage } from '@/features/emoticon-storage/emoticon-storage-page';
+import { createPageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = {
   ...createPageMetadata({
@@ -10,8 +11,8 @@ export const metadata: Metadata = {
     path: '/emoticons',
     tags: ['Emoticon', 'SVG', 'PNG', 'Material Icons', 'Tossface'],
   }),
-}
+};
 
 export default function EmoticonsPage() {
-  return <EmoticonStoragePage />
+  return <EmoticonStoragePage />;
 }

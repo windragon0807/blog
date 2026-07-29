@@ -4,11 +4,7 @@
   "type": "registry:ui",
   "title": "Typewriter Text",
   "description": "Characters appearing in typed animation.",
-  "dependencies": [
-    "clsx",
-    "motion",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "motion", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/typing-animation.tsx",

@@ -1,33 +1,30 @@
-import type { Metadata } from 'next'
-import { ArrowLeft } from 'lucide-react'
-import { ActionLink } from '@/components/common/ActionControl'
-import { PostExplorer } from '@/components/PostExplorer'
-import { getPortfolioPosts } from '@/lib/notion'
-import { createPageMetadata } from '@/lib/seo'
+import { ArrowLeft } from 'lucide-react';
+import type { Metadata } from 'next';
 
-export const revalidate = 3600
+import { ActionLink } from '@/components/common/ActionControl';
+import { PostExplorer } from '@/components/PostExplorer';
+import { getPortfolioPosts } from '@/lib/notion';
+import { createPageMetadata } from '@/lib/seo';
+
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: 'portfolio',
-    description:
-      '정승룡의 프론트엔드 제품 개발 작업 기록과 포트폴리오를 모아둔 페이지입니다.',
+    description: '정승룡의 프론트엔드 제품 개발 작업 기록과 포트폴리오를 모아둔 페이지입니다.',
     path: '/portfolio',
     imageTitle: 'ryong.portfolio',
     tags: ['Portfolio', 'Frontend', 'Product Engineering'],
   }),
-}
+};
 
 export default async function PortfolioPage() {
-  const posts = await getPortfolioPosts()
+  const posts = await getPortfolioPosts();
 
   return (
     <div className="relative left-1/2 w-[min(1200px,calc(100vw-2rem))] -translate-x-1/2 -mt-3 pt-0 md:mt-0 md:pt-3">
       <div className="mb-3 flex items-center md:mb-4">
-        <ActionLink
-          href="/resume"
-          variant="glass"
-        >
+        <ActionLink href="/resume" variant="glass">
           <ArrowLeft className="h-4 w-4 text-zinc-400 dark:text-zinc-500" aria-hidden="true" />
           <span>이력서 보기</span>
         </ActionLink>
@@ -38,5 +35,5 @@ export default async function PortfolioPage() {
         emptyMessage="아직 게시된 포트폴리오 항목이 없습니다."
       />
     </div>
-  )
+  );
 }

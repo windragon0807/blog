@@ -1,45 +1,47 @@
-import { useEffect, useState } from 'react'
-import { VideoText } from '@/components/video-text'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+import { useEffect, useState } from 'react';
+
+import { VideoText } from '@/components/video-text';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 function getUserFontFamily() {
-  const rootStyles = window.getComputedStyle(document.documentElement)
-  const userFont = rootStyles.getPropertyValue('--font-user').trim()
+  const rootStyles = window.getComputedStyle(document.documentElement);
+  const userFont = rootStyles.getPropertyValue('--font-user').trim();
 
-  return userFont || window.getComputedStyle(document.body).fontFamily || 'sans-serif'
+  return userFont || window.getComputedStyle(document.body).fontFamily || 'sans-serif';
 }
 
 function useUserFontFamily() {
-  const [userFontFamily, setUserFontFamily] = useState('var(--font-user)')
+  const [userFontFamily, setUserFontFamily] = useState('var(--font-user)');
 
   useEffect(() => {
     const syncFontFamily = () => {
-      const nextFontFamily = getUserFontFamily()
+      const nextFontFamily = getUserFontFamily();
       setUserFontFamily((currentFontFamily) =>
-        currentFontFamily === nextFontFamily ? currentFontFamily : nextFontFamily
-      )
-    }
-    const root = document.documentElement
-    const observer = new MutationObserver(syncFontFamily)
+        currentFontFamily === nextFontFamily ? currentFontFamily : nextFontFamily,
+      );
+    };
+    const root = document.documentElement;
+    const observer = new MutationObserver(syncFontFamily);
 
-    syncFontFamily()
+    syncFontFamily();
     observer.observe(root, {
       attributes: true,
       attributeFilter: ['style', 'data-font-theme'],
-    })
-    window.addEventListener('storage', syncFontFamily)
+    });
+    window.addEventListener('storage', syncFontFamily);
 
     return () => {
-      observer.disconnect()
-      window.removeEventListener('storage', syncFontFamily)
-    }
-  }, [])
+      observer.disconnect();
+      window.removeEventListener('storage', syncFontFamily);
+    };
+  }, []);
 
-  return userFontFamily
+  return userFontFamily;
 }
 
 export function VideoTextPreview() {
-  const userFontFamily = useUserFontFamily()
+  const userFontFamily = useUserFontFamily();
 
   return (
     <PreviewDemoSurface
@@ -58,5 +60,5 @@ export function VideoTextPreview() {
         VIDEO
       </VideoText>
     </PreviewDemoSurface>
-  )
+  );
 }

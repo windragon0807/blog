@@ -1,7 +1,8 @@
-import * as React from 'react'
-import { Slot } from '@radix-ui/react-slot'
-import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from '@/lib/utils'
+import { Slot } from '@radix-ui/react-slot';
+import { cva, type VariantProps } from 'class-variance-authority';
+import * as React from 'react';
+
+import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
   'inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap text-sm font-medium outline-none transition-[background-color,border-color,color,box-shadow,transform,opacity] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-ring/45 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0',
@@ -14,8 +15,7 @@ const buttonVariants = cva(
           'rounded-md border border-border bg-secondary px-4 py-2 text-secondary-foreground shadow-sm hover:bg-secondary/78',
         outline:
           'rounded-md border border-border bg-background px-4 py-2 text-foreground shadow-sm hover:bg-accent hover:text-accent-foreground',
-        ghost:
-          'rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+        ghost: 'rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground',
         glass:
           'glass-surface rounded-2xl border border-zinc-200/90 bg-white/86 px-4 py-2 text-zinc-700 shadow-[0_12px_28px_-20px_rgba(15,23,42,0.45)] backdrop-blur-md hover:-translate-y-0.5 hover:border-zinc-300 hover:bg-white/95 hover:text-zinc-900 hover:shadow-[0_18px_32px_-22px_rgba(15,23,42,0.45)] dark:border-zinc-700/80 dark:bg-zinc-800/78 dark:text-zinc-100 dark:hover:border-zinc-500 dark:hover:bg-zinc-700/80 dark:hover:text-white dark:hover:shadow-[0_20px_36px_-24px_rgba(2,6,23,0.78)]',
         iconGlass:
@@ -38,8 +38,8 @@ const buttonVariants = cva(
       variant: 'default',
       size: 'default',
     },
-  }
-)
+  },
+);
 
 function Button({
   className,
@@ -49,9 +49,9 @@ function Button({
   ...props
 }: React.ComponentProps<'button'> &
   VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
+    asChild?: boolean;
   }) {
-  const Comp = asChild ? Slot : 'button'
+  const Comp = asChild ? Slot : 'button';
 
   return (
     <Comp
@@ -59,7 +59,7 @@ function Button({
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     />
-  )
+  );
 }
 
-export { Button, buttonVariants }
+export { Button, buttonVariants };

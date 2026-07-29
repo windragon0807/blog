@@ -9,29 +9,29 @@ export const BLOG_THEME_VALUES = [
   'amber',
   'sepia',
   'iris',
-] as const
+] as const;
 
-export type BlogThemeName = (typeof BLOG_THEME_VALUES)[number]
+export type BlogThemeName = (typeof BLOG_THEME_VALUES)[number];
 
 export type BlogThemePalette = {
-  accent: string
-  accentDark: string
-  selection: string
-  progressStart: string
-  progressMid: string
-  progressEnd: string
-  progressGlow: string
-  progressDarkStart: string
-  progressDarkMid: string
-  progressDarkEnd: string
-  progressDarkGlow: string
-  inlineCodeBg: string
-  inlineCodeBorder: string
-  inlineCodeText: string
-  inlineCodeDarkBg: string
-  inlineCodeDarkBorder: string
-  inlineCodeDarkText: string
-}
+  accent: string;
+  accentDark: string;
+  selection: string;
+  progressStart: string;
+  progressMid: string;
+  progressEnd: string;
+  progressGlow: string;
+  progressDarkStart: string;
+  progressDarkMid: string;
+  progressDarkEnd: string;
+  progressDarkGlow: string;
+  inlineCodeBg: string;
+  inlineCodeBorder: string;
+  inlineCodeText: string;
+  inlineCodeDarkBg: string;
+  inlineCodeDarkBorder: string;
+  inlineCodeDarkText: string;
+};
 
 export const BLOG_THEME_PALETTES: Record<BlogThemeName, BlogThemePalette> = {
   ink: {
@@ -224,12 +224,12 @@ export const BLOG_THEME_PALETTES: Record<BlogThemeName, BlogThemePalette> = {
     inlineCodeDarkBorder: 'rgba(134, 87, 216, 0.44)',
     inlineCodeDarkText: '#c2a2ff',
   },
-}
+};
 
 export const BLOG_THEME_OPTIONS: ReadonlyArray<{
-  value: BlogThemeName
-  label: string
-  accent: string
+  value: BlogThemeName;
+  label: string;
+  accent: string;
 }> = [
   { value: 'ink', label: 'Ink (기본)', accent: BLOG_THEME_PALETTES.ink.accent },
   { value: 'moss', label: 'Moss', accent: BLOG_THEME_PALETTES.moss.accent },
@@ -241,53 +241,48 @@ export const BLOG_THEME_OPTIONS: ReadonlyArray<{
   { value: 'amber', label: 'Amber', accent: BLOG_THEME_PALETTES.amber.accent },
   { value: 'sepia', label: 'Sepia', accent: BLOG_THEME_PALETTES.sepia.accent },
   { value: 'iris', label: 'Iris', accent: BLOG_THEME_PALETTES.iris.accent },
-]
+];
 
-export const DEFAULT_BLOG_THEME: BlogThemeName = 'ink'
-export const DEFAULT_CUSTOM_BLOG_THEME_COLOR = '#2F67DA'
-export const BLOG_THEME_STORAGE_KEY = 'blog-theme'
-export const BLOG_THEME_USER_SET_STORAGE_KEY = 'blog-theme-user-set'
-export const BLOG_THEME_CUSTOM_COLOR_STORAGE_KEY =
-  'blog-theme-custom-color'
-export const MINIMUM_TEXT_CONTRAST = 4.5
-export const CUSTOM_THEME_LIGHT_SURFACE = '#FFFFFF'
-export const CUSTOM_THEME_DARK_SURFACE = '#171A23'
+export const DEFAULT_BLOG_THEME: BlogThemeName = 'ink';
+export const DEFAULT_CUSTOM_BLOG_THEME_COLOR = '#2F67DA';
+export const BLOG_THEME_STORAGE_KEY = 'blog-theme';
+export const BLOG_THEME_USER_SET_STORAGE_KEY = 'blog-theme-user-set';
+export const BLOG_THEME_CUSTOM_COLOR_STORAGE_KEY = 'blog-theme-custom-color';
+export const MINIMUM_TEXT_CONTRAST = 4.5;
+export const CUSTOM_THEME_LIGHT_SURFACE = '#FFFFFF';
+export const CUSTOM_THEME_DARK_SURFACE = '#171A23';
 
-const BLOG_THEME_SET = new Set<string>(BLOG_THEME_VALUES)
+const BLOG_THEME_SET = new Set<string>(BLOG_THEME_VALUES);
 
-export function isBlogThemeName(
-  value: string | null | undefined
-): value is BlogThemeName {
-  return Boolean(value && BLOG_THEME_SET.has(value))
+export function isBlogThemeName(value: string | null | undefined): value is BlogThemeName {
+  return Boolean(value && BLOG_THEME_SET.has(value));
 }
 
 export function getBlogThemePalette(theme: BlogThemeName): BlogThemePalette {
-  return BLOG_THEME_PALETTES[theme]
+  return BLOG_THEME_PALETTES[theme];
 }
 
 export function isHexColor(value: string | null | undefined): value is string {
-  return Boolean(value && /^#[0-9a-f]{6}$/i.test(value))
+  return Boolean(value && /^#[0-9a-f]{6}$/i.test(value));
 }
 
 export function normalizeHexColor(value: string): string {
-  const withHash = value.startsWith('#') ? value : `#${value}`
-  return withHash.toUpperCase()
+  const withHash = value.startsWith('#') ? value : `#${value}`;
+  return withHash.toUpperCase();
 }
 
-export function createCustomBlogThemePalette(
-  color: string
-): BlogThemePalette {
-  const accent = normalizeHexColor(color)
-  const lightText = ensureContrast(accent, CUSTOM_THEME_LIGHT_SURFACE)
-  const darkText = ensureContrast(accent, CUSTOM_THEME_DARK_SURFACE)
+export function createCustomBlogThemePalette(color: string): BlogThemePalette {
+  const accent = normalizeHexColor(color);
+  const lightText = ensureContrast(accent, CUSTOM_THEME_LIGHT_SURFACE);
+  const darkText = ensureContrast(accent, CUSTOM_THEME_DARK_SURFACE);
   const lightInlineText = ensureContrast(
     accent,
-    mixHexColors(CUSTOM_THEME_LIGHT_SURFACE, accent, 0.1)
-  )
+    mixHexColors(CUSTOM_THEME_LIGHT_SURFACE, accent, 0.1),
+  );
   const darkInlineText = ensureContrast(
     accent,
-    mixHexColors(CUSTOM_THEME_DARK_SURFACE, accent, 0.22)
-  )
+    mixHexColors(CUSTOM_THEME_DARK_SURFACE, accent, 0.22),
+  );
 
   return {
     accent: lightText,
@@ -307,87 +302,77 @@ export function createCustomBlogThemePalette(
     inlineCodeDarkBg: `color-mix(in srgb, ${accent} 22%, transparent)`,
     inlineCodeDarkBorder: `color-mix(in srgb, ${accent} 44%, transparent)`,
     inlineCodeDarkText: darkInlineText,
-  }
+  };
 }
 
 function ensureContrast(
   color: string,
   background: string,
-  minimumContrast = MINIMUM_TEXT_CONTRAST
+  minimumContrast = MINIMUM_TEXT_CONTRAST,
 ): string {
-  if (getContrastRatio(color, background) >= minimumContrast) return color
+  if (getContrastRatio(color, background) >= minimumContrast) return color;
 
   const target =
-    getContrastRatio('#000000', background) >=
-    getContrastRatio('#FFFFFF', background)
+    getContrastRatio('#000000', background) >= getContrastRatio('#FFFFFF', background)
       ? '#000000'
-      : '#FFFFFF'
-  let lowerBound = 0
-  let upperBound = 1
-  let bestColor = target
+      : '#FFFFFF';
+  let lowerBound = 0;
+  let upperBound = 1;
+  let bestColor = target;
 
   for (let index = 0; index < 24; index += 1) {
-    const ratio = (lowerBound + upperBound) / 2
-    const candidate = mixHexColors(color, target, ratio)
+    const ratio = (lowerBound + upperBound) / 2;
+    const candidate = mixHexColors(color, target, ratio);
 
     if (getContrastRatio(candidate, background) >= minimumContrast) {
-      bestColor = candidate
-      upperBound = ratio
+      bestColor = candidate;
+      upperBound = ratio;
     } else {
-      lowerBound = ratio
+      lowerBound = ratio;
     }
   }
 
-  return bestColor
+  return bestColor;
 }
 
-function mixHexColors(
-  background: string,
-  foreground: string,
-  foregroundRatio: number
-): string {
-  const backgroundChannels = parseHexColor(background)
-  const foregroundChannels = parseHexColor(foreground)
+function mixHexColors(background: string, foreground: string, foregroundRatio: number): string {
+  const backgroundChannels = parseHexColor(background);
+  const foregroundChannels = parseHexColor(foreground);
   return formatHexColor(
     backgroundChannels.map((channel, index) =>
-      Math.round(
-        channel * (1 - foregroundRatio) +
-          foregroundChannels[index] * foregroundRatio
-      )
-    )
-  )
+      Math.round(channel * (1 - foregroundRatio) + foregroundChannels[index] * foregroundRatio),
+    ),
+  );
 }
 
 function getContrastRatio(foreground: string, background: string): number {
-  const foregroundLuminance = getRelativeLuminance(foreground)
-  const backgroundLuminance = getRelativeLuminance(background)
+  const foregroundLuminance = getRelativeLuminance(foreground);
+  const backgroundLuminance = getRelativeLuminance(background);
   return (
     (Math.max(foregroundLuminance, backgroundLuminance) + 0.05) /
     (Math.min(foregroundLuminance, backgroundLuminance) + 0.05)
-  )
+  );
 }
 
 function getRelativeLuminance(color: string): number {
   const [red, green, blue] = parseHexColor(color).map((channel) => {
-    const normalized = channel / 255
-    return normalized <= 0.04045
-      ? normalized / 12.92
-      : ((normalized + 0.055) / 1.055) ** 2.4
-  })
-  return 0.2126 * red + 0.7152 * green + 0.0722 * blue
+    const normalized = channel / 255;
+    return normalized <= 0.04045 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
 }
 
 function parseHexColor(color: string): number[] {
-  const normalized = normalizeHexColor(color)
+  const normalized = normalizeHexColor(color);
   return [
     Number.parseInt(normalized.slice(1, 3), 16),
     Number.parseInt(normalized.slice(3, 5), 16),
     Number.parseInt(normalized.slice(5, 7), 16),
-  ]
+  ];
 }
 
 function formatHexColor(channels: number[]): string {
   return `#${channels
     .map((channel) => channel.toString(16).padStart(2, '0'))
-    .join('')}`.toUpperCase()
+    .join('')}`.toUpperCase();
 }

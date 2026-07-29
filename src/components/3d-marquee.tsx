@@ -1,32 +1,33 @@
-'use client'
+'use client';
 
-import { motion } from 'motion/react'
-import type { CSSProperties, ReactNode } from 'react'
-import { cn } from '@/lib/utils'
+import { motion } from 'motion/react';
+import type { CSSProperties, ReactNode } from 'react';
+
+import { cn } from '@/lib/utils';
 
 interface ThreeDMarqueeProps {
-  images?: string[]
-  items?: ReactNode[]
-  className?: string
+  images?: string[];
+  items?: ReactNode[];
+  className?: string;
 }
 
 export function ThreeDMarquee({ images, items, className }: ThreeDMarqueeProps) {
-  const imageItems = images ?? []
-  const chunkSize = Math.ceil(Math.max(imageItems.length, 1) / 4)
+  const imageItems = images ?? [];
+  const chunkSize = Math.ceil(Math.max(imageItems.length, 1) / 4);
   const imageChunks = Array.from({ length: 4 }, (_, columnIndex) => {
-    const start = columnIndex * chunkSize
-    return imageItems.slice(start, start + chunkSize)
-  })
+    const start = columnIndex * chunkSize;
+    return imageItems.slice(start, start + chunkSize);
+  });
 
   if (!images && items) {
-    return <LegacyThreeDMarquee items={items} className={className} />
+    return <LegacyThreeDMarquee items={items} className={className} />;
   }
 
   return (
     <div
       className={cn(
         'mx-auto block h-[600px] overflow-hidden rounded-2xl bg-white max-sm:h-full dark:bg-zinc-950',
-        className
+        className,
       )}
     >
       <div className="flex size-full items-center justify-center">
@@ -67,23 +68,17 @@ export function ThreeDMarquee({ images, items, className }: ThreeDMarqueeProps) 
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-function LegacyThreeDMarquee({
-  items,
-  className,
-}: {
-  items: ReactNode[]
-  className?: string
-}) {
-  const rows = [items, [...items].reverse(), items]
+function LegacyThreeDMarquee({ items, className }: { items: ReactNode[]; className?: string }) {
+  const rows = [items, [...items].reverse(), items];
 
   return (
     <div
       className={cn(
         'relative h-full w-full overflow-hidden rounded-[inherit] bg-white [perspective:900px] dark:bg-zinc-950',
-        className
+        className,
       )}
     >
       <div className="absolute inset-0 flex -rotate-x-12 rotate-z-6 flex-col justify-center gap-4">
@@ -92,7 +87,7 @@ function LegacyThreeDMarquee({
             key={rowIndex}
             className={cn(
               'flex min-w-max gap-4 [--duration:26s] animate-marquee',
-              rowIndex % 2 === 1 && '[animation-direction:reverse]'
+              rowIndex % 2 === 1 && '[animation-direction:reverse]',
             )}
           >
             {[...row, ...row].map((item, index) => (
@@ -108,41 +103,41 @@ function LegacyThreeDMarquee({
       </div>
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,white_74%)] dark:bg-[radial-gradient(circle_at_center,transparent,#09090b_74%)]" />
     </div>
-  )
+  );
 }
 
 function GridLineHorizontal({
   className,
   offset = '200px',
 }: {
-  className?: string
-  offset?: string
+  className?: string;
+  offset?: string;
 }) {
   return (
     <div
       className={cn(
         'absolute left-[calc(var(--offset)/2*-1)] z-30 h-px w-[calc(100%+var(--offset))] [--background:#ffffff] [--color:rgba(0,0,0,0.2)] [--color-dark:rgba(255,255,255,0.2)] [--fade-stop:90%] [--height:1px] [--width:5px] [background-size:var(--width)_var(--height)] [mask:linear-gradient(to_left,var(--background)_var(--fade-stop),transparent),_linear-gradient(to_right,var(--background)_var(--fade-stop),transparent),_linear-gradient(black,black)] [mask-composite:exclude] bg-[linear-gradient(to_right,var(--color),var(--color)_50%,transparent_0,transparent)] dark:bg-[linear-gradient(to_right,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]',
-        className
+        className,
       )}
       style={{ '--offset': offset } as CSSProperties}
     />
-  )
+  );
 }
 
 function GridLineVertical({
   className,
   offset = '150px',
 }: {
-  className?: string
-  offset?: string
+  className?: string;
+  offset?: string;
 }) {
   return (
     <div
       className={cn(
         'absolute top-[calc(var(--offset)/2*-1)] z-30 h-[calc(100%+var(--offset))] w-px [--background:#ffffff] [--color:rgba(0,0,0,0.2)] [--color-dark:rgba(255,255,255,0.2)] [--fade-stop:90%] [--height:5px] [--width:1px] [background-size:var(--width)_var(--height)] [mask:linear-gradient(to_top,var(--background)_var(--fade-stop),transparent),_linear-gradient(to_bottom,var(--background)_var(--fade-stop),transparent),_linear-gradient(black,black)] [mask-composite:exclude] bg-[linear-gradient(to_bottom,var(--color),var(--color)_50%,transparent_0,transparent)] dark:bg-[linear-gradient(to_bottom,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]',
-        className
+        className,
       )}
       style={{ '--offset': offset } as CSSProperties}
     />
-  )
+  );
 }

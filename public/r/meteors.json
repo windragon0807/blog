@@ -4,10 +4,7 @@
   "type": "registry:ui",
   "title": "Meteor Background",
   "description": "A meteor shower effect.",
-  "dependencies": [
-    "clsx",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/meteors.tsx",

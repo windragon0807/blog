@@ -1,23 +1,16 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
-import {
-  ArrowRight,
-  Boxes,
-  Code2,
-  Component,
-  Layers3,
-  PackagePlus,
-  Sparkles,
-} from 'lucide-react'
+import { ArrowRight, Boxes, Code2, Component, Layers3, PackagePlus, Sparkles } from 'lucide-react';
+import type { Metadata } from 'next';
+import Link from 'next/link';
+
 import {
   componentCategories,
+  type ComponentCategory,
   componentRegistryBaseUrl,
+  type ComponentSample,
   componentSamples,
   getComponentSampleBySlug,
-  type ComponentCategory,
-  type ComponentSample,
-} from '@/features/component-library/component-data'
-import { createPageMetadata } from '@/lib/seo'
+} from '@/features/component-library/component-data';
+import { createPageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = {
   ...createPageMetadata({
@@ -28,7 +21,7 @@ export const metadata: Metadata = {
     imageTitle: 'ryong.components',
     tags: ['UI Components', 'shadcn', 'Tailwind CSS', 'React'],
   }),
-}
+};
 
 const featuredComponentSlugs = [
   'data-table',
@@ -37,50 +30,50 @@ const featuredComponentSlugs = [
   'placeholders-and-vanish-input',
   '3d-image-carousel',
   'typing-animation',
-] as const
+] as const;
 
 const featuredComponents = featuredComponentSlugs
   .map((slug) => getComponentSampleBySlug(slug))
-  .filter((sample): sample is ComponentSample => Boolean(sample))
+  .filter((sample): sample is ComponentSample => Boolean(sample));
 
-const installExampleSlug = 'data-table'
-const installTarget = `${componentRegistryBaseUrl}/${installExampleSlug}.json`
-const installCommand = `pnpm dlx shadcn@latest add ${installTarget}`
+const installExampleSlug = 'data-table';
+const installTarget = `${componentRegistryBaseUrl}/${installExampleSlug}.json`;
+const installCommand = `pnpm dlx shadcn@latest add ${installTarget}`;
 
 function getCategorySamples(categoryId: ComponentCategory['id']) {
-  return componentSamples.filter((sample) => sample.categoryId === categoryId)
+  return componentSamples.filter((sample) => sample.categoryId === categoryId);
 }
 
 function getCategoryIcon(categoryId: ComponentCategory['id']) {
   switch (categoryId) {
     case 'controls-inputs':
-      return Component
+      return Component;
     case 'menus-actions':
-      return Sparkles
+      return Sparkles;
     case 'content-display':
-      return Layers3
+      return Layers3;
     case 'data-status':
-      return Boxes
+      return Boxes;
     case 'text-effects':
-      return Code2
+      return Code2;
     case 'background-atmosphere':
-      return Sparkles
+      return Sparkles;
     case 'cursor-interaction-effects':
-      return Component
+      return Component;
   }
 }
 
 export default function ComponentsPage() {
   const categorySummaries = componentCategories
     .map((category) => {
-      const samples = getCategorySamples(category.id)
+      const samples = getCategorySamples(category.id);
       return {
         category,
         count: samples.length,
         href: samples[0] ? `/components/${samples[0].slug}` : '/components',
-      }
+      };
     })
-    .filter((summary) => summary.count > 0)
+    .filter((summary) => summary.count > 0);
 
   return (
     <article className="pb-20">
@@ -94,10 +87,7 @@ export default function ComponentsPage() {
         </p>
       </header>
 
-      <section
-        aria-label="Registry summary"
-        className="grid gap-3 sm:grid-cols-3"
-      >
+      <section aria-label="Registry summary" className="grid gap-3 sm:grid-cols-3">
         {[
           { label: 'Components', value: componentSamples.length },
           { label: 'Categories', value: categorySummaries.length },
@@ -107,9 +97,7 @@ export default function ComponentsPage() {
             key={item.label}
             className="rounded-2xl border border-zinc-200 bg-white/86 p-4 shadow-[0_14px_34px_-30px_rgba(24,24,27,0.38)] dark:border-zinc-800/80 dark:bg-zinc-900/48 dark:shadow-[0_18px_44px_-34px_rgba(2,6,23,0.9)]"
           >
-            <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-500">
-              {item.label}
-            </p>
+            <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-500">{item.label}</p>
             <p className="mt-2 text-2xl font-semibold text-zinc-950 dark:text-zinc-50">
               {item.value}
             </p>
@@ -131,10 +119,7 @@ export default function ComponentsPage() {
               Registry install
             </h2>
           </div>
-          <PackagePlus
-            className="h-5 w-5 text-zinc-400 dark:text-zinc-500"
-            aria-hidden="true"
-          />
+          <PackagePlus className="h-5 w-5 text-zinc-400 dark:text-zinc-500" aria-hidden="true" />
         </div>
         <code className="mt-4 block overflow-x-auto rounded-xl border border-zinc-200 bg-white px-4 py-3 font-mono text-sm text-zinc-800 dark:border-zinc-800 dark:bg-zinc-950/72 dark:text-zinc-100">
           {installCommand}
@@ -156,7 +141,7 @@ export default function ComponentsPage() {
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {categorySummaries.map(({ category, count, href }) => {
-            const Icon = getCategoryIcon(category.id)
+            const Icon = getCategoryIcon(category.id);
 
             return (
               <Link
@@ -168,9 +153,7 @@ export default function ComponentsPage() {
                   <span className="inline-grid h-9 w-9 place-items-center rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-600 dark:border-zinc-800 dark:bg-zinc-950/60 dark:text-zinc-300">
                     <Icon className="h-4 w-4" aria-hidden="true" />
                   </span>
-                  <span className="text-xs font-semibold text-zinc-500">
-                    {count} items
-                  </span>
+                  <span className="text-xs font-semibold text-zinc-500">{count} items</span>
                 </div>
                 <div className="mt-5">
                   <h3 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">
@@ -188,7 +171,7 @@ export default function ComponentsPage() {
                   />
                 </span>
               </Link>
-            )
+            );
           })}
         </div>
       </section>
@@ -207,9 +190,8 @@ export default function ComponentsPage() {
         <div className="mt-5 divide-y divide-zinc-200 overflow-hidden rounded-2xl border border-zinc-200 bg-white/86 dark:divide-zinc-800 dark:border-zinc-800/82 dark:bg-zinc-900/48">
           {featuredComponents.map((sample) => {
             const categoryName =
-              componentCategories.find(
-                (category) => category.id === sample.categoryId
-              )?.name ?? 'Component'
+              componentCategories.find((category) => category.id === sample.categoryId)?.name ??
+              'Component';
 
             return (
               <Link
@@ -218,9 +200,7 @@ export default function ComponentsPage() {
                 className="group grid gap-3 p-5 transition-colors hover:bg-zinc-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-zinc-950 dark:hover:bg-zinc-800/46 dark:focus-visible:outline-zinc-50 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"
               >
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold text-zinc-500">
-                    {categoryName}
-                  </p>
+                  <p className="text-xs font-semibold text-zinc-500">{categoryName}</p>
                   <h3 className="mt-1 text-base font-semibold text-zinc-950 dark:text-zinc-50">
                     {sample.title}
                   </h3>
@@ -236,10 +216,10 @@ export default function ComponentsPage() {
                   />
                 </span>
               </Link>
-            )
+            );
           })}
         </div>
       </section>
     </article>
-  )
+  );
 }

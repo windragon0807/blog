@@ -1,18 +1,20 @@
-import 'server-only'
+import 'server-only';
 
-import { cache } from 'react'
-import type { Block, KnownBlock, Post, RichText } from '@/types/notion'
-import { getAllContentPosts, getPageBlocks } from './notion'
+import { cache } from 'react';
 
-const READING_WORDS_PER_MINUTE = 300
+import type { Block, KnownBlock, Post, RichText } from '@/types/notion';
+
+import { getAllContentPosts, getPageBlocks } from './notion';
+
+const READING_WORDS_PER_MINUTE = 300;
 
 export interface ReadingStats {
-  words: number
-  minutes: number
+  words: number;
+  minutes: number;
 }
 
 function extractPlainTextFromBlocks(blocks: Block[]): string {
-  const fragments: string[] = []
+  const fragments: string[] = [];
 
   const walk = (items: Block[]) => {
     for (const block of items) {
@@ -20,152 +22,140 @@ function extractPlainTextFromBlocks(blocks: Block[]): string {
         case 'paragraph':
           fragments.push(
             richTextToString(
-              (block as Extract<KnownBlock, { type: 'paragraph' }>).paragraph.rich_text
-            )
-          )
-          break
+              (block as Extract<KnownBlock, { type: 'paragraph' }>).paragraph.rich_text,
+            ),
+          );
+          break;
         case 'heading_1':
           fragments.push(
             richTextToString(
-              (block as Extract<KnownBlock, { type: 'heading_1' }>).heading_1.rich_text
-            )
-          )
-          break
+              (block as Extract<KnownBlock, { type: 'heading_1' }>).heading_1.rich_text,
+            ),
+          );
+          break;
         case 'heading_2':
           fragments.push(
             richTextToString(
-              (block as Extract<KnownBlock, { type: 'heading_2' }>).heading_2.rich_text
-            )
-          )
-          break
+              (block as Extract<KnownBlock, { type: 'heading_2' }>).heading_2.rich_text,
+            ),
+          );
+          break;
         case 'heading_3':
           fragments.push(
             richTextToString(
-              (block as Extract<KnownBlock, { type: 'heading_3' }>).heading_3.rich_text
-            )
-          )
-          break
+              (block as Extract<KnownBlock, { type: 'heading_3' }>).heading_3.rich_text,
+            ),
+          );
+          break;
         case 'heading_4':
           fragments.push(
             richTextToString(
-              (block as Extract<KnownBlock, { type: 'heading_4' }>).heading_4.rich_text
-            )
-          )
-          break
+              (block as Extract<KnownBlock, { type: 'heading_4' }>).heading_4.rich_text,
+            ),
+          );
+          break;
         case 'bulleted_list_item':
           fragments.push(
             richTextToString(
-              (block as Extract<KnownBlock, { type: 'bulleted_list_item' }>)
-                .bulleted_list_item.rich_text
-            )
-          )
-          break
+              (block as Extract<KnownBlock, { type: 'bulleted_list_item' }>).bulleted_list_item
+                .rich_text,
+            ),
+          );
+          break;
         case 'numbered_list_item':
           fragments.push(
             richTextToString(
-              (block as Extract<KnownBlock, { type: 'numbered_list_item' }>)
-                .numbered_list_item.rich_text
-            )
-          )
-          break
+              (block as Extract<KnownBlock, { type: 'numbered_list_item' }>).numbered_list_item
+                .rich_text,
+            ),
+          );
+          break;
         case 'quote':
           fragments.push(
-            richTextToString(
-              (block as Extract<KnownBlock, { type: 'quote' }>).quote.rich_text
-            )
-          )
-          break
+            richTextToString((block as Extract<KnownBlock, { type: 'quote' }>).quote.rich_text),
+          );
+          break;
         case 'callout':
           fragments.push(
-            richTextToString(
-              (block as Extract<KnownBlock, { type: 'callout' }>).callout.rich_text
-            )
-          )
-          break
+            richTextToString((block as Extract<KnownBlock, { type: 'callout' }>).callout.rich_text),
+          );
+          break;
         case 'toggle':
           fragments.push(
-            richTextToString(
-              (block as Extract<KnownBlock, { type: 'toggle' }>).toggle.rich_text
-            )
-          )
-          break
+            richTextToString((block as Extract<KnownBlock, { type: 'toggle' }>).toggle.rich_text),
+          );
+          break;
         case 'bookmark':
+          fragments.push((block as Extract<KnownBlock, { type: 'bookmark' }>).bookmark.url);
           fragments.push(
-            (block as Extract<KnownBlock, { type: 'bookmark' }>).bookmark.url
-          )
-          fragments.push(
-            richTextToString(
-              (block as Extract<KnownBlock, { type: 'bookmark' }>).bookmark.caption
-            )
-          )
-          break
+            richTextToString((block as Extract<KnownBlock, { type: 'bookmark' }>).bookmark.caption),
+          );
+          break;
         case 'code':
           fragments.push(
-            (block as Extract<KnownBlock, { type: 'code' }>)
-              .code.rich_text.map((token) => token.plain_text)
-              .join('')
-          )
-          break
+            (block as Extract<KnownBlock, { type: 'code' }>).code.rich_text
+              .map((token) => token.plain_text)
+              .join(''),
+          );
+          break;
       }
 
-      const children = (block as { children?: Block[] }).children
+      const children = (block as { children?: Block[] }).children;
       if (children && children.length > 0) {
-        walk(children)
+        walk(children);
       }
     }
-  }
+  };
 
-  walk(blocks)
+  walk(blocks);
 
   return fragments
     .map((value) => value.trim())
     .filter(Boolean)
-    .join('\n')
+    .join('\n');
 }
 
 function estimateReadingStats(text: string): ReadingStats {
-  const normalized = text.trim()
+  const normalized = text.trim();
   if (!normalized) {
-    return { words: 0, minutes: 1 }
+    return { words: 0, minutes: 1 };
   }
 
-  const words = normalized.split(/\s+/).filter(Boolean).length
-  const minutes = Math.max(1, Math.ceil(words / READING_WORDS_PER_MINUTE))
+  const words = normalized.split(/\s+/).filter(Boolean).length;
+  const minutes = Math.max(1, Math.ceil(words / READING_WORDS_PER_MINUTE));
 
-  return { words, minutes }
+  return { words, minutes };
 }
 
 export const getPostReadingStats = cache(async (postId: string): Promise<ReadingStats> => {
-  const blocks = await getPageBlocks(postId)
-  return estimateReadingStats(extractPlainTextFromBlocks(blocks))
-})
+  const blocks = await getPageBlocks(postId);
+  return estimateReadingStats(extractPlainTextFromBlocks(blocks));
+});
 
 export async function getRelatedPosts(currentPost: Post, limit = 3): Promise<Post[]> {
-  const posts = await getAllContentPosts()
+  const posts = await getAllContentPosts();
 
   return posts
     .filter((post) => post.id !== currentPost.id)
     .map((post) => {
-      const sharedTags = post.tags.filter((tag) => currentPost.tags.includes(tag)).length
+      const sharedTags = post.tags.filter((tag) => currentPost.tags.includes(tag)).length;
       const sameSeries =
-        currentPost.series && post.series && currentPost.series === post.series ? 1 : 0
+        currentPost.series && post.series && currentPost.series === post.series ? 1 : 0;
       const dateGap =
-        Math.abs(
-          new Date(currentPost.date).getTime() - new Date(post.date).getTime()
-        ) /
-        (1000 * 60 * 60 * 24)
-      const recencyScore = Number.isFinite(dateGap) ? Math.max(0, 2 - dateGap / 60) : 0
+        Math.abs(new Date(currentPost.date).getTime() - new Date(post.date).getTime()) /
+        (1000 * 60 * 60 * 24);
+      const recencyScore = Number.isFinite(dateGap) ? Math.max(0, 2 - dateGap / 60) : 0;
 
       return {
         post,
         score: sharedTags * 4 + sameSeries * 5 + recencyScore,
-      }
+      };
     })
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
-    .map(({ post }) => post)
+    .map(({ post }) => post);
 }
 
 function richTextToString(richText: RichText[]): string {
-  return richText.map((token) => token.plain_text).join('')
+  return richText.map((token) => token.plain_text).join('');
 }

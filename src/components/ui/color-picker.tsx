@@ -1,105 +1,91 @@
-'use client'
+'use client';
 
+import { CheckIcon } from 'lucide-react';
 import {
-  useMemo,
-  useRef,
-  useState,
   type CSSProperties,
   type KeyboardEvent,
   type PointerEvent,
   type ReactNode,
-} from 'react'
-import { CheckIcon } from 'lucide-react'
-import { hexToHsv, hsvToHex, type HsvColor } from '@/lib/color'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { hexToHsv, type HsvColor, hsvToHex } from '@/lib/color';
 
 type ColorPickerProps = {
-  children: ReactNode
-  value: string
-  onValueChange: (value: string) => void
-}
+  children: ReactNode;
+  value: string;
+  onValueChange: (value: string) => void;
+};
 
-const HEX_PATTERN = /^#[0-9A-F]{6}$/
+const HEX_PATTERN = /^#[0-9A-F]{6}$/;
 
 function clamp(value: number) {
-  return Math.min(1, Math.max(0, value))
+  return Math.min(1, Math.max(0, value));
 }
 
-export function ColorPicker({
-  children,
-  value,
-  onValueChange,
-}: ColorPickerProps) {
-  const hsv = useMemo(() => hexToHsv(value), [value])
+export function ColorPicker({ children, value, onValueChange }: ColorPickerProps) {
+  const hsv = useMemo(() => hexToHsv(value), [value]);
   const [hexDraft, setHexDraft] = useState({
     source: value,
     input: value.toUpperCase(),
-  })
-  const saturationRef = useRef<HTMLDivElement>(null)
-  const hexInput =
-    hexDraft.source === value ? hexDraft.input : value.toUpperCase()
+  });
+  const saturationRef = useRef<HTMLDivElement>(null);
+  const hexInput = hexDraft.source === value ? hexDraft.input : value.toUpperCase();
 
   function updateHsv(next: HsvColor) {
-    onValueChange(hsvToHex(next))
+    onValueChange(hsvToHex(next));
   }
 
-  function updateSaturationAndValue(
-    event: PointerEvent<HTMLDivElement>
-  ) {
-    const rect = event.currentTarget.getBoundingClientRect()
+  function updateSaturationAndValue(event: PointerEvent<HTMLDivElement>) {
+    const rect = event.currentTarget.getBoundingClientRect();
     updateHsv({
       h: hsv.h,
       s: clamp((event.clientX - rect.left) / rect.width),
       v: clamp(1 - (event.clientY - rect.top) / rect.height),
-    })
+    });
   }
 
-  function handleSaturationPointerDown(
-    event: PointerEvent<HTMLDivElement>
-  ) {
-    event.currentTarget.setPointerCapture(event.pointerId)
-    updateSaturationAndValue(event)
+  function handleSaturationPointerDown(event: PointerEvent<HTMLDivElement>) {
+    event.currentTarget.setPointerCapture(event.pointerId);
+    updateSaturationAndValue(event);
   }
 
-  function handleSaturationPointerMove(
-    event: PointerEvent<HTMLDivElement>
-  ) {
-    if (!event.currentTarget.hasPointerCapture(event.pointerId)) return
-    updateSaturationAndValue(event)
+  function handleSaturationPointerMove(event: PointerEvent<HTMLDivElement>) {
+    if (!event.currentTarget.hasPointerCapture(event.pointerId)) return;
+    updateSaturationAndValue(event);
   }
 
   function handleSaturationKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-    const step = event.shiftKey ? 0.05 : 0.01
-    let next = hsv
+    const step = event.shiftKey ? 0.05 : 0.01;
+    let next = hsv;
 
-    if (event.key === 'ArrowLeft') next = { ...hsv, s: clamp(hsv.s - step) }
-    else if (event.key === 'ArrowRight') next = { ...hsv, s: clamp(hsv.s + step) }
-    else if (event.key === 'ArrowUp') next = { ...hsv, v: clamp(hsv.v + step) }
-    else if (event.key === 'ArrowDown') next = { ...hsv, v: clamp(hsv.v - step) }
-    else return
+    if (event.key === 'ArrowLeft') next = { ...hsv, s: clamp(hsv.s - step) };
+    else if (event.key === 'ArrowRight') next = { ...hsv, s: clamp(hsv.s + step) };
+    else if (event.key === 'ArrowUp') next = { ...hsv, v: clamp(hsv.v + step) };
+    else if (event.key === 'ArrowDown') next = { ...hsv, v: clamp(hsv.v - step) };
+    else return;
 
-    event.preventDefault()
-    updateHsv(next)
+    event.preventDefault();
+    updateHsv(next);
   }
 
   function commitHexInput() {
     const normalized = hexInput.startsWith('#')
       ? hexInput.toUpperCase()
-      : `#${hexInput.toUpperCase()}`
+      : `#${hexInput.toUpperCase()}`;
 
     if (HEX_PATTERN.test(normalized)) {
-      setHexDraft({ source: normalized, input: normalized })
-      onValueChange(normalized)
+      setHexDraft({ source: normalized, input: normalized });
+      onValueChange(normalized);
     } else {
-      setHexDraft({ source: value, input: value.toUpperCase() })
+      setHexDraft({ source: value, input: value.toUpperCase() });
     }
   }
 
-  const pureHue = hsvToHex({ h: hsv.h, s: 1, v: 1 })
+  const pureHue = hsvToHex({ h: hsv.h, s: 1, v: 1 });
 
   return (
     <Popover>
@@ -111,8 +97,8 @@ export function ColorPicker({
         collisionPadding={16}
         data-settings-menu-portal=""
         onOpenAutoFocus={(event) => {
-          event.preventDefault()
-          saturationRef.current?.focus({ preventScroll: true })
+          event.preventDefault();
+          saturationRef.current?.focus({ preventScroll: true });
         }}
         className="settings-popover z-[90] w-[min(19rem,calc(100vw-2rem))] rounded-2xl border-border/65 bg-background/88 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.76),0_24px_64px_-30px_rgba(15,23,42,0.68)] backdrop-blur-2xl dark:bg-zinc-950/88 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.09),0_28px_72px_-30px_rgba(0,0,0,0.86)]"
       >
@@ -160,9 +146,7 @@ export function ColorPicker({
               min={0}
               max={359}
               value={Math.round(hsv.h)}
-              onChange={(event) =>
-                updateHsv({ ...hsv, h: Number(event.target.value) })
-              }
+              onChange={(event) => updateHsv({ ...hsv, h: Number(event.target.value) })}
               style={{ '--color-picker-hue-thumb': pureHue } as CSSProperties}
               className="color-picker-hue h-8 w-full appearance-none rounded-full bg-transparent outline-none focus-visible:ring-2 focus-visible:ring-ring/45"
             />
@@ -179,16 +163,16 @@ export function ColorPicker({
               maxLength={7}
               spellCheck={false}
               onChange={(event) => {
-                const next = event.target.value.toUpperCase()
+                const next = event.target.value.toUpperCase();
                 if (/^#?[0-9A-F]{0,6}$/.test(next)) {
-                  setHexDraft({ source: value, input: next })
+                  setHexDraft({ source: value, input: next });
                 }
               }}
               onBlur={commitHexInput}
               onKeyDown={(event) => {
-                if (event.key !== 'Enter') return
-                event.preventDefault()
-                commitHexInput()
+                if (event.key !== 'Enter') return;
+                event.preventDefault();
+                commitHexInput();
               }}
               className="h-10 min-w-0 bg-transparent px-3 font-mono text-xs uppercase text-foreground outline-none"
             />
@@ -196,5 +180,5 @@ export function ColorPicker({
         </div>
       </PopoverContent>
     </Popover>
-  )
+  );
 }

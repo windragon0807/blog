@@ -1,33 +1,27 @@
-'use client'
+'use client';
 
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  type MouseEvent,
-  type TouchEvent,
-} from 'react'
-import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
+import { type MouseEvent, type TouchEvent, useCallback, useEffect, useRef, useState } from 'react';
+
+import { cn } from '@/lib/utils';
 
 export interface ThreeDImageCarouselItem {
-  id?: number
-  src: string
-  alt?: string
-  href?: string
-  title?: string
+  id?: number;
+  src: string;
+  alt?: string;
+  href?: string;
+  title?: string;
 }
 
 interface ThreeDImageCarouselProps {
-  items?: ThreeDImageCarouselItem[]
-  slides?: ThreeDImageCarouselItem[]
-  itemCount?: 3 | 5
-  interval?: number
-  delay?: number
-  autoplay?: boolean
-  pauseOnHover?: boolean
-  className?: string
+  items?: ThreeDImageCarouselItem[];
+  slides?: ThreeDImageCarouselItem[];
+  itemCount?: 3 | 5;
+  interval?: number;
+  delay?: number;
+  autoplay?: boolean;
+  pauseOnHover?: boolean;
+  className?: string;
 }
 
 const defaultItems: ThreeDImageCarouselItem[] = [
@@ -51,7 +45,7 @@ const defaultItems: ThreeDImageCarouselItem[] = [
     alt: 'Desk',
     title: 'Desk',
   },
-]
+];
 
 const embeddedCss = `
 /* --- Cascade Slider Styles --- */
@@ -179,25 +173,20 @@ const embeddedCss = `
     .cascade-slider_item.prev2 { transform: translateY(-50%) translateX(80%) scale(0.37); }
     .cascade-slider_slides img { max-width: 350px; }
 }
-`
+`;
 
-function getSlideClasses(
-  index: number,
-  activeIndex: number,
-  total: number,
-  visibleCount: 3 | 5
-) {
-  const diff = index - activeIndex
-  if (diff === 0) return 'now'
-  if (diff === 1 || diff === -total + 1) return 'next'
+function getSlideClasses(index: number, activeIndex: number, total: number, visibleCount: 3 | 5) {
+  const diff = index - activeIndex;
+  if (diff === 0) return 'now';
+  if (diff === 1 || diff === -total + 1) return 'next';
   if (visibleCount === 5 && (diff === 2 || diff === -total + 2)) {
-    return 'next2'
+    return 'next2';
   }
-  if (diff === -1 || diff === total - 1) return 'prev'
+  if (diff === -1 || diff === total - 1) return 'prev';
   if (visibleCount === 5 && (diff === -2 || diff === total - 2)) {
-    return 'prev2'
+    return 'prev2';
   }
-  return ''
+  return '';
 }
 
 export function ThreeDImageCarousel({
@@ -214,112 +203,112 @@ export function ThreeDImageCarousel({
     ...slide,
     id: slide.id ?? index,
     href: slide.href ?? '#',
-  }))
-  const [activeIndex, setActiveIndex] = useState(0)
-  const autoplayIntervalRef = useRef<number | null>(null)
-  const total = carouselSlides.length
-  const [isDragging, setIsDragging] = useState(false)
-  const [startX, setStartX] = useState(0)
-  const swipeThreshold = 50
-  const autoplayDelay = delay ?? (interval ? interval / 1000 : 3)
+  }));
+  const [activeIndex, setActiveIndex] = useState(0);
+  const autoplayIntervalRef = useRef<number | null>(null);
+  const total = carouselSlides.length;
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const swipeThreshold = 50;
+  const autoplayDelay = delay ?? (interval ? interval / 1000 : 3);
 
   const navigate = useCallback(
     (direction: 'next' | 'prev') => {
       setActiveIndex((current) => {
         if (direction === 'next') {
-          return (current + 1) % total
+          return (current + 1) % total;
         }
-        return (current - 1 + total) % total
-      })
+        return (current - 1 + total) % total;
+      });
     },
-    [total]
-  )
+    [total],
+  );
 
   const startAutoplay = useCallback(() => {
     if (autoplay && total > 1) {
       if (autoplayIntervalRef.current) {
-        clearInterval(autoplayIntervalRef.current)
+        clearInterval(autoplayIntervalRef.current);
       }
       autoplayIntervalRef.current = window.setInterval(() => {
-        navigate('next')
-      }, autoplayDelay * 1000)
+        navigate('next');
+      }, autoplayDelay * 1000);
     }
-  }, [autoplay, autoplayDelay, navigate, total])
+  }, [autoplay, autoplayDelay, navigate, total]);
 
   const stopAutoplay = useCallback(() => {
     if (autoplayIntervalRef.current) {
-      clearInterval(autoplayIntervalRef.current)
-      autoplayIntervalRef.current = null
+      clearInterval(autoplayIntervalRef.current);
+      autoplayIntervalRef.current = null;
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    startAutoplay()
+    startAutoplay();
     return () => {
-      stopAutoplay()
-    }
-  }, [startAutoplay, stopAutoplay])
+      stopAutoplay();
+    };
+  }, [startAutoplay, stopAutoplay]);
 
   if (total === 0) {
-    return null
+    return null;
   }
 
   const handleMouseEnter = () => {
     if (autoplay && pauseOnHover) {
-      stopAutoplay()
+      stopAutoplay();
     }
-  }
+  };
 
   const handleStart = (clientX: number) => {
-    setIsDragging(true)
-    setStartX(clientX)
-    stopAutoplay()
-  }
+    setIsDragging(true);
+    setStartX(clientX);
+    stopAutoplay();
+  };
 
   const handleEnd = (clientX: number) => {
-    if (!isDragging) return
+    if (!isDragging) return;
 
-    const distance = clientX - startX
+    const distance = clientX - startX;
 
     if (Math.abs(distance) > swipeThreshold) {
       if (distance < 0) {
-        navigate('next')
+        navigate('next');
       } else {
-        navigate('prev')
+        navigate('prev');
       }
     }
 
-    setIsDragging(false)
-    setStartX(0)
-  }
+    setIsDragging(false);
+    setStartX(0);
+  };
 
   const handleExit = (event: MouseEvent<HTMLDivElement>) => {
     if (autoplay && pauseOnHover) {
-      startAutoplay()
+      startAutoplay();
     }
 
     if (isDragging) {
-      handleEnd(event.clientX)
+      handleEnd(event.clientX);
     }
-  }
+  };
 
   const onMouseDown = (event: MouseEvent<HTMLDivElement>) => {
-    handleStart(event.clientX)
-  }
+    handleStart(event.clientX);
+  };
 
   const onMouseUp = (event: MouseEvent<HTMLDivElement>) => {
-    handleEnd(event.clientX)
-    startAutoplay()
-  }
+    handleEnd(event.clientX);
+    startAutoplay();
+  };
 
   const onTouchStart = (event: TouchEvent<HTMLDivElement>) => {
-    handleStart(event.touches[0].clientX)
-  }
+    handleStart(event.touches[0].clientX);
+  };
 
   const onTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
-    handleEnd(event.changedTouches[0].clientX)
-    startAutoplay()
-  }
+    handleEnd(event.changedTouches[0].clientX);
+    startAutoplay();
+  };
 
   return (
     <div
@@ -332,17 +321,13 @@ export function ThreeDImageCarousel({
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 opacity-80 dark:opacity-35"
         style={{
-          backgroundImage:
-            'radial-gradient(circle, rgba(24, 24, 27, 0.1) 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(circle, rgba(24, 24, 27, 0.1) 1px, transparent 1px)',
           backgroundSize: '24px 24px',
         }}
       />
 
       <div
-        className={cn(
-          'cascade-slider_container min-w-[600px] bg-transparent',
-          className
-        )}
+        className={cn('cascade-slider_container min-w-[600px] bg-transparent', className)}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleExit}
         onMouseDown={onMouseDown}
@@ -358,7 +343,7 @@ export function ThreeDImageCarousel({
                 index,
                 activeIndex,
                 total,
-                itemCount
+                itemCount,
               )}`}
               data-slide-number={index}
             >
@@ -368,10 +353,10 @@ export function ThreeDImageCarousel({
                   src={slide.src}
                   alt={slide.alt ?? `Slide ${index + 1}`}
                   onError={(event) => {
-                    event.currentTarget.onerror = null
+                    event.currentTarget.onerror = null;
                     event.currentTarget.src = `https://placehold.co/350x200/4F46E5/ffffff?text=Slide%20${
                       index + 1
-                    }`
+                    }`;
                   }}
                 />
               </a>
@@ -386,8 +371,8 @@ export function ThreeDImageCarousel({
               aria-label="Previous image"
               className="cascade-slider_arrow cascade-slider_arrow-left rounded-full border border-white/10 bg-white/[0.08] p-2 text-white/80 shadow-[0_16px_48px_-30px_rgba(255,255,255,0.52)] backdrop-blur-md transition-colors duration-300 hover:bg-white/[0.14] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
               onClick={(event) => {
-                event.stopPropagation()
-                navigate('prev')
+                event.stopPropagation();
+                navigate('prev');
               }}
               data-action="prev"
             >
@@ -398,8 +383,8 @@ export function ThreeDImageCarousel({
               aria-label="Next image"
               className="cascade-slider_arrow cascade-slider_arrow-right rounded-full border border-white/10 bg-white/[0.08] p-2 text-white/80 shadow-[0_16px_48px_-30px_rgba(255,255,255,0.52)] backdrop-blur-md transition-colors duration-300 hover:bg-white/[0.14] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
               onClick={(event) => {
-                event.stopPropagation()
-                navigate('next')
+                event.stopPropagation();
+                navigate('next');
               }}
               data-action="next"
             >
@@ -409,5 +394,5 @@ export function ThreeDImageCarousel({
         )}
       </div>
     </div>
-  )
+  );
 }

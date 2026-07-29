@@ -1,7 +1,8 @@
-import { FairyDustCursor } from '@/components/fairy-dust-cursor'
-import { DesktopOnlyPreview } from '../desktop-only-preview'
-import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface'
-import type { PreviewMode } from '../types'
+import { FairyDustCursor } from '@/components/fairy-dust-cursor';
+
+import { DesktopOnlyPreview } from '../desktop-only-preview';
+import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface';
+import type { PreviewMode } from '../types';
 
 export function FairyDustCursorPreview({ mode }: { mode: PreviewMode }) {
   return (
@@ -22,5 +23,5 @@ export function FairyDustCursorPreview({ mode }: { mode: PreviewMode }) {
         </FairyDustCursor>
       </OuterEffectSurface>
     </DesktopOnlyPreview>
-  )
+  );
 }

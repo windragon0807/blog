@@ -1,5 +1,6 @@
-import { NumberTicker } from '@/components/number-ticker'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+import { NumberTicker } from '@/components/number-ticker';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 export function NumberTickerPreview() {
   return (
@@ -13,5 +14,5 @@ export function NumberTickerPreview() {
       subtitle="count up to the latest value"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(34,197,94,0.26),transparent_55%)]"
     />
-  )
+  );
 }

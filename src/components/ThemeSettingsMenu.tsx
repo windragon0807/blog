@@ -1,36 +1,35 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { XIcon } from 'lucide-react'
-import { SettingsSection } from '@/components/common/SettingsSection'
-import { SettingsIcon } from '@/components/icons'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { XIcon } from 'lucide-react';
+import { useState } from 'react';
+
+import { SettingsSection } from '@/components/common/SettingsSection';
+import { SettingsIcon } from '@/components/icons';
 import {
   Drawer,
   DrawerClose,
   DrawerContent,
   DrawerTitle,
   DrawerTrigger,
-} from '@/components/ui/drawer'
-import { BlogThemeSelect } from './BlogThemeSelect'
-import { IconControlButton } from './IconControlButton'
-import { ReadingPreferencesControls } from './ReadingPreferencesControls'
+} from '@/components/ui/drawer';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
-const SETTINGS_MENU_PORTAL_SELECTOR = '[data-settings-menu-portal]'
+import { BlogThemeSelect } from './BlogThemeSelect';
+import { IconControlButton } from './IconControlButton';
+import { ReadingPreferencesControls } from './ReadingPreferencesControls';
+
+const SETTINGS_MENU_PORTAL_SELECTOR = '[data-settings-menu-portal]';
 
 function handleSettingsDrawerInteractOutside(event: Event) {
-  const target = event.target
+  const target = event.target;
 
-  if (
-    target instanceof Element &&
-    target.closest(SETTINGS_MENU_PORTAL_SELECTOR)
-  ) {
-    event.preventDefault()
+  if (target instanceof Element && target.closest(SETTINGS_MENU_PORTAL_SELECTOR)) {
+    event.preventDefault();
   }
 }
 
 export function ThemeSettingsMenu() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
@@ -59,10 +58,7 @@ export function ThemeSettingsMenu() {
           </div>
         </header>
 
-        <ScrollArea
-          data-lenis-prevent=""
-          className="settings-drawer-scroll min-h-0 flex-1"
-        >
+        <ScrollArea data-lenis-prevent="" className="settings-drawer-scroll min-h-0 flex-1">
           <div className="px-4 pb-4 pt-1 sm:px-5 sm:pb-5 sm:pt-1">
             <div className="grid gap-3">
               <SettingsSection
@@ -78,5 +74,5 @@ export function ThemeSettingsMenu() {
         </ScrollArea>
       </DrawerContent>
     </Drawer>
-  )
+  );
 }

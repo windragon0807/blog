@@ -1,11 +1,12 @@
-import { ThreeDMarquee } from '@/components/3d-marquee'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
-import { previewImages } from '../shared/preview-images'
+import { ThreeDMarquee } from '@/components/3d-marquee';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
+import { previewImages } from '../shared/preview-images';
 
 export function ThreeDMarqueePreview() {
   const marqueeImages = Array.from({ length: 8 }, () => previewImages)
     .flat()
-    .map((image) => image.src)
+    .map((image) => image.src);
 
   return (
     <PreviewDemoSurface
@@ -26,5 +27,5 @@ export function ThreeDMarqueePreview() {
         </>
       }
     />
-  )
+  );
 }

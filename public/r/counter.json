@@ -4,9 +4,7 @@
   "type": "registry:ui",
   "title": "Rolling Number Counter",
   "description": "An animated rolling number counter with decimal place support.",
-  "dependencies": [
-    "motion"
-  ],
+  "dependencies": ["motion"],
   "files": [
     {
       "path": "src/components/counter.tsx",

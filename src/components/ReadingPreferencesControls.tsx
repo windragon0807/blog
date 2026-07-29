@@ -1,36 +1,38 @@
-'use client'
+'use client';
 
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
-import {
-  getSupportedFontWeights,
-  normalizeFontWeight,
-  readFontThemePreference,
-  type FontThemeName,
-  type FontWeight,
-} from '@/lib/fontThemes'
-import {
-  READING_FONT_SIZE_OPTIONS,
-  READING_LINE_HEIGHT_OPTIONS,
-  applyReadingPreferences,
-  persistReadingPreferences,
-  readStoredReadingPreferences,
-  type ReadingFontSize,
-  type ReadingLineHeight,
-  type ReadingPreferences,
-} from '@/lib/readingPreferences'
-import { cn } from '@/lib/utils'
-import { SettingsSection } from '@/components/common/SettingsSection'
-import { Badge } from '@/components/ui/badge'
+import { type ReactNode, useEffect, useMemo, useState } from 'react';
+
+import { SettingsSection } from '@/components/common/SettingsSection';
+import { Badge } from '@/components/ui/badge';
+import { SegmentedControl } from '@/components/ui/segmented-control';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { SegmentedControl } from '@/components/ui/segmented-control'
-import { CodeThemeSelect } from './CodeThemeSelect'
-import { FontThemeSelect } from './FontThemeSelect'
+} from '@/components/ui/select';
+import {
+  type FontThemeName,
+  type FontWeight,
+  getSupportedFontWeights,
+  normalizeFontWeight,
+  readFontThemePreference,
+} from '@/lib/fontThemes';
+import {
+  applyReadingPreferences,
+  persistReadingPreferences,
+  READING_FONT_SIZE_OPTIONS,
+  READING_LINE_HEIGHT_OPTIONS,
+  type ReadingFontSize,
+  type ReadingLineHeight,
+  type ReadingPreferences,
+  readStoredReadingPreferences,
+} from '@/lib/readingPreferences';
+import { cn } from '@/lib/utils';
+
+import { CodeThemeSelect } from './CodeThemeSelect';
+import { FontThemeSelect } from './FontThemeSelect';
 
 const FONT_WEIGHT_LABELS: Record<FontWeight, string> = {
   100: 'Thin',
@@ -42,39 +44,37 @@ const FONT_WEIGHT_LABELS: Record<FontWeight, string> = {
   700: 'Bold',
   800: 'ExtraBold',
   900: 'Black',
-}
+};
 
 type ReadingSettingsState = {
-  fontTheme: FontThemeName
-  preferences: ReadingPreferences
-}
+  fontTheme: FontThemeName;
+  preferences: ReadingPreferences;
+};
 
 function readInitialReadingSettings(): ReadingSettingsState {
-  const fontTheme = readFontThemePreference()
+  const fontTheme = readFontThemePreference();
   return {
     fontTheme,
     preferences: readStoredReadingPreferences(fontTheme),
-  }
+  };
 }
 
 export function ReadingPreferencesControls() {
-  const [{ fontTheme, preferences }, setSettings] =
-    useState<ReadingSettingsState>(readInitialReadingSettings)
-  const supportedWeights = getSupportedFontWeights(fontTheme)
+  const [{ fontTheme, preferences }, setSettings] = useState<ReadingSettingsState>(
+    readInitialReadingSettings,
+  );
+  const supportedWeights = getSupportedFontWeights(fontTheme);
   const effectivePreferences = useMemo(
     () => ({
       ...preferences,
       fontWeight: normalizeFontWeight(fontTheme, preferences.fontWeight),
     }),
-    [fontTheme, preferences]
-  )
+    [fontTheme, preferences],
+  );
 
   function handleFontThemeChange(nextTheme: FontThemeName) {
     setSettings((current) => {
-      const normalizedWeight = normalizeFontWeight(
-        nextTheme,
-        current.preferences.fontWeight
-      )
+      const normalizedWeight = normalizeFontWeight(nextTheme, current.preferences.fontWeight);
 
       return {
         fontTheme: nextTheme,
@@ -82,37 +82,31 @@ export function ReadingPreferencesControls() {
           normalizedWeight === current.preferences.fontWeight
             ? current.preferences
             : { ...current.preferences, fontWeight: normalizedWeight },
-      }
-    })
+      };
+    });
   }
 
   useEffect(() => {
-    applyReadingPreferences(effectivePreferences)
-    persistReadingPreferences(effectivePreferences)
-  }, [effectivePreferences])
+    applyReadingPreferences(effectivePreferences);
+    persistReadingPreferences(effectivePreferences);
+  }, [effectivePreferences]);
 
   function updatePreference<Key extends keyof ReadingPreferences>(
     key: Key,
-    value: ReadingPreferences[Key]
+    value: ReadingPreferences[Key],
   ) {
     setSettings((current) => ({
       ...current,
       preferences: { ...current.preferences, [key]: value },
-    }))
+    }));
   }
 
   return (
     <>
-      <SettingsSection
-        label="글꼴"
-        description="본문 전체의 글꼴과 읽기 밀도를 조정합니다."
-      >
+      <SettingsSection label="글꼴" description="본문 전체의 글꼴과 읽기 밀도를 조정합니다.">
         <div className="grid gap-5">
           <PreferenceField label="글꼴 선택">
-            <FontThemeSelect
-              className="h-11 w-full"
-              onThemeChange={handleFontThemeChange}
-            />
+            <FontThemeSelect className="h-11 w-full" onThemeChange={handleFontThemeChange} />
           </PreferenceField>
 
           {supportedWeights.length > 1 ? (
@@ -168,25 +162,17 @@ export function ReadingPreferencesControls() {
         </div>
       </SettingsSection>
 
-      <SettingsSection
-        label="코드 블럭"
-        description="코드 블럭의 문법 강조 색상을 선택합니다."
-      >
+      <SettingsSection label="코드 블럭" description="코드 블럭의 문법 강조 색상을 선택합니다.">
         <CodeThemeSelect className="h-11 w-full" />
       </SettingsSection>
 
-      <SettingsSection
-        label="접근성"
-        description="전환과 장식 애니메이션의 움직임을 줄입니다."
-      >
+      <SettingsSection label="접근성" description="전환과 장식 애니메이션의 움직임을 줄입니다.">
         <button
           type="button"
           role="switch"
           aria-label="모션 줄이기"
           aria-checked={preferences.reducedMotion}
-          onClick={() =>
-            updatePreference('reducedMotion', !preferences.reducedMotion)
-          }
+          onClick={() => updatePreference('reducedMotion', !preferences.reducedMotion)}
           className="flex min-h-11 w-full items-center justify-between gap-4 rounded-xl border border-input bg-background/95 px-3 text-left text-sm outline-none transition-colors hover:border-ring/45 focus-visible:ring-2 focus-visible:ring-ring/40 dark:bg-zinc-900/80"
         >
           <span>모션 줄이기</span>
@@ -194,20 +180,20 @@ export function ReadingPreferencesControls() {
             aria-hidden="true"
             className={cn(
               'relative h-6 w-11 shrink-0 rounded-full bg-muted-foreground/35 transition-colors',
-              preferences.reducedMotion && 'bg-[var(--theme-accent-current)]'
+              preferences.reducedMotion && 'bg-[var(--theme-accent-current)]',
             )}
           >
             <span
               className={cn(
                 'absolute left-0.5 top-0.5 size-5 rounded-full bg-background shadow-sm transition-transform',
-                preferences.reducedMotion && 'translate-x-5'
+                preferences.reducedMotion && 'translate-x-5',
               )}
             />
           </span>
         </button>
       </SettingsSection>
     </>
-  )
+  );
 }
 
 function FontWeightLabel({ weight }: { weight: FontWeight }) {
@@ -222,7 +208,7 @@ function FontWeightLabel({ weight }: { weight: FontWeight }) {
         {weight}
       </Badge>
     </span>
-  )
+  );
 }
 
 function PreferenceField({
@@ -230,21 +216,19 @@ function PreferenceField({
   description,
   children,
 }: {
-  label: string
-  description?: string
-  children: ReactNode
+  label: string;
+  description?: string;
+  children: ReactNode;
 }) {
   return (
     <div className="grid gap-2">
       <div>
         <p className="text-xs font-medium text-foreground">{label}</p>
         {description ? (
-          <p className="mt-0.5 text-[11px] leading-relaxed text-muted-foreground">
-            {description}
-          </p>
+          <p className="mt-0.5 text-[11px] leading-relaxed text-muted-foreground">{description}</p>
         ) : null}
       </div>
       {children}
     </div>
-  )
+  );
 }

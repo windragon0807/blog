@@ -1,26 +1,26 @@
-"use client"
+'use client';
 
-import React, { useMemo } from "react"
+import React, { useMemo } from 'react';
 
-import { cn } from "@/lib/utils"
+import { cn } from '@/lib/utils';
 
 interface MeteorsProps {
-  number?: number
-  minDelay?: number
-  maxDelay?: number
-  minDuration?: number
-  maxDuration?: number
-  angle?: number
-  className?: string
+  number?: number;
+  minDelay?: number;
+  maxDelay?: number;
+  minDuration?: number;
+  maxDuration?: number;
+  angle?: number;
+  className?: string;
 }
 
 function seededRandom(seed: number) {
-  const value = Math.sin(seed) * 10000
-  return value - Math.floor(value)
+  const value = Math.sin(seed) * 10000;
+  return value - Math.floor(value);
 }
 
 function formatSeconds(value: number) {
-  return `${value.toFixed(3)}s`
+  return `${value.toFixed(3)}s`;
 }
 
 export const Meteors = ({
@@ -34,24 +34,20 @@ export const Meteors = ({
 }: MeteorsProps) => {
   const meteorStyles = useMemo<Array<React.CSSProperties>>(() => {
     return [...new Array(number)].map((_, index) => {
-      const leftPercent = Math.floor(seededRandom(index * 3 + 1) * 100)
+      const leftPercent = Math.floor(seededRandom(index * 3 + 1) * 100);
 
       return {
-        "--angle": -angle + "deg",
-        top: "-5%",
+        '--angle': -angle + 'deg',
+        top: '-5%',
         left: `${leftPercent}%`,
         animationDelay: formatSeconds(
-          seededRandom(index * 3 + 2) * (maxDelay - minDelay) + minDelay
+          seededRandom(index * 3 + 2) * (maxDelay - minDelay) + minDelay,
         ),
         animationDuration:
-          Math.floor(
-            seededRandom(index * 3 + 3) * (maxDuration - minDuration) +
-              minDuration
-          ) +
-          "s",
-      }
-    })
-  }, [number, minDelay, maxDelay, minDuration, maxDuration, angle])
+          Math.floor(seededRandom(index * 3 + 3) * (maxDuration - minDuration) + minDuration) + 's',
+      };
+    });
+  }, [number, minDelay, maxDelay, minDuration, maxDuration, angle]);
 
   return (
     <>
@@ -61,8 +57,8 @@ export const Meteors = ({
           key={idx}
           style={{ ...style }}
           className={cn(
-            "animate-meteor pointer-events-none absolute size-0.5 rotate-(--angle) rounded-full bg-current text-sky-300 shadow-[0_0_0_1px_#ffffff10] [animation-fill-mode:backwards] will-change-transform",
-            className
+            'animate-meteor pointer-events-none absolute size-0.5 rotate-(--angle) rounded-full bg-current text-sky-300 shadow-[0_0_0_1px_#ffffff10] [animation-fill-mode:backwards] will-change-transform',
+            className,
           )}
         >
           {/* Meteor Tail */}
@@ -70,5 +66,5 @@ export const Meteors = ({
         </span>
       ))}
     </>
-  )
-}
+  );
+};

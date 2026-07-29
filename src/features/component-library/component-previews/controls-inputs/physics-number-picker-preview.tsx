@@ -1,12 +1,14 @@
-import { useState } from 'react'
+import { useState } from 'react';
+
 import {
   PhysicsNumberPicker,
   type PhysicsNumberPickerStyle,
-} from '@/components/physics-number-picker'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+} from '@/components/physics-number-picker';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 export function PhysicsNumberPickerPreview() {
-  const [value, setValue] = useState(24)
+  const [value, setValue] = useState(24);
 
   return (
     <PreviewDemoSurface
@@ -30,13 +32,15 @@ export function PhysicsNumberPickerPreview() {
           itemHeight={48}
           visibleItems={5}
           className="!w-24 !rounded-[1.75rem] !bg-transparent !shadow-none sm:!w-28"
-          style={{
-            '--picker-fade-color': 'transparent',
-            '--picker-selection-bg': 'rgba(255,255,255,0.11)',
-            '--picker-selection-border': 'rgba(255,255,255,0.16)',
-            '--picker-selection-highlight': 'rgba(255,255,255,0.26)',
-            '--picker-selection-shadow': 'rgba(45,212,191,0.48)',
-          } as PhysicsNumberPickerStyle}
+          style={
+            {
+              '--picker-fade-color': 'transparent',
+              '--picker-selection-bg': 'rgba(255,255,255,0.11)',
+              '--picker-selection-border': 'rgba(255,255,255,0.16)',
+              '--picker-selection-highlight': 'rgba(255,255,255,0.26)',
+              '--picker-selection-shadow': 'rgba(45,212,191,0.48)',
+            } as PhysicsNumberPickerStyle
+          }
           formatValue={(itemValue, isSelected) => (
             <span
               className={
@@ -51,5 +55,5 @@ export function PhysicsNumberPickerPreview() {
         />
       </div>
     </PreviewDemoSurface>
-  )
+  );
 }

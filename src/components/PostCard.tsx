@@ -1,43 +1,39 @@
-import type { CSSProperties } from 'react'
-import Link from 'next/link'
-import type { Post } from '@/types/notion'
-import { CardShell } from '@/components/common/Surface'
-import { PostPageIcon } from '@/components/notion/PostPageIcon'
-import { RetryableImage } from '@/components/RetryableImage'
-import { getCoverAccent } from '@/lib/coverAccent'
+import Link from 'next/link';
+import type { CSSProperties } from 'react';
+
+import { CardShell } from '@/components/common/Surface';
+import { PostPageIcon } from '@/components/notion/PostPageIcon';
+import { RetryableImage } from '@/components/RetryableImage';
+import { getCoverAccent } from '@/lib/coverAccent';
+import type { Post } from '@/types/notion';
 
 interface Props {
-  post: Post
-  variant?: 'grid' | 'list'
-  density?: 'default' | 'compact'
-  motionIndex?: number
+  post: Post;
+  variant?: 'grid' | 'list';
+  density?: 'default' | 'compact';
+  motionIndex?: number;
 }
 
-export function PostCard({
-  post,
-  variant = 'grid',
-  density = 'default',
-  motionIndex = 0,
-}: Props) {
-  const isList = variant === 'list'
-  const isCompact = density === 'compact'
-  const coverSrc = post.cover
-  const hasCover = Boolean(coverSrc)
+export function PostCard({ post, variant = 'grid', density = 'default', motionIndex = 0 }: Props) {
+  const isList = variant === 'list';
+  const isCompact = density === 'compact';
+  const coverSrc = post.cover;
+  const hasCover = Boolean(coverSrc);
   const formattedDate = post.date
     ? new Date(post.date).toLocaleDateString('ko-KR', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
       })
-    : ''
-  const accent = getCoverAccent(post.cover ?? post.slug)
-  const delayMs = Math.min(motionIndex * 55, 320)
+    : '';
+  const accent = getCoverAccent(post.cover ?? post.slug);
+  const delayMs = Math.min(motionIndex * 55, 320);
   const motionStyle = {
     '--card-delay': `${delayMs}ms`,
-  } as CSSProperties
+  } as CSSProperties;
   const interactionClass = isCompact
     ? 'transition-[translate,scale,border-color,box-shadow,filter] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:scale-[1.005] hover:border-zinc-300/70 hover:shadow-[0_18px_34px_-24px_rgba(15,23,42,0.32)] dark:hover:border-zinc-500/70 dark:hover:shadow-[0_20px_42px_-24px_rgba(10,20,35,0.54)]'
-    : 'transition-[translate,scale,border-color,box-shadow,filter] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:scale-[1.01] hover:border-zinc-300/75 hover:shadow-[0_22px_45px_-26px_rgba(15,23,42,0.34)] hover:brightness-[1.01] dark:hover:border-zinc-500/72 dark:hover:shadow-[0_24px_55px_-26px_rgba(10,20,35,0.62)] dark:hover:brightness-[1.03]'
+    : 'transition-[translate,scale,border-color,box-shadow,filter] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:scale-[1.01] hover:border-zinc-300/75 hover:shadow-[0_22px_45px_-26px_rgba(15,23,42,0.34)] hover:brightness-[1.01] dark:hover:border-zinc-500/72 dark:hover:shadow-[0_24px_55px_-26px_rgba(10,20,35,0.62)] dark:hover:brightness-[1.03]';
 
   return (
     <Link
@@ -45,12 +41,7 @@ export function PostCard({
       className={`group block ${isList ? '' : 'h-full'}`}
       style={motionStyle}
     >
-      <CardShell
-        compact={isCompact}
-        className={`${
-          isList ? '' : 'h-full'
-        } ${interactionClass}`}
-      >
+      <CardShell compact={isCompact} className={`${isList ? '' : 'h-full'} ${interactionClass}`}>
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
@@ -62,9 +53,7 @@ export function PostCard({
         <div className={isList ? 'sm:flex sm:min-h-[13rem]' : ''}>
           <div
             className={`relative z-10 overflow-hidden ${
-              isList
-                ? 'aspect-[16/9] sm:h-auto sm:w-[42%]'
-                : 'aspect-[16/9]'
+              isList ? 'aspect-[16/9] sm:h-auto sm:w-[42%]' : 'aspect-[16/9]'
             }`}
             style={
               hasCover
@@ -136,15 +125,9 @@ export function PostCard({
               <div className="min-w-0 flex-1">
                 <h2
                   data-reading-surface="post-card-title"
-                  data-reading-card-size={
-                    isList ? 'list' : isCompact ? 'compact' : 'grid'
-                  }
+                  data-reading-card-size={isList ? 'list' : isCompact ? 'compact' : 'grid'}
                   className={`line-clamp-2 leading-snug font-semibold text-zinc-900 transition-colors duration-300 ease-out group-hover:text-blue-600 dark:text-zinc-100 dark:group-hover:text-blue-400 ${
-                    isList
-                      ? 'text-[1.72rem]'
-                      : isCompact
-                        ? 'text-base'
-                        : 'text-lg'
+                    isList ? 'text-[1.72rem]' : isCompact ? 'text-base' : 'text-lg'
                   }`}
                 >
                   {post.title}
@@ -172,5 +155,5 @@ export function PostCard({
         </div>
       </CardShell>
     </Link>
-  )
+  );
 }

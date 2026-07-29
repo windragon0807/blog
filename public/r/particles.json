@@ -4,10 +4,7 @@
   "type": "registry:ui",
   "title": "Particle Background",
   "description": "Particles add visual flair with depth, movement, and interactivity.",
-  "dependencies": [
-    "clsx",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/particles.tsx",

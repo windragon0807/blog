@@ -1,48 +1,43 @@
-"use client"
+'use client';
 
-import type { ComponentProps, MouseEvent } from "react"
 import type {
   GlobalOptions as ConfettiGlobalOptions,
   Options as ConfettiOptions,
-} from "canvas-confetti"
-import confetti from "canvas-confetti"
+} from 'canvas-confetti';
+import confetti from 'canvas-confetti';
+import type { ComponentProps, MouseEvent } from 'react';
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 
-interface ConfettiButtonProps extends ComponentProps<"button"> {
-  options?: ConfettiOptions &
-    ConfettiGlobalOptions & { canvas?: HTMLCanvasElement }
+interface ConfettiButtonProps extends ComponentProps<'button'> {
+  options?: ConfettiOptions & ConfettiGlobalOptions & { canvas?: HTMLCanvasElement };
 }
 
-const ConfettiButtonComponent = ({
-  options,
-  children,
-  ...props
-}: ConfettiButtonProps) => {
+const ConfettiButtonComponent = ({ options, children, ...props }: ConfettiButtonProps) => {
   const handleClick = async (event: MouseEvent<HTMLButtonElement>) => {
     try {
-      const rect = event.currentTarget.getBoundingClientRect()
-      const x = rect.left + rect.width / 2
-      const y = rect.top + rect.height / 2
+      const rect = event.currentTarget.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
       await confetti({
         ...options,
         origin: {
           x: x / window.innerWidth,
           y: y / window.innerHeight,
         },
-      })
+      });
     } catch (error) {
-      console.error("Confetti button error:", error)
+      console.error('Confetti button error:', error);
     }
-  }
+  };
 
   return (
     <Button onClick={handleClick} {...props}>
       {children}
     </Button>
-  )
-}
+  );
+};
 
-ConfettiButtonComponent.displayName = "ConfettiButton"
+ConfettiButtonComponent.displayName = 'ConfettiButton';
 
-export const ConfettiButton = ConfettiButtonComponent
+export const ConfettiButton = ConfettiButtonComponent;

@@ -1,5 +1,6 @@
-import { Carousel } from '@/components/carousel'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+import { Carousel } from '@/components/carousel';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 export function CarouselPreview() {
   return (
@@ -11,5 +12,5 @@ export function CarouselPreview() {
     >
       <Carousel autoplay loop pauseOnHover variant="dark" />
     </PreviewDemoSurface>
-  )
+  );
 }

@@ -1,9 +1,11 @@
-import { useState } from 'react'
-import { AnimatedCircularProgressBar } from '@/components/animated-circular-progress-bar'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+import { useState } from 'react';
+
+import { AnimatedCircularProgressBar } from '@/components/animated-circular-progress-bar';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 export function AnimatedCircularProgressBarPreview() {
-  const [value, setValue] = useState(68)
+  const [value, setValue] = useState(68);
 
   return (
     <PreviewDemoSurface
@@ -39,5 +41,5 @@ export function AnimatedCircularProgressBarPreview() {
         </div>
       </div>
     </PreviewDemoSurface>
-  )
+  );
 }

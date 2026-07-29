@@ -55,25 +55,25 @@ const LANGUAGE_ICON_MAP: Record<string, string> = {
   nodejs: 'nodejs.svg',
   text: 'document.svg',
   plaintext: 'document.svg',
-}
+};
 
 const LANGUAGE_ALIAS_MAP: Record<string, string> = {
   'plain text': 'text',
   plain_text: 'text',
   objectivec: 'c',
   objective_c: 'c',
-}
+};
 
 export function getCodeLanguageIconSrc(language: string): string {
-  const raw = language.trim().toLowerCase()
-  const normalized = LANGUAGE_ALIAS_MAP[raw] ?? raw
-  const compact = normalized.replace(/\s+/g, '')
+  const raw = language.trim().toLowerCase();
+  const normalized = LANGUAGE_ALIAS_MAP[raw] ?? raw;
+  const compact = normalized.replace(/\s+/g, '');
 
   const icon =
     LANGUAGE_ICON_MAP[normalized] ??
     LANGUAGE_ICON_MAP[compact] ??
     LANGUAGE_ICON_MAP[normalized.replace(/[0-9.+-]/g, '')] ??
-    'document.svg'
+    'document.svg';
 
-  return `/vscode-icons/${icon}`
+  return `/vscode-icons/${icon}`;
 }

@@ -14,5 +14,5 @@ export default function PostLoading() {
         <div className="h-5 w-4/5 animate-pulse rounded bg-zinc-200/70 dark:bg-zinc-700/70" />
       </div>
     </article>
-  )
+  );
 }

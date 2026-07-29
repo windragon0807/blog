@@ -38,22 +38,21 @@ html,
 .header-active-aurora::before,
 .header-active-aurora::after {
   border-radius: inherit;
-  content: "";
+  content: '';
   pointer-events: none;
   position: absolute;
 }
 
 .header-active-aurora::before {
   animation: header-aurora-flow 6.5s ease-in-out infinite;
-  background:
-    linear-gradient(
-      135deg,
-      var(--header-active-aurora-rose),
-      var(--header-active-aurora-violet),
-      var(--header-active-aurora-blue),
-      var(--header-active-aurora-mint),
-      var(--header-active-aurora-rose)
-    );
+  background: linear-gradient(
+    135deg,
+    var(--header-active-aurora-rose),
+    var(--header-active-aurora-violet),
+    var(--header-active-aurora-blue),
+    var(--header-active-aurora-mint),
+    var(--header-active-aurora-rose)
+  );
   background-size: 260% 260%;
   inset: calc(var(--header-active-border-offset) * -1);
   opacity: 0.9;
@@ -77,14 +76,14 @@ html,
   color: var(--header-active-icon-fallback);
   filter: drop-shadow(0 1px 4px var(--header-active-icon-glow));
   position: relative;
-  stroke: url("#header-active-aurora-icon-gradient") currentColor;
+  stroke: url('#header-active-aurora-icon-gradient') currentColor;
   stroke-width: 2.35px;
   z-index: 10;
 }
 
-.header-active-aurora > svg:not(.header-aurora-icon-defs)[fill="currentColor"],
-.header-active-aurora > svg:not(.header-aurora-icon-defs) [fill="currentColor"] {
-  fill: url("#header-active-aurora-icon-gradient") currentColor;
+.header-active-aurora > svg:not(.header-aurora-icon-defs)[fill='currentColor'],
+.header-active-aurora > svg:not(.header-aurora-icon-defs) [fill='currentColor'] {
+  fill: url('#header-active-aurora-icon-gradient') currentColor;
 }
 
 .emoticon-collection-label {
@@ -104,7 +103,7 @@ html,
     transform: translateY(-1px);
   }
 
-  .emoticon-action-button[data-tone="default"]:hover {
+  .emoticon-action-button[data-tone='default']:hover {
     background: rgba(255, 255, 255, 0.86);
     border-color: rgba(255, 255, 255, 0.98);
     box-shadow:
@@ -114,7 +113,7 @@ html,
       inset 0 -1px 0 rgba(255, 255, 255, 0.48);
   }
 
-  .dark .emoticon-action-button[data-tone="default"]:hover {
+  .dark .emoticon-action-button[data-tone='default']:hover {
     background: rgba(255, 255, 255, 0.16);
     border-color: rgba(255, 255, 255, 0.22);
     box-shadow:
@@ -124,8 +123,8 @@ html,
       inset 0 -1px 0 rgba(255, 255, 255, 0.04);
   }
 
-  .emoticon-action-button[data-tone="success"]:hover,
-  .emoticon-action-button[data-tone="error"]:hover {
+  .emoticon-action-button[data-tone='success']:hover,
+  .emoticon-action-button[data-tone='error']:hover {
     filter: brightness(1.04);
   }
 }

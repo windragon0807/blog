@@ -4,10 +4,7 @@
   "type": "registry:ui",
   "title": "Continuous Marquee",
   "description": "An infinite scrolling component that can be used to display text, images, or videos.",
-  "dependencies": [
-    "clsx",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/marquee.tsx",

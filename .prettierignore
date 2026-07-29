@@ -1,0 +1,14 @@
+.next
+node_modules
+out
+build
+pnpm-lock.yaml
+pnpm-workspace.yaml
+*.tsbuildinfo
+next-env.d.ts
+public/emoticons
+public/fonts
+public/resume
+public/vscode-icons
+public/apps
+.vercel

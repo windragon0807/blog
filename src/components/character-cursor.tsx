@@ -1,6 +1,3 @@
-'use client'
+'use client';
 
-export {
-  CharacterCursor,
-  type CharacterCursorProps,
-} from './cursor-effect-runtime'
+export { CharacterCursor, type CharacterCursorProps } from './cursor-effect-runtime';

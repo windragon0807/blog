@@ -1,27 +1,22 @@
-import {
-  useEffect,
-  useState,
-  type ReactNode,
-} from 'react'
-import type { ComponentPreviewKind } from '../component-data'
-import { PreviewDemoSurface } from './shared/preview-demo-surface'
+import { type ReactNode, useEffect, useState } from 'react';
+
+import type { ComponentPreviewKind } from '../component-data';
+import { PreviewDemoSurface } from './shared/preview-demo-surface';
 
 export function useDesktopPreviewAvailable() {
-  const [isAvailable, setIsAvailable] = useState(false)
+  const [isAvailable, setIsAvailable] = useState(false);
 
   useEffect(() => {
-    const query = window.matchMedia(
-      '(min-width: 768px) and (hover: hover) and (pointer: fine)'
-    )
-    const sync = () => setIsAvailable(query.matches)
+    const query = window.matchMedia('(min-width: 768px) and (hover: hover) and (pointer: fine)');
+    const sync = () => setIsAvailable(query.matches);
 
-    sync()
-    query.addEventListener('change', sync)
+    sync();
+    query.addEventListener('change', sync);
 
-    return () => query.removeEventListener('change', sync)
-  }, [])
+    return () => query.removeEventListener('change', sync);
+  }, []);
 
-  return isAvailable
+  return isAvailable;
 }
 
 export function MobileUnavailablePreview({
@@ -30,10 +25,10 @@ export function MobileUnavailablePreview({
   subtitle = 'desktop pointer preview',
   accentClassName = 'bg-[radial-gradient(circle_at_center,rgba(148,163,184,0.22),transparent_58%)]',
 }: {
-  slug: ComponentPreviewKind
-  title: string
-  subtitle?: string
-  accentClassName?: string
+  slug: ComponentPreviewKind;
+  title: string;
+  subtitle?: string;
+  accentClassName?: string;
 }) {
   return (
     <PreviewDemoSurface
@@ -49,7 +44,7 @@ export function MobileUnavailablePreview({
         Desktop preview
       </div>
     </PreviewDemoSurface>
-  )
+  );
 }
 
 export function DesktopOnlyPreview({
@@ -59,13 +54,13 @@ export function DesktopOnlyPreview({
   accentClassName,
   children,
 }: {
-  slug: ComponentPreviewKind
-  title: string
-  subtitle?: string
-  accentClassName?: string
-  children: ReactNode
+  slug: ComponentPreviewKind;
+  title: string;
+  subtitle?: string;
+  accentClassName?: string;
+  children: ReactNode;
 }) {
-  const isDesktopPreviewAvailable = useDesktopPreviewAvailable()
+  const isDesktopPreviewAvailable = useDesktopPreviewAvailable();
 
   if (!isDesktopPreviewAvailable) {
     return (
@@ -75,8 +70,8 @@ export function DesktopOnlyPreview({
         subtitle={subtitle}
         accentClassName={accentClassName}
       />
-    )
+    );
   }
 
-  return children
+  return children;
 }

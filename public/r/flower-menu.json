@@ -4,10 +4,7 @@
   "type": "registry:ui",
   "title": "Radial Action Menu",
   "description": "A radial floating action menu.",
-  "dependencies": [
-    "clsx",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/flower-menu.tsx",

@@ -8,6 +8,7 @@
 - 관련 로직은 가까이 두고, 다른 영역에서 재사용할 때만 안정적인 공개 진입점을 만듭니다.
 - 기존 기능, UI, 문구, DOM, 반응형 배치, animation timing을 호환성 계약으로 취급합니다.
 - 리팩터링과 동작 변경을 한 변경 묶음에 섞지 않습니다.
+
 ## 2. 공개 facade와 내부 runtime folder
 
 `src/lib`의 기존 공개 경로는 consumer와의 호환성을 위한 facade입니다. 구현을 옮겨도 기존 `@/lib/*` import path와 named export는 유지합니다.
@@ -85,7 +86,8 @@ src/lib/
 
 ## 9. formatting과 성능 최적화
 
-- repo 전체 Prettier 적용이나 global format rewrite를 하지 않습니다. 수정한 파일은 기존 인접 코드 스타일을 따르고, 기계적 formatting은 기능 리팩터링과 분리합니다.
+- 포맷의 단일 기준은 Prettier(`.prettierrc`)입니다. `pnpm format`으로 맞추고, 포맷-only 변경은 기능 리팩터링과 커밋을 분리합니다.
+- pre-commit(husky + lint-staged)이 staged 파일에 Prettier와 ESLint `--fix`을 적용합니다.
 - `memo`, `useMemo`, `useCallback`, cache, lazy loading, prefetch를 측정 근거 없이 추가하지 않습니다.
 - 최적화 전 병목과 요청 중복을 재현하고, 적용 후 render 수, 요청 수, 응답 시간 또는 bundle 변화를 같은 조건에서 비교합니다.
 - prefetch는 사용자 intent, 네트워크 상태, 중복 제거, 동시성 제한을 고려하며 실제 navigation을 막지 않습니다.
@@ -98,6 +100,7 @@ src/lib/
 ```bash
 pnpm typecheck
 pnpm lint
+pnpm format:check
 git diff --check
 ```
 

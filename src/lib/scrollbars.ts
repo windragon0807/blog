@@ -1,4 +1,4 @@
-import type { PartialOptions } from 'overlayscrollbars'
+import type { PartialOptions } from 'overlayscrollbars';
 
 export const APP_SCROLLBAR_OPTIONS = {
   scrollbars: {
@@ -8,7 +8,7 @@ export const APP_SCROLLBAR_OPTIONS = {
     dragScroll: true,
     theme: 'os-theme-ryonglog',
   },
-} satisfies PartialOptions
+} satisfies PartialOptions;
 
 export const BODY_SCROLLBAR_OPTIONS = {
   ...APP_SCROLLBAR_OPTIONS,
@@ -16,4 +16,4 @@ export const BODY_SCROLLBAR_OPTIONS = {
     x: 'hidden',
     y: 'scroll',
   },
-} satisfies PartialOptions
+} satisfies PartialOptions;

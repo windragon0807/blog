@@ -1,6 +1,3 @@
-'use client'
+'use client';
 
-export {
-  CanvasCursor,
-  type CanvasCursorProps,
-} from './cursor-effect-runtime'
+export { CanvasCursor, type CanvasCursorProps } from './cursor-effect-runtime';

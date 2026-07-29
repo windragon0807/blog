@@ -4,12 +4,7 @@
   "type": "registry:ui",
   "title": "Theme Toggle",
   "description": "A minimal switch-style theme toggle.",
-  "dependencies": [
-    "clsx",
-    "lucide-react",
-    "next-themes",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "lucide-react", "next-themes", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/toggle-theme.tsx",

@@ -1,69 +1,59 @@
-'use client'
+'use client';
 
-import { useVirtualizer } from '@tanstack/react-virtual'
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+
+import { subscribeToTouchInputDeviceChange } from '@/lib/touch-input';
+import { cn } from '@/lib/utils';
+
+import { EMOTICON_CONTENT_CLASS_NAME } from '../emoticon-layout-contract';
+import type { EmoticonGridSection } from '../model/prepare-collections';
 import {
-  memo,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
-import { createPortal } from 'react-dom'
-import { subscribeToTouchInputDeviceChange } from '@/lib/touch-input'
-import { cn } from '@/lib/utils'
-import { EMOTICON_CONTENT_CLASS_NAME } from '../emoticon-layout-contract'
-import type { EmoticonGridSection } from '../model/prepare-collections'
-import {
+  BACKGROUND_PREFETCH_CHUNK_SIZE,
+  hasSettledEmoticonImage,
+  markEmoticonImageSettled,
   PREFETCH_ROW_LOOKAHEAD,
   PREFETCH_ROW_LOOKBEHIND,
-  BACKGROUND_PREFETCH_CHUNK_SIZE,
-  markEmoticonImageSettled,
-  hasSettledEmoticonImage,
-  scheduleEmoticonImagePrefetch,
   scheduleBackgroundEmoticonImageWarmup,
-} from '../prefetch/emoticon-image-prefetch'
-import type { EmoticonCollectionId, EmoticonItem } from '../types'
+  scheduleEmoticonImagePrefetch,
+} from '../prefetch/emoticon-image-prefetch';
+import type { EmoticonCollectionId, EmoticonItem } from '../types';
 
-const GRID_GAP = 10
-const GRID_EDGE_BLEED = 8
-const GRID_ROW_HEIGHT = 62
-const MOBILE_GRID_SECTION_HEADING_HEIGHT = 42
-const DESKTOP_GRID_SECTION_HEADING_HEIGHT = 74
-const MOBILE_CARD_MIN_WIDTH = 54
-const DESKTOP_CARD_MIN_WIDTH = 56
-const GRID_OVERSCAN = 4
-const EAGER_ROW_BUFFER = 1
+const GRID_GAP = 10;
+const GRID_EDGE_BLEED = 8;
+const GRID_ROW_HEIGHT = 62;
+const MOBILE_GRID_SECTION_HEADING_HEIGHT = 42;
+const DESKTOP_GRID_SECTION_HEADING_HEIGHT = 74;
+const MOBILE_CARD_MIN_WIDTH = 54;
+const DESKTOP_CARD_MIN_WIDTH = 56;
+const GRID_OVERSCAN = 4;
+const EAGER_ROW_BUFFER = 1;
 
 type EmoticonGridRow =
   | {
-      type: 'heading'
-      key: string
-      label: string
+      type: 'heading';
+      key: string;
+      label: string;
     }
   | {
-      type: 'icons'
-      key: string
-      items: EmoticonItem[]
-    }
+      type: 'icons';
+      key: string;
+      items: EmoticonItem[];
+    };
 
 type FloatingTooltipState = {
-  itemId: string
-  label: string
-  x: number
-  y: number
-} | null
+  itemId: string;
+  label: string;
+  x: number;
+  y: number;
+} | null;
 
 function getColumnCount(width: number) {
-  const innerWidth = Math.max(0, width - GRID_EDGE_BLEED * 2)
-  const minCardWidth =
-    innerWidth >= 640 ? DESKTOP_CARD_MIN_WIDTH : MOBILE_CARD_MIN_WIDTH
+  const innerWidth = Math.max(0, width - GRID_EDGE_BLEED * 2);
+  const minCardWidth = innerWidth >= 640 ? DESKTOP_CARD_MIN_WIDTH : MOBILE_CARD_MIN_WIDTH;
 
-  return Math.max(
-    1,
-    Math.floor((innerWidth + GRID_GAP) / (minCardWidth + GRID_GAP))
-  )
+  return Math.max(1, Math.floor((innerWidth + GRID_GAP) / (minCardWidth + GRID_GAP)));
 }
 
 const EmoticonCard = memo(function EmoticonCard({
@@ -76,22 +66,20 @@ const EmoticonCard = memo(function EmoticonCard({
   onTooltipHide,
   onTooltipShow,
 }: {
-  item: EmoticonItem
-  isSelected: boolean
-  collectionId: EmoticonCollectionId
-  imageLoading: 'eager' | 'lazy'
-  isTouchInput: boolean
-  onSelect: (item: EmoticonItem, trigger: HTMLButtonElement) => void
-  onTooltipHide: (itemId: string) => void
-  onTooltipShow: (item: EmoticonItem, trigger: HTMLButtonElement) => void
+  item: EmoticonItem;
+  isSelected: boolean;
+  collectionId: EmoticonCollectionId;
+  imageLoading: 'eager' | 'lazy';
+  isTouchInput: boolean;
+  onSelect: (item: EmoticonItem, trigger: HTMLButtonElement) => void;
+  onTooltipHide: (itemId: string) => void;
+  onTooltipShow: (item: EmoticonItem, trigger: HTMLButtonElement) => void;
 }) {
-  const [isImageLoaded, setIsImageLoaded] = useState(() =>
-    hasSettledEmoticonImage(item.src)
-  )
+  const [isImageLoaded, setIsImageLoaded] = useState(() => hasSettledEmoticonImage(item.src));
   const handleImageSettled = () => {
-    markEmoticonImageSettled(item.src)
-    setIsImageLoaded(true)
-  }
+    markEmoticonImageSettled(item.src);
+    setIsImageLoaded(true);
+  };
 
   return (
     <button
@@ -101,23 +89,23 @@ const EmoticonCard = memo(function EmoticonCard({
       data-touch-input={isTouchInput ? 'true' : undefined}
       aria-label={`${item.name} 선택`}
       onBlur={() => {
-        if (!isTouchInput) onTooltipHide(item.id)
+        if (!isTouchInput) onTooltipHide(item.id);
       }}
       onClick={(event) => onSelect(item, event.currentTarget)}
       onFocus={(event) => {
-        if (!isTouchInput) onTooltipShow(item, event.currentTarget)
+        if (!isTouchInput) onTooltipShow(item, event.currentTarget);
       }}
       onMouseEnter={(event) => {
-        if (!isTouchInput) onTooltipShow(item, event.currentTarget)
+        if (!isTouchInput) onTooltipShow(item, event.currentTarget);
       }}
       onMouseLeave={() => {
-        if (!isTouchInput) onTooltipHide(item.id)
+        if (!isTouchInput) onTooltipHide(item.id);
       }}
       className={cn(
         'group grid h-14 place-items-center rounded-xl transition focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/35',
         isSelected
           ? 'bg-zinc-100 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10'
-          : 'bg-transparent hover:bg-zinc-50 dark:hover:bg-zinc-900/70'
+          : 'bg-transparent hover:bg-zinc-50 dark:hover:bg-zinc-900/70',
       )}
     >
       <span className="relative grid h-12 w-12 place-items-center">
@@ -139,15 +127,15 @@ const EmoticonCard = memo(function EmoticonCard({
           width={36}
           className={cn(
             'relative h-9 w-9 object-contain transition duration-200 group-hover:scale-110',
-            isImageLoaded ? 'opacity-100' : 'opacity-0'
+            isImageLoaded ? 'opacity-100' : 'opacity-0',
           )}
         />
       </span>
     </button>
-  )
-})
+  );
+});
 
-EmoticonCard.displayName = 'EmoticonCard'
+EmoticonCard.displayName = 'EmoticonCard';
 
 export function VirtualizedEmoticonGrid({
   collectionId,
@@ -156,20 +144,20 @@ export function VirtualizedEmoticonGrid({
   selectedItemId,
   onSelect,
 }: {
-  collectionId: EmoticonCollectionId
-  sections: EmoticonGridSection[]
-  showSectionHeadings: boolean
-  selectedItemId: string | null
-  onSelect: (item: EmoticonItem, trigger: HTMLButtonElement) => void
+  collectionId: EmoticonCollectionId;
+  sections: EmoticonGridSection[];
+  showSectionHeadings: boolean;
+  selectedItemId: string | null;
+  onSelect: (item: EmoticonItem, trigger: HTMLButtonElement) => void;
 }) {
-  const scrollRef = useRef<HTMLDivElement | null>(null)
-  const contentRef = useRef<HTMLDivElement | null>(null)
-  const [columnCount, setColumnCount] = useState(1)
-  const [isCompactGrid, setIsCompactGrid] = useState(false)
-  const [isTouchInput, setIsTouchInput] = useState(false)
-  const [tooltip, setTooltip] = useState<FloatingTooltipState>(null)
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const [columnCount, setColumnCount] = useState(1);
+  const [isCompactGrid, setIsCompactGrid] = useState(false);
+  const [isTouchInput, setIsTouchInput] = useState(false);
+  const [tooltip, setTooltip] = useState<FloatingTooltipState>(null);
   const rows = useMemo<EmoticonGridRow[]>(() => {
-    const nextRows: EmoticonGridRow[] = []
+    const nextRows: EmoticonGridRow[] = [];
 
     for (const section of sections) {
       if (showSectionHeadings) {
@@ -177,7 +165,7 @@ export function VirtualizedEmoticonGrid({
           type: 'heading',
           key: `${section.id}-heading`,
           label: section.label,
-        })
+        });
       }
 
       for (let index = 0; index < section.items.length; index += columnCount) {
@@ -185,51 +173,51 @@ export function VirtualizedEmoticonGrid({
           type: 'icons',
           key: `${section.id}-${index}`,
           items: section.items.slice(index, index + columnCount),
-        })
+        });
       }
     }
 
-    return nextRows
-  }, [columnCount, sections, showSectionHeadings])
+    return nextRows;
+  }, [columnCount, sections, showSectionHeadings]);
 
   useLayoutEffect(() => {
-    const contentElement = contentRef.current
+    const contentElement = contentRef.current;
 
     if (!contentElement) {
-      return
+      return;
     }
 
     const syncLayout = () => {
-      const rect = contentElement.getBoundingClientRect()
+      const rect = contentElement.getBoundingClientRect();
 
-      setColumnCount(getColumnCount(rect.width))
-      setIsCompactGrid(rect.width < 640)
-    }
+      setColumnCount(getColumnCount(rect.width));
+      setIsCompactGrid(rect.width < 640);
+    };
 
-    syncLayout()
-    const observer = new ResizeObserver(syncLayout)
-    observer.observe(contentElement)
-    window.addEventListener('resize', syncLayout)
+    syncLayout();
+    const observer = new ResizeObserver(syncLayout);
+    observer.observe(contentElement);
+    window.addEventListener('resize', syncLayout);
 
     return () => {
-      observer.disconnect()
-      window.removeEventListener('resize', syncLayout)
-    }
-  }, [])
+      observer.disconnect();
+      window.removeEventListener('resize', syncLayout);
+    };
+  }, []);
 
   useEffect(() => {
     return subscribeToTouchInputDeviceChange((nextIsTouchInput) => {
-      setIsTouchInput(nextIsTouchInput)
+      setIsTouchInput(nextIsTouchInput);
 
       if (nextIsTouchInput) {
-        setTooltip(null)
+        setTooltip(null);
       }
-    })
-  }, [])
+    });
+  }, []);
 
   const sectionHeadingHeight = isCompactGrid
     ? MOBILE_GRID_SECTION_HEADING_HEIGHT
-    : DESKTOP_GRID_SECTION_HEADING_HEIGHT
+    : DESKTOP_GRID_SECTION_HEADING_HEIGHT;
 
   // TanStack Virtual keeps mutable methods on the virtualizer instance.
   // eslint-disable-next-line react-hooks/incompatible-library
@@ -237,87 +225,75 @@ export function VirtualizedEmoticonGrid({
     count: rows.length,
     getScrollElement: () => scrollRef.current,
     estimateSize: (index) =>
-      rows[index]?.type === 'heading'
-        ? sectionHeadingHeight
-        : GRID_ROW_HEIGHT,
+      rows[index]?.type === 'heading' ? sectionHeadingHeight : GRID_ROW_HEIGHT,
     overscan: GRID_OVERSCAN,
-  })
-  const virtualRows = rowVirtualizer.getVirtualItems()
-  const firstVirtualRowIndex = virtualRows[0]?.index ?? 0
-  const lastVirtualRowIndex =
-    virtualRows[virtualRows.length - 1]?.index ?? firstVirtualRowIndex
-  const scrollOffset = rowVirtualizer.scrollOffset ?? 0
-  const viewportHeight = scrollRef.current?.clientHeight ?? 0
+  });
+  const virtualRows = rowVirtualizer.getVirtualItems();
+  const firstVirtualRowIndex = virtualRows[0]?.index ?? 0;
+  const lastVirtualRowIndex = virtualRows[virtualRows.length - 1]?.index ?? firstVirtualRowIndex;
+  const scrollOffset = rowVirtualizer.scrollOffset ?? 0;
+  const viewportHeight = scrollRef.current?.clientHeight ?? 0;
 
   useEffect(() => {
-    rowVirtualizer.measure()
-  }, [
-    collectionId,
-    columnCount,
-    rowVirtualizer,
-    rows.length,
-    sectionHeadingHeight,
-  ])
+    rowVirtualizer.measure();
+  }, [collectionId, columnCount, rowVirtualizer, rows.length, sectionHeadingHeight]);
 
   const handleTooltipShow = useCallback(
     (item: EmoticonItem, trigger: HTMLButtonElement) => {
       if (isTouchInput) {
-        setTooltip(null)
-        return
+        setTooltip(null);
+        return;
       }
 
-      const rect = trigger.getBoundingClientRect()
+      const rect = trigger.getBoundingClientRect();
 
       setTooltip({
         itemId: item.id,
         label: item.name,
         x: rect.left + rect.width / 2,
         y: Math.max(12, rect.top - 10),
-      })
+      });
     },
-    [isTouchInput]
-  )
+    [isTouchInput],
+  );
 
   const handleTooltipHide = useCallback((itemId: string) => {
     setTooltip((currentTooltip) => {
       if (currentTooltip?.itemId !== itemId) {
-        return currentTooltip
+        return currentTooltip;
       }
 
-      return null
-    })
-  }, [])
+      return null;
+    });
+  }, []);
 
   useEffect(() => {
     if (rows.length === 0 || lastVirtualRowIndex < 0) {
-      return
+      return;
     }
 
-    const startRow = Math.max(0, firstVirtualRowIndex - PREFETCH_ROW_LOOKBEHIND)
-    const endRow = Math.min(
-      rows.length,
-      lastVirtualRowIndex + PREFETCH_ROW_LOOKAHEAD
-    )
+    const startRow = Math.max(0, firstVirtualRowIndex - PREFETCH_ROW_LOOKBEHIND);
+    const endRow = Math.min(rows.length, lastVirtualRowIndex + PREFETCH_ROW_LOOKAHEAD);
     const prefetchSrcs = rows
       .slice(startRow, endRow + 1)
       .flatMap((row) => (row.type === 'icons' ? row.items : []))
-      .map((item) => item.src)
+      .map((item) => item.src);
 
-    return scheduleEmoticonImagePrefetch(prefetchSrcs)
-  }, [collectionId, firstVirtualRowIndex, lastVirtualRowIndex, rows])
+    return scheduleEmoticonImagePrefetch(prefetchSrcs);
+  }, [collectionId, firstVirtualRowIndex, lastVirtualRowIndex, rows]);
 
   useEffect(() => {
     if (rows.length === 0 || lastVirtualRowIndex < 0) {
-      return
+      return;
     }
 
     const warmupSrcs = rows
       .slice(lastVirtualRowIndex + 1)
       .flatMap((row) => (row.type === 'icons' ? row.items : []))
-      .map((item) => item.src)
+      .map((item) => item.src);
 
-    return scheduleBackgroundEmoticonImageWarmup(warmupSrcs)
-  }, [collectionId, lastVirtualRowIndex, rows])
+    return scheduleBackgroundEmoticonImageWarmup(warmupSrcs);
+  }, [collectionId, lastVirtualRowIndex, rows]);
 
   return (
     <div
@@ -346,13 +322,13 @@ export function VirtualizedEmoticonGrid({
         }}
       >
         {virtualRows.map((virtualRow) => {
-          const row = rows[virtualRow.index]
+          const row = rows[virtualRow.index];
 
           if (!row) {
-            return null
+            return null;
           }
 
-          const transform = `translateY(${virtualRow.start}px)`
+          const transform = `translateY(${virtualRow.start}px)`;
 
           if (row.type === 'heading') {
             return (
@@ -372,7 +348,7 @@ export function VirtualizedEmoticonGrid({
                   </h2>
                 ) : null}
               </div>
-            )
+            );
           }
 
           return (
@@ -388,13 +364,11 @@ export function VirtualizedEmoticonGrid({
               }}
             >
               {row.items.map((item) => {
-                const rowEnd = virtualRow.start + virtualRow.size
+                const rowEnd = virtualRow.start + virtualRow.size;
                 const isNearViewport =
                   rowEnd >= scrollOffset - GRID_ROW_HEIGHT * EAGER_ROW_BUFFER &&
                   virtualRow.start <=
-                    scrollOffset +
-                      viewportHeight +
-                      GRID_ROW_HEIGHT * EAGER_ROW_BUFFER
+                    scrollOffset + viewportHeight + GRID_ROW_HEIGHT * EAGER_ROW_BUFFER;
 
                 return (
                   <EmoticonCard
@@ -408,24 +382,20 @@ export function VirtualizedEmoticonGrid({
                     onTooltipHide={handleTooltipHide}
                     onTooltipShow={handleTooltipShow}
                   />
-                )
+                );
               })}
             </div>
-          )
+          );
         })}
       </div>
       {tooltip && typeof document !== 'undefined'
         ? createPortal(<FloatingEmoticonTooltip tooltip={tooltip} />, document.body)
         : null}
     </div>
-  )
+  );
 }
 
-function FloatingEmoticonTooltip({
-  tooltip,
-}: {
-  tooltip: NonNullable<FloatingTooltipState>
-}) {
+function FloatingEmoticonTooltip({ tooltip }: { tooltip: NonNullable<FloatingTooltipState> }) {
   return (
     <div
       role="tooltip"
@@ -438,5 +408,5 @@ function FloatingEmoticonTooltip({
     >
       {tooltip.label}
     </div>
-  )
+  );
 }

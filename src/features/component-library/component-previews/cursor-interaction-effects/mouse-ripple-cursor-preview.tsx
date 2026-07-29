@@ -1,6 +1,7 @@
-import { MouseRippleCursor } from '@/components/mouse-ripple-cursor'
-import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface'
-import type { PreviewMode } from '../types'
+import { MouseRippleCursor } from '@/components/mouse-ripple-cursor';
+
+import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface';
+import type { PreviewMode } from '../types';
 
 export function MouseRippleCursorPreview({ mode }: { mode: PreviewMode }) {
   return (
@@ -19,5 +20,5 @@ export function MouseRippleCursorPreview({ mode }: { mode: PreviewMode }) {
         />
       </MouseRippleCursor>
     </OuterEffectSurface>
-  )
+  );
 }

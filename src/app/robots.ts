@@ -1,8 +1,9 @@
-import type { MetadataRoute } from 'next'
-import { getPublicSiteUrl } from '@/lib/server/env'
+import type { MetadataRoute } from 'next';
+
+import { getPublicSiteUrl } from '@/lib/server/env';
 
 export default function robots(): MetadataRoute.Robots {
-  const siteUrl = getPublicSiteUrl() ?? 'http://localhost:3000'
+  const siteUrl = getPublicSiteUrl() ?? 'http://localhost:3000';
 
   return {
     rules: [
@@ -14,5 +15,5 @@ export default function robots(): MetadataRoute.Robots {
     ],
     host: siteUrl,
     sitemap: `${siteUrl}/sitemap.xml`,
-  }
+  };
 }

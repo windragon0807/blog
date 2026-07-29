@@ -1,5 +1,6 @@
-import { Marquee } from '@/components/marquee'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+import { Marquee } from '@/components/marquee';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 const reviews = [
   {
@@ -38,10 +39,10 @@ const reviews = [
     body: "I'm at a loss for words. This is amazing. I love it.",
     img: 'https://avatar.vercel.sh/james',
   },
-]
+];
 
-const firstReviewRow = reviews.slice(0, reviews.length / 2)
-const secondReviewRow = reviews.slice(reviews.length / 2)
+const firstReviewRow = reviews.slice(0, reviews.length / 2);
+const secondReviewRow = reviews.slice(reviews.length / 2);
 
 function ReviewCard({
   img,
@@ -49,10 +50,10 @@ function ReviewCard({
   username,
   body,
 }: {
-  img: string
-  name: string
-  username: string
-  body: string
+  img: string;
+  name: string;
+  username: string;
+  body: string;
 }) {
   return (
     <figure className="relative h-full w-64 cursor-pointer overflow-hidden rounded-xl border border-gray-950/[.1] bg-gray-950/[.01] p-4 hover:bg-gray-950/[.05] dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]">
@@ -60,15 +61,13 @@ function ReviewCard({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className="rounded-full" width="32" height="32" alt="" src={img} />
         <div className="flex flex-col">
-          <figcaption className="text-sm font-medium dark:text-white">
-            {name}
-          </figcaption>
+          <figcaption className="text-sm font-medium dark:text-white">{name}</figcaption>
           <p className="text-xs font-medium dark:text-white/40">{username}</p>
         </div>
       </div>
       <blockquote className="mt-2 text-sm">{body}</blockquote>
     </figure>
-  )
+  );
 }
 
 export function MarqueePreview() {
@@ -95,5 +94,5 @@ export function MarqueePreview() {
         </div>
       }
     />
-  )
+  );
 }

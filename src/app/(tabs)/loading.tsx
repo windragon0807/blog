@@ -20,7 +20,7 @@ function PostCardSkeleton() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default function HomeLoading() {
@@ -36,5 +36,5 @@ export default function HomeLoading() {
         ))}
       </div>
     </div>
-  )
+  );
 }

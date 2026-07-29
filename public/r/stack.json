@@ -4,9 +4,7 @@
   "type": "registry:ui",
   "title": "Swipe Card Stack",
   "description": "A draggable card stack that sends swiped cards to the back.",
-  "dependencies": [
-    "motion"
-  ],
+  "dependencies": ["motion"],
   "files": [
     {
       "path": "src/components/stack.tsx",

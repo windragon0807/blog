@@ -1,15 +1,10 @@
-'use client'
+'use client';
 
-import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { createPortal } from 'react-dom'
-import {
-  AnimatePresence,
-  motion,
-  useMotionValue,
-  type HTMLMotionProps,
-} from 'motion/react'
+import { AnimatePresence, type HTMLMotionProps, motion, useMotionValue } from 'motion/react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 /**
  * A custom pointer component that displays an animated cursor.
@@ -25,49 +20,47 @@ export function Pointer({
   children,
   ...props
 }: HTMLMotionProps<'div'>): ReactNode {
-  const pointerX = useMotionValue(0)
-  const pointerY = useMotionValue(0)
-  const [isActive, setIsActive] = useState<boolean>(false)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const [isActive, setIsActive] = useState<boolean>(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const parentElement =
-      typeof window !== 'undefined'
-        ? (containerRef.current?.parentElement ?? null)
-        : null
+      typeof window !== 'undefined' ? (containerRef.current?.parentElement ?? null) : null;
 
     const handleMouseMove = (e: MouseEvent) => {
-      pointerX.set(e.clientX)
-      pointerY.set(e.clientY)
-      setIsActive(true)
-    }
+      pointerX.set(e.clientX);
+      pointerY.set(e.clientY);
+      setIsActive(true);
+    };
 
     const handleMouseEnter = (e: MouseEvent) => {
-      pointerX.set(e.clientX)
-      pointerY.set(e.clientY)
-      setIsActive(true)
-    }
+      pointerX.set(e.clientX);
+      pointerY.set(e.clientY);
+      setIsActive(true);
+    };
 
     const handleMouseLeave = () => {
-      setIsActive(false)
-    }
+      setIsActive(false);
+    };
 
     if (parentElement) {
-      parentElement.style.cursor = 'none'
-      parentElement.addEventListener('mousemove', handleMouseMove)
-      parentElement.addEventListener('mouseenter', handleMouseEnter)
-      parentElement.addEventListener('mouseleave', handleMouseLeave)
+      parentElement.style.cursor = 'none';
+      parentElement.addEventListener('mousemove', handleMouseMove);
+      parentElement.addEventListener('mouseenter', handleMouseEnter);
+      parentElement.addEventListener('mouseleave', handleMouseLeave);
     }
 
     return () => {
       if (parentElement) {
-        parentElement.style.cursor = ''
-        parentElement.removeEventListener('mousemove', handleMouseMove)
-        parentElement.removeEventListener('mouseenter', handleMouseEnter)
-        parentElement.removeEventListener('mouseleave', handleMouseLeave)
+        parentElement.style.cursor = '';
+        parentElement.removeEventListener('mousemove', handleMouseMove);
+        parentElement.removeEventListener('mouseenter', handleMouseEnter);
+        parentElement.removeEventListener('mouseleave', handleMouseLeave);
       }
-    }
-  }, [pointerX, pointerY])
+    };
+  }, [pointerX, pointerY]);
 
   const cursorLayer = (
     <AnimatePresence>
@@ -107,10 +100,7 @@ export function Pointer({
                 height="24"
                 width="24"
                 xmlns="http://www.w3.org/2000/svg"
-                className={cn(
-                  'rotate-[-70deg] stroke-white text-blue-500',
-                  className
-                )}
+                className={cn('rotate-[-70deg] stroke-white text-blue-500', className)}
               >
                 <path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z" />
               </svg>
@@ -119,14 +109,12 @@ export function Pointer({
         </motion.div>
       )}
     </AnimatePresence>
-  )
+  );
 
   return (
     <>
       <div ref={containerRef} />
-      {typeof document === 'undefined'
-        ? cursorLayer
-        : createPortal(cursorLayer, document.body)}
+      {typeof document === 'undefined' ? cursorLayer : createPortal(cursorLayer, document.body)}
     </>
-  )
+  );
 }

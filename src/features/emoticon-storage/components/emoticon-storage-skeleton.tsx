@@ -1,12 +1,13 @@
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
+
 import {
   EMOTICON_CONTENT_CLASS_NAME,
   EMOTICON_PAGE_SHELL_CLASS_NAME,
-} from '../emoticon-layout-contract'
+} from '../emoticon-layout-contract';
 
 function EmoticonStorageSkeleton() {
-  const tabWidths = ['w-32', 'w-36', 'w-28']
-  const categoryWidths = ['w-24', 'w-32', 'w-32', 'w-24', 'w-24', 'w-24']
+  const tabWidths = ['w-32', 'w-36', 'w-28'];
+  const categoryWidths = ['w-24', 'w-32', 'w-32', 'w-24', 'w-24', 'w-24'];
 
   return (
     <section
@@ -17,16 +18,13 @@ function EmoticonStorageSkeleton() {
       <div className={cn('shrink-0', EMOTICON_CONTENT_CLASS_NAME)}>
         <div className="mb-3 flex flex-wrap items-end gap-x-5 gap-y-1.5 sm:mb-4 sm:gap-x-6 sm:gap-y-2 md:mb-6 md:gap-x-7">
           {tabWidths.map((width, index) => (
-            <div
-              key={width}
-              className="flex animate-pulse items-center gap-1.5 md:gap-2"
-            >
+            <div key={width} className="flex animate-pulse items-center gap-1.5 md:gap-2">
               <div className="h-5 w-5 rounded-md bg-zinc-100 dark:bg-zinc-900 sm:h-6 sm:w-6 md:h-7 md:w-7" />
               <div
                 className={cn(
                   'h-7 rounded-xl bg-zinc-100 dark:bg-zinc-900 sm:h-8 md:h-9',
                   width,
-                  index === 1 ? 'opacity-60' : ''
+                  index === 1 ? 'opacity-60' : '',
                 )}
               />
             </div>
@@ -41,7 +39,7 @@ function EmoticonStorageSkeleton() {
                 className={cn(
                   'h-10 shrink-0 animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-900 sm:h-12',
                   width,
-                  index > 2 ? 'hidden sm:block' : ''
+                  index > 2 ? 'hidden sm:block' : '',
                 )}
               />
             ))}
@@ -63,10 +61,7 @@ function EmoticonStorageSkeleton() {
             </div>
             <div className="grid grid-cols-[repeat(auto-fill,minmax(54px,1fr))] content-start gap-2 px-2">
               {Array.from({ length: 144 }, (_, index) => (
-                <div
-                  key={index}
-                  className="grid h-14 animate-pulse place-items-center rounded-xl"
-                >
+                <div key={index} className="grid h-14 animate-pulse place-items-center rounded-xl">
                   <div className="h-9 w-9 rounded-xl bg-zinc-100 dark:bg-zinc-900" />
                 </div>
               ))}
@@ -75,7 +70,7 @@ function EmoticonStorageSkeleton() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
-export { EmoticonStorageSkeleton }
+export { EmoticonStorageSkeleton };

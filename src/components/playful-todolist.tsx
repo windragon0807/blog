@@ -1,18 +1,19 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { motion, type Transition } from 'motion/react'
-import { cn } from '@/lib/utils'
+import { motion, type Transition } from 'motion/react';
+import { useState } from 'react';
+
+import { cn } from '@/lib/utils';
 
 interface TodoItem {
-  id: number
-  label: string
-  defaultChecked: boolean
+  id: number;
+  label: string;
+  defaultChecked: boolean;
 }
 
 interface PlayfulTodoListProps {
-  items?: TodoItem[]
-  className?: string
+  items?: TodoItem[];
+  className?: string;
 }
 
 const checkboxItems: TodoItem[] = [
@@ -31,12 +32,12 @@ const checkboxItems: TodoItem[] = [
     label: 'Push to prod on a Friday 🚀',
     defaultChecked: false,
   },
-]
+];
 
 const getPathAnimate = (checked: boolean) => ({
   pathLength: checked ? 1 : 0,
   opacity: checked ? 1 : 0,
-})
+});
 
 const getPathTransition = (checked: boolean): Transition => ({
   pathLength: {
@@ -47,19 +48,16 @@ const getPathTransition = (checked: boolean): Transition => ({
     duration: 0.01,
     delay: checked ? 0 : 0.45,
   },
-})
+});
 
-export function PlayfulTodoList({
-  items = checkboxItems,
-  className,
-}: PlayfulTodoListProps) {
-  const [checked, setChecked] = useState(items.map((item) => item.defaultChecked))
+export function PlayfulTodoList({ items = checkboxItems, className }: PlayfulTodoListProps) {
+  const [checked, setChecked] = useState(items.map((item) => item.defaultChecked));
 
   return (
     <div
       className={cn(
         'w-full max-w-lg space-y-4 rounded-2xl border border-white/10 bg-white/[0.07] p-5 text-left text-white shadow-[0_24px_90px_-52px_rgba(255,255,255,0.34)] backdrop-blur-md',
-        className
+        className,
       )}
     >
       {items.map((item, index) => (
@@ -71,15 +69,14 @@ export function PlayfulTodoList({
               aria-pressed={checked[index]}
               onClick={() => {
                 setChecked((current) => {
-                  const updated = [...current]
-                  updated[index] = !updated[index]
-                  return updated
-                })
+                  const updated = [...current];
+                  updated[index] = !updated[index];
+                  return updated;
+                });
               }}
               className={cn(
                 'flex size-5 shrink-0 items-center justify-center rounded-md border border-white/18 bg-white/[0.08] text-sky-300 shadow-[0_12px_28px_-22px_rgba(255,255,255,0.5)] transition-colors',
-                checked[index] &&
-                  'border-sky-300/35 bg-sky-300/15 text-sky-200'
+                checked[index] && 'border-sky-300/35 bg-sky-300/15 text-sky-200',
               )}
             >
               <motion.svg
@@ -106,7 +103,7 @@ export function PlayfulTodoList({
                 htmlFor={`checkbox-${item.id}`}
                 className={cn(
                   'cursor-pointer text-base font-medium text-white transition-colors',
-                  checked[index] && 'text-white/42'
+                  checked[index] && 'text-white/42',
                 )}
               >
                 {item.label}
@@ -129,18 +126,16 @@ export function PlayfulTodoList({
                   transition={getPathTransition(checked[index])}
                   className={cn(
                     'stroke-white/80 transition-colors',
-                    checked[index] && 'stroke-white/38'
+                    checked[index] && 'stroke-white/38',
                   )}
                 />
               </motion.svg>
             </div>
           </div>
 
-          {index !== items.length - 1 ? (
-            <div className="border-t border-white/12" />
-          ) : null}
+          {index !== items.length - 1 ? <div className="border-t border-white/12" /> : null}
         </div>
       ))}
     </div>
-  )
+  );
 }

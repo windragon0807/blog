@@ -1,15 +1,16 @@
-'use client'
+'use client';
 
-import { Search, X } from 'lucide-react'
-import { useEffect, useRef } from 'react'
-import { cn } from '@/lib/utils'
+import { Search, X } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+
+import { cn } from '@/lib/utils';
 
 export type EmoticonSearchFieldProps = {
-  isOpen: boolean
-  query: string
-  onOpenChange: (open: boolean) => void
-  onQueryChange: (query: string) => void
-}
+  isOpen: boolean;
+  query: string;
+  onOpenChange: (open: boolean) => void;
+  onQueryChange: (query: string) => void;
+};
 
 export function EmoticonSearchField({
   isOpen,
@@ -17,23 +18,23 @@ export function EmoticonSearchField({
   onOpenChange,
   onQueryChange,
 }: EmoticonSearchFieldProps) {
-  const inputRef = useRef<HTMLInputElement | null>(null)
-  const rootRef = useRef<HTMLDivElement | null>(null)
-  const triggerRef = useRef<HTMLButtonElement | null>(null)
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
-    if (!isOpen) return
+    if (!isOpen) return;
 
-    inputRef.current?.focus({ preventScroll: true })
-  }, [isOpen])
+    inputRef.current?.focus({ preventScroll: true });
+  }, [isOpen]);
 
   const closeAndRestoreFocus = () => {
-    onOpenChange(false)
+    onOpenChange(false);
 
     requestAnimationFrame(() => {
-      triggerRef.current?.focus({ preventScroll: true })
-    })
-  }
+      triggerRef.current?.focus({ preventScroll: true });
+    });
+  };
 
   return (
     <div ref={rootRef} className="relative ml-auto shrink-0">
@@ -48,7 +49,7 @@ export function EmoticonSearchField({
           'grid size-9 place-items-center rounded-xl text-zinc-400 transition',
           'hover:text-zinc-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/35',
           'dark:text-zinc-500 dark:hover:text-zinc-200 sm:size-10',
-          isOpen && 'invisible pointer-events-none'
+          isOpen && 'invisible pointer-events-none',
         )}
       >
         <Search className="size-5" strokeWidth={2.25} />
@@ -59,7 +60,7 @@ export function EmoticonSearchField({
           className={cn(
             'absolute inset-y-0 right-0 z-10 flex items-center',
             'w-[calc(100vw-3rem)] sm:w-[min(22.5rem,calc(100vw-2rem))]',
-            'motion-safe:animate-[emoticon-search-enter_300ms_cubic-bezier(0.22,1,0.36,1)_both]'
+            'motion-safe:animate-[emoticon-search-enter_300ms_cubic-bezier(0.22,1,0.36,1)_both]',
           )}
         >
           <div className="flex h-10 w-full items-center gap-2 rounded-2xl bg-zinc-100 px-3 dark:bg-zinc-900 sm:h-12 sm:px-4">
@@ -70,20 +71,20 @@ export function EmoticonSearchField({
               onChange={(event) => onQueryChange(event.target.value)}
               onKeyDown={(event) => {
                 if (event.key === 'Escape') {
-                  event.preventDefault()
-                  event.stopPropagation()
-                  closeAndRestoreFocus()
+                  event.preventDefault();
+                  event.stopPropagation();
+                  closeAndRestoreFocus();
                 }
               }}
               onBlur={(event) => {
-                const next = event.relatedTarget
+                const next = event.relatedTarget;
 
                 if (next instanceof Node && rootRef.current?.contains(next)) {
-                  return
+                  return;
                 }
 
                 if (query.trim() === '') {
-                  onOpenChange(false)
+                  onOpenChange(false);
                 }
               }}
               aria-label="이모티콘 검색"
@@ -102,5 +103,5 @@ export function EmoticonSearchField({
         </div>
       ) : null}
     </div>
-  )
+  );
 }

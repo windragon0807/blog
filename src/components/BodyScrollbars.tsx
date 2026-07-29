@@ -1,13 +1,14 @@
-'use client'
+'use client';
 
-import { useEffect } from 'react'
-import { OverlayScrollbars } from 'overlayscrollbars'
-import { BODY_SCROLLBAR_OPTIONS } from '@/lib/scrollbars'
+import { OverlayScrollbars } from 'overlayscrollbars';
+import { useEffect } from 'react';
+
+import { BODY_SCROLLBAR_OPTIONS } from '@/lib/scrollbars';
 
 export function BodyScrollbars() {
   useEffect(() => {
-    const body = document.body
-    body.setAttribute('data-overlayscrollbars-initialize', '')
+    const body = document.body;
+    body.setAttribute('data-overlayscrollbars-initialize', '');
 
     const instance = OverlayScrollbars(
       {
@@ -17,14 +18,14 @@ export function BodyScrollbars() {
           nativeScrollbarsOverlaid: false,
         },
       },
-      BODY_SCROLLBAR_OPTIONS
-    )
+      BODY_SCROLLBAR_OPTIONS,
+    );
 
     return () => {
-      instance.destroy()
-      body.removeAttribute('data-overlayscrollbars-initialize')
-    }
-  }, [])
+      instance.destroy();
+      body.removeAttribute('data-overlayscrollbars-initialize');
+    };
+  }, []);
 
-  return null
+  return null;
 }

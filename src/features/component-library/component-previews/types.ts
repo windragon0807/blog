@@ -1,1 +1,1 @@
-export type PreviewMode = 'interactive' | 'thumbnail'
+export type PreviewMode = 'interactive' | 'thumbnail';

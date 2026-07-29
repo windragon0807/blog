@@ -1,58 +1,59 @@
-'use client'
+'use client';
 
-import { useTheme } from 'next-themes'
-import { useCallback, useEffect, useState } from 'react'
-import { flushSync } from 'react-dom'
-import { MoonIcon, SunIcon } from '@/components/icons'
-import { IconControlButton } from './IconControlButton'
+import { useTheme } from 'next-themes';
+import { useCallback, useEffect, useState } from 'react';
+import { flushSync } from 'react-dom';
+
+import { MoonIcon, SunIcon } from '@/components/icons';
+
+import { IconControlButton } from './IconControlButton';
 
 type ViewTransition = {
-  ready: Promise<void>
-  finished: Promise<void>
-}
+  ready: Promise<void>;
+  finished: Promise<void>;
+};
 
 type ViewTransitionDocument = Document & {
-  startViewTransition?: (callback: () => void) => ViewTransition
-}
+  startViewTransition?: (callback: () => void) => ViewTransition;
+};
 
-const themeModeAnimationType = 'fade-in-out'
-const themeModeTransitionDuration = 400
+const themeModeAnimationType = 'fade-in-out';
+const themeModeTransitionDuration = 400;
 
 function createViewTransitionResetStyle() {
-  const styleElement = document.createElement('style')
+  const styleElement = document.createElement('style');
   styleElement.textContent = `
     ::view-transition-old(root),
     ::view-transition-new(root) {
       animation: none;
       mix-blend-mode: normal;
     }
-  `
-  document.head.appendChild(styleElement)
-  return styleElement
+  `;
+  document.head.appendChild(styleElement);
+  return styleElement;
 }
 
 async function runThemeModeTransition(commitTheme: () => void) {
-  const startViewTransition = (document as ViewTransitionDocument)
-    .startViewTransition?.bind(document)
-  const prefersReducedMotion = window.matchMedia(
-    '(prefers-reduced-motion: reduce)'
-  ).matches
+  const startViewTransition = (document as ViewTransitionDocument).startViewTransition?.bind(
+    document,
+  );
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (!startViewTransition || prefersReducedMotion) {
-    commitTheme()
-    return
+    commitTheme();
+    return;
   }
 
-  const transitionStyle = createViewTransitionResetStyle()
+  const transitionStyle = createViewTransitionResetStyle();
   const transition = startViewTransition(() => {
-    flushSync(commitTheme)
-  })
+    flushSync(commitTheme);
+  });
 
   try {
-    await transition.ready
+    await transition.ready;
   } catch {
-    transitionStyle.remove()
-    return
+    transitionStyle.remove();
+    return;
   }
 
   if (themeModeAnimationType === 'fade-in-out') {
@@ -64,43 +65,41 @@ async function runThemeModeTransition(commitTheme: () => void) {
         duration: themeModeTransitionDuration * 0.5,
         easing: 'ease-in-out',
         pseudoElement: '::view-transition-new(root)',
-      }
-    )
+      },
+    );
   }
 
   void transition.finished.finally(() => {
-    transitionStyle.remove()
-  })
+    transitionStyle.remove();
+  });
 }
 
 export function ThemeModeButton() {
-  const { resolvedTheme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const id = requestAnimationFrame(() => setMounted(true))
-    return () => cancelAnimationFrame(id)
-  }, [])
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
-  const isDark = mounted && resolvedTheme === 'dark'
+  const isDark = mounted && resolvedTheme === 'dark';
   const handleToggleTheme = useCallback(() => {
-    if (!mounted) return
+    if (!mounted) return;
 
-    const nextIsDark = !isDark
-    const nextTheme = nextIsDark ? 'dark' : 'light'
+    const nextIsDark = !isDark;
+    const nextTheme = nextIsDark ? 'dark' : 'light';
 
     void runThemeModeTransition(() => {
-      document.documentElement.classList.toggle('dark', nextIsDark)
-      window.localStorage.setItem('theme', nextTheme)
-      setTheme(nextTheme)
-    })
-  }, [isDark, mounted, setTheme])
+      document.documentElement.classList.toggle('dark', nextIsDark);
+      window.localStorage.setItem('theme', nextTheme);
+      setTheme(nextTheme);
+    });
+  }, [isDark, mounted, setTheme]);
 
   return (
     <IconControlButton
-      srLabel={
-        mounted ? (isDark ? '라이트 모드로 전환' : '다크 모드로 전환') : '테마 전환'
-      }
+      srLabel={mounted ? (isDark ? '라이트 모드로 전환' : '다크 모드로 전환') : '테마 전환'}
       aria-pressed={mounted ? isDark : undefined}
       onClick={handleToggleTheme}
       className="relative overflow-hidden"
@@ -130,5 +129,5 @@ export function ThemeModeButton() {
         <MoonIcon className="h-[18px] w-[18px]" />
       </span>
     </IconControlButton>
-  )
+  );
 }

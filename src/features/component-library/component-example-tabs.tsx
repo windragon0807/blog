@@ -1,21 +1,10 @@
-import type { ComponentSample } from './component-data'
-import { ComponentPreviewContent } from './component-previews'
+import type { ComponentSample } from './component-data';
+import { ComponentPreviewContent } from './component-previews';
 
-export function ComponentExampleTabs({
-  sample,
-}: {
-  sample: ComponentSample
-}) {
+export function ComponentExampleTabs({ sample }: { sample: ComponentSample }) {
   return (
-    <section
-      id="preview"
-      aria-labelledby="preview-heading"
-      className="mt-8"
-    >
-      <h2
-        id="preview-heading"
-        className="text-xl font-semibold text-zinc-950 dark:text-zinc-50"
-      >
+    <section id="preview" aria-labelledby="preview-heading" className="mt-8">
+      <h2 id="preview-heading" className="text-xl font-semibold text-zinc-950 dark:text-zinc-50">
         Preview
       </h2>
 
@@ -33,5 +22,5 @@ export function ComponentExampleTabs({
         </div>
       </div>
     </section>
-  )
+  );
 }

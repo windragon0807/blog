@@ -1,21 +1,18 @@
-'use client'
+'use client';
 
-import type { ReactNode } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import {
-  GitHubIcon,
-  HouseIcon,
-  PuzzleIcon,
-  SmileStorageIcon,
-} from '@/components/icons'
-import { useEmoticonManifestPrefetch } from '@/hooks/use-emoticon-manifest-prefetch'
-import { usePostsPrefetch } from '@/hooks/usePostsPrefetch'
-import { cn } from '@/lib/utils'
-import { AppLauncherMenu } from './AppLauncherMenu'
-import { ICON_CONTROL_BUTTON_CLASS_NAME } from './IconControlButton'
-import { ThemeModeButton } from './ThemeModeButton'
-import { ThemeSettingsMenu } from './ThemeSettingsMenu'
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import type { ReactNode } from 'react';
+
+import { GitHubIcon, HouseIcon, PuzzleIcon, SmileStorageIcon } from '@/components/icons';
+import { useEmoticonManifestPrefetch } from '@/hooks/use-emoticon-manifest-prefetch';
+import { usePostsPrefetch } from '@/hooks/usePostsPrefetch';
+import { cn } from '@/lib/utils';
+
+import { AppLauncherMenu } from './AppLauncherMenu';
+import { ICON_CONTROL_BUTTON_CLASS_NAME } from './IconControlButton';
+import { ThemeModeButton } from './ThemeModeButton';
+import { ThemeSettingsMenu } from './ThemeSettingsMenu';
 
 function HeaderAuroraIconDefs() {
   return (
@@ -42,7 +39,7 @@ function HeaderAuroraIconDefs() {
         </linearGradient>
       </defs>
     </svg>
-  )
+  );
 }
 
 function HeaderNavLink({
@@ -54,13 +51,13 @@ function HeaderNavLink({
   onMouseEnter,
   onTouchStart,
 }: {
-  href: string
-  label: string
-  isActive: boolean
-  children: ReactNode
-  onFocus?: () => void
-  onMouseEnter?: () => void
-  onTouchStart?: () => void
+  href: string;
+  label: string;
+  isActive: boolean;
+  children: ReactNode;
+  onFocus?: () => void;
+  onMouseEnter?: () => void;
+  onTouchStart?: () => void;
 }) {
   return (
     <Link
@@ -71,7 +68,7 @@ function HeaderNavLink({
       className={cn(
         ICON_CONTROL_BUTTON_CLASS_NAME,
         isActive &&
-          'header-active-aurora overflow-visible border-transparent focus:ring-0 focus-visible:ring-0 dark:border-transparent'
+          'header-active-aurora overflow-visible border-transparent focus:ring-0 focus-visible:ring-0 dark:border-transparent',
       )}
       onFocus={onFocus}
       onMouseEnter={onMouseEnter}
@@ -81,16 +78,16 @@ function HeaderNavLink({
       <span className="sr-only">{label}</span>
       {children}
     </Link>
-  )
+  );
 }
 
 export function Header() {
-  const prefetchPosts = usePostsPrefetch()
-  const prefetchEmoticons = useEmoticonManifestPrefetch()
-  const pathname = usePathname()
-  const isHomeActive = pathname === '/'
-  const isComponentsActive = pathname === '/components' || pathname.startsWith('/components/')
-  const isEmoticonsActive = pathname === '/emoticons'
+  const prefetchPosts = usePostsPrefetch();
+  const prefetchEmoticons = useEmoticonManifestPrefetch();
+  const pathname = usePathname();
+  const isHomeActive = pathname === '/';
+  const isComponentsActive = pathname === '/components' || pathname.startsWith('/components/');
+  const isEmoticonsActive = pathname === '/emoticons';
 
   return (
     <header className="glass-surface header-sticky top-0 z-50">
@@ -162,5 +159,5 @@ export function Header() {
         </div>
       </div>
     </header>
-  )
+  );
 }

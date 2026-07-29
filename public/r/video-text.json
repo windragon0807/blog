@@ -4,10 +4,7 @@
   "type": "registry:ui",
   "title": "Video Mask Text",
   "description": "A component that displays text with a video playing in the background.",
-  "dependencies": [
-    "clsx",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/video-text.tsx",

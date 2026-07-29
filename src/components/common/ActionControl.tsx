@@ -1,12 +1,13 @@
-import Link from 'next/link'
-import type { ComponentProps } from 'react'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import Link from 'next/link';
+import type { ComponentProps } from 'react';
 
-type ActionVariant = 'default' | 'subtle' | 'glass' | 'outline' | 'secondary'
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+type ActionVariant = 'default' | 'subtle' | 'glass' | 'outline' | 'secondary';
 type ActionLinkProps = ComponentProps<typeof Link> & {
-  variant?: ActionVariant
-}
+  variant?: ActionVariant;
+};
 
 export function ActionLink({
   href,
@@ -21,5 +22,5 @@ export function ActionLink({
         {children}
       </Link>
     </Button>
-  )
+  );
 }

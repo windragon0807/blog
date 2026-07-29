@@ -4,11 +4,7 @@
   "type": "registry:ui",
   "title": "Color Sweep Text",
   "description": "A horizontal color band sweeps across text, revealing a gradient shine before settling on the base color.",
-  "dependencies": [
-    "clsx",
-    "motion",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "motion", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/dia-text-reveal.tsx",

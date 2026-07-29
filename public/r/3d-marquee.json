@@ -4,11 +4,7 @@
   "type": "registry:ui",
   "title": "Perspective Image Marquee",
   "description": "A perspective marquee grid for image or card strips.",
-  "dependencies": [
-    "clsx",
-    "motion",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "motion", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/3d-marquee.tsx",

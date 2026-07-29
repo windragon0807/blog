@@ -1,23 +1,24 @@
-import { getPageBlocks } from '@/lib/notion'
-import { extractTocHeadings } from '@/lib/toc'
-import { Skeleton } from '@/components/ui/skeleton'
-import { BlockRenderer } from './BlockRenderer'
-import { FloatingToc } from './FloatingToc'
+import { Skeleton } from '@/components/ui/skeleton';
+import { getPageBlocks } from '@/lib/notion';
+import { extractTocHeadings } from '@/lib/toc';
+
+import { BlockRenderer } from './BlockRenderer';
+import { FloatingToc } from './FloatingToc';
 
 interface Props {
-  postId: string
+  postId: string;
 }
 
 export async function PostBodyStream({ postId }: Props) {
-  const blocks = await getPageBlocks(postId)
-  const tocHeadings = extractTocHeadings(blocks)
+  const blocks = await getPageBlocks(postId);
+  const tocHeadings = extractTocHeadings(blocks);
 
   return (
     <>
       <BlockRenderer postId={postId} blocks={blocks} />
       <FloatingToc headings={tocHeadings} />
     </>
-  )
+  );
 }
 
 export function PostBodyFallback() {
@@ -31,5 +32,5 @@ export function PostBodyFallback() {
       <Skeleton className="h-5 w-full bg-zinc-200/70 dark:bg-zinc-700/70" />
       <Skeleton className="h-5 w-10/12 bg-zinc-200/70 dark:bg-zinc-700/70" />
     </div>
-  )
+  );
 }

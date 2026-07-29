@@ -4,10 +4,7 @@
   "type": "registry:ui",
   "title": "Click Ripple Button",
   "description": "A button that emits a click ripple from the pointer position.",
-  "dependencies": [
-    "clsx",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/ripple-button.tsx",

@@ -1,42 +1,43 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import {
-  CODE_THEME_OPTIONS,
-  CODE_THEME_PREVIEW_LINES,
-  CODE_THEME_PREVIEW_PALETTES,
-  CODE_THEME_STORAGE_KEY,
-  DEFAULT_DARK_CODE_THEME,
-  DEFAULT_LIGHT_CODE_THEME,
-  type CodeThemeName,
-  isCodeThemeName,
-} from '@/lib/codeThemes'
+import { useEffect, useState } from 'react';
+
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { cn } from '@/lib/utils'
+} from '@/components/ui/select';
+import {
+  CODE_THEME_OPTIONS,
+  CODE_THEME_PREVIEW_LINES,
+  CODE_THEME_PREVIEW_PALETTES,
+  CODE_THEME_STORAGE_KEY,
+  type CodeThemeName,
+  DEFAULT_DARK_CODE_THEME,
+  DEFAULT_LIGHT_CODE_THEME,
+  isCodeThemeName,
+} from '@/lib/codeThemes';
+import { cn } from '@/lib/utils';
 
 type CodeThemeSelectProps = {
-  className?: string
-}
+  className?: string;
+};
 
 export function CodeThemeSelect({ className = '' }: CodeThemeSelectProps) {
-  const [selectedTheme, setSelectedTheme] = useState<CodeThemeName>(readInitialTheme)
+  const [selectedTheme, setSelectedTheme] = useState<CodeThemeName>(readInitialTheme);
 
   useEffect(() => {
-    applyCodeTheme(selectedTheme)
+    applyCodeTheme(selectedTheme);
     try {
-      localStorage.setItem(CODE_THEME_STORAGE_KEY, selectedTheme)
+      localStorage.setItem(CODE_THEME_STORAGE_KEY, selectedTheme);
     } catch {
       // Ignore storage failures in private mode.
     }
-  }, [selectedTheme])
+  }, [selectedTheme]);
 
-  const previewPalette = CODE_THEME_PREVIEW_PALETTES[selectedTheme]
+  const previewPalette = CODE_THEME_PREVIEW_PALETTES[selectedTheme];
 
   return (
     <div className="grid gap-3">
@@ -66,10 +67,7 @@ export function CodeThemeSelect({ className = '' }: CodeThemeSelectProps) {
                     data-code-preview-token={segment.index}
                     data-code-preview-segment={segment.id}
                     style={{
-                      color:
-                        previewPalette.colors[
-                          previewPalette.tokenColorIndexes[segment.index]
-                        ],
+                      color: previewPalette.colors[previewPalette.tokenColorIndexes[segment.index]],
                     }}
                   >
                     {segment.content}
@@ -86,10 +84,7 @@ export function CodeThemeSelect({ className = '' }: CodeThemeSelectProps) {
         value={selectedTheme}
         onValueChange={(value) => setSelectedTheme(value as CodeThemeName)}
       >
-        <SelectTrigger
-          aria-label="코드 테마 선택"
-          className={cn('h-10 w-full text-sm', className)}
-        >
+        <SelectTrigger aria-label="코드 테마 선택" className={cn('h-10 w-full text-sm', className)}>
           <SelectValue placeholder="코드 테마를 선택하세요" />
         </SelectTrigger>
         <SelectContent position="popper" data-settings-menu-portal="">
@@ -101,43 +96,43 @@ export function CodeThemeSelect({ className = '' }: CodeThemeSelectProps) {
         </SelectContent>
       </Select>
     </div>
-  )
+  );
 }
 
 function applyCodeTheme(theme: CodeThemeName) {
-  document.documentElement.setAttribute('data-code-theme', theme)
+  document.documentElement.setAttribute('data-code-theme', theme);
 }
 
 function readInitialTheme(): CodeThemeName {
   if (typeof window === 'undefined' || typeof document === 'undefined') {
-    return DEFAULT_LIGHT_CODE_THEME
+    return DEFAULT_LIGHT_CODE_THEME;
   }
 
-  const appliedTheme = document.documentElement.getAttribute('data-code-theme')
+  const appliedTheme = document.documentElement.getAttribute('data-code-theme');
   if (isCodeThemeName(appliedTheme)) {
-    return appliedTheme
+    return appliedTheme;
   }
 
   try {
-    const storedTheme = localStorage.getItem(CODE_THEME_STORAGE_KEY)
+    const storedTheme = localStorage.getItem(CODE_THEME_STORAGE_KEY);
     if (isCodeThemeName(storedTheme)) {
-      return storedTheme
+      return storedTheme;
     }
   } catch {
     // Storage can be unavailable in private mode.
   }
 
-  return getDefaultCodeTheme()
+  return getDefaultCodeTheme();
 }
 
 function getDefaultCodeTheme(): CodeThemeName {
   if (typeof window === 'undefined' || typeof document === 'undefined') {
-    return DEFAULT_LIGHT_CODE_THEME
+    return DEFAULT_LIGHT_CODE_THEME;
   }
 
   const prefersDark =
     document.documentElement.classList.contains('dark') ||
-    window.matchMedia('(prefers-color-scheme: dark)').matches
+    window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-  return prefersDark ? DEFAULT_DARK_CODE_THEME : DEFAULT_LIGHT_CODE_THEME
+  return prefersDark ? DEFAULT_DARK_CODE_THEME : DEFAULT_LIGHT_CODE_THEME;
 }

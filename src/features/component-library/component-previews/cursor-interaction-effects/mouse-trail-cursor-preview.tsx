@@ -1,7 +1,8 @@
-import { MouseTrailCursor } from '@/components/mouse-trail-cursor'
-import { DesktopOnlyPreview } from '../desktop-only-preview'
-import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface'
-import type { PreviewMode } from '../types'
+import { MouseTrailCursor } from '@/components/mouse-trail-cursor';
+
+import { DesktopOnlyPreview } from '../desktop-only-preview';
+import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface';
+import type { PreviewMode } from '../types';
 
 export function MouseTrailCursorPreview({ mode }: { mode: PreviewMode }) {
   return (
@@ -29,5 +30,5 @@ export function MouseTrailCursorPreview({ mode }: { mode: PreviewMode }) {
         </MouseTrailCursor>
       </OuterEffectSurface>
     </DesktopOnlyPreview>
-  )
+  );
 }

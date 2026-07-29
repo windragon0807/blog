@@ -1,6 +1,7 @@
-import { Folder } from '@/components/folder'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
-import { folderPreviewColor } from '../shared/preview-tokens'
+import { Folder } from '@/components/folder';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
+import { folderPreviewColor } from '../shared/preview-tokens';
 
 export function FolderPreview() {
   return (
@@ -18,10 +19,13 @@ export function FolderPreview() {
           items={[
             <div key="one" className="h-full rounded-md border border-white/15 bg-white/[0.08]" />,
             <div key="two" className="h-full rounded-md border border-white/15 bg-white/[0.08]" />,
-            <div key="three" className="h-full rounded-md border border-white/15 bg-white/[0.08]" />,
+            <div
+              key="three"
+              className="h-full rounded-md border border-white/15 bg-white/[0.08]"
+            />,
           ]}
         />
       </div>
     </PreviewDemoSurface>
-  )
+  );
 }

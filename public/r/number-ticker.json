@@ -4,11 +4,7 @@
   "type": "registry:ui",
   "title": "Animated Number",
   "description": "Animate numbers to count up or down to a target number.",
-  "dependencies": [
-    "clsx",
-    "motion",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "motion", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/number-ticker.tsx",

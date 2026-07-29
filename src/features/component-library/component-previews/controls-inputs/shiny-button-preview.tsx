@@ -1,6 +1,7 @@
-import { ShinyButton } from '@/components/shiny-button'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
-import { glassStaticButtonClassName } from '../shared/preview-tokens'
+import { ShinyButton } from '@/components/shiny-button';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
+import { glassStaticButtonClassName } from '../shared/preview-tokens';
 
 export function ShinyButtonPreview() {
   return (
@@ -17,5 +18,5 @@ export function ShinyButtonPreview() {
         continue
       </ShinyButton>
     </PreviewDemoSurface>
-  )
+  );
 }

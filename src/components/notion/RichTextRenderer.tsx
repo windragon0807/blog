@@ -1,17 +1,17 @@
-import type { RichText } from '@/types/notion'
+import type { RichText } from '@/types/notion';
 
 interface Props {
-  richText: RichText[]
+  richText: RichText[];
 }
 
 export function RichTextRenderer({ richText }: Props) {
   return (
     <>
       {richText.map((text, i) => {
-        const { bold, italic, strikethrough, underline, code } = text.annotations
-        const href = text.href ?? text.text?.link?.url
+        const { bold, italic, strikethrough, underline, code } = text.annotations;
+        const href = text.href ?? text.text?.link?.url;
 
-        let node: React.ReactNode = text.plain_text
+        let node: React.ReactNode = text.plain_text;
 
         if (code) {
           node = (
@@ -21,12 +21,12 @@ export function RichTextRenderer({ richText }: Props) {
             >
               {node}
             </code>
-          )
+          );
         } else {
-          if (bold) node = <strong key={i}>{node}</strong>
-          if (italic) node = <em key={i}>{node}</em>
-          if (strikethrough) node = <s key={i}>{node}</s>
-          if (underline) node = <u key={i}>{node}</u>
+          if (bold) node = <strong key={i}>{node}</strong>;
+          if (italic) node = <em key={i}>{node}</em>;
+          if (strikethrough) node = <s key={i}>{node}</s>;
+          if (underline) node = <u key={i}>{node}</u>;
         }
 
         if (href) {
@@ -40,11 +40,11 @@ export function RichTextRenderer({ richText }: Props) {
             >
               {node}
             </a>
-          )
+          );
         }
 
-        return <span key={i}>{node}</span>
+        return <span key={i}>{node}</span>;
       })}
     </>
-  )
+  );
 }

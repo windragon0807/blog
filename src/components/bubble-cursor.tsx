@@ -1,3 +1,3 @@
-'use client'
+'use client';
 
-export { BubbleCursor, type BubbleCursorProps } from './cursor-effect-runtime'
+export { BubbleCursor, type BubbleCursorProps } from './cursor-effect-runtime';

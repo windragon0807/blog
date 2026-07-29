@@ -4,11 +4,7 @@
   "type": "registry:ui",
   "title": "Rotating Search Input",
   "description": "A search input with rotating placeholders and vanish submit motion.",
-  "dependencies": [
-    "clsx",
-    "motion",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "motion", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/placeholders-and-vanish-input.tsx",

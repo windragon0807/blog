@@ -1,49 +1,40 @@
-import { PDFDocument } from 'pdf-lib'
-import {
-  RESUME_A4_HEIGHT_PT,
-  RESUME_A4_WIDTH_PT,
-  RESUME_PDF_PAGE_COUNT,
-} from '../constants'
-import {
-  addLinkAnnotationsToPage,
-  type ResumePdfLinkAnnotation,
-} from './resume-pdf-annotations'
-import {
-  addSearchableTextRunsToPdfDocument,
-  type ResumePdfTextRun,
-} from './resume-pdf-text-layer'
+import { PDFDocument } from 'pdf-lib';
+
+import { RESUME_A4_HEIGHT_PT, RESUME_A4_WIDTH_PT, RESUME_PDF_PAGE_COUNT } from '../constants';
+import { addLinkAnnotationsToPage, type ResumePdfLinkAnnotation } from './resume-pdf-annotations';
+import { addSearchableTextRunsToPdfDocument, type ResumePdfTextRun } from './resume-pdf-text-layer';
 
 type ResumePdfWorkerRequest = {
-  fontBytes?: ArrayBuffer
-  imageBytes: ArrayBuffer
-  imageType: string
-  linkAnnotations: ResumePdfLinkAnnotation[]
-  sourcePageHeight: number
-  textRuns?: ResumePdfTextRun[]
-}
+  fontBytes?: ArrayBuffer;
+  imageBytes: ArrayBuffer;
+  imageType: string;
+  linkAnnotations: ResumePdfLinkAnnotation[];
+  sourcePageHeight: number;
+  textRuns?: ResumePdfTextRun[];
+};
 
 type ResumePdfWorkerResponse =
   | {
-      pdfBytes: ArrayBuffer
-      type: 'success'
+      pdfBytes: ArrayBuffer;
+      type: 'success';
     }
   | {
-      message: string
-      type: 'error'
-    }
+      message: string;
+      type: 'error';
+    };
 
 type ResumePdfWorkerScope = {
-  onmessage: ((event: MessageEvent<ResumePdfWorkerRequest>) => void) | null
-  postMessage: (message: ResumePdfWorkerResponse, transfer?: Transferable[]) => void
-}
+  onmessage: ((event: MessageEvent<ResumePdfWorkerRequest>) => void) | null;
+  postMessage: (message: ResumePdfWorkerResponse, transfer?: Transferable[]) => void;
+};
 
-const workerScope = self as unknown as ResumePdfWorkerScope
+const workerScope = self as unknown as ResumePdfWorkerScope;
 
 function toTransferableArrayBuffer(bytes: Uint8Array) {
-  const buffer = new ArrayBuffer(bytes.byteLength)
-  new Uint8Array(buffer).set(bytes)
+  const buffer = new ArrayBuffer(bytes.byteLength);
+  new Uint8Array(buffer).set(bytes);
 
-  return buffer
+  return buffer;
 }
 
 async function buildPdfInWorker({
@@ -54,25 +45,23 @@ async function buildPdfInWorker({
   sourcePageHeight,
   textRuns = [],
 }: ResumePdfWorkerRequest) {
-  const imageBlob = new Blob([imageBytes], { type: imageType || 'image/png' })
-  const sourceImage = await createImageBitmap(imageBlob)
-  const pdf = await PDFDocument.create()
-  const sliceHeight = Math.floor(
-    (sourceImage.width * RESUME_A4_HEIGHT_PT) / RESUME_A4_WIDTH_PT
-  )
+  const imageBlob = new Blob([imageBytes], { type: imageType || 'image/png' });
+  const sourceImage = await createImageBitmap(imageBlob);
+  const pdf = await PDFDocument.create();
+  const sliceHeight = Math.floor((sourceImage.width * RESUME_A4_HEIGHT_PT) / RESUME_A4_WIDTH_PT);
 
   try {
     for (let pageIndex = 0; pageIndex < RESUME_PDF_PAGE_COUNT; pageIndex += 1) {
-      const offsetY = pageIndex * sliceHeight
-      const canvas = new OffscreenCanvas(sourceImage.width, sliceHeight)
-      const context = canvas.getContext('2d')
+      const offsetY = pageIndex * sliceHeight;
+      const canvas = new OffscreenCanvas(sourceImage.width, sliceHeight);
+      const context = canvas.getContext('2d');
 
       if (!context) {
-        throw new Error('Worker canvas context를 만들 수 없습니다.')
+        throw new Error('Worker canvas context를 만들 수 없습니다.');
       }
 
-      context.fillStyle = '#ffffff'
-      context.fillRect(0, 0, canvas.width, canvas.height)
+      context.fillStyle = '#ffffff';
+      context.fillRect(0, 0, canvas.width, canvas.height);
       context.drawImage(
         sourceImage,
         0,
@@ -82,23 +71,23 @@ async function buildPdfInWorker({
         0,
         0,
         sourceImage.width,
-        sliceHeight
-      )
+        sliceHeight,
+      );
 
-      const page = pdf.addPage([RESUME_A4_WIDTH_PT, RESUME_A4_HEIGHT_PT])
+      const page = pdf.addPage([RESUME_A4_WIDTH_PT, RESUME_A4_HEIGHT_PT]);
       const jpgBlob = await canvas.convertToBlob({
         quality: 0.96,
         type: 'image/jpeg',
-      })
-      const jpgBytes = await jpgBlob.arrayBuffer()
-      const jpg = await pdf.embedJpg(jpgBytes)
+      });
+      const jpgBytes = await jpgBlob.arrayBuffer();
+      const jpg = await pdf.embedJpg(jpgBytes);
 
       page.drawImage(jpg, {
         x: 0,
         y: 0,
         width: RESUME_A4_WIDTH_PT,
         height: RESUME_A4_HEIGHT_PT,
-      })
+      });
 
       addLinkAnnotationsToPage({
         links: linkAnnotations,
@@ -106,7 +95,7 @@ async function buildPdfInWorker({
         pageIndex,
         pdf,
         sourcePageHeight,
-      })
+      });
     }
 
     if (fontBytes && textRuns.length > 0) {
@@ -115,13 +104,13 @@ async function buildPdfInWorker({
         pdf,
         sourcePageHeight,
         textRuns,
-      })
+      });
     }
   } finally {
-    sourceImage.close()
+    sourceImage.close();
   }
 
-  return toTransferableArrayBuffer(await pdf.save())
+  return toTransferableArrayBuffer(await pdf.save());
 }
 
 workerScope.onmessage = (event: MessageEvent<ResumePdfWorkerRequest>) => {
@@ -130,16 +119,16 @@ workerScope.onmessage = (event: MessageEvent<ResumePdfWorkerRequest>) => {
       const response: ResumePdfWorkerResponse = {
         pdfBytes,
         type: 'success',
-      }
+      };
 
-      workerScope.postMessage(response, [pdfBytes])
+      workerScope.postMessage(response, [pdfBytes]);
     })
     .catch((error: unknown) => {
       const response: ResumePdfWorkerResponse = {
         message: error instanceof Error ? error.message : 'PDF worker 처리에 실패했습니다.',
         type: 'error',
-      }
+      };
 
-      workerScope.postMessage(response)
-    })
-}
+      workerScope.postMessage(response);
+    });
+};

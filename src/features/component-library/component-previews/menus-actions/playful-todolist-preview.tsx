@@ -1,5 +1,6 @@
-import { PlayfulTodoList } from '@/components/playful-todolist'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+import { PlayfulTodoList } from '@/components/playful-todolist';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 export function PlayfulTodoListPreview() {
   return (
@@ -11,5 +12,5 @@ export function PlayfulTodoListPreview() {
     >
       <PlayfulTodoList />
     </PreviewDemoSurface>
-  )
+  );
 }

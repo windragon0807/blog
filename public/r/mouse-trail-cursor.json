@@ -4,10 +4,7 @@
   "type": "registry:ui",
   "title": "Dot Cursor Trail",
   "description": "A bounded canvas dot trail adapted from mouse-animations Trail.",
-  "dependencies": [
-    "clsx",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/mouse-trail-cursor.tsx",

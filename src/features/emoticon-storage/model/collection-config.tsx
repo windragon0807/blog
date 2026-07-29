@@ -1,19 +1,21 @@
-import Image from 'next/image'
-import type { ReactNode } from 'react'
-import { StarIcon } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import type { EmoticonCollectionId } from '../types'
+import { StarIcon } from 'lucide-react';
+import Image from 'next/image';
+import type { ReactNode } from 'react';
+
+import { cn } from '@/lib/utils';
+
+import type { EmoticonCollectionId } from '../types';
 
 export type Subcategory = {
-  id: string
-  label: string
-  icon?: ReactNode
-}
+  id: string;
+  label: string;
+  icon?: ReactNode;
+};
 
 export const ALL_SUBCATEGORY: Subcategory = {
   id: 'all',
   label: '전체',
-}
+};
 
 export const MATERIAL_SUBCATEGORIES: readonly Subcategory[] = [
   ALL_SUBCATEGORY,
@@ -27,7 +29,7 @@ export const MATERIAL_SUBCATEGORIES: readonly Subcategory[] = [
     label: '폴더 아이콘',
     icon: <MaterialCategoryIcon filename="folder-src.svg" />,
   },
-]
+];
 
 export const TOSSFACE_SUBCATEGORIES: readonly Subcategory[] = [
   ALL_SUBCATEGORY,
@@ -71,7 +73,7 @@ export const TOSSFACE_SUBCATEGORIES: readonly Subcategory[] = [
     label: '깃발',
     icon: <TossfaceCategoryIcon name="펄럭이는 흰색 깃발" />,
   },
-]
+];
 
 export const RYONG_SUBCATEGORIES: readonly Subcategory[] = [
   ALL_SUBCATEGORY,
@@ -80,15 +82,9 @@ export const RYONG_SUBCATEGORIES: readonly Subcategory[] = [
     label: '아끼는 이미지',
     icon: <RyongCategoryIcon filename="noticon-teg1ooxzhglorh6rk9hs.svg" />,
   },
-]
+];
 
-export function CollectionLogoImage({
-  src,
-  isActive,
-}: {
-  src: string
-  isActive: boolean
-}) {
+export function CollectionLogoImage({ src, isActive }: { src: string; isActive: boolean }) {
   return (
     <Image
       src={src}
@@ -101,19 +97,14 @@ export function CollectionLogoImage({
         'h-[0.9em] w-[0.9em] shrink-0 rounded-[0.22em] object-contain',
         isActive
           ? 'opacity-100'
-          : 'opacity-35 grayscale saturate-0 contrast-75 group-hover:opacity-65 group-hover:grayscale-[0.45] group-hover:saturate-[0.65]'
+          : 'opacity-35 grayscale saturate-0 contrast-75 group-hover:opacity-65 group-hover:grayscale-[0.45] group-hover:saturate-[0.65]',
       )}
     />
-  )
+  );
 }
 
 export function MaterialLogo({ isActive }: { isActive: boolean }) {
-  return (
-    <CollectionLogoImage
-      src="/emoticons/logos/material-icon-theme.png"
-      isActive={isActive}
-    />
-  )
+  return <CollectionLogoImage src="/emoticons/logos/material-icon-theme.png" isActive={isActive} />;
 }
 
 export function MaterialCategoryIcon({ filename }: { filename: string }) {
@@ -127,7 +118,7 @@ export function MaterialCategoryIcon({ filename }: { filename: string }) {
       fetchPriority="low"
       className="h-5 w-5 object-contain"
     />
-  )
+  );
 }
 
 export function TossfaceCategoryIcon({ name }: { name: string }) {
@@ -140,16 +131,11 @@ export function TossfaceCategoryIcon({ name }: { name: string }) {
       decoding="async"
       className="h-4 w-4 object-contain"
     />
-  )
+  );
 }
 
 export function TossfaceLogo({ isActive }: { isActive: boolean }) {
-  return (
-    <CollectionLogoImage
-      src="/emoticons/logos/toss-symbol.png"
-      isActive={isActive}
-    />
-  )
+  return <CollectionLogoImage src="/emoticons/logos/toss-symbol.png" isActive={isActive} />;
 }
 
 export function RyongCategoryIcon({ filename }: { filename: string }) {
@@ -162,11 +148,11 @@ export function RyongCategoryIcon({ filename }: { filename: string }) {
       decoding="async"
       className="h-4 w-4 object-contain"
     />
-  )
+  );
 }
 
 export function RyongLogo({ isActive }: { isActive: boolean }) {
-  return <CollectionLogoImage src="/icon.png" isActive={isActive} />
+  return <CollectionLogoImage src="/icon.png" isActive={isActive} />;
 }
 
 export function FavoritesLogo({ isActive }: { isActive: boolean }) {
@@ -179,66 +165,60 @@ export function FavoritesLogo({ isActive }: { isActive: boolean }) {
         'h-[0.9em] w-[0.9em] shrink-0',
         isActive
           ? 'fill-amber-400 text-amber-400 opacity-100'
-          : 'fill-none text-zinc-300 opacity-35 group-hover:opacity-65 dark:text-zinc-700'
+          : 'fill-none text-zinc-300 opacity-35 group-hover:opacity-65 dark:text-zinc-700',
       )}
     />
-  )
+  );
 }
 
-export function CollectionLogo({
-  id,
-  isActive,
-}: {
-  id: EmoticonCollectionId
-  isActive: boolean
-}) {
+export function CollectionLogo({ id, isActive }: { id: EmoticonCollectionId; isActive: boolean }) {
   if (id === 'tossface') {
-    return <TossfaceLogo isActive={isActive} />
+    return <TossfaceLogo isActive={isActive} />;
   }
 
   if (id === 'ryong') {
-    return <RyongLogo isActive={isActive} />
+    return <RyongLogo isActive={isActive} />;
   }
 
   if (id === 'favorites') {
-    return <FavoritesLogo isActive={isActive} />
+    return <FavoritesLogo isActive={isActive} />;
   }
 
-  return <MaterialLogo isActive={isActive} />
+  return <MaterialLogo isActive={isActive} />;
 }
 
 export function getSubcategories(collectionId: EmoticonCollectionId) {
   if (collectionId === 'favorites') {
-    return []
+    return [];
   }
 
   if (collectionId === 'tossface') {
-    return TOSSFACE_SUBCATEGORIES
+    return TOSSFACE_SUBCATEGORIES;
   }
 
   if (collectionId === 'ryong') {
-    return RYONG_SUBCATEGORIES
+    return RYONG_SUBCATEGORIES;
   }
 
-  return MATERIAL_SUBCATEGORIES
+  return MATERIAL_SUBCATEGORIES;
 }
 
 export function getDefaultSubcategory(collectionId: EmoticonCollectionId) {
-  return getSubcategories(collectionId)[0]?.id ?? 'all'
+  return getSubcategories(collectionId)[0]?.id ?? 'all';
 }
 
 export function getCollectionLabel(collectionId: EmoticonCollectionId) {
   if (collectionId === 'favorites') {
-    return 'Favorites'
+    return 'Favorites';
   }
 
   if (collectionId === 'tossface') {
-    return 'Tossface'
+    return 'Tossface';
   }
 
   if (collectionId === 'ryong') {
-    return 'Ryong'
+    return 'Ryong';
   }
 
-  return 'Material'
+  return 'Material';
 }

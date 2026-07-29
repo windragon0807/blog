@@ -1,5 +1,4 @@
-export { CircleCheckIcon, CopyIcon, DownloadIcon } from './action-icons'
-
+export { CircleCheckIcon, CopyIcon, DownloadIcon } from './action-icons';
 export {
   GitHubIcon,
   HouseIcon,
@@ -9,4 +8,4 @@ export {
   SettingsIcon,
   SmileStorageIcon,
   SunIcon,
-} from './header-icons'
+} from './header-icons';

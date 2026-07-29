@@ -1,7 +1,8 @@
-import { CharacterCursor } from '@/components/character-cursor'
-import { DesktopOnlyPreview } from '../desktop-only-preview'
-import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface'
-import type { PreviewMode } from '../types'
+import { CharacterCursor } from '@/components/character-cursor';
+
+import { DesktopOnlyPreview } from '../desktop-only-preview';
+import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface';
+import type { PreviewMode } from '../types';
 
 export function CharacterCursorPreview({ mode }: { mode: PreviewMode }) {
   return (
@@ -22,5 +23,5 @@ export function CharacterCursorPreview({ mode }: { mode: PreviewMode }) {
         </CharacterCursor>
       </OuterEffectSurface>
     </DesktopOnlyPreview>
-  )
+  );
 }

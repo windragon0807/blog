@@ -1,29 +1,30 @@
-'use client'
+'use client';
 
-import { useCallback, useEffect, useState, type CSSProperties, type MouseEvent } from 'react'
-import { X, ZoomIn, ZoomOut } from 'lucide-react'
-import { RetryableImage, type NotionMediaRefreshConfig } from '@/components/RetryableImage'
+import { X, ZoomIn, ZoomOut } from 'lucide-react';
+import { type CSSProperties, type MouseEvent, useCallback, useEffect, useState } from 'react';
+
+import { type NotionMediaRefreshConfig, RetryableImage } from '@/components/RetryableImage';
 import {
   Dialog,
   DialogOverlay,
   DialogPortal,
   DialogRawContent,
   DialogTitle,
-} from '@/components/ui/dialog'
+} from '@/components/ui/dialog';
 
 interface Props {
-  src: string
-  alt: string
-  width: number
-  height: number
-  className?: string
-  unoptimized?: boolean
-  notionRefresh?: NotionMediaRefreshConfig
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  className?: string;
+  unoptimized?: boolean;
+  notionRefresh?: NotionMediaRefreshConfig;
 }
 
-const MIN_IMAGE_SCALE = 1
-const MAX_IMAGE_SCALE = 2.5
-const IMAGE_SCALE_STEP = 0.25
+const MIN_IMAGE_SCALE = 1;
+const MAX_IMAGE_SCALE = 2.5;
+const IMAGE_SCALE_STEP = 0.25;
 
 export function LightboxImage({
   src,
@@ -34,93 +35,85 @@ export function LightboxImage({
   unoptimized = false,
   notionRefresh,
 }: Props) {
-  const [open, setOpen] = useState(false)
-  const [imageScale, setImageScale] = useState(MIN_IMAGE_SCALE)
+  const [open, setOpen] = useState(false);
+  const [imageScale, setImageScale] = useState(MIN_IMAGE_SCALE);
   const [resolvedImage, setResolvedImage] = useState({
     originalSrc: src,
     resolvedSrc: src,
-  })
+  });
   const [aspectRatio, setAspectRatio] = useState<number>(() => {
     if (width > 0 && height > 0) {
-      return width / height
+      return width / height;
     }
-    return 16 / 9
-  })
-  const resolvedSrc =
-    resolvedImage.originalSrc === src ? resolvedImage.resolvedSrc : src
+    return 16 / 9;
+  });
+  const resolvedSrc = resolvedImage.originalSrc === src ? resolvedImage.resolvedSrc : src;
 
   const handleSourceResolved = (nextSrc: string) => {
     setResolvedImage((previousImage) => {
-      if (
-        previousImage.originalSrc === src &&
-        previousImage.resolvedSrc === nextSrc
-      ) {
-        return previousImage
+      if (previousImage.originalSrc === src && previousImage.resolvedSrc === nextSrc) {
+        return previousImage;
       }
 
       return {
         originalSrc: src,
         resolvedSrc: nextSrc,
-      }
-    })
-  }
+      };
+    });
+  };
 
   const closeLightbox = useCallback(() => {
-    setOpen(false)
-    setImageScale(MIN_IMAGE_SCALE)
-  }, [])
+    setOpen(false);
+    setImageScale(MIN_IMAGE_SCALE);
+  }, []);
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (nextOpen) {
-      setOpen(true)
-      return
+      setOpen(true);
+      return;
     }
 
-    closeLightbox()
-  }
+    closeLightbox();
+  };
 
   const zoomOut = () => {
-    setImageScale((previousScale) =>
-      Math.max(MIN_IMAGE_SCALE, previousScale - IMAGE_SCALE_STEP)
-    )
-  }
+    setImageScale((previousScale) => Math.max(MIN_IMAGE_SCALE, previousScale - IMAGE_SCALE_STEP));
+  };
 
   const zoomIn = () => {
-    setImageScale((previousScale) =>
-      Math.min(MAX_IMAGE_SCALE, previousScale + IMAGE_SCALE_STEP)
-    )
-  }
+    setImageScale((previousScale) => Math.min(MAX_IMAGE_SCALE, previousScale + IMAGE_SCALE_STEP));
+  };
 
   useEffect(() => {
-    if (!open) return
+    if (!open) return;
 
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        closeLightbox()
+        closeLightbox();
       }
-    }
+    };
 
-    document.addEventListener('keydown', onKeyDown)
+    document.addEventListener('keydown', onKeyDown);
     return () => {
-      document.removeEventListener('keydown', onKeyDown)
-      document.body.style.overflow = previousOverflow
-    }
-  }, [closeLightbox, open])
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [closeLightbox, open]);
 
   const openLightbox = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-    event.stopPropagation()
-    setImageScale(MIN_IMAGE_SCALE)
-    setOpen(true)
-  }
+    event.preventDefault();
+    event.stopPropagation();
+    setImageScale(MIN_IMAGE_SCALE);
+    setOpen(true);
+  };
   const imageScaleStyle = {
     '--lightbox-scale': imageScale,
-  } as CSSProperties
-  const canZoomOut = imageScale > MIN_IMAGE_SCALE
-  const canZoomIn = imageScale < MAX_IMAGE_SCALE
+  } as CSSProperties;
+  const canZoomOut = imageScale > MIN_IMAGE_SCALE;
+  const canZoomIn = imageScale < MAX_IMAGE_SCALE;
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -143,7 +136,7 @@ export function LightboxImage({
           unoptimized={unoptimized}
           notionRefresh={notionRefresh}
           onImageResolved={({ naturalWidth, naturalHeight }) => {
-            setAspectRatio(naturalWidth / naturalHeight)
+            setAspectRatio(naturalWidth / naturalHeight);
           }}
           onSourceResolved={handleSourceResolved}
           skeletonClassName="absolute inset-0 animate-pulse bg-zinc-200/80 dark:bg-zinc-700/65"
@@ -156,7 +149,7 @@ export function LightboxImage({
           className="fixed inset-0 z-[91] flex items-center justify-center p-4 outline-none"
           onClick={(event) => {
             if (event.target === event.currentTarget) {
-              closeLightbox()
+              closeLightbox();
             }
           }}
         >
@@ -205,7 +198,7 @@ export function LightboxImage({
             unoptimized={unoptimized}
             notionRefresh={notionRefresh}
             onImageResolved={({ naturalWidth, naturalHeight }) => {
-              setAspectRatio(naturalWidth / naturalHeight)
+              setAspectRatio(naturalWidth / naturalHeight);
             }}
             onSourceResolved={handleSourceResolved}
             skeletonClassName="fixed left-1/2 top-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 rounded-xl bg-zinc-200/20 backdrop-blur-sm dark:bg-white/10"
@@ -216,5 +209,5 @@ export function LightboxImage({
         </DialogRawContent>
       </DialogPortal>
     </Dialog>
-  )
+  );
 }

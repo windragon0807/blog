@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
 /* eslint-disable react-hooks/set-state-in-effect, @next/next/no-img-element */
 
-import { motion, useMotionValue, useTransform, type PanInfo } from 'motion/react';
-import { useState, useEffect } from 'react';
+import { motion, type PanInfo, useMotionValue, useTransform } from 'motion/react';
+import { useEffect, useState } from 'react';
 
 interface CardRotateProps {
   children: React.ReactNode;
@@ -78,7 +78,7 @@ export function Stack({
   autoplayDelay = 3000,
   pauseOnHover = false,
   mobileClickOnly = false,
-  mobileBreakpoint = 768
+  mobileBreakpoint = 768,
 }: StackProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -109,7 +109,7 @@ export function Stack({
               alt="card-1"
               className="w-full h-full object-cover pointer-events-none"
             />
-          )
+          ),
         },
         {
           id: 2,
@@ -119,7 +119,7 @@ export function Stack({
               alt="card-2"
               className="w-full h-full object-cover pointer-events-none"
             />
-          )
+          ),
         },
         {
           id: 3,
@@ -129,7 +129,7 @@ export function Stack({
               alt="card-3"
               className="w-full h-full object-cover pointer-events-none"
             />
-          )
+          ),
         },
         {
           id: 4,
@@ -139,8 +139,8 @@ export function Stack({
               alt="card-4"
               className="w-full h-full object-cover pointer-events-none"
             />
-          )
-        }
+          ),
+        },
       ];
     }
   });
@@ -152,9 +152,9 @@ export function Stack({
   }, [cards]);
 
   const sendToBack = (id: number) => {
-    setStack(prev => {
+    setStack((prev) => {
       const newStack = [...prev];
-      const index = newStack.findIndex(card => card.id === id);
+      const index = newStack.findIndex((card) => card.id === id);
       const [card] = newStack.splice(index, 1);
       newStack.unshift(card);
       return newStack;
@@ -176,7 +176,7 @@ export function Stack({
     <div
       className="relative w-full h-full"
       style={{
-        perspective: 600
+        perspective: 600,
       }}
       onMouseEnter={() => pauseOnHover && setIsPaused(true)}
       onMouseLeave={() => pauseOnHover && setIsPaused(false)}
@@ -196,13 +196,13 @@ export function Stack({
               animate={{
                 rotateZ: (stack.length - index - 1) * 4 + randomRotate,
                 scale: 1 + index * 0.06 - stack.length * 0.06,
-                transformOrigin: '90% 90%'
+                transformOrigin: '90% 90%',
               }}
               initial={false}
               transition={{
                 type: 'spring',
                 stiffness: animationConfig.stiffness,
-                damping: animationConfig.damping
+                damping: animationConfig.damping,
               }}
             >
               {card.content}

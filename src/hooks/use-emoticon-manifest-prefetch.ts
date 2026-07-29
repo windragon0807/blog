@@ -1,21 +1,22 @@
-'use client'
+'use client';
 
-import { useCallback } from 'react'
-import { useRouter } from 'next/navigation'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { useCallback } from 'react';
+
 import {
   EMOTICON_MANIFEST_QUERY_KEY,
   prefetchEmoticonManifest,
-} from '@/features/emoticon-storage/emoticon-manifest-query'
+} from '@/features/emoticon-storage/emoticon-manifest-query';
 
 export function useEmoticonManifestPrefetch() {
-  const router = useRouter()
-  const queryClient = useQueryClient()
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
   return useCallback(() => {
-    router.prefetch('/emoticons')
+    router.prefetch('/emoticons');
 
-    const queryState = queryClient.getQueryState(EMOTICON_MANIFEST_QUERY_KEY)
+    const queryState = queryClient.getQueryState(EMOTICON_MANIFEST_QUERY_KEY);
 
     if (
       queryState?.data !== undefined ||
@@ -23,9 +24,9 @@ export function useEmoticonManifestPrefetch() {
       queryState?.fetchStatus === 'fetching' ||
       queryState?.status === 'error'
     ) {
-      return
+      return;
     }
 
-    void prefetchEmoticonManifest(queryClient).catch(() => undefined)
-  }, [queryClient, router])
+    void prefetchEmoticonManifest(queryClient).catch(() => undefined);
+  }, [queryClient, router]);
 }

@@ -1,9 +1,10 @@
-import type { ReactNode } from 'react'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import type { ReactNode } from 'react';
+
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   ComponentMobileSidebarTrigger,
   ComponentSidebar,
-} from '@/features/component-library/component-sidebar'
+} from '@/features/component-library/component-sidebar';
 
 export default function ComponentsLayout({ children }: { children: ReactNode }) {
   return (
@@ -22,12 +23,10 @@ export default function ComponentsLayout({ children }: { children: ReactNode }) 
             data-lenis-prevent-wheel
             orientation="vertical"
           >
-            <div className="components-content-inner lg:pb-20 lg:pr-10">
-              {children}
-            </div>
+            <div className="components-content-inner lg:pb-20 lg:pr-10">{children}</div>
           </ScrollArea>
         </div>
       </div>
     </>
-  )
+  );
 }

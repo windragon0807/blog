@@ -1,135 +1,133 @@
-import 'server-only'
+import 'server-only';
 
-import { Client } from '@notionhq/client'
-import { unstable_cache } from 'next/cache'
-import { cache } from 'react'
+import { Client } from '@notionhq/client';
+import type {
+  BlockObjectResponse,
+  PageObjectResponse,
+  PartialBlockObjectResponse,
+  QueryDatabaseParameters,
+} from '@notionhq/client/build/src/api-endpoints';
+import { unstable_cache } from 'next/cache';
+import { cache } from 'react';
+
 import {
   getNodeEnv,
   getNotionApiKey,
   getNotionDatabaseId,
   getNotionPortfolioDatabaseId,
-} from '@/lib/server/env'
-import type { Post, PostSource, Block, RichText } from '@/types/notion'
-import type {
-  PageObjectResponse,
-  BlockObjectResponse,
-  PartialBlockObjectResponse,
-  QueryDatabaseParameters,
-} from '@notionhq/client/build/src/api-endpoints'
+} from '@/lib/server/env';
+import type { Block, Post, PostSource, RichText } from '@/types/notion';
 
 function requireEnv(name: string, value: string | undefined): string {
-  const trimmed = value?.trim()
+  const trimmed = value?.trim();
   if (!trimmed) {
     throw new Error(
-      `Missing required environment variable: ${name}. Set it in .env.local and Vercel project settings.`
-    )
+      `Missing required environment variable: ${name}. Set it in .env.local and Vercel project settings.`,
+    );
   }
-  return trimmed
+  return trimmed;
 }
 
 const notion = new Client({
   auth: getNotionApiKey(),
-})
+});
 
-const BLOG_DATABASE_ID = requireEnv('NOTION_DATABASE_ID', getNotionDatabaseId())
+const BLOG_DATABASE_ID = requireEnv('NOTION_DATABASE_ID', getNotionDatabaseId());
 const PORTFOLIO_DATABASE_ID = requireEnv(
   'NOTION_PORTFOLIO_DATABASE_ID',
-  getNotionPortfolioDatabaseId()
-)
+  getNotionPortfolioDatabaseId(),
+);
 
 // blog + portfolio (slug/detail lookup, webhook, getPostByPageId)
-const CONTENT_DATABASE_IDS = Array.from(
-  new Set([BLOG_DATABASE_ID, PORTFOLIO_DATABASE_ID])
-)
-const CACHE_TTL_SECONDS = getNodeEnv() === 'development' ? 120 : 3600
+const CONTENT_DATABASE_IDS = Array.from(new Set([BLOG_DATABASE_ID, PORTFOLIO_DATABASE_ID]));
+const CACHE_TTL_SECONDS = getNodeEnv() === 'development' ? 120 : 3600;
 
 export const NOTION_CACHE_TAGS = {
   schema: 'notion:schema',
   posts: 'notion:posts',
   blocks: 'notion:blocks',
-} as const
+} as const;
 
 // ─────────────────────────────────────────────
 // Helpers
 // ─────────────────────────────────────────────
 
 interface DatabaseSchema {
-  title: string | null
-  slug: string | null
-  description: string | null
-  seriesSelect: string | null
-  seriesRich: string | null
-  tags: string | null
-  published: string | null
-  date: string | null
+  title: string | null;
+  slug: string | null;
+  description: string | null;
+  seriesSelect: string | null;
+  seriesRich: string | null;
+  tags: string | null;
+  published: string | null;
+  date: string | null;
 }
 
 export interface PostMediaUrls {
-  cover: string | null
-  iconUrl: string | null
+  cover: string | null;
+  iconUrl: string | null;
 }
 
 function extractRichText(richTextArr: RichText[]): string {
-  return richTextArr.map((t) => t.plain_text).join('')
+  return richTextArr.map((t) => t.plain_text).join('');
 }
 
 function normalizeKey(value: string): string {
-  return value.toLowerCase().replace(/[\s_-]/g, '')
+  return value.toLowerCase().replace(/[\s_-]/g, '');
 }
 
 function findProperty(
   properties: Record<string, { type: string }>,
   aliases: string[],
-  expectedType: string
+  expectedType: string,
 ): string | null {
-  const aliasSet = new Set(aliases.map(normalizeKey))
+  const aliasSet = new Set(aliases.map(normalizeKey));
 
   for (const [name, def] of Object.entries(properties)) {
     if (def.type === expectedType && aliasSet.has(normalizeKey(name))) {
-      return name
+      return name;
     }
   }
 
   for (const [name, def] of Object.entries(properties)) {
-    if (def.type === expectedType) return name
+    if (def.type === expectedType) return name;
   }
 
-  return null
+  return null;
 }
 
 async function getDatabaseSchemaCached(databaseId: string): Promise<DatabaseSchema> {
-  return unstable_cache(async (): Promise<DatabaseSchema> => {
-    const database = await notion.databases.retrieve({ database_id: databaseId })
-    const properties = (database as { properties: Record<string, { type: string }> })
-      .properties
+  return unstable_cache(
+    async (): Promise<DatabaseSchema> => {
+      const database = await notion.databases.retrieve({ database_id: databaseId });
+      const properties = (database as { properties: Record<string, { type: string }> }).properties;
 
-    return {
-      title: findProperty(properties, ['title', '이름', 'name'], 'title'),
-      slug: findProperty(properties, ['slug', '슬러그'], 'rich_text'),
-      description: findProperty(
-        properties,
-        ['description', '요약', '설명', 'excerpt'],
-        'rich_text'
-      ),
-      seriesSelect: findProperty(properties, ['series', '시리즈'], 'select'),
-      seriesRich: findProperty(properties, ['series', '시리즈'], 'rich_text'),
-      tags: findProperty(properties, ['tags', 'tag', '태그'], 'multi_select'),
-      published: findProperty(
-        properties,
-        ['published', 'publish', '공개', '게시'],
-        'checkbox'
-      ),
-      date: findProperty(properties, ['date', 'publishedat', '날짜'], 'date'),
-    }
-  }, [`notion-schema:${databaseId}`], {
-    revalidate: CACHE_TTL_SECONDS,
-    tags: [NOTION_CACHE_TAGS.schema],
-  })()
+      return {
+        title: findProperty(properties, ['title', '이름', 'name'], 'title'),
+        slug: findProperty(properties, ['slug', '슬러그'], 'rich_text'),
+        description: findProperty(
+          properties,
+          ['description', '요약', '설명', 'excerpt'],
+          'rich_text',
+        ),
+        seriesSelect: findProperty(properties, ['series', '시리즈'], 'select'),
+        seriesRich: findProperty(properties, ['series', '시리즈'], 'rich_text'),
+        tags: findProperty(properties, ['tags', 'tag', '태그'], 'multi_select'),
+        published: findProperty(properties, ['published', 'publish', '공개', '게시'], 'checkbox'),
+        date: findProperty(properties, ['date', 'publishedat', '날짜'], 'date'),
+      };
+    },
+    [`notion-schema:${databaseId}`],
+    {
+      revalidate: CACHE_TTL_SECONDS,
+      tags: [NOTION_CACHE_TAGS.schema],
+    },
+  )();
 }
 
 const getDatabaseSchema = cache(async (databaseId: string): Promise<DatabaseSchema> => {
-  return getDatabaseSchemaCached(databaseId)
-})
+  return getDatabaseSchemaCached(databaseId);
+});
 
 function slugify(input: string): string {
   return input
@@ -138,14 +136,14 @@ function slugify(input: string): string {
     .replace(/[\s/]+/g, '-')
     .replace(/[^\p{L}\p{N}-]+/gu, '')
     .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '')
+    .replace(/^-|-$/g, '');
 }
 
 function normalizeSlug(slug: string): string {
   try {
-    return decodeURIComponent(slug)
+    return decodeURIComponent(slug);
   } catch {
-    return slug
+    return slug;
   }
 }
 
@@ -154,7 +152,7 @@ function getPageCoverUrl(page: Pick<PageObjectResponse, 'cover'>): string | null
     ? page.cover.external.url
     : page.cover?.type === 'file'
       ? page.cover.file.url
-      : null
+      : null;
 }
 
 function getPageIcon(page: Pick<PageObjectResponse, 'icon'>): Post['icon'] {
@@ -164,68 +162,57 @@ function getPageIcon(page: Pick<PageObjectResponse, 'icon'>): Post['icon'] {
       ? { type: 'image' as const, url: page.icon.external.url }
       : page.icon?.type === 'file'
         ? { type: 'image' as const, url: page.icon.file.url }
-        : null
+        : null;
 }
 
 function getPostSource(databaseId: string): PostSource {
-  if (databaseId === PORTFOLIO_DATABASE_ID) return 'portfolio'
-  return 'blog'
+  if (databaseId === PORTFOLIO_DATABASE_ID) return 'portfolio';
+  return 'blog';
 }
 
-function pageToPost(
-  page: PageObjectResponse,
-  schema: DatabaseSchema,
-  source: PostSource
-): Post {
-  const props = page.properties as Record<string, unknown>
+function pageToPost(page: PageObjectResponse, schema: DatabaseSchema, source: PostSource): Post {
+  const props = page.properties as Record<string, unknown>;
 
-  const titleProp = schema.title ? props[schema.title] : undefined
-  const slugProp = schema.slug ? props[schema.slug] : undefined
-  const descriptionProp = schema.description ? props[schema.description] : undefined
-  const seriesSelectProp = schema.seriesSelect ? props[schema.seriesSelect] : undefined
-  const seriesRichProp = schema.seriesRich ? props[schema.seriesRich] : undefined
-  const tagsProp = schema.tags ? props[schema.tags] : undefined
-  const publishedProp = schema.published ? props[schema.published] : undefined
-  const dateProp = schema.date ? props[schema.date] : undefined
+  const titleProp = schema.title ? props[schema.title] : undefined;
+  const slugProp = schema.slug ? props[schema.slug] : undefined;
+  const descriptionProp = schema.description ? props[schema.description] : undefined;
+  const seriesSelectProp = schema.seriesSelect ? props[schema.seriesSelect] : undefined;
+  const seriesRichProp = schema.seriesRich ? props[schema.seriesRich] : undefined;
+  const tagsProp = schema.tags ? props[schema.tags] : undefined;
+  const publishedProp = schema.published ? props[schema.published] : undefined;
+  const dateProp = schema.date ? props[schema.date] : undefined;
 
-  const title = extractRichText(
-    (titleProp as { title?: RichText[] })?.title ?? []
-  )
+  const title = extractRichText((titleProp as { title?: RichText[] })?.title ?? []);
 
-  const rawSlug = extractRichText(
-    (slugProp as { rich_text?: RichText[] })?.rich_text ?? []
-  )
+  const rawSlug = extractRichText((slugProp as { rich_text?: RichText[] })?.rich_text ?? []);
 
-  const slug = rawSlug || slugify(title) || page.id.replace(/-/g, '')
+  const slug = rawSlug || slugify(title) || page.id.replace(/-/g, '');
 
   const description = extractRichText(
-    (descriptionProp as { rich_text?: RichText[] })?.rich_text ?? []
-  )
+    (descriptionProp as { rich_text?: RichText[] })?.rich_text ?? [],
+  );
 
   const seriesFromSelect =
-    (seriesSelectProp as { select?: { name?: string } | null })?.select?.name ??
-    null
+    (seriesSelectProp as { select?: { name?: string } | null })?.select?.name ?? null;
   const seriesFromRich = extractRichText(
-    (seriesRichProp as { rich_text?: RichText[] })?.rich_text ?? []
-  )
-  const series = seriesFromSelect ?? (seriesFromRich || null)
+    (seriesRichProp as { rich_text?: RichText[] })?.rich_text ?? [],
+  );
+  const series = seriesFromSelect ?? (seriesFromRich || null);
 
   const tags: string[] = (
     (tagsProp as { multi_select?: { name: string }[] })?.multi_select ?? []
-  ).map((t) => t.name)
+  ).map((t) => t.name);
 
   const published =
     schema.published == null
       ? true
-      : ((publishedProp as { checkbox?: boolean })?.checkbox ?? false)
+      : ((publishedProp as { checkbox?: boolean })?.checkbox ?? false);
 
   const date =
-    ((dateProp as { date?: { start?: string } | null })?.date?.start ??
-      page.created_time ??
-      '')
+    (dateProp as { date?: { start?: string } | null })?.date?.start ?? page.created_time ?? '';
 
-  const cover = getPageCoverUrl(page)
-  const icon = getPageIcon(page)
+  const cover = getPageCoverUrl(page);
+  const icon = getPageIcon(page);
 
   return {
     id: page.id,
@@ -239,15 +226,18 @@ function pageToPost(
     icon,
     cover,
     source,
-  }
+  };
 }
 
-async function queryAllPages(databaseId: string, params: {
-  filter?: QueryDatabaseParameters['filter']
-  sorts?: QueryDatabaseParameters['sorts']
-}): Promise<PageObjectResponse[]> {
-  const pages: PageObjectResponse[] = []
-  let cursor: string | undefined
+async function queryAllPages(
+  databaseId: string,
+  params: {
+    filter?: QueryDatabaseParameters['filter'];
+    sorts?: QueryDatabaseParameters['sorts'];
+  },
+): Promise<PageObjectResponse[]> {
+  const pages: PageObjectResponse[] = [];
+  let cursor: string | undefined;
 
   do {
     const response = await notion.databases.query({
@@ -256,18 +246,16 @@ async function queryAllPages(databaseId: string, params: {
       sorts: params.sorts,
       start_cursor: cursor,
       page_size: 100,
-    })
+    });
 
     pages.push(
-      ...response.results.filter(
-        (page): page is PageObjectResponse => 'properties' in page
-      )
-    )
+      ...response.results.filter((page): page is PageObjectResponse => 'properties' in page),
+    );
 
-    cursor = response.has_more ? (response.next_cursor ?? undefined) : undefined
-  } while (cursor)
+    cursor = response.has_more ? (response.next_cursor ?? undefined) : undefined;
+  } while (cursor);
 
-  return pages
+  return pages;
 }
 
 // ─────────────────────────────────────────────
@@ -276,192 +264,176 @@ async function queryAllPages(databaseId: string, params: {
 
 /** published=true 포스트 목록 (최신순) */
 async function getPostsImpl(databaseId: string): Promise<Post[]> {
-  const schema = await getDatabaseSchema(databaseId)
-  const source = getPostSource(databaseId)
+  const schema = await getDatabaseSchema(databaseId);
+  const source = getPostSource(databaseId);
   const filter = schema.published
     ? { property: schema.published, checkbox: { equals: true } }
-    : undefined
+    : undefined;
   const sorts = schema.date
     ? [{ property: schema.date, direction: 'descending' as const }]
-    : [{ timestamp: 'created_time' as const, direction: 'descending' as const }]
+    : [{ timestamp: 'created_time' as const, direction: 'descending' as const }];
 
-  const pages = await queryAllPages(databaseId, { filter, sorts })
+  const pages = await queryAllPages(databaseId, { filter, sorts });
 
-  return pages.map((page) => pageToPost(page, schema, source))
+  return pages.map((page) => pageToPost(page, schema, source));
 }
 
 async function getPostsCached(databaseId: string): Promise<Post[]> {
-  return unstable_cache(
-    async () => getPostsImpl(databaseId),
-    [`notion-posts:${databaseId}`],
-    {
-      revalidate: CACHE_TTL_SECONDS,
-      tags: [NOTION_CACHE_TAGS.posts],
-    }
-  )()
+  return unstable_cache(async () => getPostsImpl(databaseId), [`notion-posts:${databaseId}`], {
+    revalidate: CACHE_TTL_SECONDS,
+    tags: [NOTION_CACHE_TAGS.posts],
+  })();
 }
 
 export const getPosts = cache(async (): Promise<Post[]> => {
-  return getPostsCached(BLOG_DATABASE_ID)
-})
+  return getPostsCached(BLOG_DATABASE_ID);
+});
 
 export const getPortfolioPosts = cache(async (): Promise<Post[]> => {
-  return getPostsCached(PORTFOLIO_DATABASE_ID)
-})
+  return getPostsCached(PORTFOLIO_DATABASE_ID);
+});
 
 export const getAllContentPosts = cache(async (): Promise<Post[]> => {
   const postGroups = await Promise.all(
-    CONTENT_DATABASE_IDS.map((databaseId) => getPostsCached(databaseId))
-  )
+    CONTENT_DATABASE_IDS.map((databaseId) => getPostsCached(databaseId)),
+  );
 
-  return postGroups
-    .flat()
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-})
+  return postGroups.flat().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+});
 
-async function getPostBySlugFromDatabase(
-  databaseId: string,
-  slug: string
-): Promise<Post | null> {
-  const decodedSlug = normalizeSlug(slug)
-  const posts = await getPostsCached(databaseId)
-  return posts.find((post) => post.slug === decodedSlug || post.slug === slug) ?? null
+async function getPostBySlugFromDatabase(databaseId: string, slug: string): Promise<Post | null> {
+  const decodedSlug = normalizeSlug(slug);
+  const posts = await getPostsCached(databaseId);
+  return posts.find((post) => post.slug === decodedSlug || post.slug === slug) ?? null;
 }
 
 export const getPostBySlug = cache(async (slug: string): Promise<Post | null> => {
   for (const databaseId of CONTENT_DATABASE_IDS) {
-    const post = await getPostBySlugFromDatabase(databaseId, slug)
-    if (post) return post
+    const post = await getPostBySlugFromDatabase(databaseId, slug);
+    if (post) return post;
   }
 
-  return null
-})
+  return null;
+});
 
 /** 페이지 블록 트리 재귀 조회 */
 async function getPageBlocksImpl(blockId: string): Promise<Block[]> {
-  const blocks: Block[] = []
+  const blocks: Block[] = [];
 
-  let cursor: string | undefined = undefined
+  let cursor: string | undefined = undefined;
   do {
     const response = await notion.blocks.children.list({
       block_id: blockId,
       start_cursor: cursor,
       page_size: 100,
-    })
+    });
 
-    const fetched = response.results as (
-      | BlockObjectResponse
-      | PartialBlockObjectResponse
-    )[]
+    const fetched = response.results as (BlockObjectResponse | PartialBlockObjectResponse)[];
 
     const resolvedBlocks = await Promise.all(
       fetched.map(async (block) => {
-        if (!('type' in block)) return null
+        if (!('type' in block)) return null;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const b = block as any
+        const b = block as any;
 
         if (b.has_children) {
-          b.children = await getPageBlocks(b.id)
+          b.children = await getPageBlocks(b.id);
         }
 
-        return b as Block
-      })
-    )
+        return b as Block;
+      }),
+    );
 
-    blocks.push(...resolvedBlocks.filter((block): block is Block => block != null))
+    blocks.push(...resolvedBlocks.filter((block): block is Block => block != null));
 
-    cursor = response.has_more ? (response.next_cursor ?? undefined) : undefined
-  } while (cursor)
+    cursor = response.has_more ? (response.next_cursor ?? undefined) : undefined;
+  } while (cursor);
 
-  return blocks
+  return blocks;
 }
 
-const getPageBlocksCached = unstable_cache(
-  getPageBlocksImpl,
-  ['notion-page-blocks'],
-  {
-    revalidate: CACHE_TTL_SECONDS,
-    tags: [NOTION_CACHE_TAGS.blocks],
-  }
-)
+const getPageBlocksCached = unstable_cache(getPageBlocksImpl, ['notion-page-blocks'], {
+  revalidate: CACHE_TTL_SECONDS,
+  tags: [NOTION_CACHE_TAGS.blocks],
+});
 
 export const getPageBlocks = cache(async (blockId: string): Promise<Block[]> => {
-  return getPageBlocksCached(blockId)
-})
+  return getPageBlocksCached(blockId);
+});
 
 export async function getAllSlugs(): Promise<string[]> {
   const groups = await Promise.all(
-    CONTENT_DATABASE_IDS.map((databaseId) => getPostsCached(databaseId))
-  )
-  const slugs = groups.flat().map((post) => post.slug).filter(Boolean)
-  return Array.from(new Set(slugs))
+    CONTENT_DATABASE_IDS.map((databaseId) => getPostsCached(databaseId)),
+  );
+  const slugs = groups
+    .flat()
+    .map((post) => post.slug)
+    .filter(Boolean);
+  return Array.from(new Set(slugs));
 }
 
 export async function getPostMediaUrlsById(postId: string): Promise<PostMediaUrls | null> {
-  const page = await notion.pages.retrieve({ page_id: postId })
+  const page = await notion.pages.retrieve({ page_id: postId });
   if (!('properties' in page)) {
-    return null
+    return null;
   }
 
-  const icon = getPageIcon(page)
+  const icon = getPageIcon(page);
 
   return {
     cover: getPageCoverUrl(page),
     iconUrl: icon?.type === 'image' ? icon.url : null,
-  }
+  };
 }
 
 function hasBlockId(blocks: Block[], targetBlockId: string): boolean {
   for (const block of blocks) {
     if (block.id === targetBlockId) {
-      return true
+      return true;
     }
 
-    if (!('children' in block)) continue
+    if (!('children' in block)) continue;
 
-    const children = block.children
+    const children = block.children;
     if (Array.isArray(children) && children.length > 0) {
       if (hasBlockId(children as Block[], targetBlockId)) {
-        return true
+        return true;
       }
     }
   }
 
-  return false
+  return false;
 }
 
 export async function getPostImageBlockUrlById(
   postId: string,
-  blockId: string
+  blockId: string,
 ): Promise<string | null> {
-  const pageBlocks = await getPageBlocks(postId)
+  const pageBlocks = await getPageBlocks(postId);
   if (!hasBlockId(pageBlocks, blockId)) {
-    return null
+    return null;
   }
 
-  const block = await notion.blocks.retrieve({ block_id: blockId })
+  const block = await notion.blocks.retrieve({ block_id: blockId });
   if (!('type' in block) || block.type !== 'image') {
-    return null
+    return null;
   }
 
-  return block.image.type === 'external'
-    ? block.image.external.url
-    : block.image.file.url
+  return block.image.type === 'external' ? block.image.external.url : block.image.file.url;
 }
 
 export async function getPostByPageId(postId: string): Promise<Post | null> {
-  const page = await notion.pages.retrieve({ page_id: postId })
+  const page = await notion.pages.retrieve({ page_id: postId });
 
   if (!('properties' in page)) {
-    return null
+    return null;
   }
 
-  const parent =
-    page.parent?.type === 'database_id' ? page.parent.database_id ?? null : null
+  const parent = page.parent?.type === 'database_id' ? (page.parent.database_id ?? null) : null;
   if (!parent || !CONTENT_DATABASE_IDS.includes(parent)) {
-    return null
+    return null;
   }
 
-  const schema = await getDatabaseSchema(parent)
-  return pageToPost(page, schema, getPostSource(parent))
+  const schema = await getDatabaseSchema(parent);
+  return pageToPost(page, schema, getPostSource(parent));
 }

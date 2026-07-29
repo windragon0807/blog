@@ -18,8 +18,7 @@
 
 @font-face {
   font-family: 'Hancom MalangMalang';
-  src: url('/fonts/hancom-malangmalang/HancomMalangMalang-Regular.otf')
-    format('opentype');
+  src: url('/fonts/hancom-malangmalang/HancomMalangMalang-Regular.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -124,8 +123,7 @@
 
 @font-face {
   font-family: 'Hancom MalangMalang';
-  src: url('/fonts/hancom-malangmalang/HancomMalangMalang-Bold.otf')
-    format('opentype');
+  src: url('/fonts/hancom-malangmalang/HancomMalangMalang-Bold.otf') format('opentype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -165,7 +163,9 @@
   --sidebar-accent-foreground: #18181b;
   --sidebar-border: rgba(228, 228, 231, 0.9);
   --sidebar-ring: #a1a1aa;
-  --font-user: Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif;
+  --font-user:
+    Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR',
+    'Segoe UI', sans-serif;
   --reading-font-size: 1rem;
   --reading-line-height: 1.75;
   --reading-font-weight: 400;
@@ -197,31 +197,45 @@
 }
 
 html[data-font-theme='pretendard'] {
-  --font-user: Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif;
+  --font-user:
+    Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR',
+    'Segoe UI', sans-serif;
 }
 
 html[data-font-theme='maplestory'] {
-  --font-user: 'Maplestory OTF', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif;
+  --font-user:
+    'Maplestory OTF', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+    'Noto Sans KR', 'Segoe UI', sans-serif;
 }
 
 html[data-font-theme='hancom-malangmalang'] {
-  --font-user: 'Hancom MalangMalang', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif;
+  --font-user:
+    'Hancom MalangMalang', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+    'Noto Sans KR', 'Segoe UI', sans-serif;
 }
 
 html[data-font-theme='chosun-myeongjo'] {
-  --font-user: 'Chosun Myeongjo', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif;
+  --font-user:
+    'Chosun Myeongjo', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+    'Noto Sans KR', 'Segoe UI', sans-serif;
 }
 
 html[data-font-theme='moneygraphy'] {
-  --font-user: 'Moneygraphy Rounded', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif;
+  --font-user:
+    'Moneygraphy Rounded', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+    'Noto Sans KR', 'Segoe UI', sans-serif;
 }
 
 html[data-font-theme='chosun-gulim'] {
-  --font-user: 'Chosun Gulim', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif;
+  --font-user:
+    'Chosun Gulim', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+    'Noto Sans KR', 'Segoe UI', sans-serif;
 }
 
 html[data-font-theme='paperlogy'] {
-  --font-user: 'Paperlogy', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif;
+  --font-user:
+    'Paperlogy', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+    'Noto Sans KR', 'Segoe UI', sans-serif;
 }
 
 @media (forced-colors: active) {

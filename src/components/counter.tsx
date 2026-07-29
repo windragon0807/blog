@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import { MotionValue, motion, useSpring, useTransform } from 'motion/react';
+import { motion, MotionValue, useSpring, useTransform } from 'motion/react';
 import type React from 'react';
 import { useEffect } from 'react';
 
@@ -13,7 +13,7 @@ interface NumberProps {
 }
 
 function Number({ mv, number, height }: NumberProps) {
-  const y = useTransform(mv, latest => {
+  const y = useTransform(mv, (latest) => {
     const placeValue = latest % 10;
     const offset = (10 + number - placeValue) % 10;
     let memo = offset * height;
@@ -28,7 +28,7 @@ function Number({ mv, number, height }: NumberProps) {
     inset: 0,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   };
 
   return <motion.span style={{ ...baseStyle, y }}>{number}</motion.span>;
@@ -54,9 +54,7 @@ interface DigitProps {
 
 function Digit({ place, value, height, digitStyle }: DigitProps) {
   const isDecimalPoint = place === '.';
-  const valueRoundedToPlace = isDecimalPoint
-    ? 0
-    : getValueRoundedToPlace(value, place);
+  const valueRoundedToPlace = isDecimalPoint ? 0 : getValueRoundedToPlace(value, place);
   const animatedValue = useSpring(valueRoundedToPlace);
 
   useEffect(() => {
@@ -81,11 +79,14 @@ function Digit({ place, value, height, digitStyle }: DigitProps) {
     height,
     position: 'relative',
     width: '1ch',
-    fontVariantNumeric: 'tabular-nums'
+    fontVariantNumeric: 'tabular-nums',
   };
 
   return (
-    <span className="relative inline-flex overflow-hidden" style={{ ...defaultStyle, ...digitStyle }}>
+    <span
+      className="relative inline-flex overflow-hidden"
+      style={{ ...defaultStyle, ...digitStyle }}
+    >
       {Array.from({ length: 10 }, (_, i) => (
         <Number key={i} mv={animatedValue} number={i} height={height} />
       ))}
@@ -131,7 +132,11 @@ export function Counter({
     const dotIndex = a.indexOf('.');
     const isInteger = dotIndex === -1;
 
-    const exponent = isInteger ? a.length - i - 1 : i < dotIndex ? dotIndex - i - 1 : -(i - dotIndex);
+    const exponent = isInteger
+      ? a.length - i - 1
+      : i < dotIndex
+        ? dotIndex - i - 1
+        : -(i - dotIndex);
 
     return 10 ** exponent;
   }),
@@ -147,13 +152,13 @@ export function Counter({
   gradientFrom = 'black',
   gradientTo = 'transparent',
   topGradientStyle,
-  bottomGradientStyle
+  bottomGradientStyle,
 }: CounterProps) {
   const height = fontSize + padding;
 
   const defaultContainerStyle: React.CSSProperties = {
     position: 'relative',
-    display: 'inline-block'
+    display: 'inline-block',
   };
 
   const defaultCounterStyle: React.CSSProperties = {
@@ -167,7 +172,7 @@ export function Counter({
     lineHeight: 1,
     color: textColor,
     fontWeight,
-    direction: "ltr"
+    direction: 'ltr',
   };
 
   const gradientContainerStyle: React.CSSProperties = {
@@ -176,23 +181,23 @@ export function Counter({
     inset: 0,
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   };
 
   const defaultTopGradientStyle: React.CSSProperties = {
     height: gradientHeight,
-    background: `linear-gradient(to bottom, ${gradientFrom}, ${gradientTo})`
+    background: `linear-gradient(to bottom, ${gradientFrom}, ${gradientTo})`,
   };
 
   const defaultBottomGradientStyle: React.CSSProperties = {
     height: gradientHeight,
-    background: `linear-gradient(to top, ${gradientFrom}, ${gradientTo})`
+    background: `linear-gradient(to top, ${gradientFrom}, ${gradientTo})`,
   };
 
   return (
     <span style={{ ...defaultContainerStyle, ...containerStyle }}>
       <span style={{ ...defaultCounterStyle, ...counterStyle }}>
-        {places.map(place => (
+        {places.map((place) => (
           <Digit key={place} place={place} value={value} height={height} digitStyle={digitStyle} />
         ))}
       </span>

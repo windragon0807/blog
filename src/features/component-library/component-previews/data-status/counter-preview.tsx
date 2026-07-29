@@ -1,10 +1,12 @@
-import { useState } from 'react'
-import { Counter } from '@/components/counter'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
-import { glassIconButtonClassName } from '../shared/preview-tokens'
+import { useState } from 'react';
+
+import { Counter } from '@/components/counter';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
+import { glassIconButtonClassName } from '../shared/preview-tokens';
 
 export function CounterPreview() {
-  const [value, setValue] = useState(17.8)
+  const [value, setValue] = useState(17.8);
 
   return (
     <PreviewDemoSurface
@@ -41,5 +43,5 @@ export function CounterPreview() {
         </div>
       </div>
     </PreviewDemoSurface>
-  )
+  );
 }

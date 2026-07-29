@@ -1,5 +1,6 @@
-import { Lens } from '@/components/lens'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+import { Lens } from '@/components/lens';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 export function LensPreview() {
   return (
@@ -23,14 +24,12 @@ export function LensPreview() {
           </Lens>
         </div>
         <div className="space-y-1 px-4 pb-4">
-          <h3 className="text-xl font-semibold text-white">
-            Your next camp
-          </h3>
+          <h3 className="text-xl font-semibold text-white">Your next camp</h3>
           <p className="text-sm leading-6 text-white/58">
             See our latest and best camp destinations across the globe.
           </p>
         </div>
       </div>
     </PreviewDemoSurface>
-  )
+  );
 }

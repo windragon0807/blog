@@ -1,7 +1,8 @@
-import { Particles } from '@/components/particles'
-import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface'
-import { cosmicParticleColors } from '../shared/preview-tokens'
-import type { PreviewMode } from '../types'
+import { Particles } from '@/components/particles';
+
+import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface';
+import { cosmicParticleColors } from '../shared/preview-tokens';
+import type { PreviewMode } from '../types';
 
 export function ParticlesPreview({ mode }: { mode: PreviewMode }) {
   return (
@@ -21,5 +22,5 @@ export function ParticlesPreview({ mode }: { mode: PreviewMode }) {
         }
       />
     </OuterEffectSurface>
-  )
+  );
 }

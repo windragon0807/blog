@@ -1,6 +1,7 @@
-import { DiaTextReveal } from '@/components/dia-text-reveal'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
-import { originalGradientColors } from '../shared/preview-tokens'
+import { DiaTextReveal } from '@/components/dia-text-reveal';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
+import { originalGradientColors } from '../shared/preview-tokens';
 
 export function DiaTextRevealPreview() {
   return (
@@ -19,5 +20,5 @@ export function DiaTextRevealPreview() {
       subtitle="reveal letters with a color trail"
       accentClassName="bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.28),transparent_55%)]"
     />
-  )
+  );
 }

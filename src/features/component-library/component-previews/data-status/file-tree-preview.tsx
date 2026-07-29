@@ -1,5 +1,6 @@
-import { Tree, type TreeViewElement } from '@/components/file-tree'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+import { Tree, type TreeViewElement } from '@/components/file-tree';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 const fileTreeElements: TreeViewElement[] = [
   {
@@ -31,7 +32,7 @@ const fileTreeElements: TreeViewElement[] = [
     name: 'lib',
     children: [{ id: 'lib-utils', name: 'utils.ts' }],
   },
-]
+];
 
 export function FileTreePreview() {
   return (
@@ -50,5 +51,5 @@ export function FileTreePreview() {
         />
       </div>
     </PreviewDemoSurface>
-  )
+  );
 }

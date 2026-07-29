@@ -1,6 +1,7 @@
-import { Keyboard } from '@/components/keyboard'
-import { DesktopOnlyPreview } from '../desktop-only-preview'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+import { Keyboard } from '@/components/keyboard';
+
+import { DesktopOnlyPreview } from '../desktop-only-preview';
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 export function KeyboardPreview() {
   return (
@@ -23,5 +24,5 @@ export function KeyboardPreview() {
         <Keyboard showPreview className="scale-[1.35] md:scale-[1.55]" />
       </PreviewDemoSurface>
     </DesktopOnlyPreview>
-  )
+  );
 }

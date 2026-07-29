@@ -4,10 +4,7 @@
   "type": "registry:ui",
   "title": "Card Carousel",
   "description": "A draggable, optionally autoplaying 3D card carousel.",
-  "dependencies": [
-    "motion",
-    "react-icons"
-  ],
+  "dependencies": ["motion", "react-icons"],
   "files": [
     {
       "path": "src/components/carousel.tsx",

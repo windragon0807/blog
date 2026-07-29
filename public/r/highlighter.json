@@ -4,10 +4,7 @@
   "type": "registry:ui",
   "title": "Marker Highlight",
   "description": "A text highlighter that mimics the effect of a human-drawn marker stroke.",
-  "dependencies": [
-    "motion",
-    "rough-notation"
-  ],
+  "dependencies": ["motion", "rough-notation"],
   "files": [
     {
       "path": "src/components/highlighter.tsx",

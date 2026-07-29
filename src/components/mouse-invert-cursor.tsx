@@ -1,6 +1,3 @@
-'use client'
+'use client';
 
-export {
-  MouseInvertCursor,
-  type MouseInvertCursorProps,
-} from './cursor-effect-runtime'
+export { MouseInvertCursor, type MouseInvertCursorProps } from './cursor-effect-runtime';

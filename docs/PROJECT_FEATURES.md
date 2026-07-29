@@ -11,20 +11,20 @@
 
 ## 2. 사용자 라우트
 
-| 경로 | 설명 | 주요 파일 |
-|---|---|---|
-| `/` | 전체 포스트 목록 | `src/app/(tabs)/page.tsx` |
+| 경로            | 설명                              | 주요 파일                       |
+| --------------- | --------------------------------- | ------------------------------- |
+| `/`             | 전체 포스트 목록                  | `src/app/(tabs)/page.tsx`       |
 | `/posts/[slug]` | 포스트 상세, 본문/TOC/댓글/관련글 | `src/app/posts/[slug]/page.tsx` |
-| `/portfolio` | 포트폴리오 링크 허브 | `src/app/portfolio/page.tsx` |
-| `/resume` | 코드 기반 이력서 및 PDF 다운로드 | `src/app/resume/page.tsx` |
+| `/portfolio`    | 포트폴리오 링크 허브              | `src/app/portfolio/page.tsx`    |
+| `/resume`       | 코드 기반 이력서 및 PDF 다운로드  | `src/app/resume/page.tsx`       |
 
 ## 3. API 라우트
 
-| 경로 | 메서드 | 설명 | 주요 파일 |
-|---|---|---|---|
-| `/api/notion-media` | GET | Notion 만료 미디어 URL 재조회(cover/icon) | `src/app/api/notion-media/route.ts` |
-| `/api/notion-webhook` | GET/POST | Notion Webhook 검증 및 경로 재검증 | `src/app/api/notion-webhook/route.ts` |
-| `/api/og` | GET | OG 이미지 생성 | `src/app/api/og/route.tsx` |
+| 경로                  | 메서드   | 설명                                      | 주요 파일                             |
+| --------------------- | -------- | ----------------------------------------- | ------------------------------------- |
+| `/api/notion-media`   | GET      | Notion 만료 미디어 URL 재조회(cover/icon) | `src/app/api/notion-media/route.ts`   |
+| `/api/notion-webhook` | GET/POST | Notion Webhook 검증 및 경로 재검증        | `src/app/api/notion-webhook/route.ts` |
+| `/api/og`             | GET      | OG 이미지 생성                            | `src/app/api/og/route.tsx`            |
 
 ## 4. UI 시스템
 

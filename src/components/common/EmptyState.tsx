@@ -1,16 +1,18 @@
-import type { ReactNode } from 'react'
-import { Search } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Surface } from './Surface'
-import { cn } from '@/lib/utils'
+import { Search } from 'lucide-react';
+import type { ReactNode } from 'react';
+
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+
+import { Surface } from './Surface';
 
 interface EmptyStateProps {
-  title: string
-  description: string
-  hints?: string[]
-  icon?: ReactNode
-  className?: string
-  framed?: boolean
+  title: string;
+  description: string;
+  hints?: string[];
+  icon?: ReactNode;
+  className?: string;
+  framed?: boolean;
 }
 
 export function EmptyState({
@@ -40,15 +42,13 @@ export function EmptyState({
         </div>
       ) : null}
     </>
-  )
+  );
 
   if (!framed) {
-    return <div className={cn('px-6 py-10 text-center', className)}>{content}</div>
+    return <div className={cn('px-6 py-10 text-center', className)}>{content}</div>;
   }
 
   return (
-    <Surface className={cn('rounded-2xl px-6 py-10 text-center', className)}>
-      {content}
-    </Surface>
-  )
+    <Surface className={cn('rounded-2xl px-6 py-10 text-center', className)}>{content}</Surface>
+  );
 }

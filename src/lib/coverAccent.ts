@@ -1,1 +1,1 @@
-export { getCoverAccent } from '@/lib/domain/cover-accent'
+export { getCoverAccent } from '@/lib/domain/cover-accent';

@@ -1,6 +1,7 @@
-import { ClickSpark } from '@/components/click-spark'
-import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface'
-import { auroraSparkColors } from '../shared/preview-tokens'
+import { ClickSpark } from '@/components/click-spark';
+
+import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface';
+import { auroraSparkColors } from '../shared/preview-tokens';
 
 export function ClickSparkPreview() {
   return (
@@ -21,5 +22,5 @@ export function ClickSparkPreview() {
         />
       </ClickSpark>
     </OuterEffectSurface>
-  )
+  );
 }

@@ -4,10 +4,7 @@
   "type": "registry:ui",
   "title": "Bubble Cursor Trail",
   "description": "A scoped bubble particle cursor adapted from tholman cursor-effects Bubbles.",
-  "dependencies": [
-    "clsx",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/bubble-cursor.tsx",

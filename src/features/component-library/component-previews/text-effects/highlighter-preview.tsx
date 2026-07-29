@@ -1,5 +1,6 @@
-import { Highlighter } from '@/components/highlighter'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+import { Highlighter } from '@/components/highlighter';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 export function HighlighterPreview() {
   return (
@@ -31,9 +32,9 @@ export function HighlighterPreview() {
           repeatDelay={1400}
         >
           text stand out
-        </Highlighter>
-        {' '}effortlessly.
+        </Highlighter>{' '}
+        effortlessly.
       </p>
     </PreviewDemoSurface>
-  )
+  );
 }

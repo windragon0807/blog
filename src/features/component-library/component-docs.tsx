@@ -1,59 +1,56 @@
-import { componentCategories, type ComponentSample } from './component-data'
-import { CodeBlock } from './component-code-block'
-import { ComponentExampleTabs } from './component-example-tabs'
-import { DataTable, type DataTableColumn } from '@/components/data-table'
+import { DataTable, type DataTableColumn } from '@/components/data-table';
+
+import { CodeBlock } from './component-code-block';
+import { componentCategories, type ComponentSample } from './component-data';
+import { ComponentExampleTabs } from './component-example-tabs';
 import {
-  InstallCommandTabs,
   type InstallCommandPanel,
+  InstallCommandTabs,
   type PackageManager,
-} from './install-command-tabs'
+} from './install-command-tabs';
 
 function InstallCommand({ command }: { command: string }) {
-  const target = getInstallTarget(command)
+  const target = getInstallTarget(command);
   const panels: InstallCommandPanel[] = packageManagers.map((manager) => {
-    const installCommand = getPackageManagerCommand(manager, target)
+    const installCommand = getPackageManagerCommand(manager, target);
 
     return {
       manager,
       command: installCommand,
       panel: (
-        <CodeBlock
-          blockId={`install-${manager}-${target}`}
-          code={installCommand}
-          language="bash"
-        />
+        <CodeBlock blockId={`install-${manager}-${target}`} code={installCommand} language="bash" />
       ),
-    }
-  })
+    };
+  });
 
-  return <InstallCommandTabs panels={panels} />
+  return <InstallCommandTabs panels={panels} />;
 }
 
-const packageManagers: readonly PackageManager[] = ['pnpm', 'npm', 'yarn', 'bun']
+const packageManagers: readonly PackageManager[] = ['pnpm', 'npm', 'yarn', 'bun'];
 
 function getInstallTarget(command: string) {
-  return command.match(/\sadd\s+(.+)$/)?.[1] ?? command
+  return command.match(/\sadd\s+(.+)$/)?.[1] ?? command;
 }
 
 function getPackageManagerCommand(manager: PackageManager, target: string) {
   switch (manager) {
     case 'pnpm':
-      return `pnpm dlx shadcn@latest add ${target}`
+      return `pnpm dlx shadcn@latest add ${target}`;
     case 'npm':
-      return `npx shadcn@latest add ${target}`
+      return `npx shadcn@latest add ${target}`;
     case 'yarn':
-      return `yarn dlx shadcn@latest add ${target}`
+      return `yarn dlx shadcn@latest add ${target}`;
     case 'bun':
-      return `bunx shadcn@latest add ${target}`
+      return `bunx shadcn@latest add ${target}`;
   }
 }
 
 type PropsTableRow = {
-  prop: string
-  type: string
-  defaultValue: string
-  description: string
-}
+  prop: string;
+  type: string;
+  defaultValue: string;
+  description: string;
+};
 
 const propsTableColumns: readonly DataTableColumn<PropsTableRow>[] = [
   { key: 'prop', header: 'Prop', width: 'minmax(9rem, 0.9fr)' },
@@ -64,7 +61,7 @@ const propsTableColumns: readonly DataTableColumn<PropsTableRow>[] = [
     header: 'Description',
     width: 'minmax(20rem, 1.65fr)',
   },
-]
+];
 
 const propsTableClassName = [
   'component-props-table rounded-[28px] bg-transparent p-0 text-sm dark:bg-transparent',
@@ -79,7 +76,7 @@ const propsTableClassName = [
   '[&_tbody_td]:align-top',
   '[&_tbody_td]:leading-6',
   '[&_tbody_td:first-child]:text-base',
-].join(' ')
+].join(' ');
 
 function PropsTable({ sample }: { sample: ComponentSample }) {
   const rows = sample.props.map((prop) => ({
@@ -87,28 +84,22 @@ function PropsTable({ sample }: { sample: ComponentSample }) {
     type: prop.type,
     defaultValue: prop.defaultValue,
     description: prop.description,
-  }))
+  }));
 
-  return (
-    <DataTable
-      columns={propsTableColumns}
-      rows={rows}
-      className={propsTableClassName}
-    />
-  )
+  return <DataTable columns={propsTableColumns} rows={rows} className={propsTableClassName} />;
 }
 
 export function ComponentSection({ sample }: { sample: ComponentSample }) {
   const categoryName = componentCategories.find(
-    (category) => category.id === sample.categoryId
-  )?.name
+    (category) => category.id === sample.categoryId,
+  )?.name;
   const codeSectionBlock = (
     <CodeBlock
       blockId={`component-${sample.slug}-code`}
       code={sample.usage}
       language="typescript"
     />
-  )
+  );
 
   return (
     <article className="pb-20">
@@ -126,11 +117,7 @@ export function ComponentSection({ sample }: { sample: ComponentSample }) {
 
       <ComponentExampleTabs sample={sample} />
 
-      <section
-        id="installation"
-        aria-labelledby="installation-heading"
-        className="mt-8"
-      >
+      <section id="installation" aria-labelledby="installation-heading" className="mt-8">
         <h2
           id="installation-heading"
           className="text-xl font-semibold text-zinc-950 dark:text-zinc-50"
@@ -143,10 +130,7 @@ export function ComponentSection({ sample }: { sample: ComponentSample }) {
       </section>
 
       <section id="code" aria-labelledby="code-heading" className="mt-8">
-        <h2
-          id="code-heading"
-          className="text-xl font-semibold text-zinc-950 dark:text-zinc-50"
-        >
+        <h2 id="code-heading" className="text-xl font-semibold text-zinc-950 dark:text-zinc-50">
           Code
         </h2>
         <div className="code-section-block-shell mt-4 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_18px_46px_-36px_rgba(24,24,27,0.42)] dark:border-zinc-700/70 dark:bg-zinc-900/60 dark:shadow-[0_22px_54px_-38px_rgba(2,6,23,0.9)]">
@@ -155,10 +139,7 @@ export function ComponentSection({ sample }: { sample: ComponentSample }) {
       </section>
 
       <section id="props" aria-labelledby="props-heading" className="mt-8">
-        <h2
-          id="props-heading"
-          className="text-xl font-semibold text-zinc-950 dark:text-zinc-50"
-        >
+        <h2 id="props-heading" className="text-xl font-semibold text-zinc-950 dark:text-zinc-50">
           Props
         </h2>
         <div className="mt-4">
@@ -183,5 +164,5 @@ export function ComponentSection({ sample }: { sample: ComponentSample }) {
         </a>
       </section>
     </article>
-  )
+  );
 }

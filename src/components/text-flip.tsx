@@ -1,16 +1,17 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
-import { cn } from '@/lib/utils'
+import { AnimatePresence, motion } from 'motion/react';
+import { useEffect, useState } from 'react';
+
+import { cn } from '@/lib/utils';
 
 interface TextFlipProps {
-  prefix?: string
-  words: string[]
-  wordColors?: readonly string[]
-  interval?: number
-  className?: string
-  wordClassName?: string
+  prefix?: string;
+  words: string[];
+  wordColors?: readonly string[];
+  interval?: number;
+  className?: string;
+  wordClassName?: string;
 }
 
 export function TextFlip({
@@ -21,28 +22,30 @@ export function TextFlip({
   className,
   wordClassName,
 }: TextFlipProps) {
-  const [index, setIndex] = useState(0)
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    if (words.length <= 1) return
+    if (words.length <= 1) return;
 
     const id = window.setInterval(() => {
-      setIndex((current) => (current + 1) % words.length)
-    }, interval)
+      setIndex((current) => (current + 1) % words.length);
+    }, interval);
 
-    return () => window.clearInterval(id)
-  }, [interval, words.length])
+    return () => window.clearInterval(id);
+  }, [interval, words.length]);
 
   return (
     <span
       data-text-flip=""
       className={cn(
         'box-content inline-flex max-w-full flex-nowrap items-center gap-2 whitespace-nowrap text-2xl font-semibold leading-none sm:gap-4 sm:text-4xl md:text-5xl',
-        className
+        className,
       )}
     >
       <span className="text-foreground">{prefix}</span>
-      <span className={cn('relative inline-grid w-[10ch] overflow-hidden text-left', wordClassName)}>
+      <span
+        className={cn('relative inline-grid w-[10ch] overflow-hidden text-left', wordClassName)}
+      >
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.span
             key={words[index]}
@@ -58,5 +61,5 @@ export function TextFlip({
         </AnimatePresence>
       </span>
     </span>
-  )
+  );
 }

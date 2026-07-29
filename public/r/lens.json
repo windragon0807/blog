@@ -4,9 +4,7 @@
   "type": "registry:ui",
   "title": "Magnifier Lens",
   "description": "An interactive component that enables zooming into images, videos, and other elements.",
-  "dependencies": [
-    "motion"
-  ],
+  "dependencies": ["motion"],
   "files": [
     {
       "path": "src/components/lens.tsx",

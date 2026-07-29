@@ -1,86 +1,76 @@
-'use client'
+'use client';
 
-import type { KeyboardEvent, ReactNode } from 'react'
-import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import type { KeyboardEvent, ReactNode } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 
-export type PackageManager = 'pnpm' | 'npm' | 'yarn' | 'bun'
+export type PackageManager = 'pnpm' | 'npm' | 'yarn' | 'bun';
 
 export interface InstallCommandPanel {
-  manager: PackageManager
-  command: string
-  panel: ReactNode
+  manager: PackageManager;
+  command: string;
+  panel: ReactNode;
 }
 
-export function InstallCommandTabs({
-  panels,
-}: {
-  panels: readonly InstallCommandPanel[]
-}) {
-  const generatedId = useId()
-  const [activeManager, setActiveManager] = useState<PackageManager>(
-    panels[0]?.manager ?? 'pnpm'
-  )
+export function InstallCommandTabs({ panels }: { panels: readonly InstallCommandPanel[] }) {
+  const generatedId = useId();
+  const [activeManager, setActiveManager] = useState<PackageManager>(panels[0]?.manager ?? 'pnpm');
   const tabRefs = useRef<Record<PackageManager, HTMLButtonElement | null>>({
     pnpm: null,
     npm: null,
     yarn: null,
     bun: null,
-  })
-  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 })
+  });
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
   const syncIndicator = useCallback(() => {
-    const activeElement = tabRefs.current[activeManager]
-    if (!activeElement) return
+    const activeElement = tabRefs.current[activeManager];
+    if (!activeElement) return;
 
     setIndicatorStyle({
       left: activeElement.offsetLeft,
       width: activeElement.offsetWidth,
-    })
-  }, [activeManager])
+    });
+  }, [activeManager]);
 
   useEffect(() => {
-    syncIndicator()
-    window.addEventListener('resize', syncIndicator)
+    syncIndicator();
+    window.addEventListener('resize', syncIndicator);
 
     return () => {
-      window.removeEventListener('resize', syncIndicator)
-    }
-  }, [syncIndicator])
+      window.removeEventListener('resize', syncIndicator);
+    };
+  }, [syncIndicator]);
 
-  const activePanel = panels.find((panel) => panel.manager === activeManager)
+  const activePanel = panels.find((panel) => panel.manager === activeManager);
 
   const activateManager = (manager: PackageManager, shouldFocus = true) => {
-    setActiveManager(manager)
+    setActiveManager(manager);
     if (shouldFocus) {
-      requestAnimationFrame(() => tabRefs.current[manager]?.focus())
+      requestAnimationFrame(() => tabRefs.current[manager]?.focus());
     }
-  }
+  };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
-    const currentIndex = panels.findIndex(
-      (panel) => panel.manager === activeManager
-    )
-    if (currentIndex < 0) return
+    const currentIndex = panels.findIndex((panel) => panel.manager === activeManager);
+    if (currentIndex < 0) return;
 
     if (event.key === 'ArrowRight') {
-      event.preventDefault()
-      activateManager(panels[(currentIndex + 1) % panels.length].manager)
+      event.preventDefault();
+      activateManager(panels[(currentIndex + 1) % panels.length].manager);
     }
     if (event.key === 'ArrowLeft') {
-      event.preventDefault()
-      activateManager(
-        panels[(currentIndex - 1 + panels.length) % panels.length].manager
-      )
+      event.preventDefault();
+      activateManager(panels[(currentIndex - 1 + panels.length) % panels.length].manager);
     }
     if (event.key === 'Home') {
-      event.preventDefault()
-      activateManager(panels[0].manager)
+      event.preventDefault();
+      activateManager(panels[0].manager);
     }
     if (event.key === 'End') {
-      event.preventDefault()
-      activateManager(panels[panels.length - 1].manager)
+      event.preventDefault();
+      activateManager(panels[panels.length - 1].manager);
     }
-  }
+  };
 
   return (
     <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_18px_46px_-36px_rgba(24,24,27,0.42)] dark:border-zinc-700/70 dark:bg-zinc-900/60 dark:shadow-[0_22px_54px_-38px_rgba(2,6,23,0.9)]">
@@ -99,13 +89,13 @@ export function InstallCommandTabs({
             }}
           />
           {panels.map((panel) => {
-            const isSelected = activeManager === panel.manager
+            const isSelected = activeManager === panel.manager;
 
             return (
               <button
                 key={panel.manager}
                 ref={(node) => {
-                  tabRefs.current[panel.manager] = node
+                  tabRefs.current[panel.manager] = node;
                 }}
                 type="button"
                 role="tab"
@@ -123,7 +113,7 @@ export function InstallCommandTabs({
               >
                 {panel.manager}
               </button>
-            )
+            );
           })}
         </div>
       </div>
@@ -140,5 +130,5 @@ export function InstallCommandTabs({
         </div>
       ))}
     </div>
-  )
+  );
 }

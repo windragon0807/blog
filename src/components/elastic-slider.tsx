@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
 /* eslint-disable react-hooks/set-state-in-effect */
 
-import React, { useEffect, useRef, useState } from 'react';
 import { animate, motion, useMotionValue, useMotionValueEvent, useTransform } from 'motion/react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const MAX_OVERFLOW = 50;
 
@@ -26,7 +26,7 @@ const ElasticSlider: React.FC<ElasticSliderProps> = ({
   isStepped = false,
   stepSize = 1,
   leftIcon = <>-</>,
-  rightIcon = <>+</>
+  rightIcon = <>+</>,
 }) => {
   return (
     <div className={`flex w-72 flex-col items-center justify-center gap-7 ${className}`}>
@@ -60,7 +60,7 @@ const Slider: React.FC<SliderProps> = ({
   isStepped,
   stepSize,
   leftIcon,
-  rightIcon
+  rightIcon,
 }) => {
   const [value, setValue] = useState<number>(defaultValue);
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -128,17 +128,17 @@ const Slider: React.FC<SliderProps> = ({
         onTouchEnd={() => animate(scale, 1)}
         style={{
           scale,
-          opacity: useTransform(scale, [1, 1.2], [0.7, 1])
+          opacity: useTransform(scale, [1, 1.2], [0.7, 1]),
         }}
         className="flex w-full touch-none select-none items-center justify-center gap-4"
       >
         <motion.div
           animate={{
             scale: region === 'left' ? [1, 1.4, 1] : 1,
-            transition: { duration: 0.25 }
+            transition: { duration: 0.25 },
           }}
           style={{
-            x: useTransform(() => (region === 'left' ? -overflow.get() / scale.get() : 0))
+            x: useTransform(() => (region === 'left' ? -overflow.get() / scale.get() : 0)),
           }}
           className="text-2xl text-white/58"
         >
@@ -173,7 +173,7 @@ const Slider: React.FC<SliderProps> = ({
               }),
               height: useTransform(scale, [1, 1.2], [6, 12]),
               marginTop: useTransform(scale, [1, 1.2], [0, -3]),
-              marginBottom: useTransform(scale, [1, 1.2], [0, -3])
+              marginBottom: useTransform(scale, [1, 1.2], [0, -3]),
             }}
             className="flex flex-grow"
           >
@@ -189,10 +189,10 @@ const Slider: React.FC<SliderProps> = ({
         <motion.div
           animate={{
             scale: region === 'right' ? [1, 1.4, 1] : 1,
-            transition: { duration: 0.25 }
+            transition: { duration: 0.25 },
           }}
           style={{
-            x: useTransform(() => (region === 'right' ? overflow.get() / scale.get() : 0))
+            x: useTransform(() => (region === 'right' ? overflow.get() / scale.get() : 0)),
           }}
           className="text-2xl text-white/58"
         >

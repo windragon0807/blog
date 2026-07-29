@@ -1,107 +1,88 @@
-'use client'
+'use client';
 
+import { ChevronDownIcon, SquareArrowOutUpRightIcon } from 'lucide-react';
+import { type KeyboardEvent, type SyntheticEvent, useEffect, useRef, useState } from 'react';
+
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
-  useEffect,
-  useRef,
-  useState,
-  type KeyboardEvent,
-  type SyntheticEvent,
-} from 'react'
-import { ChevronDownIcon, SquareArrowOutUpRightIcon } from 'lucide-react'
-import {
-  FONT_THEME_OPTIONS,
   applyFontTheme,
+  FONT_THEME_OPTIONS,
+  type FontThemeName,
   getFontThemeStack,
   persistFontThemePreference,
   readFontThemePreference,
-  type FontThemeName,
-} from '@/lib/fontThemes'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { cn } from '@/lib/utils'
+} from '@/lib/fontThemes';
+import { cn } from '@/lib/utils';
 
 type FontThemeSelectProps = {
-  className?: string
-  onThemeChange?: (theme: FontThemeName) => void
-}
+  className?: string;
+  onThemeChange?: (theme: FontThemeName) => void;
+};
 
-export function FontThemeSelect({
-  className = '',
-  onThemeChange,
-}: FontThemeSelectProps) {
-  const [open, setOpen] = useState(false)
-  const [selectedTheme, setSelectedTheme] =
-    useState<FontThemeName>(readFontThemePreference)
+export function FontThemeSelect({ className = '', onThemeChange }: FontThemeSelectProps) {
+  const [open, setOpen] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState<FontThemeName>(readFontThemePreference);
   const selectedIndex = Math.max(
     0,
-    FONT_THEME_OPTIONS.findIndex((option) => option.value === selectedTheme)
-  )
-  const [activeIndex, setActiveIndex] = useState(selectedIndex)
-  const optionRefs = useRef<Array<HTMLButtonElement | null>>([])
-  const typeaheadQueryRef = useRef('')
-  const typeaheadTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const selectedOption = FONT_THEME_OPTIONS.find(
-    (option) => option.value === selectedTheme
-  )
+    FONT_THEME_OPTIONS.findIndex((option) => option.value === selectedTheme),
+  );
+  const [activeIndex, setActiveIndex] = useState(selectedIndex);
+  const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const typeaheadQueryRef = useRef('');
+  const typeaheadTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const selectedOption = FONT_THEME_OPTIONS.find((option) => option.value === selectedTheme);
 
   useEffect(() => {
-    applyFontTheme(selectedTheme)
-    persistFontThemePreference(selectedTheme)
-  }, [selectedTheme])
+    applyFontTheme(selectedTheme);
+    persistFontThemePreference(selectedTheme);
+  }, [selectedTheme]);
 
   useEffect(() => {
     return () => {
       if (typeaheadTimerRef.current) {
-        clearTimeout(typeaheadTimerRef.current)
+        clearTimeout(typeaheadTimerRef.current);
       }
-    }
-  }, [])
+    };
+  }, []);
 
   function handleOpenChange(nextOpen: boolean) {
     if (nextOpen) {
-      setActiveIndex(selectedIndex)
+      setActiveIndex(selectedIndex);
     }
-    setOpen(nextOpen)
+    setOpen(nextOpen);
   }
 
   function handleThemeChange(theme: FontThemeName) {
-    setSelectedTheme(theme)
-    onThemeChange?.(theme)
-    setOpen(false)
+    setSelectedTheme(theme);
+    onThemeChange?.(theme);
+    setOpen(false);
   }
 
   function handleOpenAutoFocus(event: Event) {
-    event.preventDefault()
-    optionRefs.current[selectedIndex]?.focus()
+    event.preventDefault();
+    optionRefs.current[selectedIndex]?.focus();
   }
 
   function focusOption(index: number) {
-    const normalizedIndex =
-      (index + FONT_THEME_OPTIONS.length) % FONT_THEME_OPTIONS.length
+    const normalizedIndex = (index + FONT_THEME_OPTIONS.length) % FONT_THEME_OPTIONS.length;
 
-    setActiveIndex(normalizedIndex)
-    optionRefs.current[normalizedIndex]?.focus()
+    setActiveIndex(normalizedIndex);
+    optionRefs.current[normalizedIndex]?.focus();
   }
 
-  function handleOptionKeyDown(
-    event: KeyboardEvent<HTMLButtonElement>,
-    index: number
-  ) {
+  function handleOptionKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
     const navigationIndex = {
       ArrowDown: index + 1,
       ArrowUp: index - 1,
       Home: 0,
       End: FONT_THEME_OPTIONS.length - 1,
-    }[event.key]
+    }[event.key];
 
     if (navigationIndex !== undefined) {
-      event.preventDefault()
-      focusOption(navigationIndex)
-      return
+      event.preventDefault();
+      focusOption(navigationIndex);
+      return;
     }
 
     if (
@@ -111,39 +92,33 @@ export function FontThemeSelect({
       event.ctrlKey ||
       event.metaKey
     ) {
-      return
+      return;
     }
 
-    event.preventDefault()
-    const key = event.key.toLocaleLowerCase()
-    const combinedQuery = `${typeaheadQueryRef.current}${key}`
-    const candidates = FONT_THEME_OPTIONS.map((_, offset) =>
-      (index + offset + 1) % FONT_THEME_OPTIONS.length
-    )
+    event.preventDefault();
+    const key = event.key.toLocaleLowerCase();
+    const combinedQuery = `${typeaheadQueryRef.current}${key}`;
+    const candidates = FONT_THEME_OPTIONS.map(
+      (_, offset) => (index + offset + 1) % FONT_THEME_OPTIONS.length,
+    );
     const findMatch = (query: string) =>
       candidates.find((candidateIndex) =>
-        FONT_THEME_OPTIONS[candidateIndex].label
-          .toLocaleLowerCase()
-          .startsWith(query)
-      )
-    const combinedMatchIndex = findMatch(combinedQuery)
-    const matchIndex = combinedMatchIndex ?? findMatch(key)
+        FONT_THEME_OPTIONS[candidateIndex].label.toLocaleLowerCase().startsWith(query),
+      );
+    const combinedMatchIndex = findMatch(combinedQuery);
+    const matchIndex = combinedMatchIndex ?? findMatch(key);
 
     typeaheadQueryRef.current =
-      matchIndex === undefined
-        ? ''
-        : combinedMatchIndex === undefined
-          ? key
-          : combinedQuery
+      matchIndex === undefined ? '' : combinedMatchIndex === undefined ? key : combinedQuery;
     if (typeaheadTimerRef.current) {
-      clearTimeout(typeaheadTimerRef.current)
+      clearTimeout(typeaheadTimerRef.current);
     }
     typeaheadTimerRef.current = setTimeout(() => {
-      typeaheadQueryRef.current = ''
-    }, 500)
+      typeaheadQueryRef.current = '';
+    }, 500);
 
     if (matchIndex !== undefined) {
-      focusOption(matchIndex)
+      focusOption(matchIndex);
     }
   }
 
@@ -156,7 +131,7 @@ export function FontThemeSelect({
           aria-expanded={open}
           className={cn(
             'flex h-10 w-full items-center justify-between gap-2 rounded-xl border border-input bg-background/95 px-3 text-left text-sm text-foreground shadow-[0_1px_2px_rgba(0,0,0,0.04)] outline-none transition-colors hover:border-ring/45 focus:border-ring/55 focus:ring-2 focus:ring-ring/35 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-900/80',
-            className
+            className,
           )}
         >
           <span
@@ -167,10 +142,7 @@ export function FontThemeSelect({
           </span>
           <ChevronDownIcon
             aria-hidden="true"
-            className={cn(
-              'size-4 shrink-0 opacity-55 transition-transform',
-              open && 'rotate-180'
-            )}
+            className={cn('size-4 shrink-0 opacity-55 transition-transform', open && 'rotate-180')}
           />
         </button>
       </PopoverTrigger>
@@ -186,7 +158,7 @@ export function FontThemeSelect({
         <ScrollArea defer={false} data-lenis-prevent="" className="max-h-80">
           <div className="grid gap-0.5 p-1.5">
             {FONT_THEME_OPTIONS.map((theme, index) => {
-              const selected = selectedTheme === theme.value
+              const selected = selectedTheme === theme.value;
 
               return (
                 <div
@@ -197,7 +169,7 @@ export function FontThemeSelect({
                 >
                   <button
                     ref={(element) => {
-                      optionRefs.current[index] = element
+                      optionRefs.current[index] = element;
                     }}
                     type="button"
                     aria-pressed={selectedTheme === theme.value}
@@ -225,27 +197,24 @@ export function FontThemeSelect({
                     onKeyDown={stopLinkKeyDownPropagation}
                     className="flex w-11 shrink-0 items-center justify-center rounded-r-lg text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/50"
                   >
-                    <SquareArrowOutUpRightIcon
-                      aria-hidden="true"
-                      className="size-4"
-                    />
+                    <SquareArrowOutUpRightIcon aria-hidden="true" className="size-4" />
                   </a>
                 </div>
-              )
+              );
             })}
           </div>
         </ScrollArea>
       </PopoverContent>
     </Popover>
-  )
+  );
 }
 
 function stopLinkEventPropagation(event: SyntheticEvent) {
-  event.stopPropagation()
+  event.stopPropagation();
 }
 
 function stopLinkKeyDownPropagation(event: KeyboardEvent<HTMLAnchorElement>) {
   if (event.key === 'Enter' || event.key === ' ') {
-    event.stopPropagation()
+    event.stopPropagation();
   }
 }

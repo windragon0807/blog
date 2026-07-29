@@ -1,6 +1,7 @@
-import { BackgroundBoxes } from '@/components/background-boxes'
-import { DesktopOnlyPreview } from '../desktop-only-preview'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
+import { BackgroundBoxes } from '@/components/background-boxes';
+
+import { DesktopOnlyPreview } from '../desktop-only-preview';
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 export function BackgroundBoxesPreview() {
   return (
@@ -23,5 +24,5 @@ export function BackgroundBoxesPreview() {
         }
       />
     </DesktopOnlyPreview>
-  )
+  );
 }

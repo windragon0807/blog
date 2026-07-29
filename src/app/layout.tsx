@@ -1,16 +1,19 @@
-import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
-import Script from 'next/script'
-import { Analytics } from '@vercel/analytics/next'
-import { SpeedInsights } from '@vercel/speed-insights/next'
-import { ThemeProvider } from 'next-themes'
-import { BodyScrollbars } from '@/components/BodyScrollbars'
-import { Header } from '@/components/Header'
-import { QueryProvider } from '@/components/providers/QueryProvider'
-import { SmoothScrollProvider } from '@/components/SmoothScrollProvider'
+import './globals.css';
+
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import Script from 'next/script';
+import { ThemeProvider } from 'next-themes';
+
+import { BodyScrollbars } from '@/components/BodyScrollbars';
+import { Header } from '@/components/Header';
+import { QueryProvider } from '@/components/providers/QueryProvider';
+import { SmoothScrollProvider } from '@/components/SmoothScrollProvider';
 import {
-  BLOG_THEME_PALETTES,
   BLOG_THEME_CUSTOM_COLOR_STORAGE_KEY,
+  BLOG_THEME_PALETTES,
   BLOG_THEME_STORAGE_KEY,
   BLOG_THEME_USER_SET_STORAGE_KEY,
   BLOG_THEME_VALUES,
@@ -18,20 +21,16 @@ import {
   CUSTOM_THEME_LIGHT_SURFACE,
   DEFAULT_BLOG_THEME,
   MINIMUM_TEXT_CONTRAST,
-} from '@/lib/blogThemes'
-import {
-  CODE_THEME_STORAGE_KEY,
-  CODE_THEME_STYLE_TEXT,
-  CODE_THEME_VALUES,
-} from '@/lib/codeThemes'
+} from '@/lib/blogThemes';
+import { CODE_THEME_STORAGE_KEY, CODE_THEME_STYLE_TEXT, CODE_THEME_VALUES } from '@/lib/codeThemes';
 import {
   ALL_FONT_WEIGHTS,
   DEFAULT_FONT_THEME,
-  FONT_THEME_WEIGHT_MAP,
   FONT_THEME_STORAGE_KEY,
   FONT_THEME_VALUES,
+  FONT_THEME_WEIGHT_MAP,
   getFontThemeStack,
-} from '@/lib/fontThemes'
+} from '@/lib/fontThemes';
 import {
   DEFAULT_READING_PREFERENCES,
   READING_FONT_SIZE_CSS,
@@ -39,25 +38,18 @@ import {
   READING_LINE_HEIGHT_CSS,
   READING_LINE_HEIGHT_OPTIONS,
   READING_PREFERENCE_STORAGE_KEYS,
-} from '@/lib/readingPreferences'
-import {
-  SITE_AUTHOR,
-  SITE_DESCRIPTION,
-  SITE_NAME,
-  SITE_URL,
-  ogImageUrl,
-} from '@/lib/seo'
-import './globals.css'
+} from '@/lib/readingPreferences';
+import { ogImageUrl, SITE_AUTHOR, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/seo';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
-})
+});
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
-})
+});
 
 const codeThemeBootScript = `(() => {
   try {
@@ -67,16 +59,14 @@ const codeThemeBootScript = `(() => {
       document.documentElement.setAttribute('data-code-theme', theme);
     }
   } catch {}
-})();`
+})();`;
 
 const fontThemeBootScript = `(() => {
   try {
     const supportedThemes = ${JSON.stringify(FONT_THEME_VALUES)};
     const defaultTheme = ${JSON.stringify(DEFAULT_FONT_THEME)};
     const fontStacks = ${JSON.stringify(
-      Object.fromEntries(
-        FONT_THEME_VALUES.map((theme) => [theme, getFontThemeStack(theme)])
-      )
+      Object.fromEntries(FONT_THEME_VALUES.map((theme) => [theme, getFontThemeStack(theme)])),
     )};
     const stored = localStorage.getItem(${JSON.stringify(FONT_THEME_STORAGE_KEY)});
     const theme = stored && supportedThemes.includes(stored) ? stored : defaultTheme;
@@ -92,18 +82,16 @@ const fontThemeBootScript = `(() => {
     root.style.setProperty('--font-user', stack);
     document.body?.style.setProperty('font-family', stack);
   }
-})();`
+})();`;
 
 const readingPreferencesBootScript = `(() => {
   const defaults = ${JSON.stringify(DEFAULT_READING_PREFERENCES)};
   const keys = ${JSON.stringify(READING_PREFERENCE_STORAGE_KEYS)};
   const fontSizes = ${JSON.stringify(READING_FONT_SIZE_CSS)};
   const lineHeights = ${JSON.stringify(READING_LINE_HEIGHT_CSS)};
-  const supportedFontSizes = ${JSON.stringify(
-    READING_FONT_SIZE_OPTIONS.map(({ value }) => value)
-  )};
+  const supportedFontSizes = ${JSON.stringify(READING_FONT_SIZE_OPTIONS.map(({ value }) => value))};
   const supportedLineHeights = ${JSON.stringify(
-    READING_LINE_HEIGHT_OPTIONS.map(({ value }) => value)
+    READING_LINE_HEIGHT_OPTIONS.map(({ value }) => value),
   )};
   const allFontWeights = ${JSON.stringify(ALL_FONT_WEIGHTS)};
   const fontWeightMap = ${JSON.stringify(FONT_THEME_WEIGHT_MAP)};
@@ -124,9 +112,7 @@ const readingPreferencesBootScript = `(() => {
   };
 
   try {
-    const fontTheme = root.getAttribute('data-font-theme') || ${JSON.stringify(
-      DEFAULT_FONT_THEME
-    )};
+    const fontTheme = root.getAttribute('data-font-theme') || ${JSON.stringify(DEFAULT_FONT_THEME)};
     const supportedWeights = fontWeightMap[fontTheme] || [defaults.fontWeight];
     const storedWeightValue = localStorage.getItem(keys.fontWeight);
     const storedWeight = Number(storedWeightValue);
@@ -154,7 +140,7 @@ const readingPreferencesBootScript = `(() => {
   } catch {
     apply(defaults);
   }
-})();`
+})();`;
 
 const blogThemeBootScript = `(() => {
   const applyTheme = (theme, palette) => {
@@ -279,10 +265,10 @@ const blogThemeBootScript = `(() => {
     const palettes = ${JSON.stringify(BLOG_THEME_PALETTES)};
     const stored = localStorage.getItem(${JSON.stringify(BLOG_THEME_STORAGE_KEY)});
     const customColor = localStorage.getItem(${JSON.stringify(
-      BLOG_THEME_CUSTOM_COLOR_STORAGE_KEY
+      BLOG_THEME_CUSTOM_COLOR_STORAGE_KEY,
     )});
     const isUserSetTheme = localStorage.getItem(${JSON.stringify(
-      BLOG_THEME_USER_SET_STORAGE_KEY
+      BLOG_THEME_USER_SET_STORAGE_KEY,
     )}) === 'true';
     if (isUserSetTheme && stored === 'custom' && isHexColor(customColor)) {
       applyTheme('custom', createCustomPalette(customColor));
@@ -296,10 +282,10 @@ const blogThemeBootScript = `(() => {
     applyTheme(theme, palette);
   } catch {
     applyTheme(${JSON.stringify(DEFAULT_BLOG_THEME)}, ${JSON.stringify(
-      BLOG_THEME_PALETTES[DEFAULT_BLOG_THEME]
+      BLOG_THEME_PALETTES[DEFAULT_BLOG_THEME],
     )});
   }
-})();`
+})();`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -310,13 +296,7 @@ export const metadata: Metadata = {
   description: SITE_DESCRIPTION,
   authors: [{ name: SITE_AUTHOR }],
   creator: SITE_AUTHOR,
-  keywords: [
-    '프론트엔드',
-    'Next.js',
-    'React',
-    'UI 컴포넌트',
-    '개발 블로그',
-  ],
+  keywords: ['프론트엔드', 'Next.js', 'React', 'UI 컴포넌트', '개발 블로그'],
   alternates: {
     canonical: '/',
   },
@@ -350,12 +330,12 @@ export const metadata: Metadata = {
     shortcut: [{ url: '/favicon.ico', sizes: 'any' }],
     apple: [{ url: '/apple-icon.png', type: 'image/png', sizes: '180x180' }],
   },
-}
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
@@ -391,5 +371,5 @@ export default function RootLayout({
         <SpeedInsights />
       </body>
     </html>
-  )
+  );
 }

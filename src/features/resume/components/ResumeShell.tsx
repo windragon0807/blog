@@ -1,170 +1,157 @@
-'use client'
+'use client';
 
-import { FileDown, Loader2 } from 'lucide-react'
-import { useCallback, useLayoutEffect, useRef, useState } from 'react'
-import { IconButton } from '@/components/common/IconButton'
-import {
-  RESUME_DOCUMENT_HEIGHT,
-  RESUME_DOCUMENT_WIDTH,
-  RESUME_PDF_FILE_NAME,
-} from '../constants'
-import { buildResumePdfFromElement } from '../lib/build-resume-pdf'
-import { ResumeDocument } from './ResumeDocument'
+import { FileDown, Loader2 } from 'lucide-react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 
-const RESUME_PREVIEW_MAX_WIDTH = 1000
-const RESUME_PREVIEW_MAX_SCALE = RESUME_PREVIEW_MAX_WIDTH / RESUME_DOCUMENT_WIDTH
+import { IconButton } from '@/components/common/IconButton';
+
+import { RESUME_DOCUMENT_HEIGHT, RESUME_DOCUMENT_WIDTH, RESUME_PDF_FILE_NAME } from '../constants';
+import { buildResumePdfFromElement } from '../lib/build-resume-pdf';
+import { ResumeDocument } from './ResumeDocument';
+
+const RESUME_PREVIEW_MAX_WIDTH = 1000;
+const RESUME_PREVIEW_MAX_SCALE = RESUME_PREVIEW_MAX_WIDTH / RESUME_DOCUMENT_WIDTH;
 
 function downloadBytes(bytes: Uint8Array, fileName: string) {
-  const buffer = new Uint8Array(bytes.byteLength)
-  buffer.set(bytes)
+  const buffer = new Uint8Array(bytes.byteLength);
+  buffer.set(bytes);
 
-  const blob = new Blob([buffer.buffer], { type: 'application/pdf' })
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
+  const blob = new Blob([buffer.buffer], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
 
-  link.href = url
-  link.download = fileName
-  document.body.appendChild(link)
-  link.click()
-  link.remove()
-  window.setTimeout(() => URL.revokeObjectURL(url), 0)
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
 function waitForNextPaint() {
   return new Promise<void>((resolve) => {
     window.requestAnimationFrame(() => {
-      window.setTimeout(resolve, 0)
-    })
-  })
+      window.setTimeout(resolve, 0);
+    });
+  });
 }
 
 export function ResumeShell() {
-  const viewportRef = useRef<HTMLDivElement>(null)
-  const documentRef = useRef<HTMLDivElement>(null)
-  const [scale, setScale] = useState<number | null>(null)
-  const [documentHeight, setDocumentHeight] = useState(RESUME_DOCUMENT_HEIGHT)
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const documentRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState<number | null>(null);
+  const [documentHeight, setDocumentHeight] = useState(RESUME_DOCUMENT_HEIGHT);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useLayoutEffect(() => {
     const updateScale = () => {
-      const viewport = viewportRef.current
+      const viewport = viewportRef.current;
 
-      if (!viewport) return
+      if (!viewport) return;
 
-      const availableWidth = viewport.clientWidth
-      const nextScale = Math.min(
-        RESUME_PREVIEW_MAX_SCALE,
-        availableWidth / RESUME_DOCUMENT_WIDTH
-      )
+      const availableWidth = viewport.clientWidth;
+      const nextScale = Math.min(RESUME_PREVIEW_MAX_SCALE, availableWidth / RESUME_DOCUMENT_WIDTH);
 
-      setScale((currentScale) =>
-        currentScale === nextScale ? currentScale : nextScale
-      )
-    }
+      setScale((currentScale) => (currentScale === nextScale ? currentScale : nextScale));
+    };
 
-    updateScale()
+    updateScale();
 
-    const resizeObserver = new ResizeObserver(updateScale)
-    const viewport = viewportRef.current
+    const resizeObserver = new ResizeObserver(updateScale);
+    const viewport = viewportRef.current;
 
     if (viewport) {
-      resizeObserver.observe(viewport)
+      resizeObserver.observe(viewport);
     }
 
-    window.addEventListener('resize', updateScale)
+    window.addEventListener('resize', updateScale);
 
     return () => {
-      resizeObserver.disconnect()
-      window.removeEventListener('resize', updateScale)
-    }
-  }, [])
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', updateScale);
+    };
+  }, []);
 
   useLayoutEffect(() => {
-    if (scale === null) return
+    if (scale === null) return;
 
-    const target = documentRef.current
+    const target = documentRef.current;
 
-    if (!target) return
+    if (!target) return;
 
-    let frameId: number | null = null
-    let isDisposed = false
+    let frameId: number | null = null;
+    let isDisposed = false;
 
     const updateHeight = () => {
-      frameId = null
+      frameId = null;
 
-      if (isDisposed) return
+      if (isDisposed) return;
 
       setDocumentHeight((currentHeight) => {
         const nextHeight = Math.ceil(
-          Math.max(
-            RESUME_DOCUMENT_HEIGHT,
-            target.scrollHeight,
-            target.offsetHeight
-          )
-        )
+          Math.max(RESUME_DOCUMENT_HEIGHT, target.scrollHeight, target.offsetHeight),
+        );
 
-        return currentHeight === nextHeight ? currentHeight : nextHeight
-      })
-    }
+        return currentHeight === nextHeight ? currentHeight : nextHeight;
+      });
+    };
 
     const scheduleHeightUpdate = () => {
-      if (isDisposed) return
+      if (isDisposed) return;
 
       if (frameId !== null) {
-        window.cancelAnimationFrame(frameId)
+        window.cancelAnimationFrame(frameId);
       }
 
-      frameId = window.requestAnimationFrame(updateHeight)
-    }
+      frameId = window.requestAnimationFrame(updateHeight);
+    };
 
-    scheduleHeightUpdate()
+    scheduleHeightUpdate();
 
-    document.fonts?.ready.then(scheduleHeightUpdate).catch(() => undefined)
+    document.fonts?.ready.then(scheduleHeightUpdate).catch(() => undefined);
 
-    const resizeObserver = new ResizeObserver(scheduleHeightUpdate)
+    const resizeObserver = new ResizeObserver(scheduleHeightUpdate);
     const measuredElements = [
       target,
       ...Array.from(
-        target.querySelectorAll<HTMLElement>(
-          '[data-resume-section-stack], section, article'
-        )
+        target.querySelectorAll<HTMLElement>('[data-resume-section-stack], section, article'),
       ),
-    ]
+    ];
 
-    measuredElements.forEach((element) => resizeObserver.observe(element))
-    window.addEventListener('load', scheduleHeightUpdate)
+    measuredElements.forEach((element) => resizeObserver.observe(element));
+    window.addEventListener('load', scheduleHeightUpdate);
 
     return () => {
-      isDisposed = true
-      resizeObserver.disconnect()
-      window.removeEventListener('load', scheduleHeightUpdate)
+      isDisposed = true;
+      resizeObserver.disconnect();
+      window.removeEventListener('load', scheduleHeightUpdate);
 
       if (frameId !== null) {
-        window.cancelAnimationFrame(frameId)
+        window.cancelAnimationFrame(frameId);
       }
-    }
-  }, [scale])
+    };
+  }, [scale]);
 
   const handleDownload = useCallback(async () => {
-    const target = documentRef.current
+    const target = documentRef.current;
 
-    if (!target || isGenerating) return
+    if (!target || isGenerating) return;
 
-    setIsGenerating(true)
-    setErrorMessage(null)
+    setIsGenerating(true);
+    setErrorMessage(null);
 
     try {
-      await waitForNextPaint()
-      const pdfBytes = await buildResumePdfFromElement(target)
-      downloadBytes(pdfBytes, RESUME_PDF_FILE_NAME)
+      await waitForNextPaint();
+      const pdfBytes = await buildResumePdfFromElement(target);
+      downloadBytes(pdfBytes, RESUME_PDF_FILE_NAME);
     } catch (error) {
-      console.error(error)
-      setErrorMessage('PDF 생성에 실패했습니다. 잠시 후 다시 시도해주세요.')
+      console.error(error);
+      setErrorMessage('PDF 생성에 실패했습니다. 잠시 후 다시 시도해주세요.');
     } finally {
-      setIsGenerating(false)
+      setIsGenerating(false);
     }
-  }, [isGenerating])
+  }, [isGenerating]);
 
   return (
     <>
@@ -232,5 +219,5 @@ export function ResumeShell() {
         </div>
       </div>
     </>
-  )
+  );
 }

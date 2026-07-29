@@ -4,11 +4,7 @@
   "type": "registry:ui",
   "title": "Depth Image Carousel",
   "description": "A rotating perspective image carousel.",
-  "dependencies": [
-    "clsx",
-    "lucide-react",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "lucide-react", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/3d-image-carousel.tsx",

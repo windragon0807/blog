@@ -1,7 +1,8 @@
-import { MouseCustomCursor } from '@/components/mouse-custom-cursor'
-import { DesktopOnlyPreview } from '../desktop-only-preview'
-import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface'
-import type { PreviewMode } from '../types'
+import { MouseCustomCursor } from '@/components/mouse-custom-cursor';
+
+import { DesktopOnlyPreview } from '../desktop-only-preview';
+import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface';
+import type { PreviewMode } from '../types';
 
 export function MouseCustomCursorPreview({ mode }: { mode: PreviewMode }) {
   return (
@@ -29,5 +30,5 @@ export function MouseCustomCursorPreview({ mode }: { mode: PreviewMode }) {
         </MouseCustomCursor>
       </OuterEffectSurface>
     </DesktopOnlyPreview>
-  )
+  );
 }

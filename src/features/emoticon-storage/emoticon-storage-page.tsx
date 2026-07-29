@@ -1,3 +1,3 @@
-'use client'
+'use client';
 
-export { EmoticonStoragePage } from './emoticon-storage-controller'
+export { EmoticonStoragePage } from './emoticon-storage-controller';

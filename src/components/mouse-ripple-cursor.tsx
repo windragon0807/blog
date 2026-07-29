@@ -1,6 +1,3 @@
-'use client'
+'use client';
 
-export {
-  MouseRippleCursor,
-  type MouseRippleCursorProps,
-} from './cursor-effect-runtime'
+export { MouseRippleCursor, type MouseRippleCursorProps } from './cursor-effect-runtime';

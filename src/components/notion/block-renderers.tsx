@@ -1,31 +1,36 @@
-import type { ReactNode } from 'react'
-import { ChevronRight, ExternalLink } from 'lucide-react'
-import { getBookmarkMetadata, parseBookmarkUrl } from '@/lib/bookmark'
-import { getHeadingId } from '@/lib/toc'
-import type { Block, KnownBlock, RichText } from '@/types/notion'
-import { Badge } from '@/components/ui/badge'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
-import { Surface } from '@/components/common/Surface'
-import { StatusNotice } from '@/components/common/StatusNotice'
-import { CodeBlock } from './CodeBlock'
-import { LightboxImage } from './LightboxImage'
-import { RichTextRenderer } from './RichTextRenderer'
+import { ChevronRight, ExternalLink } from 'lucide-react';
+import type { ReactNode } from 'react';
+
+import { StatusNotice } from '@/components/common/StatusNotice';
+import { Surface } from '@/components/common/Surface';
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+import { getBookmarkMetadata, parseBookmarkUrl } from '@/lib/bookmark';
+import { getHeadingId } from '@/lib/toc';
+import type { Block, KnownBlock, RichText } from '@/types/notion';
+
+import { CodeBlock } from './CodeBlock';
+import { LightboxImage } from './LightboxImage';
+import { RichTextRenderer } from './RichTextRenderer';
 
 interface RendererContext {
-  postId: string
-  renderBlocks: (blocks: Block[]) => ReactNode
+  postId: string;
+  renderBlocks: (blocks: Block[]) => ReactNode;
 }
 
 type RendererMap = {
   [K in KnownBlock['type']]: (
     block: Extract<KnownBlock, { type: K }>,
-    context: RendererContext
-  ) => ReactNode | Promise<ReactNode>
-}
+    context: RendererContext,
+  ) => ReactNode | Promise<ReactNode>;
+};
 
 function richTextToPlain(richText: RichText[]): string {
-  return richText.map((token) => token.plain_text).join('').trim()
+  return richText
+    .map((token) => token.plain_text)
+    .join('')
+    .trim();
 }
 
 const knownBlockRenderers = {
@@ -103,11 +108,8 @@ const knownBlockRenderers = {
   ),
 
   image: (block, context) => {
-    const src =
-      block.image.type === 'external'
-        ? block.image.external.url
-        : block.image.file.url
-    const caption = block.image.caption
+    const src = block.image.type === 'external' ? block.image.external.url : block.image.file.url;
+    const caption = block.image.caption;
     return (
       <figure className="my-6">
         <div className="relative w-full overflow-hidden rounded-xl">
@@ -131,7 +133,7 @@ const knownBlockRenderers = {
           </figcaption>
         )}
       </figure>
-    )
+    );
   },
 
   quote: (block) => (
@@ -139,8 +141,7 @@ const knownBlockRenderers = {
       <span
         aria-hidden
         className="themed-quote-rail absolute top-0 left-0 h-full w-1.5 rounded-r-full"
-      >
-      </span>
+      ></span>
       <p className="relative text-[1.03rem] leading-8 text-[var(--post-ink)] dark:text-zinc-200">
         <RichTextRenderer richText={block.quote.rich_text} />
       </p>
@@ -148,10 +149,7 @@ const knownBlockRenderers = {
   ),
 
   callout: (block) => {
-    const icon =
-      block.callout.icon.type === 'emoji'
-        ? block.callout.icon.emoji
-        : '💡'
+    const icon = block.callout.icon.type === 'emoji' ? block.callout.icon.emoji : '💡';
     return (
       <StatusNotice tone="warning" className="my-4 flex gap-3 rounded-xl p-4">
         <span className="shrink-0 text-xl">{icon}</span>
@@ -159,7 +157,7 @@ const knownBlockRenderers = {
           <RichTextRenderer richText={block.callout.rich_text} />
         </p>
       </StatusNotice>
-    )
+    );
   },
 
   divider: () => <Separator className="my-8 bg-zinc-200 dark:bg-zinc-600" />,
@@ -181,10 +179,9 @@ const knownBlockRenderers = {
   column_list: (block, context) => {
     const columns =
       block.children?.filter(
-        (child): child is Extract<KnownBlock, { type: 'column' }> =>
-          child.type === 'column'
-      ) ?? []
-    if (columns.length === 0) return null
+        (child): child is Extract<KnownBlock, { type: 'column' }> => child.type === 'column',
+      ) ?? [];
+    if (columns.length === 0) return null;
 
     return (
       <div className="my-6 flex flex-col gap-4 md:flex-row md:items-start md:gap-6">
@@ -194,7 +191,7 @@ const knownBlockRenderers = {
           </div>
         ))}
       </div>
-    )
+    );
   },
 
   column: (block, context) => (
@@ -203,30 +200,29 @@ const knownBlockRenderers = {
 
   table: (block) => {
     const rows = (block.children ?? []).filter(
-      (child): child is Extract<KnownBlock, { type: 'table_row' }> =>
-        child.type === 'table_row'
-    )
-    if (rows.length === 0) return null
+      (child): child is Extract<KnownBlock, { type: 'table_row' }> => child.type === 'table_row',
+    );
+    if (rows.length === 0) return null;
 
-    const hasColumnHeader = block.table.has_column_header
-    const hasRowHeader = block.table.has_row_header
-    const headerRow = hasColumnHeader ? rows[0] : null
-    const bodyRows = hasColumnHeader ? rows.slice(1) : rows
+    const hasColumnHeader = block.table.has_column_header;
+    const hasRowHeader = block.table.has_row_header;
+    const headerRow = hasColumnHeader ? rows[0] : null;
+    const bodyRows = hasColumnHeader ? rows.slice(1) : rows;
 
     // 행마다 cell 개수가 table_width와 다른 경우 (Notion API 엣지케이스) 빈 셀로 패딩
-    const colCount = block.table.table_width
+    const colCount = block.table.table_width;
     const padCells = (cells: RichText[][]): RichText[][] => {
-      if (cells.length === colCount) return cells
-      if (cells.length > colCount) return cells.slice(0, colCount)
-      return [...cells, ...Array.from({ length: colCount - cells.length }, () => [] as RichText[])]
-    }
+      if (cells.length === colCount) return cells;
+      if (cells.length > colCount) return cells.slice(0, colCount);
+      return [...cells, ...Array.from({ length: colCount - cells.length }, () => [] as RichText[])];
+    };
 
     const headerCellClass =
-      'border-b-2 border-zinc-300 bg-zinc-50/80 px-3 py-2 text-left align-top text-sm font-semibold text-[var(--post-ink)] dark:border-zinc-600 dark:bg-zinc-800/40 dark:text-zinc-100'
+      'border-b-2 border-zinc-300 bg-zinc-50/80 px-3 py-2 text-left align-top text-sm font-semibold text-[var(--post-ink)] dark:border-zinc-600 dark:bg-zinc-800/40 dark:text-zinc-100';
     const cellClass =
-      'border-b border-zinc-200 px-3 py-2 align-top text-sm text-[var(--post-ink)] dark:border-zinc-700/70 dark:text-zinc-200'
+      'border-b border-zinc-200 px-3 py-2 align-top text-sm text-[var(--post-ink)] dark:border-zinc-700/70 dark:text-zinc-200';
     const rowHeaderClass =
-      'border-b border-zinc-200 px-3 py-2 align-top text-sm font-semibold text-[var(--post-ink)] dark:border-zinc-700/70 dark:text-zinc-100'
+      'border-b border-zinc-200 px-3 py-2 align-top text-sm font-semibold text-[var(--post-ink)] dark:border-zinc-700/70 dark:text-zinc-100';
 
     return (
       <ScrollArea
@@ -247,46 +243,52 @@ const knownBlockRenderers = {
           )}
           <tbody>
             {bodyRows.map((row) => (
-              <tr key={row.id} className="transition-colors hover:bg-zinc-50/60 dark:hover:bg-zinc-800/30">
+              <tr
+                key={row.id}
+                className="transition-colors hover:bg-zinc-50/60 dark:hover:bg-zinc-800/30"
+              >
                 {padCells(row.table_row.cells).map((cell, idx) => {
-                  const isRowHeader = hasRowHeader && idx === 0
+                  const isRowHeader = hasRowHeader && idx === 0;
                   if (isRowHeader) {
                     return (
                       <th key={idx} scope="row" className={rowHeaderClass}>
                         <RichTextRenderer richText={cell} />
                       </th>
-                    )
+                    );
                   }
                   return (
                     <td key={idx} className={cellClass}>
                       <RichTextRenderer richText={cell} />
                     </td>
-                  )
+                  );
                 })}
               </tr>
             ))}
           </tbody>
         </table>
       </ScrollArea>
-    )
+    );
   },
 
   table_row: () => null,
 
   bookmark: async (block) => {
-    const caption = richTextToPlain(block.bookmark.caption)
-    const info = parseBookmarkUrl(block.bookmark.url)
-    const metadata = await getBookmarkMetadata(info.href)
+    const caption = richTextToPlain(block.bookmark.caption);
+    const info = parseBookmarkUrl(block.bookmark.url);
+    const metadata = await getBookmarkMetadata(info.href);
 
-    const title = caption || metadata?.title || metadata?.siteName || info.host
-    const description = metadata?.description
-    const displayUrl = parseBookmarkUrl(metadata?.url ?? info.href).label
-    const hostInitial = (metadata?.siteName || info.host).charAt(0).toUpperCase()
-    const thumbnail = metadata?.image
-    const favicon = metadata?.icon
+    const title = caption || metadata?.title || metadata?.siteName || info.host;
+    const description = metadata?.description;
+    const displayUrl = parseBookmarkUrl(metadata?.url ?? info.href).label;
+    const hostInitial = (metadata?.siteName || info.host).charAt(0).toUpperCase();
+    const thumbnail = metadata?.image;
+    const favicon = metadata?.icon;
 
     return (
-      <Surface className="my-5 overflow-hidden rounded-2xl bg-white p-0 dark:bg-zinc-800/40" interactive>
+      <Surface
+        className="my-5 overflow-hidden rounded-2xl bg-white p-0 dark:bg-zinc-800/40"
+        interactive
+      >
         <a
           href={metadata?.url ?? info.href}
           target="_blank"
@@ -314,14 +316,20 @@ const knownBlockRenderers = {
                     decoding="async"
                   />
                 ) : (
-                  <Badge variant="series" className="flex h-5 w-5 shrink-0 items-center justify-center rounded p-0 text-[10px]">
+                  <Badge
+                    variant="series"
+                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded p-0 text-[10px]"
+                  >
                     {hostInitial}
                   </Badge>
                 )}
                 <p className="truncate text-sm text-[var(--post-muted)] dark:text-zinc-400">
                   {displayUrl}
                 </p>
-                <ExternalLink className="h-3.5 w-3.5 shrink-0 text-[var(--post-muted)] transition-transform group-hover:translate-x-0.5 group-hover:text-zinc-600 dark:group-hover:text-zinc-300" aria-hidden="true" />
+                <ExternalLink
+                  className="h-3.5 w-3.5 shrink-0 text-[var(--post-muted)] transition-transform group-hover:translate-x-0.5 group-hover:text-zinc-600 dark:group-hover:text-zinc-300"
+                  aria-hidden="true"
+                />
               </div>
             </div>
             {thumbnail && (
@@ -338,30 +346,32 @@ const knownBlockRenderers = {
             )}
             {!thumbnail && (
               <div className="hidden w-44 shrink-0 border-l border-zinc-200/80 bg-gradient-to-br from-zinc-50 to-zinc-100 dark:border-zinc-700 dark:from-zinc-800/50 dark:to-zinc-900/60 sm:flex sm:items-center sm:justify-center">
-                <span className="text-sm text-[var(--post-muted)] dark:text-zinc-500">Bookmark</span>
+                <span className="text-sm text-[var(--post-muted)] dark:text-zinc-500">
+                  Bookmark
+                </span>
               </div>
             )}
           </div>
         </a>
       </Surface>
-    )
+    );
   },
-} satisfies RendererMap
+} satisfies RendererMap;
 
 export function isKnownBlock(block: Block): block is KnownBlock {
-  return Object.hasOwn(knownBlockRenderers, block.type)
+  return Object.hasOwn(knownBlockRenderers, block.type);
 }
 
 export function renderKnownBlock(
   block: KnownBlock,
-  context: RendererContext
+  context: RendererContext,
 ): ReactNode | Promise<ReactNode> {
   const renderer = knownBlockRenderers[block.type] as (
     value: KnownBlock,
-    ctx: RendererContext
-  ) => ReactNode | Promise<ReactNode>
+    ctx: RendererContext,
+  ) => ReactNode | Promise<ReactNode>;
 
-  return renderer(block, context)
+  return renderer(block, context);
 }
 
 export function renderUnsupportedBlock(type: string): ReactNode {
@@ -369,5 +379,5 @@ export function renderUnsupportedBlock(type: string): ReactNode {
     <StatusNotice className="my-2 rounded px-3 py-2 text-sm text-zinc-400 dark:text-zinc-300">
       [{type}] — 지원하지 않는 블록 타입
     </StatusNotice>
-  )
+  );
 }

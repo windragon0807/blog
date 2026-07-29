@@ -1,30 +1,28 @@
-import 'client-only'
+import 'client-only';
 
-import { queryOptions } from '@tanstack/react-query'
-import type { Post } from '@/types/notion'
+import { queryOptions } from '@tanstack/react-query';
 
-export const POSTS_QUERY_KEY = ['posts', 'blog'] as const
-export const POSTS_STALE_TIME_MS = 60 * 60 * 1000
-export const POSTS_GC_TIME_MS = 2 * 60 * 60 * 1000
+import type { Post } from '@/types/notion';
 
-type FetchPriority = 'high' | 'low' | 'auto'
+export const POSTS_QUERY_KEY = ['posts', 'blog'] as const;
+export const POSTS_STALE_TIME_MS = 60 * 60 * 1000;
+export const POSTS_GC_TIME_MS = 2 * 60 * 60 * 1000;
+
+type FetchPriority = 'high' | 'low' | 'auto';
 type PriorityRequestInit = RequestInit & {
-  priority?: FetchPriority
-}
+  priority?: FetchPriority;
+};
 
 interface PostsResponse {
-  posts: Post[]
+  posts: Post[];
 }
 
 interface FetchPostsOptions {
-  signal?: AbortSignal
-  priority?: FetchPriority
+  signal?: AbortSignal;
+  priority?: FetchPriority;
 }
 
-async function fetchPosts({
-  signal,
-  priority = 'auto',
-}: FetchPostsOptions = {}): Promise<Post[]> {
+async function fetchPosts({ signal, priority = 'auto' }: FetchPostsOptions = {}): Promise<Post[]> {
   const response = await fetch('/api/posts', {
     signal,
     priority,
@@ -32,19 +30,19 @@ async function fetchPosts({
     headers: {
       Accept: 'application/json',
     },
-  } satisfies PriorityRequestInit)
+  } satisfies PriorityRequestInit);
 
   if (!response.ok) {
-    throw new Error(`게시글 목록을 불러오지 못했습니다. (${response.status})`)
+    throw new Error(`게시글 목록을 불러오지 못했습니다. (${response.status})`);
   }
 
-  const payload = (await response.json()) as PostsResponse
+  const payload = (await response.json()) as PostsResponse;
 
   if (!Array.isArray(payload.posts)) {
-    throw new Error('게시글 목록 응답 형식이 올바르지 않습니다.')
+    throw new Error('게시글 목록 응답 형식이 올바르지 않습니다.');
   }
 
-  return payload.posts
+  return payload.posts;
 }
 
 export function getPostsQueryOptions(options: FetchPostsOptions = {}) {
@@ -57,5 +55,5 @@ export function getPostsQueryOptions(options: FetchPostsOptions = {}) {
       }),
     staleTime: POSTS_STALE_TIME_MS,
     gcTime: POSTS_GC_TIME_MS,
-  })
+  });
 }

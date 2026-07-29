@@ -1,7 +1,8 @@
-import { CanvasCursor } from '@/components/canvas-cursor'
-import { DesktopOnlyPreview } from '../desktop-only-preview'
-import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface'
-import type { PreviewMode } from '../types'
+import { CanvasCursor } from '@/components/canvas-cursor';
+
+import { DesktopOnlyPreview } from '../desktop-only-preview';
+import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface';
+import type { PreviewMode } from '../types';
 
 export function CanvasCursorPreview({ mode }: { mode: PreviewMode }) {
   return (
@@ -22,5 +23,5 @@ export function CanvasCursorPreview({ mode }: { mode: PreviewMode }) {
         </CanvasCursor>
       </OuterEffectSurface>
     </DesktopOnlyPreview>
-  )
+  );
 }

@@ -1,11 +1,10 @@
-'use client'
+'use client';
 
 /* eslint-disable react-hooks/set-state-in-effect, @typescript-eslint/no-explicit-any */
 
-import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, PanInfo, useMotionValue, useTransform } from 'motion/react';
 import React, { JSX } from 'react';
-
+import { useEffect, useMemo, useRef, useState } from 'react';
 // replace icons with your own if needed
 import { FiCircle, FiCode, FiFileText, FiLayers, FiLayout } from 'react-icons/fi';
 export interface CarouselItem {
@@ -31,32 +30,32 @@ const DEFAULT_ITEMS: CarouselItem[] = [
     title: 'Text Animations',
     description: 'Cool text animations for your projects.',
     id: 1,
-    icon: <FiFileText className="h-[16px] w-[16px] text-current" />
+    icon: <FiFileText className="h-[16px] w-[16px] text-current" />,
   },
   {
     title: 'Animations',
     description: 'Smooth animations for your projects.',
     id: 2,
-    icon: <FiCircle className="h-[16px] w-[16px] text-current" />
+    icon: <FiCircle className="h-[16px] w-[16px] text-current" />,
   },
   {
     title: 'Components',
     description: 'Reusable components for your projects.',
     id: 3,
-    icon: <FiLayers className="h-[16px] w-[16px] text-current" />
+    icon: <FiLayers className="h-[16px] w-[16px] text-current" />,
   },
   {
     title: 'Backgrounds',
     description: 'Beautiful backgrounds and patterns for your projects.',
     id: 4,
-    icon: <FiLayout className="h-[16px] w-[16px] text-current" />
+    icon: <FiLayout className="h-[16px] w-[16px] text-current" />,
   },
   {
     title: 'Common UI',
     description: 'Common UI components are coming soon!',
     id: 5,
-    icon: <FiCode className="h-[16px] w-[16px] text-current" />
-  }
+    icon: <FiCode className="h-[16px] w-[16px] text-current" />,
+  },
 ];
 
 const DRAG_BUFFER = 0;
@@ -75,8 +74,21 @@ interface CarouselItemProps {
   transition: any;
 }
 
-function CarouselItem({ item, index, itemWidth, round, variant, trackItemOffset, x, transition }: CarouselItemProps) {
-  const range = [-(index + 1) * trackItemOffset, -index * trackItemOffset, -(index - 1) * trackItemOffset];
+function CarouselItem({
+  item,
+  index,
+  itemWidth,
+  round,
+  variant,
+  trackItemOffset,
+  x,
+  transition,
+}: CarouselItemProps) {
+  const range = [
+    -(index + 1) * trackItemOffset,
+    -index * trackItemOffset,
+    -(index - 1) * trackItemOffset,
+  ];
   const outputRange = [90, 0, -90];
   const rotateY = useTransform(x, range, outputRange, { clamp: false });
   const isDark = variant === 'dark';
@@ -95,7 +107,7 @@ function CarouselItem({ item, index, itemWidth, round, variant, trackItemOffset,
         width: itemWidth,
         height: round ? itemWidth : '100%',
         rotateY: rotateY,
-        ...(round && { borderRadius: '50%' })
+        ...(round && { borderRadius: '50%' }),
       }}
       transition={transition}
     >
@@ -120,7 +132,13 @@ function CarouselItem({ item, index, itemWidth, round, variant, trackItemOffset,
         >
           {item.title}
         </div>
-        <p className={round || isDark ? 'text-sm text-white/[0.58]' : 'text-sm text-zinc-500 dark:text-zinc-400'}>
+        <p
+          className={
+            round || isDark
+              ? 'text-sm text-white/[0.58]'
+              : 'text-sm text-zinc-500 dark:text-zinc-400'
+          }
+        >
           {item.description}
         </p>
       </div>
@@ -136,7 +154,7 @@ export function Carousel({
   pauseOnHover = false,
   loop = false,
   round = false,
-  variant = 'light'
+  variant = 'light',
 }: CarouselProps): JSX.Element {
   const containerPadding = 16;
   const itemWidth = baseWidth - containerPadding * 2;
@@ -173,7 +191,7 @@ export function Carousel({
     if (pauseOnHover && isHovered) return undefined;
 
     const timer = setInterval(() => {
-      setPosition(prev => Math.min(prev + 1, itemsForRender.length - 1));
+      setPosition((prev) => Math.min(prev + 1, itemsForRender.length - 1));
     }, autoplayDelay);
 
     return () => clearInterval(timer);
@@ -242,7 +260,7 @@ export function Carousel({
 
     if (direction === 0) return;
 
-    setPosition(prev => {
+    setPosition((prev) => {
       const next = prev + direction;
       const max = itemsForRender.length - 1;
       return Math.max(0, Math.min(next, max));
@@ -254,12 +272,16 @@ export function Carousel({
     : {
         dragConstraints: {
           left: -trackItemOffset * Math.max(itemsForRender.length - 1, 0),
-          right: 0
-        }
+          right: 0,
+        },
       };
 
   const activeIndex =
-    items.length === 0 ? 0 : loop ? (position - 1 + items.length) % items.length : Math.min(position, items.length - 1);
+    items.length === 0
+      ? 0
+      : loop
+        ? (position - 1 + items.length) % items.length
+        : Math.min(position, items.length - 1);
 
   return (
     <div
@@ -274,7 +296,7 @@ export function Carousel({
       }`}
       style={{
         width: `${baseWidth}px`,
-        ...(round && { height: `${baseWidth}px` })
+        ...(round && { height: `${baseWidth}px` }),
       }}
     >
       <motion.div
@@ -286,7 +308,7 @@ export function Carousel({
           gap: `${GAP}px`,
           perspective: 1000,
           perspectiveOrigin: `${position * trackItemOffset + itemWidth / 2}px 50%`,
-          x
+          x,
         }}
         onDragEnd={handleDragEnd}
         animate={{ x: -(position * trackItemOffset) }}
@@ -308,7 +330,9 @@ export function Carousel({
           />
         ))}
       </motion.div>
-      <div className={`flex w-full justify-center ${round ? 'absolute z-20 bottom-12 left-1/2 -translate-x-1/2' : ''}`}>
+      <div
+        className={`flex w-full justify-center ${round ? 'absolute z-20 bottom-12 left-1/2 -translate-x-1/2' : ''}`}
+      >
         <div className="mt-4 flex w-[150px] justify-between px-8">
           {items.map((_, index) => (
             <motion.button
@@ -330,7 +354,7 @@ export function Carousel({
                       : 'bg-zinc-300 dark:bg-zinc-700'
               }`}
               animate={{
-                scale: activeIndex === index ? 1.2 : 1
+                scale: activeIndex === index ? 1.2 : 1,
               }}
               onClick={() => setPosition(loop ? index + 1 : index)}
               transition={{ duration: 0.15 }}

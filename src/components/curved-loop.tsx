@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
 /* eslint-disable react-hooks/refs */
 
-import { useRef, useEffect, useState, useMemo, useId, FC, PointerEvent } from 'react';
+import { FC, PointerEvent, useEffect, useId, useMemo, useRef, useState } from 'react';
 
 interface CurvedLoopProps {
   marqueeText?: string;
@@ -21,7 +21,7 @@ const CurvedLoop: FC<CurvedLoopProps> = ({
   colors,
   curveAmount = 400,
   direction = 'left',
-  interactive = true
+  interactive = true,
 }) => {
   const text = useMemo(() => {
     const hasTrailing = /\s|\u00A0$/.test(marqueeText);
@@ -128,7 +128,11 @@ const CurvedLoop: FC<CurvedLoopProps> = ({
         className="select-none w-full overflow-visible block aspect-[100/12] text-[6rem] font-bold uppercase leading-none"
         viewBox="0 0 1440 120"
       >
-        <text ref={measureRef} xmlSpace="preserve" style={{ visibility: 'hidden', opacity: 0, pointerEvents: 'none' }}>
+        <text
+          ref={measureRef}
+          xmlSpace="preserve"
+          style={{ visibility: 'hidden', opacity: 0, pointerEvents: 'none' }}
+        >
           {text}
         </text>
         <defs>
@@ -150,7 +154,12 @@ const CurvedLoop: FC<CurvedLoopProps> = ({
                 />
               ))}
               <animate attributeName="x1" values="-720;0;720" dur="7s" repeatCount="indefinite" />
-              <animate attributeName="x2" values="720;1440;2160" dur="7s" repeatCount="indefinite" />
+              <animate
+                attributeName="x2"
+                values="720;1440;2160"
+                dur="7s"
+                repeatCount="indefinite"
+              />
             </linearGradient>
           ) : null}
         </defs>
@@ -160,7 +169,12 @@ const CurvedLoop: FC<CurvedLoopProps> = ({
             className={className ?? ''}
             fill={gradientColors ? `url(#${gradientId})` : 'currentColor'}
           >
-            <textPath ref={textPathRef} href={`#${pathId}`} startOffset={offset + 'px'} xmlSpace="preserve">
+            <textPath
+              ref={textPathRef}
+              href={`#${pathId}`}
+              startOffset={offset + 'px'}
+              xmlSpace="preserve"
+            >
               {totalText}
             </textPath>
           </text>

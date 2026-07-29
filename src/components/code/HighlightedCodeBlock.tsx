@@ -1,19 +1,20 @@
-import Image from 'next/image'
-import { codeToHtml } from 'shiki'
-import type { RichText } from '@/types/notion'
-import { SHIKI_THEME_RECORD } from '@/lib/codeThemes'
-import { getCodeLanguageIconSrc } from '@/lib/codeLanguageIcons'
-import { Badge } from '@/components/ui/badge'
-import { CodeCopyButton } from '@/components/code/CodeCopyButton'
-import { RichTextRenderer } from '@/components/notion/RichTextRenderer'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import Image from 'next/image';
+import { codeToHtml } from 'shiki';
+
+import { CodeCopyButton } from '@/components/code/CodeCopyButton';
+import { RichTextRenderer } from '@/components/notion/RichTextRenderer';
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { getCodeLanguageIconSrc } from '@/lib/codeLanguageIcons';
+import { SHIKI_THEME_RECORD } from '@/lib/codeThemes';
+import type { RichText } from '@/types/notion';
 
 interface HighlightedCodeBlockProps {
-  blockId: string
-  code: string
-  language: string
-  caption?: RichText[]
-  variant?: 'post' | 'embedded'
+  blockId: string;
+  code: string;
+  language: string;
+  caption?: RichText[];
+  variant?: 'post' | 'embedded';
 }
 
 export async function HighlightedCodeBlock({
@@ -23,25 +24,25 @@ export async function HighlightedCodeBlock({
   caption = [],
   variant = 'post',
 }: HighlightedCodeBlockProps) {
-  const normalizedLang = normalizeCodeLanguage(language, code)
-  const languageIconSrc = getCodeLanguageIconSrc(normalizedLang)
-  const { fileName, highlightLines, visibleCaption } = parseCodeCaption(caption)
+  const normalizedLang = normalizeCodeLanguage(language, code);
+  const languageIconSrc = getCodeLanguageIconSrc(normalizedLang);
+  const { fileName, highlightLines, visibleCaption } = parseCodeCaption(caption);
   const html = await codeToHtml(code, {
     lang: normalizedLang,
     themes: SHIKI_THEME_RECORD,
     defaultColor: false,
-  })
-  const decoratedHtml = decorateCodeHtml(html, blockId, highlightLines)
-  const framed = variant === 'post'
+  });
+  const decoratedHtml = decorateCodeHtml(html, blockId, highlightLines);
+  const framed = variant === 'post';
   const shellClassName = framed
     ? 'relative overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-600'
-    : 'overflow-hidden'
+    : 'overflow-hidden';
   const headerClassName = framed
     ? 'flex items-center justify-between border-b border-zinc-200 bg-zinc-100 px-4 py-2 dark:border-zinc-700 dark:bg-zinc-800'
-    : 'flex items-center justify-between border-b border-zinc-200/75 bg-zinc-50/80 px-4 py-2 dark:border-zinc-700/60 dark:bg-zinc-900/55'
+    : 'flex items-center justify-between border-b border-zinc-200/75 bg-zinc-50/80 px-4 py-2 dark:border-zinc-700/60 dark:bg-zinc-900/55';
   const scrollAreaClassName = framed
     ? 'custom-scrollbar bg-white dark:bg-zinc-800'
-    : 'custom-scrollbar bg-white/92 dark:bg-zinc-900/42'
+    : 'custom-scrollbar bg-white/92 dark:bg-zinc-900/42';
 
   const block = (
     <div className={shellClassName}>
@@ -58,9 +59,7 @@ export async function HighlightedCodeBlock({
               className="h-full w-full object-contain"
             />
           </span>
-          <span className="font-mono text-xs text-zinc-500 dark:text-zinc-300">
-            {language}
-          </span>
+          <span className="font-mono text-xs text-zinc-500 dark:text-zinc-300">{language}</span>
           {fileName ? (
             <Badge
               variant="outline"
@@ -72,20 +71,17 @@ export async function HighlightedCodeBlock({
         </div>
         <CodeCopyButton code={code} />
       </div>
-      <ScrollArea
-        orientation="horizontal"
-        className={scrollAreaClassName}
-      >
+      <ScrollArea orientation="horizontal" className={scrollAreaClassName}>
         <div
           className="[&>pre]:min-w-max [&>pre]:!bg-transparent [&>pre]:px-0 [&>pre]:py-3 [&>pre]:text-sm [&>pre]:leading-relaxed"
           dangerouslySetInnerHTML={{ __html: decoratedHtml }}
         />
       </ScrollArea>
     </div>
-  )
+  );
 
   if (variant === 'embedded') {
-    return <div className="notion-code">{block}</div>
+    return <div className="notion-code">{block}</div>;
   }
 
   return (
@@ -97,7 +93,7 @@ export async function HighlightedCodeBlock({
         </p>
       ) : null}
     </div>
-  )
+  );
 }
 
 function normalizeCodeLanguage(lang: string, code: string): string {
@@ -106,90 +102,89 @@ function normalizeCodeLanguage(lang: string, code: string): string {
     plain_text: 'text',
     shell: 'bash',
     sh: 'bash',
-  }
-  const normalized = map[lang.toLowerCase()] ?? lang.toLowerCase()
-  const jsxLike = /<\/?[A-Za-z][^>]*>/.test(code) || /className=/.test(code)
+  };
+  const normalized = map[lang.toLowerCase()] ?? lang.toLowerCase();
+  const jsxLike = /<\/?[A-Za-z][^>]*>/.test(code) || /className=/.test(code);
 
-  if (jsxLike && (normalized === 'typescript' || normalized === 'ts')) return 'tsx'
-  if (jsxLike && (normalized === 'javascript' || normalized === 'js')) return 'jsx'
+  if (jsxLike && (normalized === 'typescript' || normalized === 'ts')) return 'tsx';
+  if (jsxLike && (normalized === 'javascript' || normalized === 'js')) return 'jsx';
 
-  return normalized
+  return normalized;
 }
 
 function parseCodeCaption(caption: RichText[]): {
-  fileName: string | null
-  highlightLines: Set<number>
-  visibleCaption: RichText[]
+  fileName: string | null;
+  highlightLines: Set<number>;
+  visibleCaption: RichText[];
 } {
-  const plain = caption.map((token) => token.plain_text).join('').trim()
+  const plain = caption
+    .map((token) => token.plain_text)
+    .join('')
+    .trim();
   if (!plain) {
-    return { fileName: null, highlightLines: new Set(), visibleCaption: caption }
+    return { fileName: null, highlightLines: new Set(), visibleCaption: caption };
   }
 
-  const metaMatch = plain.match(/\{([\d,\-\s]+)\}\s*$/)
-  const highlightLines = parseLineRanges(metaMatch?.[1] ?? '')
-  const plainWithoutMeta = plain.replace(/\{([\d,\-\s]+)\}\s*$/, '').trim()
-  const fileNameCandidate = plainWithoutMeta.split(/\s+/)[0]
+  const metaMatch = plain.match(/\{([\d,\-\s]+)\}\s*$/);
+  const highlightLines = parseLineRanges(metaMatch?.[1] ?? '');
+  const plainWithoutMeta = plain.replace(/\{([\d,\-\s]+)\}\s*$/, '').trim();
+  const fileNameCandidate = plainWithoutMeta.split(/\s+/)[0];
   const looksLikeFileName =
-    /[\\/]/.test(fileNameCandidate) || /\.[a-z0-9]+$/i.test(fileNameCandidate)
-  const fileName = looksLikeFileName ? fileNameCandidate : null
-  const visibleCaption = fileName ? [] : caption
+    /[\\/]/.test(fileNameCandidate) || /\.[a-z0-9]+$/i.test(fileNameCandidate);
+  const fileName = looksLikeFileName ? fileNameCandidate : null;
+  const visibleCaption = fileName ? [] : caption;
 
-  return { fileName, highlightLines, visibleCaption }
+  return { fileName, highlightLines, visibleCaption };
 }
 
 function parseLineRanges(input: string): Set<number> {
-  const output = new Set<number>()
-  if (!input.trim()) return output
+  const output = new Set<number>();
+  if (!input.trim()) return output;
 
   input.split(',').forEach((segment) => {
-    const value = segment.trim()
-    if (!value) return
+    const value = segment.trim();
+    if (!value) return;
 
     if (value.includes('-')) {
-      const [fromRaw, toRaw] = value.split('-', 2)
-      const from = Number(fromRaw)
-      const to = Number(toRaw)
-      if (!Number.isFinite(from) || !Number.isFinite(to)) return
-      const start = Math.max(1, Math.min(from, to))
-      const end = Math.max(start, Math.max(from, to))
+      const [fromRaw, toRaw] = value.split('-', 2);
+      const from = Number(fromRaw);
+      const to = Number(toRaw);
+      if (!Number.isFinite(from) || !Number.isFinite(to)) return;
+      const start = Math.max(1, Math.min(from, to));
+      const end = Math.max(start, Math.max(from, to));
       for (let line = start; line <= end; line += 1) {
-        output.add(line)
+        output.add(line);
       }
-      return
+      return;
     }
 
-    const line = Number(value)
+    const line = Number(value);
     if (Number.isFinite(line) && line > 0) {
-      output.add(line)
+      output.add(line);
     }
-  })
+  });
 
-  return output
+  return output;
 }
 
-function decorateCodeHtml(
-  html: string,
-  blockId: string,
-  highlightLines: Set<number>
-): string {
-  const match = html.match(/<code>([\s\S]*?)<\/code>/)
-  if (!match?.[1]) return html
+function decorateCodeHtml(html: string, blockId: string, highlightLines: Set<number>): string {
+  const match = html.match(/<code>([\s\S]*?)<\/code>/);
+  if (!match?.[1]) return html;
 
-  const content = match[1]
-  const lines = content.split('\n')
-  const safeBlockId = blockId.replace(/[^a-zA-Z0-9_-]/g, '')
+  const content = match[1];
+  const lines = content.split('\n');
+  const safeBlockId = blockId.replace(/[^a-zA-Z0-9_-]/g, '');
   const decorated = lines
     .map((lineHtml, index) => {
-      const line = index + 1
-      const lineId = `code-${safeBlockId}-L${line}`
-      const highlighted = highlightLines.has(line)
-      const classes = highlighted ? 'code-line code-line--highlighted' : 'code-line'
-      const lineContent = lineHtml.length > 0 ? lineHtml : '&nbsp;'
+      const line = index + 1;
+      const lineId = `code-${safeBlockId}-L${line}`;
+      const highlighted = highlightLines.has(line);
+      const classes = highlighted ? 'code-line code-line--highlighted' : 'code-line';
+      const lineContent = lineHtml.length > 0 ? lineHtml : '&nbsp;';
 
-      return `<span class="${classes}" data-line="${line}" id="${lineId}"><a class="code-line-anchor" href="#${lineId}" aria-label="라인 ${line}" tabindex="-1">${line}</a><span class="code-line-content">${lineContent}</span></span>`
+      return `<span class="${classes}" data-line="${line}" id="${lineId}"><a class="code-line-anchor" href="#${lineId}" aria-label="라인 ${line}" tabindex="-1">${line}</a><span class="code-line-content">${lineContent}</span></span>`;
     })
-    .join('')
+    .join('');
 
-  return html.replace(content, decorated)
+  return html.replace(content, decorated);
 }

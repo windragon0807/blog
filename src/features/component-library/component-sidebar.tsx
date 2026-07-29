@@ -1,10 +1,11 @@
-'use client'
+'use client';
 
-import { useMemo, useState, type CSSProperties, type ReactNode } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { AnimatePresence, motion } from 'motion/react'
-import { Menu, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { type CSSProperties, type ReactNode, useMemo, useState } from 'react';
+
 import {
   Dialog,
   DialogOverlay,
@@ -12,30 +13,27 @@ import {
   DialogRawContent,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import {
-  componentCategories,
-  componentSamples,
-  isComponentHiddenOnMobile,
-} from './component-data'
+} from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+
+import { componentCategories, componentSamples, isComponentHiddenOnMobile } from './component-data';
 
 const baseLinkClass =
-  'relative isolate block rounded-lg border border-transparent px-3 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-950 dark:focus-visible:outline-zinc-50'
+  'relative isolate block rounded-lg border border-transparent px-3 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-950 dark:focus-visible:outline-zinc-50';
 
 function getLinkClass(isActive: boolean) {
   if (isActive) {
-    return `${baseLinkClass} text-zinc-950 dark:text-zinc-50`
+    return `${baseLinkClass} text-zinc-950 dark:text-zinc-50`;
   }
 
-  return `${baseLinkClass} text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800/60`
+  return `${baseLinkClass} text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800/60`;
 }
 
 const stableStickyStyle = {
   willChange: 'transform',
   contain: 'layout paint',
   transform: 'translateZ(0)',
-} as const satisfies CSSProperties
+} as const satisfies CSSProperties;
 
 function SidebarLink({
   href,
@@ -45,12 +43,12 @@ function SidebarLink({
   onNavigate,
   children,
 }: {
-  href: string
-  isActive: boolean
-  layoutDependency: string
-  layoutScope: string
-  onNavigate?: () => void
-  children: ReactNode
+  href: string;
+  isActive: boolean;
+  layoutDependency: string;
+  layoutScope: string;
+  onNavigate?: () => void;
+  children: ReactNode;
 }) {
   return (
     <Link
@@ -75,11 +73,11 @@ function SidebarLink({
         {children}
       </span>
     </Link>
-  )
+  );
 }
 
 function normalizeSearchValue(value: string) {
-  return value.trim().toLocaleLowerCase()
+  return value.trim().toLocaleLowerCase();
 }
 
 function ComponentSearchInput({
@@ -87,9 +85,9 @@ function ComponentSearchInput({
   onChange,
   inputId,
 }: {
-  value: string
-  onChange: (value: string) => void
-  inputId: string
+  value: string;
+  onChange: (value: string) => void;
+  inputId: string;
 }) {
   return (
     <div
@@ -109,7 +107,7 @@ function ComponentSearchInput({
         className="w-full rounded-xl border border-zinc-200/85 bg-white/90 px-3 py-2 text-sm text-zinc-900 shadow-sm outline-none transition-[background-color,border-color,box-shadow,color] placeholder:text-zinc-400 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-950/10 dark:border-zinc-700/70 dark:bg-zinc-900/70 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-500 dark:focus:bg-zinc-900/80 dark:focus:ring-zinc-50/10"
       />
     </div>
-  )
+  );
 }
 
 function ComponentSidebarContent({
@@ -117,45 +115,36 @@ function ComponentSidebarContent({
   inputId,
   onNavigate,
 }: {
-  layoutScope: string
-  inputId: string
-  onNavigate?: () => void
+  layoutScope: string;
+  inputId: string;
+  onNavigate?: () => void;
 }) {
-  const pathname = usePathname()
-  const isIntroActive = pathname === '/components'
-  const [componentSearchQuery, setComponentSearchQuery] = useState('')
-  const normalizedSearchQuery = normalizeSearchValue(componentSearchQuery)
+  const pathname = usePathname();
+  const isIntroActive = pathname === '/components';
+  const [componentSearchQuery, setComponentSearchQuery] = useState('');
+  const normalizedSearchQuery = normalizeSearchValue(componentSearchQuery);
   const visibleSamples = useMemo(
     () =>
       layoutScope === 'mobile'
-        ? componentSamples.filter(
-            (sample) => !isComponentHiddenOnMobile(sample.slug)
-          )
+        ? componentSamples.filter((sample) => !isComponentHiddenOnMobile(sample.slug))
         : componentSamples,
-    [layoutScope]
-  )
+    [layoutScope],
+  );
   const filteredSamples = useMemo(() => {
-    if (!normalizedSearchQuery) return visibleSamples
+    if (!normalizedSearchQuery) return visibleSamples;
 
     return visibleSamples.filter((sample) => {
       const categoryName =
-        componentCategories.find((category) => category.id === sample.categoryId)
-          ?.name ?? ''
-      const searchableText = [
-        sample.title,
-        sample.slug,
-        sample.description,
-        categoryName,
-      ]
+        componentCategories.find((category) => category.id === sample.categoryId)?.name ?? '';
+      const searchableText = [sample.title, sample.slug, sample.description, categoryName]
         .join(' ')
-        .toLocaleLowerCase()
+        .toLocaleLowerCase();
 
-      return searchableText.includes(normalizedSearchQuery)
-    })
-  }, [normalizedSearchQuery, visibleSamples])
+      return searchableText.includes(normalizedSearchQuery);
+    });
+  }, [normalizedSearchQuery, visibleSamples]);
   const showIntroLink =
-    !normalizedSearchQuery ||
-    'introduction 소개 인트로'.includes(normalizedSearchQuery)
+    !normalizedSearchQuery || 'introduction 소개 인트로'.includes(normalizedSearchQuery);
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -187,11 +176,9 @@ function ComponentSidebarContent({
               </div>
             ) : null}
             {componentCategories.map((category) => {
-              const samples = filteredSamples.filter(
-                (sample) => sample.categoryId === category.id
-              )
+              const samples = filteredSamples.filter((sample) => sample.categoryId === category.id);
 
-              if (samples.length === 0) return null
+              if (samples.length === 0) return null;
 
               return (
                 <div key={category.id}>
@@ -200,8 +187,8 @@ function ComponentSidebarContent({
                   </p>
                   <div className="mt-2 space-y-1">
                     {samples.map((sample) => {
-                      const href = `/components/${sample.slug}`
-                      const isActive = pathname === href
+                      const href = `/components/${sample.slug}`;
+                      const isActive = pathname === href;
 
                       return (
                         <SidebarLink
@@ -214,11 +201,11 @@ function ComponentSidebarContent({
                         >
                           {sample.title}
                         </SidebarLink>
-                      )
+                      );
                     })}
                   </div>
                 </div>
-              )
+              );
             })}
             {normalizedSearchQuery && filteredSamples.length === 0 ? (
               <p className="rounded-lg border border-zinc-200 px-3 py-4 text-sm text-zinc-500 dark:border-zinc-700/70 dark:bg-zinc-900/45 dark:text-zinc-400">
@@ -231,25 +218,19 @@ function ComponentSidebarContent({
         <span aria-hidden="true" className="components-sidebar-fog-bottom" />
       </div>
     </div>
-  )
+  );
 }
 
 export function ComponentSidebar() {
   return (
-    <aside
-      aria-label="컴포넌트 문서 탐색"
-      className="flex h-full min-h-0 flex-col"
-    >
-      <ComponentSidebarContent
-        inputId="component-search-input"
-        layoutScope="desktop"
-      />
+    <aside aria-label="컴포넌트 문서 탐색" className="flex h-full min-h-0 flex-col">
+      <ComponentSidebarContent inputId="component-search-input" layoutScope="desktop" />
     </aside>
-  )
+  );
 }
 
 export function ComponentMobileSidebarTrigger() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -275,9 +256,7 @@ export function ComponentMobileSidebarTrigger() {
               className="mx-auto mb-3 h-1.5 w-10 rounded-full bg-zinc-200 dark:bg-zinc-800"
             />
             <div className="mb-3 flex items-center justify-between gap-3 px-1">
-              <p className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
-                Components
-              </p>
+              <p className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">Components</p>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
@@ -296,5 +275,5 @@ export function ComponentMobileSidebarTrigger() {
         </DialogRawContent>
       </DialogPortal>
     </Dialog>
-  )
+  );
 }

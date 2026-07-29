@@ -4,11 +4,7 @@
   "type": "registry:ui",
   "title": "Hover Grid Background",
   "description": "A hover-reactive grid background for hero and feature surfaces.",
-  "dependencies": [
-    "clsx",
-    "motion",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "motion", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/background-boxes.tsx",

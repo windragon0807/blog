@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useState } from 'react';
 
@@ -19,7 +19,7 @@ const darkenColor = (hex: string, percent: number): string => {
   if (color.length === 3) {
     color = color
       .split('')
-      .map(c => c + c)
+      .map((c) => c + c)
       .join('');
   }
   const num = parseInt(color, 16);
@@ -47,7 +47,7 @@ const Folder: React.FC<FolderProps> = ({
 
   const [open, setOpen] = useState(false);
   const [paperOffsets, setPaperOffsets] = useState<{ x: number; y: number }[]>(
-    Array.from({ length: maxItems }, () => ({ x: 0, y: 0 }))
+    Array.from({ length: maxItems }, () => ({ x: 0, y: 0 })),
   );
 
   const folderBackColor = darkenColor(color, 0.08);
@@ -56,7 +56,7 @@ const Folder: React.FC<FolderProps> = ({
   const paper3 = '#ffffff';
 
   const handleClick = () => {
-    setOpen(prev => !prev);
+    setOpen((prev) => !prev);
     if (open) {
       setPaperOffsets(Array.from({ length: maxItems }, () => ({ x: 0, y: 0 })));
     }
@@ -69,15 +69,18 @@ const Folder: React.FC<FolderProps> = ({
     const centerY = rect.top + rect.height / 2;
     const offsetX = (e.clientX - centerX) * 0.15;
     const offsetY = (e.clientY - centerY) * 0.15;
-    setPaperOffsets(prev => {
+    setPaperOffsets((prev) => {
       const newOffsets = [...prev];
       newOffsets[index] = { x: offsetX, y: offsetY };
       return newOffsets;
     });
   };
 
-  const handlePaperMouseLeave = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) => {
-    setPaperOffsets(prev => {
+  const handlePaperMouseLeave = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    index: number,
+  ) => {
+    setPaperOffsets((prev) => {
       const newOffsets = [...prev];
       newOffsets[index] = { x: 0, y: 0 };
       return newOffsets;
@@ -89,7 +92,7 @@ const Folder: React.FC<FolderProps> = ({
     '--folder-back-color': folderBackColor,
     '--paper-1': paper1,
     '--paper-2': paper2,
-    '--paper-3': paper3
+    '--paper-3': paper3,
   } as React.CSSProperties;
 
   const scaleStyle = { transform: `scale(${size})` };
@@ -109,10 +112,10 @@ const Folder: React.FC<FolderProps> = ({
         }`}
         style={{
           ...folderStyle,
-          transform: open ? 'translateY(-8px)' : undefined
+          transform: open ? 'translateY(-8px)' : undefined,
         }}
         onClick={handleClick}
-        onKeyDown={e => {
+        onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             handleClick();
@@ -124,11 +127,11 @@ const Folder: React.FC<FolderProps> = ({
         aria-label={open ? 'Close folder' : 'Open folder'}
       >
         <div
-            className="relative w-[100px] h-[80px] rounded-tl-0 rounded-tr-[10px] rounded-br-[10px] rounded-bl-[10px]"
-            style={{
-              backgroundColor: folderBackColor,
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.2), 0 18px 40px rgba(0,0,0,0.22)',
-            }}
+          className="relative w-[100px] h-[80px] rounded-tl-0 rounded-tr-[10px] rounded-br-[10px] rounded-bl-[10px]"
+          style={{
+            backgroundColor: folderBackColor,
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.2), 0 18px 40px rgba(0,0,0,0.22)',
+          }}
         >
           <span
             className="absolute z-0 bottom-[98%] left-0 w-[30px] h-[10px] rounded-tl-[5px] rounded-tr-[5px] rounded-bl-0 rounded-br-0"
@@ -148,10 +151,12 @@ const Folder: React.FC<FolderProps> = ({
             return (
               <div
                 key={i}
-                onMouseMove={e => handlePaperMouseMove(e, i)}
-                onMouseLeave={e => handlePaperMouseLeave(e, i)}
+                onMouseMove={(e) => handlePaperMouseMove(e, i)}
+                onMouseLeave={(e) => handlePaperMouseLeave(e, i)}
                 className={`absolute z-20 bottom-[10%] left-1/2 transition-all duration-300 ease-in-out ${
-                  !open ? 'transform -translate-x-1/2 translate-y-[10%] group-hover:translate-y-0' : 'hover:scale-110'
+                  !open
+                    ? 'transform -translate-x-1/2 translate-y-[10%] group-hover:translate-y-0'
+                    : 'hover:scale-110'
                 } ${sizeClasses}`}
                 style={{
                   ...(!open ? {} : { transform: transformStyle }),
@@ -160,7 +165,11 @@ const Folder: React.FC<FolderProps> = ({
                     : undefined,
                   backgroundColor: isGlassPaper
                     ? undefined
-                    : i === 0 ? paper1 : i === 1 ? paper2 : paper3,
+                    : i === 0
+                      ? paper1
+                      : i === 1
+                        ? paper2
+                        : paper3,
                   border: isGlassPaper
                     ? '1px solid rgba(255, 255, 255, 0.22)'
                     : '1px solid rgba(148, 163, 184, 0.55)',
@@ -172,7 +181,7 @@ const Folder: React.FC<FolderProps> = ({
                       : '0 14px 30px rgba(15, 23, 42, 0.16)'
                     : isGlassPaper
                       ? '0 8px 18px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255,255,255,0.16)'
-                      : '0 4px 12px rgba(15, 23, 42, 0.08)'
+                      : '0 4px 12px rgba(15, 23, 42, 0.08)',
                 }}
               >
                 {item}
@@ -187,7 +196,7 @@ const Folder: React.FC<FolderProps> = ({
               backgroundColor: color,
               borderRadius: '5px 10px 10px 10px',
               boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.24)',
-              ...(open && { transform: 'skew(15deg) scaleY(0.6)' })
+              ...(open && { transform: 'skew(15deg) scaleY(0.6)' }),
             }}
           ></div>
           <div
@@ -198,7 +207,7 @@ const Folder: React.FC<FolderProps> = ({
               backgroundColor: color,
               borderRadius: '5px 10px 10px 10px',
               boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.18)',
-              ...(open && { transform: 'skew(-15deg) scaleY(0.6)' })
+              ...(open && { transform: 'skew(-15deg) scaleY(0.6)' }),
             }}
           ></div>
         </div>

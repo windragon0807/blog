@@ -1,6 +1,7 @@
-import { SparkleCursor } from '@/components/sparkle-cursor'
-import { DesktopOnlyPreview } from '../desktop-only-preview'
-import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface'
+import { SparkleCursor } from '@/components/sparkle-cursor';
+
+import { DesktopOnlyPreview } from '../desktop-only-preview';
+import { OuterEffectSurface, PreviewDemoSurface } from '../shared/preview-demo-surface';
 
 export function SparkleCursorPreview() {
   return (
@@ -21,5 +22,5 @@ export function SparkleCursorPreview() {
         </SparkleCursor>
       </OuterEffectSurface>
     </DesktopOnlyPreview>
-  )
+  );
 }

@@ -4,10 +4,7 @@
   "type": "registry:ui",
   "title": "Character Particle Cursor",
   "description": "A scoped character particle cursor adapted from tholman cursor-effects Character.",
-  "dependencies": [
-    "clsx",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/character-cursor.tsx",

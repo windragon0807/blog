@@ -4,11 +4,7 @@
   "type": "registry:ui",
   "title": "Rotating Word Flip",
   "description": "A rotating word flip animation.",
-  "dependencies": [
-    "clsx",
-    "motion",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "motion", "tailwind-merge"],
   "files": [
     {
       "path": "src/components/text-flip.tsx",

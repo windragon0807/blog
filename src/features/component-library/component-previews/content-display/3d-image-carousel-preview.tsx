@@ -1,6 +1,7 @@
-import { ThreeDImageCarousel } from '@/components/3d-image-carousel'
-import { PreviewDemoSurface } from '../shared/preview-demo-surface'
-import { previewImages } from '../shared/preview-images'
+import { ThreeDImageCarousel } from '@/components/3d-image-carousel';
+
+import { PreviewDemoSurface } from '../shared/preview-demo-surface';
+import { previewImages } from '../shared/preview-images';
 
 export function ThreeDImageCarouselPreview() {
   return (
@@ -13,12 +14,8 @@ export function ThreeDImageCarouselPreview() {
       contentClassName="max-w-6xl"
     >
       <div className="w-full max-w-5xl min-w-0 overflow-visible [&_[data-3d-image-carousel]]:!overflow-visible">
-        <ThreeDImageCarousel
-          items={previewImages}
-          itemCount={3}
-          className="w-full min-w-0"
-        />
+        <ThreeDImageCarousel items={previewImages} itemCount={3} className="w-full min-w-0" />
       </div>
     </PreviewDemoSurface>
-  )
+  );
 }
