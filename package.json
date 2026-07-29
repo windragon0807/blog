@@ -12,11 +12,7 @@
     "build": "next build",
     "start": "next start -p 3200",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit --pretty false --incremental false",
-    "emoticons:generate": "node scripts/generate-emoticon-manifest.mjs",
-    "emoticons:check": "node scripts/check-emoticon-manifest.mjs",
-    "registry:generate": "node scripts/generate-component-registry.cjs",
-    "registry:check": "node scripts/generate-component-registry.cjs --check"
+    "typecheck": "tsc --noEmit --pretty false --incremental false"
   },
   "dependencies": {
     "@notionhq/client": "^2.3.0",
