@@ -17,12 +17,25 @@ import type {
   QueryDatabaseParameters,
 } from '@notionhq/client/build/src/api-endpoints'
 
+function requireEnv(name: string, value: string | undefined): string {
+  const trimmed = value?.trim()
+  if (!trimmed) {
+    throw new Error(
+      `Missing required environment variable: ${name}. Set it in .env.local and Vercel project settings.`
+    )
+  }
+  return trimmed
+}
+
 const notion = new Client({
   auth: getNotionApiKey(),
 })
 
-const BLOG_DATABASE_ID = getNotionDatabaseId()!
-const PORTFOLIO_DATABASE_ID = getNotionPortfolioDatabaseId()!
+const BLOG_DATABASE_ID = requireEnv('NOTION_DATABASE_ID', getNotionDatabaseId())
+const PORTFOLIO_DATABASE_ID = requireEnv(
+  'NOTION_PORTFOLIO_DATABASE_ID',
+  getNotionPortfolioDatabaseId()
+)
 
 // blog + portfolio (slug/detail lookup, webhook, getPostByPageId)
 const CONTENT_DATABASE_IDS = Array.from(
