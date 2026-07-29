@@ -1,6 +1,6 @@
 # ryong.log 코드 컨벤션
 
-이 문서는 ryong.log의 유지보수 기준입니다. 공개된 토스 기술 문화에서 강조하는 읽기 쉬운 코드, 예측 가능한 책임, 변경 영향의 지역화 원칙을 참고하되, 토스의 사내 규칙을 복제하거나 공식 컨벤션이라고 주장하지 않습니다. 이 저장소의 현재 구조와 회귀 계약에 맞춘 프로젝트 규칙입니다.
+이 문서는 ryong.log의 유지보수 기준입니다. 공개된 토스 기술 문화에서 강조하는 읽기 쉬운 코드, 예측 가능한 책임, 변경 영향의 지역화 원칙을 참고하되, 토스의 사내 규칙을 복제하거나 공식 컨벤션이라고 주장하지 않습니다. 이 저장소의 현재 구조에 맞춘 프로젝트 규칙입니다.
 
 ## 1. 변경 원칙
 
@@ -8,8 +8,6 @@
 - 관련 로직은 가까이 두고, 다른 영역에서 재사용할 때만 안정적인 공개 진입점을 만듭니다.
 - 기존 기능, UI, 문구, DOM, 반응형 배치, animation timing을 호환성 계약으로 취급합니다.
 - 리팩터링과 동작 변경을 한 변경 묶음에 섞지 않습니다.
-- 규칙은 문서만으로 끝내지 않고 `tests/contracts`의 정적 계약으로 가능한 범위까지 검증합니다.
-
 ## 2. 공개 facade와 내부 runtime folder
 
 `src/lib`의 기존 공개 경로는 consumer와의 호환성을 위한 facade입니다. 구현을 옮겨도 기존 `@/lib/*` import path와 named export는 유지합니다.
@@ -79,11 +77,10 @@ src/lib/
 - secret에는 `NEXT_PUBLIC_` 접두사를 사용하지 않습니다.
 - `NEXT_PUBLIC_SITE_URL`처럼 surface별 fallback이 다른 값은 임의로 하나로 합치지 않습니다.
 
-## 8. UI와 visual contract
+## 8. UI와 visual 기준
 
-- CSS, JSX, semantic tag, 접근성 속성, focus 처리, animation을 바꾸기 전 관련 visual/interaction contract를 먼저 준비합니다.
+- CSS, JSX, semantic tag, 접근성 속성, focus 처리, animation을 바꿀 때 기존 화면 동작과 시각 결과를 먼저 확인합니다.
 - 접근성 개선도 기존 시각 결과를 보존합니다. 새 focus ring, 간격, 줄바꿈, 색상, motion 변화가 필요하면 별도 UI 변경으로 검토합니다.
-- style 정리와 component 분리는 screenshot baseline과 keyboard/pointer interaction 계약을 통과해야 합니다.
 - 성능 최적화 때문에 animation, 콘텐츠, 접근 가능한 이름을 제거하거나 화면 구조를 단순화하지 않습니다.
 
 ## 9. formatting과 성능 최적화
@@ -101,8 +98,6 @@ src/lib/
 ```bash
 pnpm typecheck
 pnpm lint
-pnpm test:contracts
-pnpm test:browser
 git diff --check
 ```
 

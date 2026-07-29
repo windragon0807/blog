@@ -44,5 +44,3 @@ next-env.d.ts
 .codex
 /.superpowers/
 /docs/superpowers/
-/test-results/
-/playwright-report/
