@@ -36,7 +36,7 @@ export const TOSSFACE_SUBCATEGORIES: readonly Subcategory[] = [
   {
     id: 'smileys-people',
     label: '얼굴 및 사람',
-    icon: <TossfaceCategoryIcon name="미소 짓는 눈으로 살짝 웃는 얼굴" />,
+    icon: <TossfaceCategoryIcon name="활짝 웃는 얼굴" />,
   },
   {
     id: 'animals-nature',
@@ -61,7 +61,7 @@ export const TOSSFACE_SUBCATEGORIES: readonly Subcategory[] = [
   {
     id: 'objects',
     label: '물건',
-    icon: <TossfaceCategoryIcon name="노트북" />,
+    icon: <TossfaceCategoryIcon name="시계" />,
   },
   {
     id: 'symbols',
