@@ -15,18 +15,10 @@ export const DEFAULT_COLLECTIONS = Object.freeze([
     publicBase: '/emoticons/tossface',
     sourceLabel: 'Tossface',
   }),
-  Object.freeze({
-    id: 'ryong',
-    name: 'Ryong',
-    sourceDir: 'public/emoticons/ryong',
-    publicBase: '/emoticons/ryong',
-    sourceLabel: 'Ryong',
-  }),
 ]);
 
 export const DEFAULT_METADATA_PATHS = Object.freeze({
   tossface: 'scripts/data/tossface-metadata.json',
-  ryong: 'scripts/data/ryong-metadata.json',
 });
 
 export const DEFAULT_OWNER_MAP = Object.freeze({
@@ -41,11 +33,6 @@ export const DEFAULT_OWNER_MAP = Object.freeze({
       owner: 'builder:tossface',
       path: 'public/emoticons/tossface',
       extensions: Object.freeze(['.svg']),
-    }),
-    Object.freeze({
-      owner: 'builder:ryong',
-      path: 'public/emoticons/ryong',
-      extensions: Object.freeze(['.png', '.svg']),
     }),
     Object.freeze({
       owner: 'static:logos',
@@ -69,10 +56,6 @@ export const DEFAULT_OWNER_MAP = Object.freeze({
     Object.freeze({
       owner: 'metadata:tossface',
       path: DEFAULT_METADATA_PATHS.tossface,
-    }),
-    Object.freeze({
-      owner: 'metadata:ryong',
-      path: DEFAULT_METADATA_PATHS.ryong,
     }),
   ]),
 });
@@ -136,8 +119,7 @@ function metadataMap(items, key, label) {
     if (!item || typeof item !== 'object' || Array.isArray(item)) {
       throw new Error(`INVALID_METADATA_ITEM:${label}`);
     }
-    const expectedFields =
-      label === 'ryong' ? ['filename', 'name', 'category', 'order'] : ['name', 'category', 'order'];
+    const expectedFields = ['name', 'category', 'order'];
     if (!hasExactKeys(item, expectedFields)) {
       throw new Error(`INVALID_METADATA_FIELDS:${label}`);
     }
@@ -150,9 +132,6 @@ function metadataMap(items, key, label) {
     }
     if (typeof item.order !== 'number' || !Number.isFinite(item.order)) {
       throw new Error(`INVALID_METADATA_ORDER:${label}:${value}`);
-    }
-    if (label === 'ryong' && (typeof item.name !== 'string' || item.name.length === 0)) {
-      throw new Error(`INVALID_METADATA_NAME:${label}:${value}`);
     }
     if (result.has(value)) throw new Error(`DUPLICATE_METADATA_KEY:${label}:${value}`);
     result.set(value, item);
@@ -178,11 +157,6 @@ export function buildEmoticonManifest({
     readOptionalJsonArray(fileSystem, metadataPaths.tossface),
     'name',
     'tossface',
-  );
-  const ryongMetadata = metadataMap(
-    readOptionalJsonArray(fileSystem, metadataPaths.ryong),
-    'filename',
-    'ryong',
   );
   const collectionIds = new Set();
   const itemIds = new Map();
@@ -226,12 +200,7 @@ export function buildEmoticonManifest({
 
     const items = filenames.map((filename) => {
       const name = toTitle(filename);
-      const metadata =
-        collection.id === 'tossface'
-          ? tossfaceMetadata.get(name)
-          : collection.id === 'ryong'
-            ? ryongMetadata.get(filename)
-            : null;
+      const metadata = collection.id === 'tossface' ? tossfaceMetadata.get(name) : null;
       const pngFilename = filename.replace(/\.svg$/i, '.png');
       const pngPath = `${collection.sourceDir}/${pngFilename}`;
       const id = toId(collection.id, filename);
@@ -446,7 +415,7 @@ function validateConfigurationOwnership(collections, metadataPaths, ownerMap, er
     const canonicalCollection = DEFAULT_COLLECTIONS.find(
       (candidate) => candidate.id === collection.id,
     );
-    const expectedExtensions = collection.id === 'ryong' ? ['.png', '.svg'] : ['.svg'];
+    const expectedExtensions = ['.svg'];
     const matches = directories.filter(
       (descriptor) =>
         descriptor.owner === expectedOwner &&
@@ -474,7 +443,7 @@ function validateConfigurationOwnership(collections, metadataPaths, ownerMap, er
     }
     const collection = collections.find((candidate) => candidate.id === id);
     const canonicalCollection = DEFAULT_COLLECTIONS.find((candidate) => candidate.id === id);
-    const expectedExtensions = id === 'ryong' ? ['.png', '.svg'] : ['.svg'];
+    const expectedExtensions = ['.svg'];
     if (
       !canonicalCollection ||
       descriptor.path !== canonicalCollection.sourceDir ||
@@ -488,7 +457,7 @@ function validateConfigurationOwnership(collections, metadataPaths, ownerMap, er
     }
   }
 
-  const metadataKeys = new Set(['tossface', 'ryong']);
+  const metadataKeys = new Set(['tossface']);
   const configuredMetadataKeys = Object.keys(metadataPaths ?? {});
   for (const key of configuredMetadataKeys) {
     if (!metadataKeys.has(key)) pushError(errors, `EXTRA_METADATA_PATH:${key}`);

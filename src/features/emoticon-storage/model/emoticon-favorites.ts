@@ -8,11 +8,7 @@ export type EmoticonFavoriteEntry = {
   addedAt: number;
 };
 
-const SOURCE_COLLECTION_IDS = new Set<EmoticonSourceCollectionId>([
-  'material',
-  'tossface',
-  'ryong',
-]);
+const SOURCE_COLLECTION_IDS = new Set<EmoticonSourceCollectionId>(['material', 'tossface']);
 
 function isSourceCollectionId(value: unknown): value is EmoticonSourceCollectionId {
   return (

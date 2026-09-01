@@ -75,15 +75,6 @@ export const TOSSFACE_SUBCATEGORIES: readonly Subcategory[] = [
   },
 ];
 
-export const RYONG_SUBCATEGORIES: readonly Subcategory[] = [
-  ALL_SUBCATEGORY,
-  {
-    id: 'favorites',
-    label: '아끼는 이미지',
-    icon: <RyongCategoryIcon filename="noticon-teg1ooxzhglorh6rk9hs.svg" />,
-  },
-];
-
 export function CollectionLogoImage({ src, isActive }: { src: string; isActive: boolean }) {
   return (
     <Image
@@ -138,23 +129,6 @@ export function TossfaceLogo({ isActive }: { isActive: boolean }) {
   return <CollectionLogoImage src="/emoticons/logos/toss-symbol.png" isActive={isActive} />;
 }
 
-export function RyongCategoryIcon({ filename }: { filename: string }) {
-  return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={`/emoticons/ryong/${filename}`}
-      alt=""
-      loading="lazy"
-      decoding="async"
-      className="h-4 w-4 object-contain"
-    />
-  );
-}
-
-export function RyongLogo({ isActive }: { isActive: boolean }) {
-  return <CollectionLogoImage src="/icon.png" isActive={isActive} />;
-}
-
 export function FavoritesLogo({ isActive }: { isActive: boolean }) {
   return (
     <StarIcon
@@ -176,10 +150,6 @@ export function CollectionLogo({ id, isActive }: { id: EmoticonCollectionId; isA
     return <TossfaceLogo isActive={isActive} />;
   }
 
-  if (id === 'ryong') {
-    return <RyongLogo isActive={isActive} />;
-  }
-
   if (id === 'favorites') {
     return <FavoritesLogo isActive={isActive} />;
   }
@@ -196,10 +166,6 @@ export function getSubcategories(collectionId: EmoticonCollectionId) {
     return TOSSFACE_SUBCATEGORIES;
   }
 
-  if (collectionId === 'ryong') {
-    return RYONG_SUBCATEGORIES;
-  }
-
   return MATERIAL_SUBCATEGORIES;
 }
 
@@ -214,10 +180,6 @@ export function getCollectionLabel(collectionId: EmoticonCollectionId) {
 
   if (collectionId === 'tossface') {
     return 'Tossface';
-  }
-
-  if (collectionId === 'ryong') {
-    return 'Ryong';
   }
 
   return 'Material';

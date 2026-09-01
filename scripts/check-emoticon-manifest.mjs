@@ -139,17 +139,9 @@ function fixture() {
       publicBase: '/emoticons/tossface',
       sourceLabel: 'Tossface',
     },
-    {
-      id: 'ryong',
-      name: 'Ryong',
-      sourceDir: 'public/emoticons/ryong',
-      publicBase: '/emoticons/ryong',
-      sourceLabel: 'Ryong',
-    },
   ];
   const metadataPaths = {
     tossface: 'scripts/data/tossface-metadata.json',
-    ryong: 'scripts/data/ryong-metadata.json',
   };
   const ownerMap = {
     publicRoot: 'public/emoticons',
@@ -165,11 +157,6 @@ function fixture() {
         extensions: ['.svg'],
       },
       {
-        owner: 'builder:ryong',
-        path: 'public/emoticons/ryong',
-        extensions: ['.png', '.svg'],
-      },
-      {
         owner: 'static:logos',
         path: 'public/emoticons/logos',
         exactFiles: ['material-icon-theme.png', 'toss-symbol.png'],
@@ -180,7 +167,6 @@ function fixture() {
       { owner: 'static:material-license', path: 'public/emoticons/material-LICENSE.txt' },
       { owner: 'static:tossface-license', path: 'public/emoticons/tossface-LICENSE.txt' },
       { owner: 'metadata:tossface', path: metadataPaths.tossface },
-      { owner: 'metadata:ryong', path: metadataPaths.ryong },
     ],
   };
   const memory = createMemoryFileSystem({
@@ -192,9 +178,6 @@ function fixture() {
     'public/emoticons/tossface/A.svg': '<svg/>',
     'public/emoticons/tossface/나.svg': '<svg/>',
     'public/emoticons/tossface/가.svg': '<svg/>',
-    'public/emoticons/ryong': { type: 'directory' },
-    'public/emoticons/ryong/체크.svg': '<svg/>',
-    'public/emoticons/ryong/체크.png': 'png',
     'public/emoticons/logos': { type: 'directory' },
     'public/emoticons/logos/material-icon-theme.png': 'logo',
     'public/emoticons/logos/toss-symbol.png': 'logo',
@@ -206,9 +189,6 @@ function fixture() {
       { name: 'A', category: 'symbols', order: 2 },
       { name: '가', category: 'symbols', order: 0 },
       { name: '나', category: 'symbols', order: 1 },
-    ]),
-    [metadataPaths.ryong]: JSON.stringify([
-      { filename: '체크.svg', name: '체크', category: 'favorites', order: 0 },
     ]),
   });
   const generatedAt = '2026-07-02T01:25:56.980Z';
@@ -270,10 +250,6 @@ function runSelfTests() {
   );
   assert.equal(tossItems[0].id, 'tossface-가');
   assert.equal(tossItems[0].src, '/emoticons/tossface/%EA%B0%80.svg');
-  assert.equal(
-    base.payload.collections.find((collection) => collection.id === 'ryong').items[0].pngSrc,
-    '/emoticons/ryong/%EC%B2%B4%ED%81%AC.png',
-  );
 
   const missing = fixture();
   missing.memory.entries.delete('public/emoticons/material/z.svg');
@@ -384,14 +360,14 @@ function runSelfTests() {
   assertError(auditFixture(idBinding), 'COLLECTION_OWNER_BINDING');
 
   const metadataBinding = fixture();
-  metadataBinding.metadataPaths.tossface = metadataBinding.metadataPaths.ryong;
+  metadataBinding.metadataPaths.tossface = 'scripts/data/other-metadata.json';
   assertError(auditFixture(metadataBinding), 'METADATA_OWNER_BINDING');
 
   const maliciousMetadataBinding = fixture();
-  maliciousMetadataBinding.metadataPaths.tossface = maliciousMetadataBinding.metadataPaths.ryong;
+  maliciousMetadataBinding.metadataPaths.tossface = 'scripts/data/other-metadata.json';
   maliciousMetadataBinding.ownerMap.files.find(
     (descriptor) => descriptor.owner === 'metadata:tossface',
-  ).path = maliciousMetadataBinding.metadataPaths.ryong;
+  ).path = 'scripts/data/other-metadata.json';
   assertError(auditFixture(maliciousMetadataBinding), 'METADATA_OWNER_BINDING');
 
   const extraOwner = fixture();
@@ -418,7 +394,7 @@ function runSelfTests() {
   assertError(auditFixture(unboundOwner), 'EXTRA_OWNER_DESCRIPTOR');
 
   const extraMetadataPath = fixture();
-  extraMetadataPath.metadataPaths.extra = 'scripts/data/ryong-metadata.json';
+  extraMetadataPath.metadataPaths.extra = 'scripts/data/other-metadata.json';
   assertError(auditFixture(extraMetadataPath), 'EXTRA_METADATA_PATH');
 
   const ownerKind = fixture();
@@ -468,10 +444,10 @@ function runSelfTests() {
 
   const missingMetadataField = fixture();
   const missingMetadata = JSON.parse(
-    missingMetadataField.memory.entries.get(missingMetadataField.metadataPaths.ryong).content,
+    missingMetadataField.memory.entries.get(missingMetadataField.metadataPaths.tossface).content,
   );
   delete missingMetadata[0].name;
-  missingMetadataField.memory.entries.get(missingMetadataField.metadataPaths.ryong).content =
+  missingMetadataField.memory.entries.get(missingMetadataField.metadataPaths.tossface).content =
     JSON.stringify(missingMetadata);
   assertError(auditFixture(missingMetadataField), 'INVALID_METADATA_FIELDS');
 

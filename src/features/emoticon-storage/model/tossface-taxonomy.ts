@@ -555,10 +555,6 @@ export function getItemSubcategory(collectionId: EmoticonCollectionId, item: Emo
     return item.filename.startsWith('folder-') ? 'folders' : 'files';
   }
 
-  if (collectionId === 'ryong') {
-    return item.category ?? 'favorites';
-  }
-
   if (item.category) {
     return item.category;
   }

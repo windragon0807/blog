@@ -1,4 +1,4 @@
-export type EmoticonSourceCollectionId = 'material' | 'tossface' | 'ryong';
+export type EmoticonSourceCollectionId = 'material' | 'tossface';
 
 export type EmoticonCollectionId = EmoticonSourceCollectionId | 'favorites';
 
