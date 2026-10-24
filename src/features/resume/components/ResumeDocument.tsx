@@ -230,16 +230,22 @@ function ResumeEntryBlock({ entry }: { entry: ResumeEntry }) {
   const logoClassName = `${styles.organizationLogo} ${
     entry.id === 'topia' ? styles.topiaOrganizationLogo : ''
   }`.trim();
+  const organizationClassName = `${styles.organization} ${
+    entry.id === 'korea-university' || entry.id === 'korea-university-ai'
+      ? styles.organizationAlignTop
+      : ''
+  }`.trim();
 
   return (
     <article className={`${styles.entry} ${entry.compact ? styles.compactEntry : ''}`.trim()}>
       <span className={styles.entryDot} aria-hidden="true" />
       <div className={styles.entryMeta}>
         <p className={styles.period}>{entry.period}</p>
-        <div className={styles.organization}>
+        <div className={organizationClassName}>
           <img src={entry.logo} alt={entry.logoAlt} className={logoClassName} />
           <div className={styles.organizationText}>
             <h3>{entry.name}</h3>
+            {entry.subtitle && <p className={styles.organizationSubtitle}>{entry.subtitle}</p>}
             {entry.role && <p>{entry.role}</p>}
           </div>
         </div>

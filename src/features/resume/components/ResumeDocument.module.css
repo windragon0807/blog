@@ -602,6 +602,14 @@
   gap: 8px;
 }
 
+.organizationAlignTop {
+  align-items: flex-start;
+}
+
+.organizationAlignTop .organizationLogo {
+  margin-top: 2px;
+}
+
 .organizationLogo {
   width: 28px;
   height: 28px;
@@ -641,6 +649,14 @@
   font-weight: 400;
   letter-spacing: 0.09px;
   line-height: 12px;
+}
+
+.organizationText .organizationSubtitle {
+  margin-top: 4px;
+}
+
+.organizationText .organizationSubtitle + p {
+  margin-top: 0;
 }
 
 .entryTechnologies {

@@ -27,6 +27,7 @@ export type ResumeEntry = {
   id: string;
   period: string;
   name: string;
+  subtitle?: string;
   role?: string;
   logo: string;
   logoAlt: string;
@@ -60,7 +61,7 @@ export const resumeProfile = {
   basics: [
     { label: '나이', value: '1995년' },
     { label: '주소', value: '서울시 서대문구' },
-    { label: '이메일', value: 'tmdfyd95@naver.com' },
+    { label: '이메일', value: 'ryong.dev@gmail.com' },
   ],
 } as const;
 
@@ -140,7 +141,7 @@ export const resumeSections: readonly ResumeSection[] = [
               'TOPIA Live',
             ]),
             bullets: [
-              t('24년 1월 33명에서 26년 3월 동시 재원생 700+명까지 유저 수 유치에 기여했습니다.', [
+              t('24년 1월 33명에서 26년 9월 동시 재원생 700+명까지 유저 수 유치에 기여했습니다.', [
                 '33명',
                 '700+명',
               ]),
@@ -279,7 +280,7 @@ export const resumeSections: readonly ResumeSection[] = [
         id: 'openrun',
         period: '2025.01 ~ 진행 중',
         name: '오픈런',
-        role: 'Frontend ∙ App',
+        role: 'Full Stack',
         logo: '/resume/logos/openrun.png',
         logoAlt: 'OpenRun',
         technologies: [
@@ -289,6 +290,11 @@ export const resumeSections: readonly ResumeSection[] = [
           'React Query',
           'Tailwind',
           'React Native (Expo)',
+          'Java',
+          'Spring Boot',
+          'MySQL',
+          'QueryDSL',
+          'Web3j',
         ],
         paragraphs: [
           t(
@@ -333,47 +339,21 @@ export const resumeSections: readonly ResumeSection[] = [
           },
         ],
       },
-      {
-        id: 'moong-trip',
-        period: '2024.02 ~ 2024.06',
-        name: 'Moong Trip',
-        role: 'Frontend',
-        logo: '/resume/logos/moong-trip.png',
-        logoAlt: 'Moong Trip',
-        technologies: ['React', 'TypeScript', 'React Query', 'Emotion', 'Firebase'],
-        paragraphs: [
-          t(
-            'Moong Trip이란 숙소 검색부터 결제까지의 전 과정을 매끄러운 사용자 경험(UX)으로 구현한 숙소 예약 플랫폼 개인 프로젝트입니다.',
-            ['Moong Trip', '숙소 예약 플랫폼 개인 프로젝트'],
-          ),
-        ],
-        screenshots: [
-          '/resume/projects/moong/01.png',
-          '/resume/projects/moong/02.png',
-          '/resume/projects/moong/03.png',
-          '/resume/projects/moong/04.png',
-        ],
-        highlights: [
-          {
-            bullets: [
-              t(
-                '무한 스크롤 방식을 통해 다수의 숙소 데이터를 노출하는 과정에서, 고화질 이미지와 정보가 포함된 리스트 요소들이 지속적으로 누적되며 메모리 과부하 및 화면 버벅임(Jank) 현상이 발생하는 문제를 겪었습니다. 이를 해결하기 위해 react-virtuoso 라이브러리를 도입하여 윈도잉(Windowing) 기법을 적용, 사용자의 현재 뷰포트에 보이는 요소들만 동적으로 렌더링하도록 구조를 개선했습니다. 그 결과, 수백 개의 숙소 데이터가 스크롤되는 환경에서도 불필요한 DOM 요소 생성을 억제하여 렌더링 성능을 확보했으며, 끊김 없는 매끄러운 사용자 경험을 제공할 수 있었습니다.',
-                ['무한 스크롤', 'react-virtuoso', '윈도잉(Windowing)', '렌더링 성능'],
-              ),
-              t(
-                'Firebase의 전반적인 생태계를 스터디하여 Auth, Firestore, Storage를 연동한 통합 백엔드 환경을 직접 구축했습니다. 리소스 효율을 위해 대용량 이미지와 데이터베이스 관리를 분리하여 설계했으며, 특히 Query Cursor(Snapshot) 방식의 무한 스크롤을 구현해 대량의 숙소 데이터를 성능 저하 없이 안정적으로 불러오도록 쿼리를 최적화했습니다.',
-                ['Firebase', 'Auth, Firestore, Storage', 'Query Cursor(Snapshot)'],
-              ),
-            ],
-          },
-        ],
-      },
     ],
   },
   {
     id: 'education',
     title: '학력',
     entries: [
+      {
+        id: 'korea-university-ai',
+        period: '2026.09 ~ 재학 중',
+        name: '고려대학교',
+        subtitle: 'SW·AI융합대학원',
+        role: '인공지능융합학과',
+        logo: '/resume/logos/korea-university.png',
+        logoAlt: 'Korea University',
+      },
       {
         id: 'korea-university',
         period: '2016.03 ~ 2022.02 (4년)',
@@ -388,8 +368,8 @@ export const resumeSections: readonly ResumeSection[] = [
                 '자료구조, 알고리즘, 데이터베이스, 네트워크, 컴퓨터 구조 등 전반적인 컴퓨터 공학 이론을 학습했습니다.',
               ),
               t(
-                '데이터마이닝 연구실의 우수 학부생 연구 지원 프로그램(CURT)에 유일하게 선발되어 팀 프로젝트를 통해 협업에 필요한 커뮤니케이션을 경험했습니다.',
-                ['우수 학부생 연구 지원 프로그램(CURT)', '유일하게 선발'],
+                '데이터마이닝 연구실의 우수 학부생 연구 지원 프로그램(CURT)에 단독으로 선발되어 팀 프로젝트를 통해 협업에 필요한 커뮤니케이션을 경험했습니다.',
+                ['우수 학부생 연구 지원 프로그램(CURT)', '단독으로 선발'],
               ),
               t('졸업 학기에 학점 연계형 인턴십을 병행하여 실무 경험을 체득했습니다.'),
             ],

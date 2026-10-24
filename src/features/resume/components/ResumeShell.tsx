@@ -4,6 +4,7 @@ import { FileDown, Loader2 } from 'lucide-react';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 
 import { IconButton } from '@/components/common/IconButton';
+import { isIOSDevice } from '@/utils/device';
 
 import { RESUME_DOCUMENT_HEIGHT, RESUME_DOCUMENT_WIDTH, RESUME_PDF_FILE_NAME } from '../constants';
 import { buildResumePdfFromElement } from '../lib/build-resume-pdf';
@@ -12,11 +13,28 @@ import { ResumeDocument } from './ResumeDocument';
 const RESUME_PREVIEW_MAX_WIDTH = 1000;
 const RESUME_PREVIEW_MAX_SCALE = RESUME_PREVIEW_MAX_WIDTH / RESUME_DOCUMENT_WIDTH;
 
-function downloadBytes(bytes: Uint8Array, fileName: string) {
+async function downloadBytes(bytes: Uint8Array, fileName: string) {
   const buffer = new Uint8Array(bytes.byteLength);
   buffer.set(bytes);
+  const ios = isIOSDevice();
 
-  const blob = new Blob([buffer.buffer], { type: 'application/pdf' });
+  if (ios) {
+    const file = new File([buffer], fileName, { type: 'application/pdf' });
+
+    try {
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file] });
+        return;
+      }
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') return;
+    }
+  }
+
+  // iOS Safari opens application/pdf blobs in the current tab instead of downloading.
+  const blob = new Blob([buffer], {
+    type: ios ? 'application/octet-stream' : 'application/pdf',
+  });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
 
@@ -25,7 +43,7 @@ function downloadBytes(bytes: Uint8Array, fileName: string) {
   document.body.appendChild(link);
   link.click();
   link.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 0);
+  window.setTimeout(() => URL.revokeObjectURL(url), ios ? 10_000 : 0);
 }
 
 function waitForNextPaint() {
@@ -144,7 +162,7 @@ export function ResumeShell() {
     try {
       await waitForNextPaint();
       const pdfBytes = await buildResumePdfFromElement(target);
-      downloadBytes(pdfBytes, RESUME_PDF_FILE_NAME);
+      await downloadBytes(pdfBytes, RESUME_PDF_FILE_NAME);
     } catch (error) {
       console.error(error);
       setErrorMessage('PDF 생성에 실패했습니다. 잠시 후 다시 시도해주세요.');
