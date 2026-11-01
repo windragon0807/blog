@@ -42,10 +42,6 @@
   padding: 30px 27px 0;
 }
 
-.heroAura {
-  display: none;
-}
-
 .profilePhotoFrame {
   position: absolute;
   top: 35px;
@@ -552,10 +548,6 @@
 
 .projectBlock:last-child::before {
   bottom: 0;
-}
-
-.projectBlockWithoutRail::before {
-  content: none;
 }
 
 .projectBlock .projectSection {

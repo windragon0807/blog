@@ -99,11 +99,11 @@ function formatDurationFrom(start: { year: number; month: number }) {
 }
 
 function getSectionSummary(section: ResumeSection) {
-  if (section.durationStart) {
-    return `총 ${formatDurationFrom(section.durationStart)}`;
+  if (!section.durationStart) {
+    return undefined;
   }
 
-  return section.summary;
+  return `총 ${formatDurationFrom(section.durationStart)}`;
 }
 
 function isProjectItem(item: ResumeBulletItem): item is { project: ResumeProject } {
@@ -112,11 +112,7 @@ function isProjectItem(item: ResumeBulletItem): item is { project: ResumeProject
 
 function ProjectBlock({ project }: { project: ResumeProject }) {
   return (
-    <div
-      className={`${styles.projectBlock} ${
-        project.rail === false ? styles.projectBlockWithoutRail : ''
-      }`}
-    >
+    <div className={styles.projectBlock}>
       <div className={styles.projectTitleRow}>
         {project.icon && (
           <span className={styles.highlightIconFrame}>
@@ -341,7 +337,6 @@ const ResumeDocument = forwardRef<HTMLDivElement>(function ResumeDocument(_, ref
       }}
     >
       <header className={styles.hero}>
-        <div className={styles.heroAura} aria-hidden="true" />
         <div className={styles.profilePhotoFrame}>
           <img
             src={resumeProfile.photo}

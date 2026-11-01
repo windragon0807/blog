@@ -1,14 +1,12 @@
 import { PDFDocument } from 'pdf-lib';
 
 import { RESUME_A4_HEIGHT_PT, RESUME_A4_WIDTH_PT } from '../constants';
-import { addLinkAnnotationsToPage, type ResumePdfLinkAnnotation } from './resume-pdf-annotations';
 import { addSearchableTextRunsToPdfDocument, type ResumePdfTextRun } from './resume-pdf-text-layer';
 
 type ResumePdfWorkerRequest = {
   fontBytes?: ArrayBuffer;
   imageBytes: ArrayBuffer;
   imageType: string;
-  linkAnnotations: ResumePdfLinkAnnotation[];
   pageCount: number;
   sourcePageHeight: number;
   textRuns?: ResumePdfTextRun[];
@@ -42,7 +40,6 @@ async function buildPdfInWorker({
   fontBytes,
   imageBytes,
   imageType,
-  linkAnnotations,
   pageCount,
   sourcePageHeight,
   textRuns = [],
@@ -89,14 +86,6 @@ async function buildPdfInWorker({
         y: 0,
         width: RESUME_A4_WIDTH_PT,
         height: RESUME_A4_HEIGHT_PT,
-      });
-
-      addLinkAnnotationsToPage({
-        links: linkAnnotations,
-        page,
-        pageIndex,
-        pdf,
-        sourcePageHeight,
       });
     }
 

@@ -4,7 +4,6 @@ import { toBlob } from 'html-to-image';
 import { PDFDocument } from 'pdf-lib';
 
 import { RESUME_A4_HEIGHT_PT, RESUME_A4_WIDTH_PT, RESUME_DOCUMENT_WIDTH } from '../constants';
-import { addLinkAnnotationsToPage, type ResumePdfLinkAnnotation } from './resume-pdf-annotations';
 import {
   addSearchableTextLayerToResumePdf,
   collectResumeTextRuns,
@@ -72,74 +71,6 @@ async function yieldToMain() {
   });
 }
 
-function setTemporaryInlineStyle(element: Element, styles: Record<string, string>) {
-  const previousStyle = element.getAttribute('style');
-  const styledElement = element as HTMLElement | SVGElement;
-
-  Object.entries(styles).forEach(([property, value]) => {
-    styledElement.style.setProperty(property, value);
-  });
-
-  return () => {
-    if (previousStyle === null) {
-      element.removeAttribute('style');
-      return;
-    }
-
-    element.setAttribute('style', previousStyle);
-  };
-}
-
-function applyResumeExportStyleOverrides(element: HTMLElement) {
-  const restoreStyles = [
-    ...Array.from(element.querySelectorAll('[data-resume-link-icon-base]')).map((node) =>
-      setTemporaryInlineStyle(node, {
-        opacity: '1',
-        stroke: '#667088',
-        visibility: 'visible',
-      }),
-    ),
-    ...Array.from(element.querySelectorAll('[data-resume-link-icon-gradient]')).map((node) =>
-      setTemporaryInlineStyle(node, {
-        display: 'none',
-        opacity: '0',
-        visibility: 'hidden',
-      }),
-    ),
-  ];
-
-  return () => {
-    restoreStyles.forEach((restoreStyle) => restoreStyle());
-  };
-}
-
-function collectResumeLinkAnnotations(element: HTMLElement): ResumePdfLinkAnnotation[] {
-  const elementRect = element.getBoundingClientRect();
-
-  if (elementRect.width <= 0 || elementRect.height <= 0) {
-    return [];
-  }
-
-  const sourceScaleX = RESUME_DOCUMENT_WIDTH / elementRect.width;
-  const sourceScaleY = element.scrollHeight / elementRect.height;
-
-  return Array.from(element.querySelectorAll<HTMLAnchorElement>('a[data-resume-pdf-link]')).map(
-    (anchor) => {
-      const anchorRect = anchor.getBoundingClientRect();
-
-      return {
-        href: anchor.dataset.resumePdfLink ?? anchor.href,
-        rect: {
-          x: (anchorRect.left - elementRect.left) * sourceScaleX,
-          y: (anchorRect.top - elementRect.top) * sourceScaleY,
-          width: anchorRect.width * sourceScaleX,
-          height: anchorRect.height * sourceScaleY,
-        },
-      };
-    },
-  );
-}
-
 function supportsResumePdfWorker() {
   return (
     typeof Worker !== 'undefined' &&
@@ -150,13 +81,11 @@ function supportsResumePdfWorker() {
 
 async function buildPdfInWorker({
   imageBlob,
-  linkAnnotations,
   pageCount,
   sourcePageHeight,
   textRuns,
 }: {
   imageBlob: Blob;
-  linkAnnotations: ResumePdfLinkAnnotation[];
   pageCount: number;
   sourcePageHeight: number;
   textRuns: ReturnType<typeof collectResumeTextRuns>;
@@ -190,7 +119,6 @@ async function buildPdfInWorker({
           fontBytes,
           imageBytes,
           imageType: imageBlob.type,
-          linkAnnotations,
           pageCount,
           sourcePageHeight,
           textRuns,
@@ -205,14 +133,10 @@ async function buildPdfInWorker({
 
 async function buildPdfOnMainThread({
   imageBlob,
-  linkAnnotations,
   pageCount,
-  sourcePageHeight,
 }: {
   imageBlob: Blob;
-  linkAnnotations: ResumePdfLinkAnnotation[];
   pageCount: number;
-  sourcePageHeight: number;
 }) {
   const imageUrl = URL.createObjectURL(imageBlob);
 
@@ -262,14 +186,6 @@ async function buildPdfOnMainThread({
         height: RESUME_A4_HEIGHT_PT,
       });
 
-      addLinkAnnotationsToPage({
-        links: linkAnnotations,
-        page,
-        pageIndex,
-        pdf,
-        sourcePageHeight,
-      });
-
       await yieldToMain();
     }
 
@@ -288,12 +204,10 @@ export async function buildResumePdfFromElement(element: HTMLElement) {
   const captureHeight = Math.ceil(sourcePageHeight * pageCount);
 
   element.dataset.resumeExport = 'true';
-  const restoreExportStyleOverrides = applyResumeExportStyleOverrides(element);
   await waitForFrame();
   await yieldToMain();
 
   let imageBlob: Blob | null;
-  const linkAnnotations = collectResumeLinkAnnotations(element);
   const textRuns = collectResumeTextRuns(element);
 
   try {
@@ -313,7 +227,6 @@ export async function buildResumePdfFromElement(element: HTMLElement) {
       },
     });
   } finally {
-    restoreExportStyleOverrides();
     delete element.dataset.resumeExport;
   }
 
@@ -329,7 +242,6 @@ export async function buildResumePdfFromElement(element: HTMLElement) {
     try {
       pdfBytes = await buildPdfInWorker({
         imageBlob,
-        linkAnnotations,
         pageCount,
         sourcePageHeight,
         textRuns,
@@ -340,17 +252,13 @@ export async function buildResumePdfFromElement(element: HTMLElement) {
       await yieldToMain();
       pdfBytes = await buildPdfOnMainThread({
         imageBlob,
-        linkAnnotations,
         pageCount,
-        sourcePageHeight,
       });
     }
   } else {
     pdfBytes = await buildPdfOnMainThread({
       imageBlob,
-      linkAnnotations,
       pageCount,
-      sourcePageHeight,
     });
   }
 

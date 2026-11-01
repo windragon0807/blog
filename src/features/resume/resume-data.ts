@@ -12,7 +12,6 @@ export type ResumeProject = {
   title: string;
   icon?: string;
   iconAlt?: string;
-  rail?: boolean;
   technologies?: readonly string[];
   facts?: readonly { label: string; value: string }[];
   sections?: readonly {
@@ -52,7 +51,6 @@ export type ResumeEntry = {
 export type ResumeSection = {
   id: string;
   title: string;
-  summary?: string;
   durationStart?: {
     year: number;
     month: number;
