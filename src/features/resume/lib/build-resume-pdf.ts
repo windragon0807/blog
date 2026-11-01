@@ -3,12 +3,7 @@
 import { toBlob } from 'html-to-image';
 import { PDFDocument } from 'pdf-lib';
 
-import {
-  RESUME_A4_HEIGHT_PT,
-  RESUME_A4_WIDTH_PT,
-  RESUME_DOCUMENT_WIDTH,
-  RESUME_PDF_PAGE_COUNT,
-} from '../constants';
+import { RESUME_A4_HEIGHT_PT, RESUME_A4_WIDTH_PT, RESUME_DOCUMENT_WIDTH } from '../constants';
 import { addLinkAnnotationsToPage, type ResumePdfLinkAnnotation } from './resume-pdf-annotations';
 import {
   addSearchableTextLayerToResumePdf,
@@ -156,11 +151,13 @@ function supportsResumePdfWorker() {
 async function buildPdfInWorker({
   imageBlob,
   linkAnnotations,
+  pageCount,
   sourcePageHeight,
   textRuns,
 }: {
   imageBlob: Blob;
   linkAnnotations: ResumePdfLinkAnnotation[];
+  pageCount: number;
   sourcePageHeight: number;
   textRuns: ReturnType<typeof collectResumeTextRuns>;
 }) {
@@ -194,6 +191,7 @@ async function buildPdfInWorker({
           imageBytes,
           imageType: imageBlob.type,
           linkAnnotations,
+          pageCount,
           sourcePageHeight,
           textRuns,
         },
@@ -208,10 +206,12 @@ async function buildPdfInWorker({
 async function buildPdfOnMainThread({
   imageBlob,
   linkAnnotations,
+  pageCount,
   sourcePageHeight,
 }: {
   imageBlob: Blob;
   linkAnnotations: ResumePdfLinkAnnotation[];
+  pageCount: number;
   sourcePageHeight: number;
 }) {
   const imageUrl = URL.createObjectURL(imageBlob);
@@ -223,7 +223,7 @@ async function buildPdfOnMainThread({
       (sourceImage.naturalWidth * RESUME_A4_HEIGHT_PT) / RESUME_A4_WIDTH_PT,
     );
 
-    for (let pageIndex = 0; pageIndex < RESUME_PDF_PAGE_COUNT; pageIndex += 1) {
+    for (let pageIndex = 0; pageIndex < pageCount; pageIndex += 1) {
       const offsetY = pageIndex * sliceHeight;
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
@@ -283,14 +283,9 @@ export async function buildResumePdfFromElement(element: HTMLElement) {
   await document.fonts?.ready;
 
   const sourcePageHeight = (RESUME_DOCUMENT_WIDTH * RESUME_A4_HEIGHT_PT) / RESUME_A4_WIDTH_PT;
-  const captureHeight = Math.ceil(sourcePageHeight * RESUME_PDF_PAGE_COUNT);
   const contentHeight = Math.ceil(element.scrollHeight);
-
-  if (contentHeight > captureHeight) {
-    throw new Error(
-      `이력서 콘텐츠 높이(${contentHeight}px)가 4페이지 제한(${captureHeight}px)을 초과했습니다.`,
-    );
-  }
+  const pageCount = Math.max(1, Math.ceil(contentHeight / sourcePageHeight));
+  const captureHeight = Math.ceil(sourcePageHeight * pageCount);
 
   element.dataset.resumeExport = 'true';
   const restoreExportStyleOverrides = applyResumeExportStyleOverrides(element);
@@ -335,6 +330,7 @@ export async function buildResumePdfFromElement(element: HTMLElement) {
       pdfBytes = await buildPdfInWorker({
         imageBlob,
         linkAnnotations,
+        pageCount,
         sourcePageHeight,
         textRuns,
       });
@@ -345,6 +341,7 @@ export async function buildResumePdfFromElement(element: HTMLElement) {
       pdfBytes = await buildPdfOnMainThread({
         imageBlob,
         linkAnnotations,
+        pageCount,
         sourcePageHeight,
       });
     }
@@ -352,6 +349,7 @@ export async function buildResumePdfFromElement(element: HTMLElement) {
     pdfBytes = await buildPdfOnMainThread({
       imageBlob,
       linkAnnotations,
+      pageCount,
       sourcePageHeight,
     });
   }

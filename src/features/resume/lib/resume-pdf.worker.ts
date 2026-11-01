@@ -1,6 +1,6 @@
 import { PDFDocument } from 'pdf-lib';
 
-import { RESUME_A4_HEIGHT_PT, RESUME_A4_WIDTH_PT, RESUME_PDF_PAGE_COUNT } from '../constants';
+import { RESUME_A4_HEIGHT_PT, RESUME_A4_WIDTH_PT } from '../constants';
 import { addLinkAnnotationsToPage, type ResumePdfLinkAnnotation } from './resume-pdf-annotations';
 import { addSearchableTextRunsToPdfDocument, type ResumePdfTextRun } from './resume-pdf-text-layer';
 
@@ -9,6 +9,7 @@ type ResumePdfWorkerRequest = {
   imageBytes: ArrayBuffer;
   imageType: string;
   linkAnnotations: ResumePdfLinkAnnotation[];
+  pageCount: number;
   sourcePageHeight: number;
   textRuns?: ResumePdfTextRun[];
 };
@@ -42,6 +43,7 @@ async function buildPdfInWorker({
   imageBytes,
   imageType,
   linkAnnotations,
+  pageCount,
   sourcePageHeight,
   textRuns = [],
 }: ResumePdfWorkerRequest) {
@@ -51,7 +53,7 @@ async function buildPdfInWorker({
   const sliceHeight = Math.floor((sourceImage.width * RESUME_A4_HEIGHT_PT) / RESUME_A4_WIDTH_PT);
 
   try {
-    for (let pageIndex = 0; pageIndex < RESUME_PDF_PAGE_COUNT; pageIndex += 1) {
+    for (let pageIndex = 0; pageIndex < pageCount; pageIndex += 1) {
       const offsetY = pageIndex * sliceHeight;
       const canvas = new OffscreenCanvas(sourceImage.width, sliceHeight);
       const context = canvas.getContext('2d');

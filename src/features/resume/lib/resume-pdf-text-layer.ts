@@ -3,12 +3,7 @@
 import fontkit from '@pdf-lib/fontkit';
 import { PDFDocument, rgb } from 'pdf-lib';
 
-import {
-  RESUME_A4_HEIGHT_PT,
-  RESUME_A4_WIDTH_PT,
-  RESUME_DOCUMENT_WIDTH,
-  RESUME_PDF_PAGE_COUNT,
-} from '../constants';
+import { RESUME_A4_HEIGHT_PT, RESUME_A4_WIDTH_PT, RESUME_DOCUMENT_WIDTH } from '../constants';
 
 export type ResumePdfTextRun = {
   fontSize: number;
@@ -116,7 +111,7 @@ export async function addSearchableTextRunsToPdfDocument({
   textRuns.forEach((textRun) => {
     const pageIndex = Math.floor(textRun.y / sourcePageHeight);
 
-    if (pageIndex < 0 || pageIndex >= RESUME_PDF_PAGE_COUNT) return;
+    if (pageIndex < 0 || pageIndex >= pages.length) return;
 
     const page = pages[pageIndex];
     const localSourceY = textRun.y - pageIndex * sourcePageHeight;

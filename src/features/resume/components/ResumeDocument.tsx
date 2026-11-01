@@ -1,14 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 
-import { forwardRef, useId } from 'react';
+import { forwardRef, type ReactNode } from 'react';
 
 import { RESUME_DOCUMENT_HEIGHT, RESUME_DOCUMENT_WIDTH } from '../constants';
 import {
-  resumeBirthDate,
+  type ResumeBulletItem,
   type ResumeEntry,
   type ResumeHighlight,
-  resumeLinks,
+  resumeIntroduction,
+  resumeMotivation,
   resumeProfile,
+  type ResumeProject,
   type ResumeSection,
   resumeSections,
   resumeTechnologies,
@@ -69,52 +71,6 @@ function TechnologyTag({ label }: { label: string }) {
   return <span className={styles.entryTechnology}>{label}</span>;
 }
 
-function ResumeValueLinkIcon() {
-  const gradientId = `resume-link-value-gradient-${useId().replaceAll(':', '')}`;
-
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={styles.linkValueIcon}
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient
-          id={gradientId}
-          x1="3"
-          x2="21"
-          y1="3"
-          y2="21"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop offset="0%" stopColor="#6d69e8" />
-          <stop offset="47%" stopColor="#b461cf" />
-          <stop offset="100%" stopColor="#e48792" />
-        </linearGradient>
-      </defs>
-      <g className={styles.linkValueIconBase} data-resume-link-icon-base stroke="currentColor">
-        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-      </g>
-      <g
-        className={styles.linkValueIconGradient}
-        data-resume-link-icon-gradient
-        stroke={`url(#${gradientId})`}
-      >
-        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-      </g>
-    </svg>
-  );
-}
-
 function getKoreaYearMonth() {
   const koreaNow = new Date(Date.now() + 9 * 60 * 60 * 1000);
 
@@ -122,34 +78,6 @@ function getKoreaYearMonth() {
     year: koreaNow.getUTCFullYear(),
     month: koreaNow.getUTCMonth() + 1,
   };
-}
-
-function getKoreaDate() {
-  const koreaNow = new Date(Date.now() + 9 * 60 * 60 * 1000);
-
-  return {
-    year: koreaNow.getUTCFullYear(),
-    month: koreaNow.getUTCMonth() + 1,
-    day: koreaNow.getUTCDate(),
-  };
-}
-
-function formatKoreanAge(birthDate: { year: number; month: number; day: number }) {
-  const today = getKoreaDate();
-  const birthdayPassed =
-    today.month > birthDate.month ||
-    (today.month === birthDate.month && today.day >= birthDate.day);
-  const age = today.year - birthDate.year - (birthdayPassed ? 0 : 1);
-
-  return Math.max(0, age);
-}
-
-function getProfileBasicValue(item: (typeof resumeProfile.basics)[number]) {
-  if (item.label !== '나이') {
-    return item.value;
-  }
-
-  return `${resumeBirthDate.year}년 (만 ${formatKoreanAge(resumeBirthDate)}세)`;
 }
 
 function formatDurationFrom(start: { year: number; month: number }) {
@@ -178,12 +106,134 @@ function getSectionSummary(section: ResumeSection) {
   return section.summary;
 }
 
-function Highlight({ highlight }: { highlight: ResumeHighlight }) {
+function isProjectItem(item: ResumeBulletItem): item is { project: ResumeProject } {
+  return 'project' in item;
+}
+
+function ProjectBlock({ project }: { project: ResumeProject }) {
   return (
-    <div className={styles.highlight}>
+    <div
+      className={`${styles.projectBlock} ${
+        project.rail === false ? styles.projectBlockWithoutRail : ''
+      }`}
+    >
+      <div className={styles.projectTitleRow}>
+        {project.icon && (
+          <span className={styles.highlightIconFrame}>
+            <img src={project.icon} alt={project.iconAlt ?? ''} className={styles.highlightIcon} />
+          </span>
+        )}
+        <p className={styles.projectTitle}>{project.title}</p>
+      </div>
+      {project.technologies && project.technologies.length > 0 && (
+        <div className={styles.projectTechnologies}>
+          {project.technologies.map((technology) => (
+            <TechnologyTag key={technology} label={technology} />
+          ))}
+        </div>
+      )}
+      {project.facts && project.facts.length > 0 && (
+        <dl className={styles.projectFacts}>
+          {project.facts.map((fact) => (
+            <div key={fact.label} className={styles.projectFact}>
+              <dt>{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+      {project.sections?.map((section) => (
+        <div key={section.label || section.items?.[0]?.text} className={styles.projectSection}>
+          {section.label ? (
+            <p className={section.groups ? styles.projectGroupLabel : styles.projectSectionLabel}>
+              {section.label}
+            </p>
+          ) : null}
+          {section.groups?.map((group) => (
+            <div key={group.label}>
+              <p className={styles.projectSectionLabel}>{group.label}</p>
+              <ul className={styles.bulletList}>
+                {group.items.map((item) => (
+                  <li key={item}>
+                    <p className={styles.bulletText}>{item}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+          {section.items && section.items.length > 0 && (
+            <ul className={styles.bulletList}>
+              {section.items.map((item) => (
+                <li key={item.text}>
+                  <ResumeTextBlock text={item} className={styles.bulletText} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ))}
+      {project.body && (
+        <ul className={styles.bulletList}>
+          {project.body.map((bullet) => (
+            <li key={bullet.text}>
+              <ResumeTextBlock text={bullet} className={styles.bulletText} />
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+function HighlightBullets({ items }: { items: readonly ResumeBulletItem[] }) {
+  const nodes: ReactNode[] = [];
+  let texts: ResumeText[] = [];
+
+  const flush = () => {
+    if (texts.length === 0) {
+      return;
+    }
+
+    const group = texts;
+    texts = [];
+    nodes.push(
+      <ul key={group[0].text} className={styles.bulletList}>
+        {group.map((bullet) => (
+          <li key={bullet.text}>
+            <ResumeTextBlock text={bullet} className={styles.bulletText} />
+          </li>
+        ))}
+      </ul>,
+    );
+  };
+
+  for (const item of items) {
+    if (isProjectItem(item)) {
+      flush();
+      nodes.push(<ProjectBlock key={item.project.title} project={item.project} />);
+      continue;
+    }
+
+    texts.push(item);
+  }
+
+  flush();
+
+  return nodes;
+}
+
+function Highlight({ highlight }: { highlight: ResumeHighlight }) {
+  const projectTitle = Boolean(highlight.icon) && !(highlight.bullets ?? []).some(isProjectItem);
+
+  return (
+    <div className={`${styles.highlight} ${projectTitle ? styles.highlightProject : ''}`}>
       {highlight.title && (
-        <div className={styles.highlightTitleRow}>
-          {highlight.icon && (
+        <div
+          className={`${styles.highlightTitleRow} ${
+            highlight.icon ? styles.highlightTitleRowWithIcon : ''
+          }`}
+        >
+          {highlight.icon ? (
             <span className={styles.highlightIconFrame}>
               <img
                 src={highlight.icon}
@@ -191,22 +241,31 @@ function Highlight({ highlight }: { highlight: ResumeHighlight }) {
                 className={styles.highlightIcon}
               />
             </span>
+          ) : (
+            <span className={styles.listDot} aria-hidden="true" />
           )}
-          <ResumeTextBlock text={highlight.title} className={styles.highlightTitle} />
+          <ResumeTextBlock
+            text={highlight.title}
+            className={projectTitle ? styles.projectTitle : styles.highlightTitle}
+          />
         </div>
       )}
       {highlight.paragraphs?.map((paragraph) => (
         <ResumeTextBlock key={paragraph.text} text={paragraph} className={styles.bodyParagraph} />
       ))}
-      {highlight.bullets && (
-        <ul className={styles.bulletList}>
-          {highlight.bullets.map((bullet) => (
-            <li key={bullet.text}>
-              <ResumeTextBlock text={bullet} className={styles.bulletText} />
-            </li>
-          ))}
-        </ul>
-      )}
+      {highlight.bullets && <HighlightBullets items={highlight.bullets} />}
+      {highlight.sections?.map((section) => (
+        <div key={section.label} className={styles.projectSection}>
+          <p className={styles.projectSectionLabel}>{section.label}</p>
+          <ul className={styles.bulletList}>
+            {section.items.map((item) => (
+              <li key={item.text}>
+                <ResumeTextBlock text={item} className={styles.bulletText} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
   );
 }
@@ -294,14 +353,6 @@ const ResumeDocument = forwardRef<HTMLDivElement>(function ResumeDocument(_, ref
           <h1>{resumeProfile.name}</h1>
           <p>{resumeProfile.role}</p>
         </div>
-        <dl className={styles.basicInfo}>
-          {resumeProfile.basics.map((item) => (
-            <div key={item.label}>
-              <dt>{item.label}</dt>
-              <dd>{getProfileBasicValue(item)}</dd>
-            </div>
-          ))}
-        </dl>
         <div className={styles.skillCloud}>
           {resumeTechnologies.map((technology) => (
             <span key={technology.label} className={styles.skillPill}>
@@ -312,32 +363,25 @@ const ResumeDocument = forwardRef<HTMLDivElement>(function ResumeDocument(_, ref
             </span>
           ))}
         </div>
-        <div className={styles.linkCards}>
-          {resumeLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className={styles.linkCard}
-              data-resume-pdf-link={link.href}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <span className={styles.linkIconFrame}>
-                <img src={link.icon} alt="" className={styles.linkIcon} aria-hidden="true" />
-              </span>
-              <span>
-                <span className={styles.linkLabel}>{link.label}</span>
-                <span className={styles.linkValue}>
-                  {link.value}
-                  <ResumeValueLinkIcon />
-                </span>
-              </span>
-            </a>
-          ))}
-        </div>
       </header>
 
       <div className={styles.sectionStack} data-resume-section-stack>
+        {[
+          { id: 'introduction', ...resumeIntroduction },
+          { id: 'motivation', ...resumeMotivation },
+        ].map((lead) => (
+          <section
+            key={lead.id}
+            className={`${styles.section} ${styles.leadSection}`}
+            aria-labelledby={`resume-${lead.id}`}
+          >
+            <span className={styles.sectionDot} aria-hidden="true" />
+            <h2 id={`resume-${lead.id}`}>{lead.title}</h2>
+            {lead.text.split('\n\n').map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </section>
+        ))}
         {resumeSections.map((section) => {
           const sectionSummary = getSectionSummary(section);
 
